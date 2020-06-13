@@ -6,6 +6,7 @@ import {
   Switch,
 } from 'react-router-dom'
 
+import NewImage from './pieces/pages/NewImage'
 import NewPiece from './pieces/pages/NewPiece'
 
 const App = () => {
@@ -15,6 +16,9 @@ const App = () => {
   routes = (
     <Switch>
       <Route path="/" exact>
+        <NewImage />
+      </Route>
+      <Route path="/create/piece" exact>
         <NewPiece />
       </Route>
       <Redirect to="/" />

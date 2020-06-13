@@ -9,10 +9,6 @@ import './ImageUpload.css'
 const ImageUpload = props => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
   const [file, setFile] = useState(null)
-  const [awsData, setAwsData] = useState({
-    signedUrl: null,
-    url: null,
-  })
   const [previewUrl, setPReviewUrl] = useState()
   const [isValid, setIsValid] = useState()
 
@@ -72,7 +68,7 @@ const ImageUpload = props => {
         }
       )
       console.log(response)
-      return { signedUrl: response.signedRequest, url: response.url }
+      return response
     } catch (err) {
       new Error('Could not get signature')
     }
@@ -89,8 +85,8 @@ const ImageUpload = props => {
         onChange={pickHandler}
       />
       <div className={`image-upload ${props.center && 'center'}`}>
+        {isLoading && <LoadingSpinner />}
         <div className="image-upload__preview">
-          {isLoading && <LoadingSpinner center />}
           {!isLoading && previewUrl && <img src={previewUrl} alt="Preview" />}
           {!previewUrl && (
             <Button type="button" onClick={pickImageHandler}>
