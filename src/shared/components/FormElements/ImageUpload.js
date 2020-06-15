@@ -85,16 +85,15 @@ const ImageUpload = props => {
         onChange={pickHandler}
       />
       <div className={`image-upload ${props.center && 'center'}`}>
-        {isLoading && <LoadingSpinner />}
         <div className="image-upload__preview">
-          {!isLoading && previewUrl && <img src={previewUrl} alt="Preview" />}
+          {previewUrl && <img src={previewUrl} alt="Preview" />}
           {!previewUrl && (
             <Button type="button" onClick={pickImageHandler}>
               UPLOAD IMAGE
             </Button>
           )}
         </div>
-        {!isLoading && previewUrl && (
+        {previewUrl && (
           <Button type="button--small" onClick={pickImageHandler}>
             CHANGE IMAGE
           </Button>

@@ -6,6 +6,8 @@ import {
   Switch,
 } from 'react-router-dom'
 
+import './App.css'
+
 import NewImage from './pieces/pages/NewImage'
 import NewPiece from './pieces/pages/NewPiece'
 

@@ -1,49 +1,86 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+
 import { useHttpClient } from '../../shared/hooks/http-hook'
 
-import { useForm } from '../../shared/hooks/form-hook'
+import Input from '../../shared/components/FormElements/Input'
+import Button from '../../shared/components/FormElements/Button'
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
+
+import './NewPiece.css'
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
+const ASSET_URL = process.env.REACT_APP_ASSET_URL
 
 const NewPiece = () => {
+  const [imageData, setImageData] = useState({
+    id: null,
+    ext: null,
+  })
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
 
   const history = useHistory()
 
-  console.log('loading piece page')
-
-  if (!sessionStorage.getItem('imageFileName')) {
-    console.log('no url in session storage')
+  if (
+    !sessionStorage.getItem('imageId') ||
+    !sessionStorage.getItem('imageExt')
+  ) {
+    console.log('no image in session storage')
     history.push('/')
   }
 
-  const imageFileName = sessionStorage.getItem('imageFileName')
+  const { register, handleSubmit, watch, errors } = useForm()
 
-  const [formState, inputHandler] = useForm({
-    title: {
-      value: '',
-      isValid: false,
-    },
-    description: {
-      value: '',
-      isValid: false,
-    },
-  })
+  useEffect(() => {
+    console.log('loading piece page')
+    setImageData({
+      id: sessionStorage.getItem('imageId'),
+      ext: sessionStorage.getItem('imageExt'),
+    })
+  }, [])
 
-  const pieceSubmitHandler = async event => {
-    event.preventDefault()
+  const onSubmit = async formData => {
     try {
-      const formData = new FormData()
-      formData.append('imageFileName', imageFileName)
-
-      await sendRequest(
-        process.env.REACT_APP_BACKEND_URL + '/pieces/',
+      const pieceData = { ...imageData, ...formData }
+      console.log(pieceData)
+      const response = await sendRequest(
+        BACKEND_URL + '/pieces/',
         'POST',
-        formData
+        JSON.stringify(pieceData),
+        {
+          'Content-Type': 'application/json',
+        }
       )
+      console.log(response.message)
+      history.push('/')
     } catch (err) {}
   }
 
-  return <form className="piece-form" onSubmit={pieceSubmitHandler}></form>
+  return (
+    <React.Fragment>
+      <div className="piece-edit">
+        <div className="piece-edit__image">
+          <img
+            src={`${ASSET_URL}/${imageData.id}.${imageData.ext}`}
+            alt="Preview"
+          />
+        </div>
+        <form className="piece-edit__form" onSubmit={handleSubmit(onSubmit)}>
+          {isLoading && <LoadingSpinner asOverlay />}
+          <label>Title</label>
+          <input
+            name="title"
+            label="Title"
+            ref={register({ required: true })}
+          />
+          <label>Description</label>
+          <input name="description" label="Title" ref={register} />
+          <Button type="submit">SAVE</Button>
+        </form>
+      </div>
+    </React.Fragment>
+  )
 }
 
 export default NewPiece

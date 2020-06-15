@@ -24,7 +24,6 @@ const NewImage = () => {
       setImageValue(value)
       setImageIsValid(true)
       setImageData(imageData)
-      console.log(imageData.signedUrl)
     }
   }
 
@@ -34,11 +33,10 @@ const NewImage = () => {
     event.preventDefault()
     try {
       console.log('submitted')
-      console.log(imageData.signedUrl)
       const awsRes = await sendRequest(imageData.signedUrl, 'PUT', imageValue)
-      console.log('received')
       if (awsRes.status === 200) {
-        sessionStorage.setItem('imageFileName', imageData.fileName)
+        sessionStorage.setItem('imageId', imageData.id)
+        sessionStorage.setItem('imageExt', imageData.ext)
         history.push('/create/piece')
       }
     } catch (err) {
