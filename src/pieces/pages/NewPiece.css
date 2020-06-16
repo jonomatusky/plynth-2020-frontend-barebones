@@ -40,12 +40,13 @@
 }
 
 .piece-edit__form input,
-.form-control textarea {
+.piece-edit__form textarea {
   width: 100%;
   font: inherit;
   border: 1px solid #ccc;
   background: #f8f8f8;
   padding: 0.15rem 0.25rem;
+  margin: 0rem 0rem 1rem 0rem;
 }
 
 /* 

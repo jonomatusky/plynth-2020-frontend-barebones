@@ -10,6 +10,9 @@ import './App.css'
 
 import NewImage from './pieces/pages/NewImage'
 import NewPiece from './pieces/pages/NewPiece'
+import ViewPiece from './pieces/pages/ViewPiece'
+import NewScan from './pieces/pages/NewScan'
+import MainNavigation from './shared/components/Navigation/MainNavigation'
 
 const App = () => {
   // allows routes to be changed later based on authentication/authorization
@@ -17,18 +20,25 @@ const App = () => {
 
   routes = (
     <Switch>
-      <Route path="/" exact>
+      <Route path="/create" exact>
         <NewImage />
       </Route>
       <Route path="/create/piece" exact>
         <NewPiece />
       </Route>
-      <Redirect to="/" />
+      <Route path="/pieces/:pieceId">
+        <ViewPiece />
+      </Route>
+      <Route path="/pickup">
+        <NewScan />
+      </Route>
+      <Redirect to="/create" />
     </Switch>
   )
 
   return (
     <Router>
+      <MainNavigation />
       <main>{routes}</main>
     </Router>
   )

@@ -7,7 +7,7 @@ export const useHttpClient = () => {
   const activeHttpRequests = useRef([])
 
   const sendRequest = useCallback(
-    async (url, method = 'GET', body = null, headers = {}) => {
+    async (url, method = 'GET', body = null, headers = {}, json = true) => {
       setIsLoading(true)
       const httpAbortCtrl = new AbortController()
       activeHttpRequests.current.push(httpAbortCtrl)
@@ -19,18 +19,26 @@ export const useHttpClient = () => {
           signal: httpAbortCtrl.signal,
         })
 
-        const responseData = await response.json()
-
         activeHttpRequests.current = activeHttpRequests.current.filter(
           reqCtrl => reqCtrl !== httpAbortCtrl
         )
 
-        if (!response.ok) {
-          throw new Error(responseData.message)
+        let data
+
+        if (json) {
+          data = await response.json()
+          if (!response.ok) {
+            throw new Error(data.message)
+          }
+        } else {
+          data = response
+          if (!response.ok) {
+            throw new Error('Problem fulfilling HTTP request')
+          }
         }
 
         setIsLoading(false)
-        return responseData
+        return data
       } catch (err) {
         setError(err.message)
         setIsLoading(false)

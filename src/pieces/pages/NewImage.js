@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
-import { useAwsClient } from '../../shared/hooks/aws-hook'
+import { useHttpClient } from '../../shared/hooks/http-hook'
 
 import ImageUpload from '../../shared/components/FormElements/ImageUpload'
 import Button from '../../shared/components/FormElements/Button'
@@ -10,7 +10,7 @@ import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
 import './NewImage.css'
 
 const NewImage = () => {
-  const { isLoading, error, sendRequest, clearError } = useAwsClient()
+  const { isLoading, error, sendRequest, clearError } = useHttpClient()
   const [imageValue, setImageValue] = useState(null)
   const [imageIsValid, setImageIsValid] = useState(false)
   const [imageData, setImageData] = useState({
@@ -33,7 +33,13 @@ const NewImage = () => {
     event.preventDefault()
     try {
       console.log('submitted')
-      const awsRes = await sendRequest(imageData.signedUrl, 'PUT', imageValue)
+      const awsRes = await sendRequest(
+        imageData.signedUrl,
+        'PUT',
+        imageValue,
+        {},
+        false
+      )
       if (awsRes.status === 200) {
         sessionStorage.setItem('imageId', imageData.id)
         sessionStorage.setItem('imageExt', imageData.ext)

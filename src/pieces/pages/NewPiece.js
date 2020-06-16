@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form'
 
 import { useHttpClient } from '../../shared/hooks/http-hook'
 
-import Input from '../../shared/components/FormElements/Input'
 import Button from '../../shared/components/FormElements/Button'
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
 
@@ -44,7 +43,7 @@ const NewPiece = () => {
     try {
       const pieceData = { ...imageData, ...formData }
       console.log(pieceData)
-      const response = await sendRequest(
+      const res = await sendRequest(
         BACKEND_URL + '/pieces/',
         'POST',
         JSON.stringify(pieceData),
@@ -52,8 +51,8 @@ const NewPiece = () => {
           'Content-Type': 'application/json',
         }
       )
-      console.log(response.message)
-      history.push('/')
+      console.log(res)
+      history.push(`/pieces/${res.pieceId}`)
     } catch (err) {}
   }
 
