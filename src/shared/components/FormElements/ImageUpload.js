@@ -55,7 +55,6 @@ const ImageUpload = props => {
   // gets a signature as soon as the piece is selected
   const getSignedRequest = async file => {
     try {
-      console.log('sending signature request')
       const response = await sendRequest(
         process.env.REACT_APP_BACKEND_URL + '/images/sign-s3',
         'POST',
@@ -67,7 +66,6 @@ const ImageUpload = props => {
           'Content-Type': 'application/json',
         }
       )
-      console.log(response)
       return response
     } catch (err) {
       new Error('Could not get signature')

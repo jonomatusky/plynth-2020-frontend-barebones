@@ -19,11 +19,9 @@ const ViewPiece = () => {
   useEffect(() => {
     const fetchPiece = async () => {
       try {
-        console.log(`${REACT_APP_BACKEND_URL}/pieces/${pieceId}`)
         const responseData = await sendRequest(
           `${REACT_APP_BACKEND_URL}/pieces/${pieceId}`
         )
-        console.log(responseData.piece)
         setLoadedPiece(responseData.piece)
       } catch (err) {
         console.log(err)

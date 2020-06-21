@@ -3,12 +3,15 @@ import { useHistory } from 'react-router-dom'
 
 import { useHttpClient } from '../../shared/hooks/http-hook'
 
+import { Container } from '@material-ui/core'
 import ImageUpload from '../../shared/components/FormElements/ImageUpload'
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
 
-import './NewImage.css'
+import './NewScan.css'
 
 const { REACT_APP_BACKEND_URL } = process.env
+
+const title = 'New Pickup'
 
 const NewImage = () => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
@@ -17,8 +20,6 @@ const NewImage = () => {
 
   const inputHandler = async (id, value, isValid, imageData) => {
     if (isValid) {
-      console.log('submitted')
-
       try {
         const awsRes = await sendRequest(
           imageData.signedUrl,
@@ -28,7 +29,7 @@ const NewImage = () => {
           false
         )
         if (awsRes.status !== 200) {
-          throw error
+          console.log('Got a 200 error on AWS request')
         }
 
         const res = await sendRequest(
@@ -47,10 +48,12 @@ const NewImage = () => {
   }
 
   return (
-    <div className="image-form">
-      {isLoading && <LoadingSpinner asOverlay />}
-      <ImageUpload center id="image" onInput={inputHandler} />
-    </div>
+    <Container>
+      <div className="image-form">
+        {isLoading && <LoadingSpinner asOverlay />}
+        <ImageUpload center id="image" onInput={inputHandler} />
+      </div>
+    </Container>
   )
 }
 

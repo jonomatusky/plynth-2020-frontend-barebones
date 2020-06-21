@@ -32,7 +32,6 @@ const NewImage = () => {
   const imageSubmitHandler = async event => {
     event.preventDefault()
     try {
-      console.log('submitted')
       const awsRes = await sendRequest(
         imageData.signedUrl,
         'PUT',

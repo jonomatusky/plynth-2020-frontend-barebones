@@ -32,7 +32,6 @@ const NewPiece = () => {
   const { register, handleSubmit, watch, errors } = useForm()
 
   useEffect(() => {
-    console.log('loading piece page')
     setImageData({
       id: sessionStorage.getItem('imageId'),
       ext: sessionStorage.getItem('imageExt'),
@@ -42,7 +41,6 @@ const NewPiece = () => {
   const onSubmit = async formData => {
     try {
       const pieceData = { ...imageData, ...formData }
-      console.log(pieceData)
       const res = await sendRequest(
         BACKEND_URL + '/pieces/',
         'POST',
@@ -51,7 +49,6 @@ const NewPiece = () => {
           'Content-Type': 'application/json',
         }
       )
-      console.log(res)
       history.push(`/pieces/${res.pieceId}`)
     } catch (err) {}
   }

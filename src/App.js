@@ -6,13 +6,13 @@ import {
   Switch,
 } from 'react-router-dom'
 
-import './App.css'
-
 import NewImage from './pieces/pages/NewImage'
 import NewPiece from './pieces/pages/NewPiece'
 import ViewPiece from './pieces/pages/ViewPiece'
-import NewScan from './pieces/pages/NewScan'
-import MainNavigation from './shared/components/Navigation/MainNavigation'
+import NewScan from './scans/pages/NewScan'
+import Scans from './scans/pages/Scans'
+
+import NavBar from './shared/components/Navigation/NavBar'
 
 const App = () => {
   // allows routes to be changed later based on authentication/authorization
@@ -29,16 +29,19 @@ const App = () => {
       <Route path="/pieces/:pieceId">
         <ViewPiece />
       </Route>
-      <Route path="/pickup">
+      <Route path="/pickup" exact>
         <NewScan />
       </Route>
-      <Redirect to="/create" />
+      <Route path="/pickups" exact>
+        <Scans />
+      </Route>
+      <Redirect to="/pickups" />
     </Switch>
   )
 
   return (
     <Router>
-      <MainNavigation />
+      <NavBar />
       <main>{routes}</main>
     </Router>
   )
