@@ -9,6 +9,7 @@ import {
 import NewImage from './pieces/pages/NewImage'
 import NewPiece from './pieces/pages/NewPiece'
 import ViewPiece from './pieces/pages/ViewPiece'
+import ViewPieces from './pieces/pages/ViewPieces'
 import NewScan from './scans/pages/NewScan'
 import Scans from './scans/pages/Scans'
 
@@ -28,6 +29,9 @@ const App = () => {
       </Route>
       <Route path="/pieces/:pieceId">
         <ViewPiece />
+      </Route>
+      <Route path="/pieces">
+        <ViewPieces />
       </Route>
       <Route path="/pickup" exact>
         <NewScan />

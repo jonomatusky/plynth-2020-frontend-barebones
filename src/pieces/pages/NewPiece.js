@@ -4,6 +4,9 @@ import { useForm } from 'react-hook-form'
 
 import { useHttpClient } from '../../shared/hooks/http-hook'
 
+import { Container } from '@material-ui/core'
+
+import PageTitle from '../../shared/components/UIElements/PageTitle'
 import Button from '../../shared/components/FormElements/Button'
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
 
@@ -11,6 +14,8 @@ import './NewPiece.css'
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
 const ASSET_URL = process.env.REACT_APP_ASSET_URL
+
+const title = 'Create New Piece'
 
 const NewPiece = () => {
   const [imageData, setImageData] = useState({
@@ -54,7 +59,8 @@ const NewPiece = () => {
   }
 
   return (
-    <React.Fragment>
+    <Container maxWidth="sm">
+      <PageTitle title={title} />
       <div className="piece-edit">
         <div className="piece-edit__image">
           <img
@@ -75,7 +81,7 @@ const NewPiece = () => {
           <Button type="submit">SAVE</Button>
         </form>
       </div>
-    </React.Fragment>
+    </Container>
   )
 }
 

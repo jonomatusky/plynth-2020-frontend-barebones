@@ -11,6 +11,7 @@ import {
 import RestoreIcon from '@material-ui/icons/Restore'
 import AlbumIcon from '@material-ui/icons/Album'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
+import CameraAltIcon from '@material-ui/icons/CameraAlt'
 
 import { NavLink } from 'react-router-dom'
 
@@ -61,6 +62,14 @@ const MainHeader = props => {
             >
               Create
             </Button>
+            <Button
+              color="inherit"
+              component={NavLink}
+              activeClassName="Mui-selected"
+              to={'/pieces'}
+            >
+              My Pieces
+            </Button>
           </Toolbar>
         </AppBar>
         <Toolbar />
@@ -77,7 +86,7 @@ const MainHeader = props => {
             />
             <BottomNavigationAction
               label="Pickup"
-              icon={<AlbumIcon />}
+              icon={<CameraAltIcon />}
               component={NavLink}
               to={'/pickup'}
               activeClassName="Mui-selected"
@@ -87,6 +96,13 @@ const MainHeader = props => {
               icon={<AddCircleIcon />}
               component={NavLink}
               to={'/create'}
+              activeClassName="Mui-selected"
+            />
+            <BottomNavigationAction
+              label="My Pieces"
+              icon={<AlbumIcon />}
+              component={NavLink}
+              to={'/pieces'}
               activeClassName="Mui-selected"
             />
           </BottomNavigation>

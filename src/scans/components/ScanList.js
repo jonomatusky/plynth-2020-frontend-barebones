@@ -21,32 +21,30 @@ const ScanList = props => {
   }
 
   return (
-    <Container maxWidth="xs">
-      <List>
-        {props.items.map(scan => (
-          <ListItem key={scan.id}>
-            <ListItemAvatar>
-              <Avatar
-                alt={scan.creator ? scan.creator.displayName : 'Anonymous'}
-                src={
-                  scan.creator
-                    ? `${REACT_APP_ASSET_URL}/${scan.creator.avatar}`
-                    : 'https://png.pngtree.com/png-vector/20190927/ourlarge/pngtree-vinyl-icon-png-image_1753313.jpg'
-                }
-              />
-            </ListItemAvatar>
-            <ListItemText
-              primary={scan.creator ? scan.creator.displayName : 'Anonymous'}
-              secondary={`${
-                scan.piece
-                  ? `picked up ${scan.piece.title}`
-                  : `tried to pick up a piece`
-              } - ${moment(scan.createdAt).fromNow()}`}
+    <List>
+      {props.items.map(scan => (
+        <ListItem key={scan.id}>
+          <ListItemAvatar>
+            <Avatar
+              alt={scan.creator ? scan.creator.displayName : 'Anonymous'}
+              src={
+                scan.creator
+                  ? `${REACT_APP_ASSET_URL}/${scan.creator.avatar}`
+                  : 'https://png.pngtree.com/png-vector/20190927/ourlarge/pngtree-vinyl-icon-png-image_1753313.jpg'
+              }
             />
-          </ListItem>
-        ))}
-      </List>
-    </Container>
+          </ListItemAvatar>
+          <ListItemText
+            primary={scan.creator ? scan.creator.displayName : 'Anonymous'}
+            secondary={`${
+              scan.piece
+                ? `picked up ${scan.piece.title}`
+                : `tried to pick up a piece`
+            } - ${moment(scan.createdAt).fromNow()}`}
+          />
+        </ListItem>
+      ))}
+    </List>
   )
 }
 
