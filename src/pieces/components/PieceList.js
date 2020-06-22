@@ -67,7 +67,11 @@ const ScanList = props => {
                         {piece.title}
                       </Typography>
                       <Typography variant="subtitle1" color="textSecondary">
-                        {`by ${piece.creator || 'Anonymous'}`}
+                        {`by ${
+                          piece.creator
+                            ? piece.creator.displayName
+                            : 'Anonymous'
+                        }`}
                       </Typography>
                     </CardContent>
                   </div>
