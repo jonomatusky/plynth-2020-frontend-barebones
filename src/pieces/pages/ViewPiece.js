@@ -37,7 +37,7 @@ const ViewPiece = () => {
         <div className="piece-view">
           <div className="piece-view__image">
             <img
-              src={`${REACT_APP_ASSET_URL}/${loadedPiece.images[0].awsId}.${loadedPiece.images[0].ext}`}
+              src={`${REACT_APP_ASSET_URL}/${loadedPiece.images[0].filepath}`}
               alt="Preview"
             />
           </div>
