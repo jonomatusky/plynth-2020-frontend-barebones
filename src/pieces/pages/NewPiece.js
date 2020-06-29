@@ -63,7 +63,10 @@ const NewPiece = () => {
       <PageTitle title={title} />
       <div className="piece-edit">
         <div className="piece-edit__image">
-          <img src={`${ASSET_URL}/${imageData.filepath}`} alt="Preview" />
+          <img
+            src={`${ASSET_URL}/${imageData.id}.${imageData.ext}`}
+            alt="Preview"
+          />
         </div>
         <form className="piece-edit__form" onSubmit={handleSubmit(onSubmit)}>
           {isLoading && <LoadingSpinner asOverlay />}
