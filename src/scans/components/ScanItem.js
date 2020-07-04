@@ -19,8 +19,8 @@ const ScanItem = props => {
   let avatar
 
   title = props.scan.piece.title
-  name = props.scan.creator.displayName
-  avatar = props.scan.creator.avatar
+  name = props.scan.owner.displayName
+  avatar = props.scan.owner.avatar
 
   return (
     <ListItem key={props.scan.id}>
@@ -28,7 +28,7 @@ const ScanItem = props => {
         <Avatar alt={name} src={`${REACT_APP_BACKEND_URL}/${avatar}`} />
       </ListItemAvatar>
       <ListItemText
-        primary="Anonymous"
+        primary={name || 'Anonymous'}
         secondary={`${
           props.scan.piece ? `picked up ${title}` : `tried to pick up a piece`
         } - ${dateStamp}`}

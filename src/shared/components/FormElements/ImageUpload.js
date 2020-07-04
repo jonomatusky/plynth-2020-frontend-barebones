@@ -56,7 +56,7 @@ const ImageUpload = props => {
   const getSignedRequest = async file => {
     try {
       const response = await sendRequest(
-        process.env.REACT_APP_BACKEND_URL + '/images/sign-s3',
+        process.env.REACT_APP_BACKEND_URL + '/users/sign-s3',
         'POST',
         JSON.stringify({
           fileName: file.name,

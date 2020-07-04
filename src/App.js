@@ -12,6 +12,7 @@ import ViewPiece from './pieces/pages/ViewPiece'
 import ViewPieces from './pieces/pages/ViewPieces'
 import NewScan from './scans/pages/NewScan'
 import Scans from './scans/pages/Scans'
+import MyCollection from './pieces/pages/MyCollection'
 
 import NavBar from './shared/components/Navigation/NavBar'
 
@@ -38,6 +39,9 @@ const App = () => {
       </Route>
       <Route path="/pickups" exact>
         <Scans />
+      </Route>
+      <Route path="/collection" exact>
+        <MyCollection />
       </Route>
       <Redirect to="/pickups" />
     </Switch>

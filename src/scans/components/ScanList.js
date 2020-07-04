@@ -26,16 +26,16 @@ const ScanList = props => {
         <ListItem key={scan.id}>
           <ListItemAvatar>
             <Avatar
-              alt={scan.creator ? scan.creator.displayName : 'Anonymous'}
+              alt={scan.owner ? scan.owner.displayName : 'Anonymous'}
               src={
-                scan.creator
-                  ? `${REACT_APP_ASSET_URL}/${scan.creator.avatar}`
+                scan.owner
+                  ? `${REACT_APP_ASSET_URL}/${scan.owner.avatar}`
                   : 'https://png.pngtree.com/png-vector/20190927/ourlarge/pngtree-vinyl-icon-png-image_1753313.jpg'
               }
             />
           </ListItemAvatar>
           <ListItemText
-            primary={scan.creator ? scan.creator.displayName : 'Anonymous'}
+            primary={scan.owner ? scan.owner.displayName : 'Anonymous'}
             secondary={`${
               scan.piece
                 ? `picked up ${scan.piece.title}`

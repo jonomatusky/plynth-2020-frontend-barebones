@@ -19,7 +19,7 @@ const PieceList = props => {
         <PieceItem
           key={piece.id}
           id={piece.id}
-          image={`${REACT_APP_ASSET_URL}/${piece.images[0].filepath}`}
+          image={`${REACT_APP_ASSET_URL}/${piece.imageFilepath}`}
           title={piece.title}
           creator={piece.isCreators ? piece.creators[0] : piece.owner}
         />

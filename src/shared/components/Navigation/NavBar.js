@@ -70,6 +70,14 @@ const MainHeader = props => {
             >
               My Pieces
             </Button>
+            <Button
+              color="inherit"
+              component={NavLink}
+              activeClassName="Mui-selected"
+              to={'/collection'}
+            >
+              Collection
+            </Button>
           </Toolbar>
         </AppBar>
         <Toolbar />
@@ -103,6 +111,13 @@ const MainHeader = props => {
               icon={<AlbumIcon />}
               component={NavLink}
               to={'/pieces'}
+              activeClassName="Mui-selected"
+            />
+            <BottomNavigationAction
+              label="Collection"
+              icon={<AlbumIcon />}
+              component={NavLink}
+              to={'/collection'}
               activeClassName="Mui-selected"
             />
           </BottomNavigation>
