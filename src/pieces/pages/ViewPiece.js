@@ -1,53 +1,18 @@
-import React, { useState, useEffect } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
+import React from 'react'
+import { useParams } from 'react-router-dom'
 
-import { useHttpClient } from '../../shared/hooks/http-hook'
+import { Container } from '@material-ui/core'
 
-import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
-
-import './ViewPiece.css'
+import PieceCard from '../components/PieceCard'
 
 const { REACT_APP_BACKEND_URL, REACT_APP_ASSET_URL } = process.env
 
 const ViewPiece = () => {
-  const { isLoading, error, sendRequest, clearError } = useHttpClient()
-  const [loadedPiece, setLoadedPiece] = useState()
-
   const pieceId = useParams().pieceId
-  const history = useHistory()
-
-  useEffect(() => {
-    const fetchPiece = async () => {
-      try {
-        const responseData = await sendRequest(
-          `${REACT_APP_BACKEND_URL}/pieces/${pieceId}`
-        )
-        setLoadedPiece(responseData.piece)
-      } catch (err) {
-        console.log(err)
-      }
-    }
-    fetchPiece()
-  }, [sendRequest, pieceId])
-
   return (
-    <React.Fragment>
-      {(isLoading || !loadedPiece) && <LoadingSpinner asOverlay />}
-      {!isLoading && loadedPiece && (
-        <div className="piece-view">
-          <div className="piece-view__image">
-            <img
-              src={`${REACT_APP_ASSET_URL}/${loadedPiece.imageFilepath}`}
-              alt="Preview"
-            />
-          </div>
-          <div className="piece-view__content">
-            <h1>{loadedPiece.title}</h1>
-            <p>{loadedPiece.description}</p>
-          </div>
-        </div>
-      )}
-    </React.Fragment>
+    <Container maxWidth="sm" disableGutters="true">
+      <PieceCard pieceId={pieceId} />
+    </Container>
   )
 }
 

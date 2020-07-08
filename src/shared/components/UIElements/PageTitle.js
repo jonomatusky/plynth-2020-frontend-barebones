@@ -3,11 +3,11 @@ import { Box, Typography } from '@material-ui/core'
 
 const PageTitle = props => {
   return (
-    <Box pt={2} pb={2} align="left">
-      <Typography component="h1" variant="h4">
+    <Typography variant="h5">
+      <Box pt={2} pb={2} align="left" fontWeight="fontWeightBold">
         {props.title}
-      </Typography>
-    </Box>
+      </Box>
+    </Typography>
   )
 }
 

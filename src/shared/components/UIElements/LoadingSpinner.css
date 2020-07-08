@@ -2,6 +2,8 @@
   display: inline-block;
   width: 64px;
   height: 64px;
+  justify-content: center;
+  align-items: center;
 }
 
 .lds-dual-ring:after {

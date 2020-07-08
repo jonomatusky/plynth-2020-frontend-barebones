@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   AppBar,
   Toolbar,
@@ -11,7 +11,6 @@ import {
 import RestoreIcon from '@material-ui/icons/Restore'
 import AlbumIcon from '@material-ui/icons/Album'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
-import CameraAltIcon from '@material-ui/icons/CameraAlt'
 
 import { NavLink } from 'react-router-dom'
 
@@ -22,16 +21,21 @@ const useStyles = makeStyles(theme => ({
     top: 'auto',
     bottom: 0,
   },
+  navBarRoot: {
+    background: theme.palette.background.default,
+    borderTop: 1,
+    borderColor: theme.palette.secondary.main,
+  },
+  navBarActionRoot: {
+    color: theme.palette.text.primary,
+    '&.Mui-selected': {
+      color: theme.palette.secondary.main,
+    },
+  },
 }))
 
 const MainHeader = props => {
   const classes = useStyles()
-
-  // const [value, setValue] = useState(0)
-
-  // const handleChange = (event, value) => {
-  //   setValue(value)
-  // }
 
   return (
     <React.Fragment>
@@ -84,34 +88,20 @@ const MainHeader = props => {
       </Hidden>
       <Hidden mdUp>
         <AppBar className={classes.bottomBar}>
-          <BottomNavigation showLabels>
+          <BottomNavigation
+            showLabels
+            classes={{
+              root: classes.navBarRoot,
+              selected: classes.navBarSelected,
+            }}
+          >
             <BottomNavigationAction
               label="Activity"
               icon={<RestoreIcon />}
               component={NavLink}
               to={'/pickups'}
               activeClassName="Mui-selected"
-            />
-            <BottomNavigationAction
-              label="Pickup"
-              icon={<CameraAltIcon />}
-              component={NavLink}
-              to={'/pickup'}
-              activeClassName="Mui-selected"
-            />
-            <BottomNavigationAction
-              label="Create"
-              icon={<AddCircleIcon />}
-              component={NavLink}
-              to={'/create'}
-              activeClassName="Mui-selected"
-            />
-            <BottomNavigationAction
-              label="My Pieces"
-              icon={<AlbumIcon />}
-              component={NavLink}
-              to={'/pieces'}
-              activeClassName="Mui-selected"
+              classes={{ root: classes.navBarActionRoot }}
             />
             <BottomNavigationAction
               label="Collection"
@@ -119,6 +109,23 @@ const MainHeader = props => {
               component={NavLink}
               to={'/collection'}
               activeClassName="Mui-selected"
+              classes={{ root: classes.navBarActionRoot }}
+            />
+            <BottomNavigationAction
+              label="Create"
+              icon={<AddCircleIcon />}
+              component={NavLink}
+              to={'/create'}
+              activeClassName="Mui-selected"
+              classes={{ root: classes.navBarActionRoot }}
+            />
+            <BottomNavigationAction
+              label="My Pieces"
+              icon={<AlbumIcon />}
+              component={NavLink}
+              to={'/pieces'}
+              activeClassName="Mui-selected"
+              classes={{ root: classes.navBarActionRoot }}
             />
           </BottomNavigation>
         </AppBar>

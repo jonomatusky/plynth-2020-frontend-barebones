@@ -4,6 +4,7 @@ import { useHttpClient } from '../../shared/hooks/http-hook'
 import { Container } from '@material-ui/core'
 
 import PageTitle from '../../shared/components/UIElements/PageTitle'
+import ScanButton from '../../shared/components/UIElements/ScanButton'
 import ScanList from '../components/ScanList'
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
 
@@ -27,6 +28,7 @@ const Scans = () => {
 
   return (
     <Container maxWidth="sm">
+      <ScanButton />
       <PageTitle title={title} />
       {isLoading && <LoadingSpinner asOverlay />}
       {!isLoading && loadedScans && <ScanList items={loadedScans} />}

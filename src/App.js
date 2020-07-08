@@ -18,9 +18,9 @@ import NavBar from './shared/components/Navigation/NavBar'
 
 const App = () => {
   // allows routes to be changed later based on authentication/authorization
-  let routes
+  let navRoutes
 
-  routes = (
+  navRoutes = (
     <Switch>
       <Route path="/create" exact>
         <NewImage />
@@ -50,7 +50,7 @@ const App = () => {
   return (
     <Router>
       <NavBar />
-      <main>{routes}</main>
+      <main>{navRoutes}</main>
     </Router>
   )
 }
