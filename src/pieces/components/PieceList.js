@@ -5,6 +5,7 @@ import PieceItem from './PieceItem'
 const { REACT_APP_ASSET_URL } = process.env
 
 const PieceList = props => {
+  console.log(props.items)
   if (props.items.length === 0) {
     return (
       <div>

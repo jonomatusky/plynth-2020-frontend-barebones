@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { useHttpClient } from '../../shared/hooks/http-hook'
+import { NavLink } from 'react-router-dom'
 
-import { Container } from '@material-ui/core'
+import { useHttpClient } from '../../shared/hooks/http-hook'
+import { Container, Grid, Button } from '@material-ui/core'
 
 import PageTitle from '../../shared/components/UIElements/PageTitle'
 import PieceList from '../components/PieceList'
@@ -32,7 +33,25 @@ const ViewPieces = () => {
     <Container maxWidth="sm">
       <PageTitle title={title} />
       {isLoading && <LoadingSpinner asOverlay />}
-      {!isLoading && loadedPieces && <PieceList items={loadedPieces} />}
+      {!isLoading && loadedPieces && (
+        <Grid container direction="column" alignItems="stretch" spacing={2}>
+          <Grid item xs={12}>
+            <Button
+              variant="contained"
+              color="primary"
+              component={NavLink}
+              to={'/create'}
+              disableElevation={true}
+              fullWidth={true}
+            >
+              Create New Piece +
+            </Button>
+          </Grid>
+          <Grid item>
+            <PieceList items={loadedPieces} />
+          </Grid>
+        </Grid>
+      )}
     </Container>
   )
 }

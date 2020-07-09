@@ -10,7 +10,7 @@ const { REACT_APP_BACKEND_URL, REACT_APP_ASSET_URL } = process.env
 const ViewPiece = () => {
   const pieceId = useParams().pieceId
   return (
-    <Container maxWidth="sm" disableGutters="true">
+    <Container maxWidth="sm">
       <PieceCard pieceId={pieceId} />
     </Container>
   )

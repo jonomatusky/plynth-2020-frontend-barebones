@@ -27,12 +27,14 @@ const Scans = () => {
   }, [sendRequest])
 
   return (
-    <Container maxWidth="sm">
+    <React.Fragment>
+      <Container maxWidth="sm">
+        {isLoading && <LoadingSpinner asOverlay />}
+        <PageTitle title={title} />
+        {!isLoading && loadedScans && <ScanList items={loadedScans} />}
+      </Container>
       <ScanButton />
-      <PageTitle title={title} />
-      {isLoading && <LoadingSpinner asOverlay />}
-      {!isLoading && loadedScans && <ScanList items={loadedScans} />}
-    </Container>
+    </React.Fragment>
   )
 }
 

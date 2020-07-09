@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react'
 
 import {
   Fab,
+  AppBar,
   Dialog,
   Container,
   Grid,
@@ -24,6 +25,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 })
 
 const useStyles = makeStyles(theme => ({
+  bottomBar: {
+    top: 'auto',
+    bottom: 0,
+  },
   fabButton: {
     position: 'absolute',
     bottom: theme.spacing(10),
@@ -130,66 +135,72 @@ const ScanModal = () => {
   }
 
   return (
-    <Container maxWidth="sm">
-      <input
-        id="image"
-        ref={filePickerRef}
-        style={{ display: 'none' }}
-        type="file"
-        accepts=".jpg, .png, .jpeg"
-        onChange={pickHandler}
-      />
-      <Dialog
-        fullScreen
-        open={open}
-        onClose={handleClose}
-        TransitionComponent={Transition}
-      >
-        {!file && !isLoading && (
-          <Grid
-            container
-            direction="column"
-            justify="center"
-            alignItems="center"
-            style={{ minHeight: '100vh' }}
-          >
-            <Grid item xs={3}>
-              <Button onClick={handleClose}>Cancel</Button>
-            </Grid>
-          </Grid>
-        )}
-        {file && isLoading && (
-          <Grid
-            container
-            direction="column"
-            justify="center"
-            alignItems="center"
-            style={{ minHeight: '100vh' }}
-          >
-            <Grid item xs={3}>
-              <LoadingSpinner />
-              <Button onClick={handleClose}>Cancel</Button>
-            </Grid>
-          </Grid>
-        )}
-        {file && !isLoading && (
-          <React.Fragment>
-            <PieceCard pieceId={pieceId} />
-            <Button onClick={handleClose}>CLOSE</Button>
-          </React.Fragment>
-        )}
-      </Dialog>
-      <Hidden mdUp>
-        <Fab
-          color="primary"
-          aria-label="add"
-          className={classes.fabButton}
-          onClick={pickImageHandler}
+    <React.Fragment>
+      <Container maxWidth="sm">
+        <input
+          id="image"
+          ref={filePickerRef}
+          style={{ display: 'none' }}
+          type="file"
+          accepts=".jpg, .png, .jpeg"
+          onChange={pickHandler}
+        />
+        <Dialog
+          fullScreen
+          open={open}
+          onClose={handleClose}
+          TransitionComponent={Transition}
         >
-          <CameraAltIcon />
-        </Fab>
+          {/* {!file && !isLoading && (
+            <Grid
+              container
+              direction="column"
+              justify="center"
+              alignItems="center"
+              style={{ minHeight: '100vh' }}
+            >
+              <Grid item xs={3}>
+                <Button onClick={handleClose}>Cancel</Button>
+              </Grid>
+            </Grid>
+          )} */}
+          {isLoading && (
+            <Grid
+              container
+              direction="column"
+              justify="center"
+              alignItems="center"
+              style={{ minHeight: '100vh' }}
+            >
+              <Grid item xs={3}>
+                <LoadingSpinner />
+                <Button onClick={handleClose}>Cancel</Button>
+              </Grid>
+            </Grid>
+          )}
+          {!isLoading && pieceId && (
+            <React.Fragment>
+              <Container maxWidth="sm">
+                <PieceCard pieceId={pieceId} />
+              </Container>
+              <Button onClick={handleClose}>CLOSE</Button>
+            </React.Fragment>
+          )}
+        </Dialog>
+      </Container>
+      <Hidden mdUp>
+        <AppBar className={classes.bottomBar}>
+          <Fab
+            color="primary"
+            aria-label="add"
+            className={classes.fabButton}
+            onClick={pickImageHandler}
+          >
+            <CameraAltIcon />
+          </Fab>
+        </AppBar>
       </Hidden>
-    </Container>
+    </React.Fragment>
   )
 }
 

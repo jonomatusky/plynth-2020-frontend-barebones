@@ -11,6 +11,7 @@ import {
 import RestoreIcon from '@material-ui/icons/Restore'
 import AlbumIcon from '@material-ui/icons/Album'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
+import FlashOnIcon from '@material-ui/icons/FlashOn'
 
 import { NavLink } from 'react-router-dom'
 
@@ -96,14 +97,6 @@ const MainHeader = props => {
             }}
           >
             <BottomNavigationAction
-              label="Activity"
-              icon={<RestoreIcon />}
-              component={NavLink}
-              to={'/pickups'}
-              activeClassName="Mui-selected"
-              classes={{ root: classes.navBarActionRoot }}
-            />
-            <BottomNavigationAction
               label="Collection"
               icon={<AlbumIcon />}
               component={NavLink}
@@ -112,16 +105,16 @@ const MainHeader = props => {
               classes={{ root: classes.navBarActionRoot }}
             />
             <BottomNavigationAction
-              label="Create"
-              icon={<AddCircleIcon />}
+              label="Activity"
+              icon={<FlashOnIcon />}
               component={NavLink}
-              to={'/create'}
+              to={'/pickups'}
               activeClassName="Mui-selected"
               classes={{ root: classes.navBarActionRoot }}
             />
             <BottomNavigationAction
-              label="My Pieces"
-              icon={<AlbumIcon />}
+              label="Create"
+              icon={<AddCircleIcon />}
               component={NavLink}
               to={'/pieces'}
               activeClassName="Mui-selected"
