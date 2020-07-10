@@ -14,6 +14,7 @@ import {
 import { useHttpClient } from '../../hooks/http-hook'
 import CameraAltIcon from '@material-ui/icons/CameraAlt'
 import PieceCard from '../../../pieces/components/PieceCard'
+import ActionBar from '../Navigation/ActionBar'
 import LoadingSpinner from './LoadingSpinner'
 
 import { makeStyles } from '@material-ui/core/styles'
@@ -136,58 +137,44 @@ const ScanModal = () => {
 
   return (
     <React.Fragment>
-      <Container maxWidth="sm">
-        <input
-          id="image"
-          ref={filePickerRef}
-          style={{ display: 'none' }}
-          type="file"
-          accepts=".jpg, .png, .jpeg"
-          onChange={pickHandler}
-        />
-        <Dialog
-          fullScreen
-          open={open}
-          onClose={handleClose}
-          TransitionComponent={Transition}
-        >
-          {/* {!file && !isLoading && (
-            <Grid
-              container
-              direction="column"
-              justify="center"
-              alignItems="center"
-              style={{ minHeight: '100vh' }}
-            >
-              <Grid item xs={3}>
-                <Button onClick={handleClose}>Cancel</Button>
-              </Grid>
+      <input
+        id="image"
+        ref={filePickerRef}
+        style={{ display: 'none' }}
+        type="file"
+        accepts=".jpg, .png, .jpeg"
+        onChange={pickHandler}
+      />
+      <Dialog
+        fullScreen
+        open={open}
+        onClose={handleClose}
+        TransitionComponent={Transition}
+      >
+        {isLoading && (
+          <Grid
+            container
+            direction="column"
+            justify="center"
+            alignItems="center"
+            style={{ minHeight: '100vh' }}
+          >
+            <Grid item xs={3}>
+              <LoadingSpinner />
+              <Button onClick={handleClose}>Cancel</Button>
             </Grid>
-          )} */}
-          {isLoading && (
-            <Grid
-              container
-              direction="column"
-              justify="center"
-              alignItems="center"
-              style={{ minHeight: '100vh' }}
-            >
-              <Grid item xs={3}>
-                <LoadingSpinner />
-                <Button onClick={handleClose}>Cancel</Button>
-              </Grid>
-            </Grid>
-          )}
-          {!isLoading && pieceId && (
-            <React.Fragment>
-              <Container maxWidth="sm">
-                <PieceCard pieceId={pieceId} />
-              </Container>
-              <Button onClick={handleClose}>CLOSE</Button>
-            </React.Fragment>
-          )}
-        </Dialog>
-      </Container>
+          </Grid>
+        )}
+        {!isLoading && pieceId && (
+          <React.Fragment>
+            <PieceCard pieceId={pieceId} onClose={handleClose} />
+            <ActionBar
+              primaryAction={handleClose}
+              primaryLabel="Add to Collection +"
+            />
+          </React.Fragment>
+        )}
+      </Dialog>
       <Hidden mdUp>
         <AppBar className={classes.bottomBar}>
           <Fab

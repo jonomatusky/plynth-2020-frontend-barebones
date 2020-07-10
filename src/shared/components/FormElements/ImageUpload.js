@@ -1,10 +1,28 @@
 import React, { useState, useEffect, useRef } from 'react'
 
+import { Box, Grid } from '@material-ui/core'
+
 import { useHttpClient } from '../../hooks/http-hook'
 
-import Button from './Button'
+import ActionButton from '../UIElements/ActionButton'
 import LoadingSpinner from '../UIElements/LoadingSpinner'
-import './ImageUpload.css'
+
+import styled from 'styled-components'
+
+import theme from '../../../theme'
+
+const ImagePreview = styled(Box)`
+  height: 90vw;
+  max-height: 400px;
+  background: #1b1d1b;
+  border: 1px solid ${theme.palette.secondary.main};
+`
+
+const Image = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`
 
 const ImageUpload = props => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
@@ -73,32 +91,40 @@ const ImageUpload = props => {
   }
 
   return (
-    <div className="form-control">
-      <input
-        id={props.id}
-        ref={filePickerRef}
-        style={{ display: 'none' }}
-        type="file"
-        accepts=".jpg, .png, .jpeg"
-        onChange={pickHandler}
-      />
-      <div className={`image-upload ${props.center && 'center'}`}>
-        <div className="image-upload__preview">
-          {previewUrl && <img src={previewUrl} alt="Preview" />}
-          {!previewUrl && (
-            <Button type="button" onClick={pickImageHandler}>
-              UPLOAD IMAGE
-            </Button>
-          )}
-        </div>
-        {previewUrl && (
-          <Button type="button--small" onClick={pickImageHandler}>
-            CHANGE IMAGE
-          </Button>
-        )}
-      </div>
-      {!isValid && <p>{props.errorText}</p>}
-    </div>
+    <React.Fragment>
+      <Grid item>
+        <input
+          id={props.id}
+          ref={filePickerRef}
+          style={{ display: 'none' }}
+          type="file"
+          accepts=".jpg, .png, .jpeg"
+          onChange={pickHandler}
+        />
+      </Grid>
+      <Grid item>
+        <ImagePreview>
+          {previewUrl && <Image src={previewUrl} alt="Preview" />}
+          <ActionButton
+            variant="text"
+            onClick={pickImageHandler}
+            label="Upload Image"
+            color="secondary"
+            height="100%"
+            size="large"
+            style={{ height: '100%' }}
+            disabled={!!previewUrl}
+          />
+        </ImagePreview>
+      </Grid>
+      <Grid item>
+        <ActionButton
+          onClick={pickImageHandler}
+          label="Change Image"
+          disabled={!previewUrl}
+        />
+      </Grid>
+    </React.Fragment>
   )
 }
 

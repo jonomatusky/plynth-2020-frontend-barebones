@@ -3,14 +3,12 @@ import { useHistory } from 'react-router-dom'
 
 import { useHttpClient } from '../../shared/hooks/http-hook'
 
-import { Container } from '@material-ui/core'
+import { Container, Grid } from '@material-ui/core'
 
 import PageTitle from '../../shared/components/UIElements/PageTitle'
 import ImageUpload from '../../shared/components/FormElements/ImageUpload'
-import Button from '../../shared/components/FormElements/Button'
+import ActionButton from '../../shared/components/UIElements/ActionButton'
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
-
-// import './NewImage.css'
 
 const title = 'Create New Piece'
 
@@ -55,14 +53,20 @@ const NewImage = () => {
   }
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="xs">
       <PageTitle title={title} />
-      <form className="image-form" onSubmit={imageSubmitHandler}>
+      <form onSubmit={imageSubmitHandler}>
         {isLoading && <LoadingSpinner asOverlay />}
-        <ImageUpload center id="image" onInput={inputHandler} />
-        <Button type="submit" disabled={!imageIsValid}>
-          CREATE PIECE
-        </Button>
+        <Grid container direction="column" spacing={2}>
+          <ImageUpload center id="image" onInput={inputHandler} />
+          <Grid item>
+            <ActionButton
+              type="submit"
+              disabled={!imageIsValid}
+              label="Create Piece"
+            />
+          </Grid>
+        </Grid>
       </form>
     </Container>
   )

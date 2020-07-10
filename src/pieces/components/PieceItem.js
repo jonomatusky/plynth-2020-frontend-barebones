@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   Grid,
@@ -7,7 +7,9 @@ import {
   CardContent,
   CardMedia,
   Typography,
+  Button,
 } from '@material-ui/core'
+import PieceModal from './PieceModal'
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() => ({
@@ -31,12 +33,22 @@ const useStyles = makeStyles(() => ({
 }))
 
 const PieceItem = props => {
+  const [open, setOpen] = useState()
   const classes = useStyles()
+
+  const handleClickOpen = () => {
+    setOpen(true)
+  }
+
+  const handleClose = value => {
+    setOpen(false)
+  }
 
   return (
     <Grid item xs={12}>
+      <PieceModal open={open} onClose={handleClose} pieceId={props.id} />
       <Card>
-        <CardActionArea component={Link} to={`/pieces/${props.id}`}>
+        <CardActionArea onClick={handleClickOpen}>
           <Grid container wrap={'nowrap'}>
             <Grid item>
               <div className={classes.image}>

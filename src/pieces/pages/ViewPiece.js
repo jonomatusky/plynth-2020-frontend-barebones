@@ -5,8 +5,6 @@ import { Container } from '@material-ui/core'
 
 import PieceCard from '../components/PieceCard'
 
-const { REACT_APP_BACKEND_URL, REACT_APP_ASSET_URL } = process.env
-
 const ViewPiece = () => {
   const pieceId = useParams().pieceId
   return (

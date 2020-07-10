@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useHttpClient } from '../../shared/hooks/http-hook'
 
-import { Container } from '@material-ui/core'
+import { Container, Box } from '@material-ui/core'
 
 import PageTitle from '../../shared/components/UIElements/PageTitle'
 import ScanButton from '../../shared/components/UIElements/ScanButton'
@@ -32,6 +32,7 @@ const Scans = () => {
         {isLoading && <LoadingSpinner asOverlay />}
         <PageTitle title={title} />
         {!isLoading && loadedScans && <ScanList items={loadedScans} />}
+        <Box height="4rem"></Box>
       </Container>
       <ScanButton />
     </React.Fragment>

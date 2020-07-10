@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useHttpClient } from '../../shared/hooks/http-hook'
 
-import { Container } from '@material-ui/core'
+import { Container, Box } from '@material-ui/core'
 
 import PageTitle from '../../shared/components/UIElements/PageTitle'
 import PieceList from '../components/PieceList'
@@ -33,6 +33,7 @@ const MyCollection = () => {
       <PageTitle title={title} />
       {isLoading && <LoadingSpinner asOverlay />}
       {!isLoading && loadedPieces && <PieceList items={loadedPieces} />}
+      <Box height="4rem"></Box>
     </Container>
   )
 }
