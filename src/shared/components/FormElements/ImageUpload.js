@@ -105,16 +105,22 @@ const ImageUpload = props => {
       <Grid item>
         <ImagePreview>
           {previewUrl && <Image src={previewUrl} alt="Preview" />}
-          <ActionButton
-            variant="text"
-            onClick={pickImageHandler}
-            label="Upload Image"
-            color="secondary"
-            height="100%"
-            size="large"
-            style={{ height: '100%' }}
-            disabled={!!previewUrl}
-          />
+          {isLoading && (
+            <Box height="100%" align="center">
+              <LoadingSpinner asOverlay />
+            </Box>
+          )}
+          {!previewUrl && !isLoading && (
+            <ActionButton
+              variant="text"
+              onClick={pickImageHandler}
+              label="Upload Image"
+              color="secondary"
+              height="100%"
+              size="large"
+              style={{ height: '100%' }}
+            />
+          )}
         </ImagePreview>
       </Grid>
       <Grid item>

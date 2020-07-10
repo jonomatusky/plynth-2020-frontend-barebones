@@ -6,9 +6,11 @@ import {
   Dialog,
   Container,
   Grid,
+  Box,
   Button,
   Slide,
   Hidden,
+  Typography,
 } from '@material-ui/core'
 
 import { useHttpClient } from '../../hooks/http-hook'
@@ -123,7 +125,8 @@ const ScanModal = () => {
             'Content-Type': 'application/json',
           }
         )
-        setPieceId(res.pieceId)
+
+        if (res) setPieceId(res.pieceId)
       } catch (err) {
         console.log(err)
       }
@@ -151,29 +154,57 @@ const ScanModal = () => {
         onClose={handleClose}
         TransitionComponent={Transition}
       >
-        {isLoading && (
-          <Grid
-            container
-            direction="column"
-            justify="center"
-            alignItems="center"
-            style={{ minHeight: '100vh' }}
-          >
-            <Grid item xs={3}>
-              <LoadingSpinner />
-              <Button onClick={handleClose}>Cancel</Button>
+        <Container maxwidth="xs">
+          {isLoading && (
+            <Grid
+              container
+              direction="column"
+              justify="center"
+              alignItems="center"
+              style={{ minHeight: '100vh' }}
+            >
+              <Grid item xs={3}>
+                <Box justify="center" align="center">
+                  <LoadingSpinner />
+                </Box>
+                <Typography>Searching...</Typography>
+                <Button onClick={handleClose}>Cancel</Button>
+              </Grid>
             </Grid>
-          </Grid>
-        )}
-        {!isLoading && pieceId && (
-          <React.Fragment>
-            <PieceCard pieceId={pieceId} onClose={handleClose} />
-            <ActionBar
-              primaryAction={handleClose}
-              primaryLabel="Add to Collection +"
-            />
-          </React.Fragment>
-        )}
+          )}
+          {!isLoading && pieceId && (
+            <React.Fragment>
+              <PieceCard pieceId={pieceId} onClose={handleClose} />
+              <Box height="4rem"></Box>
+              <ActionBar
+                primaryAction={handleClose}
+                primaryLabel="Add to Collection +"
+              />
+            </React.Fragment>
+          )}
+          {!isLoading && !pieceId && (
+            <React.Fragment>
+              <Grid
+                container
+                direction="column"
+                justify="center"
+                alignItems="center"
+                style={{ minHeight: '80vh' }}
+              >
+                <Grid item alignItems="center">
+                  <Box textAlign="center">
+                    <Typography variant="h4" align="text">
+                      Sorry! We couldn't find a match. Scan again or add a new
+                      piece.
+                    </Typography>
+                  </Box>
+                </Grid>
+              </Grid>
+              <Box height="4rem"></Box>
+              <ActionBar primaryAction={handleClose} primaryLabel="Close" />
+            </React.Fragment>
+          )}
+        </Container>
       </Dialog>
       <Hidden mdUp>
         <AppBar className={classes.bottomBar}>

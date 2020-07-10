@@ -2,13 +2,13 @@ import React from 'react'
 import {
   AppBar,
   Toolbar,
+  Box,
   Button,
   Hidden,
   BottomNavigation,
   BottomNavigationAction,
 } from '@material-ui/core'
 
-import RestoreIcon from '@material-ui/icons/Restore'
 import AlbumIcon from '@material-ui/icons/Album'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import FlashOnIcon from '@material-ui/icons/FlashOn'
@@ -43,45 +43,43 @@ const MainHeader = props => {
       <Hidden smDown>
         <AppBar position="fixed">
           <Toolbar>
-            <Button
-              color="inherit"
-              component={NavLink}
-              activeClassName="Mui-selected"
-              to={'/pickups'}
-            >
-              Activity
-            </Button>
-            <Button
-              color="inherit"
-              component={NavLink}
-              activeClassName="Mui-selected"
-              to={'/pickup'}
-            >
-              Pickup
-            </Button>
-            <Button
-              color="inherit"
-              component={NavLink}
-              activeClassName="Mui-selected"
-              to={'/create'}
-            >
-              Create
-            </Button>
-            <Button
-              color="inherit"
-              component={NavLink}
-              activeClassName="Mui-selected"
-              to={'/pieces'}
-            >
-              My Pieces
-            </Button>
-            <Button
-              color="inherit"
-              component={NavLink}
-              activeClassName="Mui-selected"
-              to={'/collection'}
-            >
-              Collection
+            <Box flexGrow={1}>
+              <Button
+                color="inherit"
+                component={NavLink}
+                activeClassName="Mui-selected"
+                to={'/pickups'}
+              >
+                Activity
+              </Button>
+              <Button
+                color="inherit"
+                component={NavLink}
+                activeClassName="Mui-selected"
+                to={'/collection'}
+              >
+                Collection
+              </Button>
+              <Button
+                color="inherit"
+                component={NavLink}
+                activeClassName="Mui-selected"
+                to={'/create'}
+              >
+                Create
+              </Button>
+              <Button
+                color="inherit"
+                component={NavLink}
+                activeClassName="Mui-selected"
+                to={'/pieces'}
+              >
+                My Pieces
+              </Button>
+            </Box>
+
+            <Button variant="contained" component={NavLink} to={'/pickup'}>
+              New Pickup
             </Button>
           </Toolbar>
         </AppBar>

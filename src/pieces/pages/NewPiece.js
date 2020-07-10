@@ -190,7 +190,7 @@ const NewPiece = () => {
                             <Input
                               type="text"
                               name={`${fieldName}.url`}
-                              ref={register}
+                              ref={register({ required: true })}
                             />
                           </Label>
                         </Box>
@@ -202,7 +202,7 @@ const NewPiece = () => {
                             <Input
                               type="text"
                               name={`${fieldName}.name`}
-                              ref={register}
+                              ref={register({ required: true })}
                             />
                           </Label>
                         </Box>
