@@ -10,12 +10,12 @@ const StyledButton = styled(Button)`
 `
 
 const ActionButton = props => {
-  const { fullWidth, label, ...other } = props
+  const { fullWidth, label, variant, ...other } = props
   return (
     <StyledButton
-      color="primary"
+      color={variant && variant === 'text' ? 'default' : 'primary'}
       fullWidth={fullWidth || true}
-      variant="contained"
+      variant={variant || 'contained'}
       {...other}
     >
       {label}

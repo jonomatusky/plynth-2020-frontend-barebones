@@ -11,6 +11,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const ViewPiece = props => {
   const { open, onClose, pieceId } = props
+
+  console.log(pieceId)
+
   return (
     <Dialog
       fullScreen

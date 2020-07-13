@@ -33,7 +33,7 @@ const useStyles = makeStyles(() => ({
 }))
 
 const PieceItem = props => {
-  const [open, setOpen] = useState()
+  const [open, setOpen] = useState(false)
   const classes = useStyles()
 
   const handleClickOpen = () => {
@@ -46,7 +46,12 @@ const PieceItem = props => {
 
   return (
     <Grid item xs={12}>
-      <PieceModal open={open} onClose={handleClose} pieceId={props.id} />
+      <PieceModal
+        open={open}
+        onClose={handleClose}
+        pieceId={props.id}
+        key={props.id}
+      />
       <Card>
         <CardActionArea onClick={handleClickOpen}>
           <Grid container wrap={'nowrap'}>

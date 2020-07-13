@@ -17,15 +17,23 @@ import { NavLink } from 'react-router-dom'
 
 import { makeStyles } from '@material-ui/core/styles'
 
+const isInStandaloneMode = () => {
+  return 'standalone' in window.navigator && window.navigator.standalone
+}
+
+console.log(isInStandaloneMode())
+
 const useStyles = makeStyles(theme => ({
   bottomBar: {
     top: 'auto',
     bottom: 0,
+    background: theme.palette.background.default,
   },
   navBarRoot: {
     background: theme.palette.background.default,
     borderTop: 1,
     borderColor: theme.palette.secondary.main,
+    marginBottom: isInStandaloneMode() ? theme.spacing(4) : theme.spacing(0),
   },
   navBarActionRoot: {
     color: theme.palette.text.primary,

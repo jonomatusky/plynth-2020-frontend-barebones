@@ -102,6 +102,7 @@ const BarRow = styled(Grid)`
 
 const BarTitle = styled(Grid)`
   font-weight: bold;
+  min-height: 1.5rem;
 `
 
 const BarAction = styled(Grid)``
@@ -174,11 +175,13 @@ const PieceCard = props => {
             <BarTitle>
               <Typography color="inherit">{loadedPiece.issue || ''}</Typography>
             </BarTitle>
-            <Grid>
-              <Button color="inherit" onClick={props.onClose}>
-                Close X
-              </Button>
-            </Grid>
+            {!!props.onClose && (
+              <Grid>
+                <Button color="inherit" onClick={props.onClose}>
+                  Close X
+                </Button>
+              </Grid>
+            )}
           </BarRow>
           <TitleRow container>
             <ImageBox item xs={6}>
@@ -203,7 +206,7 @@ const PieceCard = props => {
           </CardRow>
           {loadedPiece.links.map(link => {
             return (
-              <LinkRow>
+              <LinkRow key={link._id}>
                 <ActionButton
                   target="_blank"
                   href={link.url}

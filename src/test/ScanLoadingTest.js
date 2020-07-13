@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 
+import loadingImage from '../images/Plynth-Loading-GIF.gif'
+import foundImage from '../images/Plynth-Loading-Final.png'
+
 import {
   Fab,
   AppBar,
@@ -15,19 +18,14 @@ import {
   Grow,
 } from '@material-ui/core'
 
-import { useHttpClient } from '../../hooks/http-hook'
+import { useHttpClient } from '../shared/hooks/http-hook'
 import CameraAltIcon from '@material-ui/icons/CameraAlt'
-import PieceCard from '../../../pieces/components/PieceCard'
-import ActionBar from '../Navigation/ActionBar'
-import NotificationModal from './NotificationModal'
+import LoadingSpinner from '../shared/components/UIElements/LoadingSpinner'
 
 import { makeStyles } from '@material-ui/core/styles'
 import styled from 'styled-components'
 
-import theme from '../../../theme'
-
-import loadingImage from '../../../images/Plynth-Loading-GIF.gif'
-import foundImage from '../../../images/Plynth-Loading-Final.png'
+import theme from '../theme'
 
 const { REACT_APP_BACKEND_URL } = process.env
 
@@ -61,20 +59,29 @@ const LoadingImage = styled.img`
   width: 50px;
   margin: 2rem;
 `
+const FoundImage = styled.img`
+  height: 75px;
+  width: 75px;
+  margin: 2rem;
+`
 
-const ScanModal = () => {
+const FoundScreen = styled(Box)`
+  background-color: white;
+  color: ${theme.palette.primary.main};
+  fontWeight="bold";
+`
+
+const ScanLoadingTest = () => {
   const [open, setOpen] = useState(false)
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
   const [foundScreen, setFoundScreen] = useState(false)
   const [file, setFile] = useState(null)
   const [pieceId, setPieceId] = useState()
   const [isValid, setIsValid] = useState()
+  const [isFound, setIsFound] = useState()
 
   const handleClose = () => {
     setOpen(false)
-    setPieceId()
-    setFile(null)
-    setIsValid(false)
   }
 
   const classes = useStyles()
@@ -82,14 +89,14 @@ const ScanModal = () => {
   const filePickerRef = useRef()
 
   useEffect(() => {
-    if (!isLoading && !!pieceId) {
-      setFoundScreen(true)
+    if (foundScreen) {
+      // setFoundScreen(true)
       const timer = setTimeout(() => {
         setFoundScreen(false)
       }, 500)
       return () => clearTimeout(timer)
     }
-  }, [isLoading, pieceId])
+  }, [isLoading, pieceId, foundScreen])
 
   // opens the file picker as soon as the modal is opened
 
@@ -165,6 +172,15 @@ const ScanModal = () => {
     }
   }
 
+  const openOnClick = event => {
+    setFoundScreen(false)
+    setOpen(true)
+    const timer = setTimeout(() => {
+      setFoundScreen(true)
+    }, 1000)
+    return () => clearTimeout(timer)
+  }
+
   const pickImageHandler = event => {
     event.preventDefault()
     filePickerRef.current.click()
@@ -180,15 +196,14 @@ const ScanModal = () => {
         accepts=".jpg, .png, .jpeg"
         onChange={pickHandler}
       />
-      <NotificationModal fullscreen open={foundScreen} />
       <Dialog
         fullScreen
         open={open}
         onClose={handleClose}
         TransitionComponent={Transition}
       >
-        <Container maxwidth="xs">
-          {isLoading && (
+        <Container maxwidth="xs" disableGutters={true}>
+          {!foundScreen && (
             <Grid
               container
               direction="column"
@@ -200,45 +215,29 @@ const ScanModal = () => {
                 <LoadingImage src={loadingImage} />
                 <Typography variant="h6">Finding Your Piece</Typography>
                 <Button onClick={handleClose}>Cancel</Button>
-                <ActionBar
-                  secondaryAction={handleClose}
-                  secondaryLabel="Cancel"
-                />
               </Grid>
             </Grid>
           )}
-          {!isLoading && !pieceId && (
-            <React.Fragment>
+          <Fade in={foundScreen} timeout={500}>
+            <FoundScreen>
               <Grid
                 container
                 direction="column"
                 justify="center"
                 alignItems="center"
-                style={{ minHeight: '80vh' }}
+                style={{ minHeight: '100vh' }}
               >
-                <Grid item>
-                  <Box textAlign="center">
-                    <Typography variant="h6" align="center">
-                      Sorry! We couldn't find a match. Scan again or add a new
-                      piece.
-                    </Typography>
-                  </Box>
-                </Grid>
+                <Grow in={foundScreen} timeout={500}>
+                  <Grid item xs={3} align="center">
+                    <Box fontWeight="bold">
+                      <FoundImage src={foundImage} />
+                      {/* <Typography variant="h5">FOUND!</Typography> */}
+                    </Box>
+                  </Grid>
+                </Grow>
               </Grid>
-              <Box height="4rem"></Box>
-              <ActionBar primaryAction={handleClose} primaryLabel="Close" />
-            </React.Fragment>
-          )}
-          {!isLoading && pieceId && (
-            <React.Fragment>
-              <PieceCard pieceId={pieceId} onClose={handleClose} />
-              <Box height="4rem"></Box>
-              <ActionBar
-                primaryAction={handleClose}
-                primaryLabel="Add to Collection +"
-              />
-            </React.Fragment>
-          )}
+            </FoundScreen>
+          </Fade>
         </Container>
       </Dialog>
       <Hidden mdUp>
@@ -247,7 +246,7 @@ const ScanModal = () => {
             color="primary"
             aria-label="add"
             className={classes.fabButton}
-            onClick={pickImageHandler}
+            onClick={openOnClick}
           >
             <CameraAltIcon />
           </Fab>
@@ -257,4 +256,4 @@ const ScanModal = () => {
   )
 }
 
-export default ScanModal
+export default ScanLoadingTest
