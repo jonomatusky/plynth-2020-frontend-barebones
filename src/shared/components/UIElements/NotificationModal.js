@@ -10,7 +10,7 @@ import foundImage from '../../../images/Plynth-Loading-Final.png'
 const FoundImage = styled.img`
   height: 75px;
   width: 75px;
-  margin: 2rem;
+  margin-bottom: 2rem;
 `
 
 const FoundScreen = styled(Box)`
@@ -36,7 +36,7 @@ const NotificationModal = props => {
         >
           <Grow in={props.open} timeout={500}>
             <Grid item xs={3} align="center">
-              <Box>
+              <Box align="center">
                 <FoundImage src={foundImage} />
                 <Typography variant="h5">
                   <Box fontWeight="fontWeightBold">{props.message}</Box>
