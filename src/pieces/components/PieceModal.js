@@ -3,7 +3,6 @@ import React from 'react'
 import { Container, Box, Dialog, Slide } from '@material-ui/core'
 
 import PieceCard from '../components/PieceCard'
-import ActionBar from '../../shared/components/Navigation/ActionBar'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
