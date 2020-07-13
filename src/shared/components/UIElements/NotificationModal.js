@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Dialog, Grid, Box, Fade, Grow } from '@material-ui/core'
+import { Dialog, Grid, Box, Typography, Fade, Grow } from '@material-ui/core'
 
 import styled from 'styled-components'
 import theme from '../../../theme'
@@ -36,9 +36,11 @@ const NotificationModal = props => {
         >
           <Grow in={props.open} timeout={500}>
             <Grid item xs={3} align="center">
-              <Box fontWeight="bold">
+              <Box>
                 <FoundImage src={foundImage} />
-                {/* <Typography variant="h5">FOUND!</Typography> */}
+                <Typography variant="h5">
+                  <Box fontWeight="fontWeightBold">{props.message}</Box>
+                </Typography>
               </Box>
             </Grid>
           </Grow>

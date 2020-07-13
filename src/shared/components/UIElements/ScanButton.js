@@ -180,7 +180,7 @@ const ScanModal = () => {
         accepts=".jpg, .png, .jpeg"
         onChange={pickHandler}
       />
-      <NotificationModal fullscreen open={foundScreen} />
+      <NotificationModal fullscreen open={foundScreen} message="FOUND!" />
       <Dialog
         fullScreen
         open={open}
@@ -198,8 +198,7 @@ const ScanModal = () => {
             >
               <Grid item xs={3} align="center">
                 <LoadingImage src={loadingImage} />
-                <Typography variant="h6">Finding Your Piece</Typography>
-                <Button onClick={handleClose}>Cancel</Button>
+                <Typography variant="h5">Searching...</Typography>
                 <ActionBar
                   secondaryAction={handleClose}
                   secondaryLabel="Cancel"

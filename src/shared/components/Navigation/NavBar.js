@@ -21,8 +21,6 @@ const isInStandaloneMode = () => {
   return 'standalone' in window.navigator && window.navigator.standalone
 }
 
-console.log(isInStandaloneMode())
-
 const useStyles = makeStyles(theme => ({
   bottomBar: {
     top: 'auto',
