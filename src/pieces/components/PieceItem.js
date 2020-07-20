@@ -38,8 +38,9 @@ const PieceItem = props => {
 
   const handleClickOpen = () => {
     setOpen(true)
-    props.setPiece(props.id)
-    localStorage.setItem('pieceId', props.id)
+    if (props.setPieces) {
+      props.setPieces(p => p.concat(props.id))
+    }
   }
 
   const handleClose = value => {

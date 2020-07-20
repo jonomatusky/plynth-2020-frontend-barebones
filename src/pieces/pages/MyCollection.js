@@ -22,7 +22,6 @@ const MyCollection = () => {
           `${REACT_APP_BACKEND_URL}/users/me/collection`
         )
         setLoadedPieces(responseData.pieces)
-        console.log(responseData)
       } catch (err) {}
     }
     fetchPieces()

@@ -167,10 +167,14 @@ const ScanButtonDemo = props => {
       //   tgs: '5f10739c1430030017ef581e',
       // }
 
+      console.log(props.pieces)
+
       setIsLoading(true)
-      await timeout(2300)
+      await timeout(2500 + Math.floor(Math.random() * 1000))
       setIsLoading(false)
-      setPieceId(localStorage.getItem('pieceId'))
+      setPieceId(props.piece)
+      console.log('Piece id: ' + props.piece)
+      props.setPieces(p => p.slice(1))
       // if (counter === 1) {
       //   setPieceId(pieces.love)
       // }

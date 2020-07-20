@@ -15,7 +15,8 @@ const title = 'My Collection'
 const MyCollection = () => {
   const [loadedPieces, setLoadedPieces] = useState()
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
-  const [piece, setPiece] = useState()
+  const [pieces, setPieces] = useState([])
+  // const [count, setCount] = useState(0)
 
   useEffect(() => {
     const fetchPieces = async () => {
@@ -24,12 +25,16 @@ const MyCollection = () => {
           `${REACT_APP_BACKEND_URL}/users/me/collection`
         )
         setLoadedPieces(responseData.pieces)
-        setPiece(loadedPieces[0].id)
-        console.log(responseData)
+        // setPiece(loadedPieces[0].id)
+        localStorage.clear()
       } catch (err) {}
     }
     fetchPieces()
   }, [sendRequest])
+
+  useEffect(() => {
+    console.log('pieces: ' + pieces)
+  }, [pieces])
 
   return (
     <React.Fragment>
@@ -37,11 +42,11 @@ const MyCollection = () => {
         <PageTitle title={title} />
         {isLoading && <LoadingSpinner asOverlay />}
         {!isLoading && loadedPieces && (
-          <PieceList items={loadedPieces} setPiece={setPiece} />
+          <PieceList items={loadedPieces} setPieces={setPieces} />
         )}
         <Box height="4rem"></Box>
       </Container>
-      <ScanButtonDemo piece={piece} />
+      <ScanButtonDemo piece={pieces[0]} setPieces={setPieces} />
     </React.Fragment>
   )
 }
