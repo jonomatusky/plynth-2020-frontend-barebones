@@ -171,7 +171,6 @@ const ScanButtonDemo = props => {
       await timeout(2300)
       setIsLoading(false)
       setPieceId(localStorage.getItem('pieceId'))
-
       // if (counter === 1) {
       //   setPieceId(pieces.love)
       // }
