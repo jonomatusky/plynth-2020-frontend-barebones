@@ -14,6 +14,7 @@ import NewScan from './scans/pages/NewScan'
 import Scans from './scans/pages/Scans'
 import MyCollection from './pieces/pages/MyCollection'
 import ScanModalTest from './test/ScanModalTest'
+import Demo from './test/Demo'
 
 import NavBar from './shared/components/Navigation/NavBar'
 
@@ -46,6 +47,9 @@ const App = () => {
       </Route>
       <Route path="/test" exact>
         <ScanModalTest />
+      </Route>
+      <Route path="/demo" exact>
+        <Demo />
       </Route>
       <Redirect to="/pickups" />
     </Switch>

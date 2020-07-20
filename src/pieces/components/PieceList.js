@@ -23,6 +23,7 @@ const PieceList = props => {
           image={`${REACT_APP_ASSET_URL}/${piece.imageFilepath}`}
           title={piece.title}
           creator={piece.isCreators ? piece.creators[0] : piece.owner}
+          setPiece={props.setPiece}
         />
       ))}
     </Grid>

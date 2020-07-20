@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import {
   Grid,
@@ -38,6 +38,8 @@ const PieceItem = props => {
 
   const handleClickOpen = () => {
     setOpen(true)
+    props.setPiece(props.id)
+    localStorage.setItem('pieceId', props.id)
   }
 
   const handleClose = value => {
