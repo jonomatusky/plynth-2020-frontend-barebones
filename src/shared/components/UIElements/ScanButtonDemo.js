@@ -91,7 +91,7 @@ const ScanButtonDemo = props => {
       }, 500)
       return () => clearTimeout(timer)
     }
-  }, [isLoading, pieceId])
+  }, [isLoading])
 
   // opens the file picker as soon as the modal is opened
 
