@@ -142,7 +142,7 @@ const FieldSet = styled(Grid)`
 
 const PieceForm = props => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
-  const [imageFilePath, setImageFilePath] = useState()
+  const [imageFilePath, setImageFilePath] = useState(null)
 
   // const { register, handleSubmit, watch, errors } = useForm()
 
@@ -154,6 +154,12 @@ const PieceForm = props => {
     creatorDemo: '',
     links: [],
   })
+
+  useEffect(() => {
+    if (!!props.imageFilePath) {
+      setImageFilePath(props.imageFilePath)
+    }
+  }, [props])
 
   useEffect(() => {
     const fetchPiece = async () => {

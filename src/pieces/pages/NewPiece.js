@@ -72,17 +72,20 @@ const NewPiece = () => {
     <Container maxWidth="xs">
       <PageTitle title={title} />
       <Grid container direction="column">
-        <Grid container justify="center">
+        {/* <Grid container justify="center">
           <ImageBox>
             <Image
-              src={`${ASSET_URL}/${imageData.id}.${imageData.ext}`}
+              src={`${ASSET_URL}/`}
               alt="Preview"
             />
           </ImageBox>
-        </Grid>
+        </Grid> */}
         <Grid item>
           {isLoading && <LoadingSpinner asOverlay />}
-          <PieceForm onSubmit={onSubmit} />
+          <PieceForm
+            onSubmit={onSubmit}
+            imageFilePath={`${imageData.id}.${imageData.ext}`}
+          />
         </Grid>
       </Grid>
       <Box height="5rem" />
