@@ -74,9 +74,7 @@ const PieceItem = props => {
                     {props.title}
                   </Typography>
                   <Typography variant="subtitle1" color="textSecondary">
-                    {`by ${
-                      props.creator ? props.creator.displayName : 'Anonymous'
-                    }`}
+                    {`by ${props.creatorDemo || 'Anonymous'}`}
                   </Typography>
                 </CardContent>
               </div>

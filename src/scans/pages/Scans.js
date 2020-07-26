@@ -34,7 +34,6 @@ const Scans = () => {
         {!isLoading && loadedScans && <ScanList items={loadedScans} />}
         <Box height="4rem"></Box>
       </Container>
-      <ScanButton />
     </React.Fragment>
   )
 }

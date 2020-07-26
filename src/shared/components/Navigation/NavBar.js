@@ -12,6 +12,7 @@ import {
 import AlbumIcon from '@material-ui/icons/Album'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import FlashOnIcon from '@material-ui/icons/FlashOn'
+import ScanButton from '../UIElements/ScanButton'
 
 import { NavLink } from 'react-router-dom'
 
@@ -109,12 +110,13 @@ const MainHeader = props => {
               classes={{ root: classes.navBarActionRoot }}
             />
             <BottomNavigationAction
-              label="Activity"
-              icon={<FlashOnIcon />}
-              component={NavLink}
-              to={'/pickups'}
-              activeClassName="Mui-selected"
-              classes={{ root: classes.navBarActionRoot }}
+              // label="Activity"
+              // icon={<FlashOnIcon />}
+              // component={NavLink}
+              // to={'/pickups'}
+              // activeClassName="Mui-selected"
+              // classes={{ root: classes.navBarActionRoot }}
+              disabled={true}
             />
             <BottomNavigationAction
               label="Create"
@@ -125,6 +127,7 @@ const MainHeader = props => {
               classes={{ root: classes.navBarActionRoot }}
             />
           </BottomNavigation>
+          <ScanButton />
         </AppBar>
       </Hidden>
     </React.Fragment>

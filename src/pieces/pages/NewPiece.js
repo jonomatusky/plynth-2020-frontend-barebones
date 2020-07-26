@@ -80,12 +80,12 @@ const NewPiece = () => {
             />
           </ImageBox>
         </Grid>
-        <Grid container direction="column">
+        <Grid item>
           {isLoading && <LoadingSpinner asOverlay />}
           <PieceForm onSubmit={onSubmit} />
         </Grid>
       </Grid>
-      <Box height="10rem"></Box>
+      <Box height="5rem" />
     </Container>
   )
 }

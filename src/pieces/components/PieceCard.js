@@ -12,79 +12,6 @@ import theme from '../../theme'
 
 const { REACT_APP_BACKEND_URL, REACT_APP_ASSET_URL } = process.env
 
-// const PieceContainer = styled.div`
-//   display: flex;
-//   justify-content: center;
-// `
-
-// const CenterHorizontal = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   width: 90%;
-// `
-
-// const CenterVertical = styled.div`
-//   display: flex;
-//   height: 90%;
-// `
-
-// const PieceBox = styled.div`
-//   border: 1px;
-//   border-style: solid;
-//   border-color: ${theme.palette.background.default};
-//   background: white;
-//   color: black;
-//   display: flex;
-//   flex-direction: column;
-//   margin-top: 5vh;
-//   max-width: 502px;
-// `
-
-// const TitleRow = styled.div`
-//   display: flex;
-//   height: 50vw;
-//   max-height: 250px;
-// `
-
-// const ImageBox = styled.div`
-//   width: 50vw;
-//   height: 100%;
-//   max-width: 250px;
-// `
-
-// const PieceImage = styled.img`
-//   width: 100%;
-//   height: 100%;
-//   object-fit: contain;
-// `
-
-// const TitleBox = styled.div`
-//   border-left: 1px solid ${theme.palette.background.default};
-//   width: 50vw;
-//   height: 100%;
-//   max-width: 250px;
-// `
-
-// const TitleText = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: center;
-//   margin: 10%;
-//   height: 80%;
-// `
-
-// const DescriptionRow = styled.div`
-//   border-top: 1px solid ${theme.palette.background.default};
-// `
-
-// const DescriptionText = styled.div`
-//   margin: 5%;
-// `
-
-// const AlbumTitle = styled(Typography)`
-//   font-weight: bold;
-// `
-
 const PieceContainer = styled(Grid)``
 
 const PieceBox = styled(Grid)`
@@ -170,56 +97,64 @@ const PieceCard = props => {
     <PieceContainer container>
       {(isLoading || !loadedPiece) && <LoadingSpinner asOverlay />}
       {!isLoading && loadedPiece && (
-        <PieceBox container direction="column">
-          <BarRow container justify="space-between">
-            <BarTitle>
-              <Typography color="inherit">{loadedPiece.issue || ''}</Typography>
-            </BarTitle>
-            {!!props.onClose && (
-              <Grid>
-                <Button color="inherit" onClick={props.onClose}>
-                  Close X
-                </Button>
-              </Grid>
-            )}
-          </BarRow>
-          <TitleRow container>
-            <ImageBox item xs={6}>
-              <PieceImage
-                src={`${REACT_APP_ASSET_URL}/${loadedPiece.imageFilepath}`}
-                alt="Preview"
-              />
-            </ImageBox>
-            <TitleBox item xs={6}>
-              <TitleText container direction="column" justify="center">
-                <Grid item>
-                  <PieceTitle variant="h5">{loadedPiece.title}</PieceTitle>
-                  <Typography>{`by ${loadedPiece.owner.displayName}`}</Typography>
+        <React.Fragment>
+          <PieceBox container direction="column">
+            <BarRow container justify="space-between">
+              <BarTitle>
+                <Typography color="inherit">
+                  {loadedPiece.issue || ''}
+                </Typography>
+              </BarTitle>
+              {!!props.onClose && (
+                <Grid>
+                  <Button color="inherit" onClick={props.onClose}>
+                    Close X
+                  </Button>
                 </Grid>
-              </TitleText>
-            </TitleBox>
-          </TitleRow>
-          <CardRow container>
-            <DescriptionText item xs={12}>
-              <Typography>{loadedPiece.description}</Typography>
-            </DescriptionText>
-          </CardRow>
-          {loadedPiece.links.map(link => {
-            return (
-              <LinkRow key={link._id}>
-                <ActionButton
-                  target="_blank"
-                  href={link.url}
-                  label={link.name}
+              )}
+            </BarRow>
+            <TitleRow container>
+              <ImageBox item xs={6}>
+                <PieceImage
+                  src={`${REACT_APP_ASSET_URL}/${loadedPiece.imageFilepath}`}
+                  alt="Preview"
                 />
-              </LinkRow>
-            )
-          })}
-          <Box height="2rem"></Box>
-        </PieceBox>
+              </ImageBox>
+              <TitleBox item xs={6}>
+                <TitleText container direction="column" justify="center">
+                  <Grid item>
+                    <PieceTitle variant="h5">{loadedPiece.title}</PieceTitle>
+                    <Typography>{`by ${
+                      loadedPiece.creatorDemo || loadedPiece.owner.displayName
+                    }`}</Typography>
+                  </Grid>
+                </TitleText>
+              </TitleBox>
+            </TitleRow>
+            <CardRow container>
+              <DescriptionText item xs={12}>
+                <Typography>{loadedPiece.description}</Typography>
+              </DescriptionText>
+            </CardRow>
+            {loadedPiece.links.map(link => {
+              return (
+                <LinkRow key={link._id}>
+                  <ActionButton
+                    target="_blank"
+                    href={link.url}
+                    label={link.name}
+                  />
+                </LinkRow>
+              )
+            })}
+            <Box height="2rem"></Box>
+          </PieceBox>
+          <ActionButton onClick={props.onEdit} label="EDIT" variant="text" />
+        </React.Fragment>
       )}
     </PieceContainer>
   )
 }
 
 export default PieceCard
+export { PieceBox, BarRow, BarTitle, TitleBox, CardRow }

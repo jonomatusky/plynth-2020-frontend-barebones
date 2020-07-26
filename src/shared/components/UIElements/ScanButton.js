@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
   },
   fabButton: {
     position: 'absolute',
-    bottom: isInStandaloneMode() ? theme.spacing(14) : theme.spacing(10),
+    bottom: isInStandaloneMode() ? theme.spacing(4) : theme.spacing(0),
     zIndex: 1,
     marginLeft: 'auto',
     marginRight: 'auto',

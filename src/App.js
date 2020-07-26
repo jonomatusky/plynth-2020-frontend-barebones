@@ -10,6 +10,7 @@ import NewImage from './pieces/pages/NewImage'
 import NewPiece from './pieces/pages/NewPiece'
 import ViewPiece from './pieces/pages/ViewPiece'
 import ViewPieces from './pieces/pages/ViewPieces'
+import UpdatePiece from './pieces/pages/UpdatePiece'
 import NewScan from './scans/pages/NewScan'
 import Scans from './scans/pages/Scans'
 import MyCollection from './pieces/pages/MyCollection'
@@ -29,6 +30,9 @@ const App = () => {
       </Route>
       <Route path="/create/piece" exact>
         <NewPiece />
+      </Route>
+      <Route path="/pieces/:pieceId/edit">
+        <UpdatePiece />
       </Route>
       <Route path="/pieces/:pieceId">
         <ViewPiece />
