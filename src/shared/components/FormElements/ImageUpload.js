@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Box, Grid } from '@material-ui/core'
 
 import { useHttpClient } from '../../hooks/http-hook'
+import { useImageResizer } from '../../hooks/image-hook'
 
 import ActionButton from '../UIElements/ActionButton'
 import LoadingSpinner from '../UIElements/LoadingSpinner'
@@ -26,76 +27,17 @@ const Image = styled.img`
 
 const ImageUpload = props => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
+  const {
+    isRendering,
+    imageError,
+    resizeImage,
+    clearImageError,
+  } = useImageResizer()
   const [file, setFile] = useState(null)
   const [previewUrl, setPreviewUrl] = useState()
   const [isValid, setIsValid] = useState()
 
   const filePickerRef = useRef()
-
-  // updates the preview image when the file is updated
-
-  // const renderImage = (src, maxDimension) => {
-  //   let image = document.createElement('img')
-  //   image.onload = () => {
-  //     let canvas = document.createElement('canvas')
-
-  //     let width = image.width
-  //     let height = image.height
-  //     let shortEdgeLength = Math.min(width, height)
-
-  //     if (shortEdgeLength > maxDimension) {
-  //       let scale = maxDimension / shortEdgeLength
-  //       width = Math.round(width * scale)
-  //       height = Math.round(height * scale)
-  //     }
-
-  //     canvas.width = width
-  //     canvas.height = height
-  //   }
-  //   image.src = src
-  // }
-
-  const loadImgAsync = imgSrc => {
-    console.log('loading image')
-    return new Promise((resolve, reject) => {
-      console.log('loading image')
-      let img = document.createElement('img')
-      img.onload = () => {
-        resolve(img)
-      }
-      img.onerror = () => {
-        console.log('error loading image')
-        reject('error loading image')
-      }
-      img.src = imgSrc
-      console.log('done loading')
-    })
-  }
-
-  const readFileAsync = file => {
-    console.log('reading file')
-    return new Promise((resolve, reject) => {
-      console.log('reading file')
-      let reader = new FileReader()
-      reader.onload = () => {
-        resolve(reader.result)
-      }
-      reader.onerror = reject
-      reader.readAsDataURL(file)
-      console.log('done reading file')
-    })
-  }
-
-  const imgToBlobAsync = (img, canvas) => {
-    return new Promise((resolve, reject) => {
-      console.log('creating blob image')
-      const ctxMain = canvas.getContext('2d')
-      ctxMain.drawImage(img, 0, 0, canvas.width, canvas.height)
-      ctxMain.canvas.toBlob(async blob => {
-        resolve(blob)
-      }, 'image/*')
-    })
-  }
 
   useEffect(() => {
     if (!file) {
@@ -107,33 +49,6 @@ const ImageUpload = props => {
     }
     fileReader.readAsDataURL(file)
   }, [file])
-
-  const resizeFile = async (file, maxDimension) => {
-    console.log('resizing image')
-    const imgSrc = await readFileAsync(file)
-    console.log('data url: ' + imgSrc)
-    const image = await loadImgAsync(imgSrc)
-    console.log('height', image.height)
-
-    const canvas = document.createElement('canvas')
-
-    let width = image.width
-    let height = image.height
-    let shortEdgeLength = Math.min(width, height)
-
-    if (shortEdgeLength > maxDimension) {
-      let scale = maxDimension / shortEdgeLength
-      width = Math.round(width * scale)
-      height = Math.round(height * scale)
-    }
-
-    canvas.width = width
-    canvas.height = height
-
-    const blob = await imgToBlobAsync(image, canvas)
-
-    return blob
-  }
 
   // checks to make sure the file is valid
   // NOTE: need stronger validation here? and need to reduce file size.
@@ -147,7 +62,7 @@ const ImageUpload = props => {
       pickedFile = event.target.files[0]
 
       try {
-        resizedFile = await resizeFile(pickedFile, 600)
+        resizedFile = await resizeImage(pickedFile, 600)
         setFile(resizedFile)
         setIsValid(true)
         imageData = await getSignedRequest(pickedFile)
@@ -192,19 +107,19 @@ const ImageUpload = props => {
           ref={filePickerRef}
           style={{ display: 'none' }}
           type="file"
-          accepts=".jpg, .png, .jpeg"
+          accept=".jpg, .png, .jpeg"
           onChange={pickHandler}
         />
       </Grid>
       <Grid item>
         <ImagePreview>
           {previewUrl && <Image src={previewUrl} alt="Preview" />}
-          {isLoading && (
+          {(isRendering || isLoading) && (
             <Box height="100%" align="center">
               <LoadingSpinner asOverlay />
             </Box>
           )}
-          {!previewUrl && !isLoading && (
+          {!previewUrl && !isLoading && !isRendering && (
             <ActionButton
               variant="text"
               onClick={pickImageHandler}

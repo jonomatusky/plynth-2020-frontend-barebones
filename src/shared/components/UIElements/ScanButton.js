@@ -16,6 +16,8 @@ import {
 } from '@material-ui/core'
 
 import { useHttpClient } from '../../hooks/http-hook'
+import { useImageResizer } from '../../hooks/image-hook'
+
 import CameraAltIcon from '@material-ui/icons/CameraAlt'
 import PieceCard from '../../../pieces/components/PieceCard'
 import ActionBar from '../Navigation/ActionBar'
@@ -69,6 +71,12 @@ const ScanModal = () => {
   const [file, setFile] = useState(null)
   const [pieceId, setPieceId] = useState()
   const [isValid, setIsValid] = useState()
+  const {
+    isRendering,
+    imageError,
+    resizeImage,
+    clearImageError,
+  } = useImageResizer()
 
   const handleClose = () => {
     setOpen(false)
@@ -97,17 +105,19 @@ const ScanModal = () => {
   // NOTE: need stronger validation here? and need to reduce file size.
   const pickHandler = async event => {
     let pickedFile
+    let resizedFile
     let fileIsValid = isValid
     let imageData = {}
 
     if (event.target.files && event.target.files.length === 1) {
       pickedFile = event.target.files[0]
       try {
-        imageData = await getSignedRequest(pickedFile)
-        setFile(pickedFile)
+        resizedFile = await resizeImage(pickedFile, 600)
+        setFile(resizedFile)
         setIsValid(true)
-        setOpen(true)
+        imageData = await getSignedRequest(pickedFile)
         fileIsValid = true
+        setOpen(true)
       } catch (err) {}
     } else {
     }
@@ -188,7 +198,7 @@ const ScanModal = () => {
         TransitionComponent={Transition}
       >
         <Container maxwidth="xs">
-          {isLoading && (
+          {(isRendering || isLoading) && (
             <Grid
               container
               direction="column"
@@ -206,7 +216,7 @@ const ScanModal = () => {
               </Grid>
             </Grid>
           )}
-          {!isLoading && !pieceId && (
+          {!isLoading && !isRendering && !pieceId && (
             <React.Fragment>
               <Grid
                 container
