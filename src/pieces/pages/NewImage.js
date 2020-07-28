@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 
 import { useHttpClient } from '../../shared/hooks/http-hook'
 
-import { Container, Grid } from '@material-ui/core'
+import { Container, Grid, Box } from '@material-ui/core'
 
 import PageTitle from '../../shared/components/UIElements/PageTitle'
 import ImageUpload from '../../shared/components/FormElements/ImageUpload'
@@ -67,6 +67,7 @@ const NewImage = () => {
             />
           </Grid>
         </Grid>
+        <Box height="5rem" />
       </form>
     </Container>
   )
