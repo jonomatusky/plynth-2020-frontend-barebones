@@ -1,19 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   AppBar,
   Toolbar,
   Box,
   Button,
+  Fab,
   Hidden,
   BottomNavigation,
   BottomNavigationAction,
 } from '@material-ui/core'
 
+import ScanModal from '../UIElements/ScanModal'
 import AlbumIcon from '@material-ui/icons/Album'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import FlashOnIcon from '@material-ui/icons/FlashOn'
-import ScanButton from '../UIElements/ScanButton'
-
+import ActionButton from '../UIElements/ActionButton'
 import { NavLink } from 'react-router-dom'
 
 import { makeStyles } from '@material-ui/core/styles'
@@ -43,10 +44,17 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const MainHeader = props => {
+  const [scanModalIsActive, setScanModalIsActive] = useState(false)
+
   const classes = useStyles()
+
+  const scanModalHandler = () => {
+    setScanModalIsActive(true)
+  }
 
   return (
     <React.Fragment>
+      <ScanModal active={scanModalIsActive} setActive={setScanModalIsActive} />
       <Hidden smDown>
         <AppBar position="fixed">
           <Toolbar>
@@ -109,15 +117,20 @@ const MainHeader = props => {
               activeClassName="Mui-selected"
               classes={{ root: classes.navBarActionRoot }}
             />
-            <BottomNavigationAction
-              // label="Activity"
-              // icon={<FlashOnIcon />}
-              // component={NavLink}
-              // to={'/pickups'}
-              // activeClassName="Mui-selected"
-              // classes={{ root: classes.navBarActionRoot }}
-              disabled={true}
-            />
+            <Fab
+              onClick={scanModalHandler}
+              variant="extended"
+              margin="1rem"
+              color="primary"
+            >
+              <FlashOnIcon />
+              Scan
+            </Fab>
+            {/* <BottomNavigationAction
+            label="Activity"
+            icon={<FlashOnIcon />}
+            onClick={}
+            /> */}
             <BottomNavigationAction
               label="Create"
               icon={<AddCircleIcon />}
@@ -127,7 +140,6 @@ const MainHeader = props => {
               classes={{ root: classes.navBarActionRoot }}
             />
           </BottomNavigation>
-          <ScanButton />
         </AppBar>
       </Hidden>
     </React.Fragment>

@@ -116,7 +116,7 @@ const ImageUpload = props => {
           {previewUrl && <Image src={previewUrl} alt="Preview" />}
           {(isRendering || isLoading) && (
             <Box height="100%" align="center">
-              <LoadingSpinner asOverlay />
+              <LoadingSpinner />
             </Box>
           )}
           {!previewUrl && !isLoading && !isRendering && (

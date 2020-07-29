@@ -4,7 +4,6 @@ import { useHttpClient } from '../../shared/hooks/http-hook'
 import { Container, Box } from '@material-ui/core'
 
 import PageTitle from '../../shared/components/UIElements/PageTitle'
-import ScanButton from '../../shared/components/UIElements/ScanButton'
 import ScanList from '../components/ScanList'
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
 

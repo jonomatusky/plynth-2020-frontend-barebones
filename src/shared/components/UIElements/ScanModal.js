@@ -64,7 +64,7 @@ const LoadingImage = styled.img`
   margin: 2rem;
 `
 
-const ScanModal = () => {
+const ScanModal = props => {
   const [open, setOpen] = useState(false)
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
   const [foundScreen, setFoundScreen] = useState(false)
@@ -77,15 +77,6 @@ const ScanModal = () => {
     resizeImage,
     clearImageError,
   } = useImageResizer()
-
-  const handleClose = () => {
-    setOpen(false)
-    setPieceId()
-    setFile(null)
-    setIsValid(false)
-  }
-
-  const classes = useStyles()
 
   const filePickerRef = useRef()
 
@@ -115,14 +106,14 @@ const ScanModal = () => {
         resizedFile = await resizeImage(pickedFile, 600)
         setFile(resizedFile)
         setIsValid(true)
-        imageData = await getSignedRequest(pickedFile)
+        imageData = await getSignedRequest(resizedFile)
         fileIsValid = true
         setOpen(true)
       } catch (err) {}
     } else {
     }
 
-    inputHandler(pickedFile, fileIsValid, imageData)
+    inputHandler(resizedFile, fileIsValid, imageData)
   }
 
   // gets a signature as soon as the piece is selected
@@ -146,6 +137,7 @@ const ScanModal = () => {
   }
 
   const inputHandler = async (value, isValid, imageData) => {
+    console.log('sending request')
     if (isValid) {
       try {
         const awsRes = await sendRequest(
@@ -175,9 +167,19 @@ const ScanModal = () => {
     }
   }
 
-  const pickImageHandler = event => {
-    event.preventDefault()
-    filePickerRef.current.click()
+  useEffect(() => {
+    if (props.active) {
+      filePickerRef.current.click()
+    }
+  }, [props.active])
+
+  const handleClose = () => {
+    setOpen(false)
+    props.setActive(false)
+    setPieceId()
+    setFile(null)
+    setIsValid(false)
+    filePickerRef.current.value = ''
   }
 
   return (
@@ -209,10 +211,10 @@ const ScanModal = () => {
               <Grid item xs={3} align="center">
                 <LoadingImage src={loadingImage} />
                 <Typography variant="h5">Searching...</Typography>
-                <ActionBar
+                {/* <ActionBar
                   secondaryAction={handleClose}
                   secondaryLabel="Cancel"
-                />
+                /> */}
               </Grid>
             </Grid>
           )}
@@ -242,26 +244,10 @@ const ScanModal = () => {
             <React.Fragment>
               <PieceCard pieceId={pieceId} onClose={handleClose} />
               <Box height="4rem"></Box>
-              <ActionBar
-                primaryAction={handleClose}
-                primaryLabel="Add to Collection +"
-              />
             </React.Fragment>
           )}
         </Container>
       </Dialog>
-      <Hidden mdUp>
-        <AppBar className={classes.bottomBar}>
-          <Fab
-            color="primary"
-            aria-label="add"
-            className={classes.fabButton}
-            onClick={pickImageHandler}
-          >
-            <CameraAltIcon />
-          </Fab>
-        </AppBar>
-      </Hidden>
     </React.Fragment>
   )
 }
