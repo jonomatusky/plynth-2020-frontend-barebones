@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import {
   AppBar,
   Toolbar,
@@ -45,16 +45,40 @@ const useStyles = makeStyles(theme => ({
 
 const MainHeader = props => {
   const [scanModalIsActive, setScanModalIsActive] = useState(false)
+  const [file, setFile] = useState(null)
 
   const classes = useStyles()
 
-  const scanModalHandler = () => {
+  const filePickerRef = useRef()
+
+  const filePickerHandler = event => {
+    event.preventDefault()
     setScanModalIsActive(true)
+    filePickerRef.current.click()
+  }
+
+  const pickHandler = async event => {
+    if (event.target.files && event.target.files.length === 1) {
+      setFile(event.target.files[0])
+    }
+    filePickerRef.current.value = ''
   }
 
   return (
     <React.Fragment>
-      <ScanModal active={scanModalIsActive} setActive={setScanModalIsActive} />
+      <ScanModal
+        active={scanModalIsActive}
+        setActive={setScanModalIsActive}
+        file={file}
+      />
+      <input
+        id="image"
+        ref={filePickerRef}
+        style={{ display: 'none' }}
+        type="file"
+        accepts=".jpg, .png, .jpeg"
+        onChange={pickHandler}
+      />
       <Hidden smDown>
         <AppBar position="fixed">
           <Toolbar>
@@ -117,8 +141,14 @@ const MainHeader = props => {
               activeClassName="Mui-selected"
               classes={{ root: classes.navBarActionRoot }}
             />
+
+            {/* <BottomNavigationAction
+            label="Activity"
+            icon={<FlashOnIcon />}
+            onClick={pickImageHandler}
+            /> */}
             <Fab
-              onClick={scanModalHandler}
+              onClick={filePickerHandler}
               variant="extended"
               margin="1rem"
               color="primary"
@@ -126,11 +156,6 @@ const MainHeader = props => {
               <FlashOnIcon />
               Scan
             </Fab>
-            {/* <BottomNavigationAction
-            label="Activity"
-            icon={<FlashOnIcon />}
-            onClick={}
-            /> */}
             <BottomNavigationAction
               label="Create"
               icon={<AddCircleIcon />}

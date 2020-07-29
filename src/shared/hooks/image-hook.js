@@ -35,12 +35,12 @@ const imgToBlobAsync = (img, canvas) => {
   })
 }
 
-export const useImageResizer = () => {
-  const [isRendering, setIsRendering] = useState(false)
-  const [imageError, setImageError] = useState()
+export const useImageResize = () => {
+  const [isResizing, setIsResizing] = useState(false)
+  const [resizeError, setResizeError] = useState()
 
   const resizeImage = useCallback(async (file, maxDimension) => {
-    setIsRendering(true)
+    setIsResizing(true)
     try {
       const imgSrc = await readFileAsync(file)
       const image = await loadImgAsync(imgSrc)
@@ -62,18 +62,111 @@ export const useImageResizer = () => {
 
       const blob = await imgToBlobAsync(image, canvas)
 
-      setIsRendering(false)
+      setIsResizing(false)
       return blob
     } catch (err) {
-      setImageError(err.message)
-      setIsRendering(false)
+      setResizeError(err.message)
+      setIsResizing(false)
       throw err
     }
   }, [])
 
   const clearImageError = () => {
-    setImageError(null)
+    setResizeError(null)
   }
 
-  return { isRendering, imageError, resizeImage, clearImageError }
+  return { isResizing, resizeError, resizeImage, clearImageError }
+}
+
+export const useSignedRequest = () => {
+  const {
+    isLoading: isSigning,
+    error: signError,
+    sendRequest,
+    clearError: clearSignError,
+  } = useHttpClient()
+
+  const getSignedRequest = useCallback(
+    async file => {
+      try {
+        const response = await sendRequest(
+          process.env.REACT_APP_BACKEND_URL + '/users/sign-s3',
+          'POST',
+          JSON.stringify({
+            fileName: file.name,
+            fileType: file.type,
+          }),
+          {
+            'Content-Type': 'application/json',
+          }
+        )
+        console.log('response: ' + response)
+        return response
+      } catch (err) {
+        new Error('Could not get signature')
+      }
+    },
+    [sendRequest]
+  )
+
+  return {
+    isSigning,
+    signError,
+    getSignedRequest,
+    clearSignError,
+  }
+}
+
+export const useImageUpload = () => {
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [uploadError, setUploadError] = useState(false)
+
+  const {
+    isSigning,
+    signError,
+    getSignedRequest,
+    clearSignError,
+  } = useSignedRequest()
+  const {
+    isResizing,
+    resizeError,
+    resizeImage,
+    clearImageError,
+  } = useImageResize()
+
+  useEffect(() => {
+    if (signError || resizeError) {
+      setUploadError(true)
+    }
+  }, [signError, resizeError])
+
+  const uploadImage = useCallback(
+    async file => {
+      let image
+      let imageData
+
+      setIsProcessing(true)
+
+      try {
+        image = await resizeImage(file, 600)
+        imageData = await getSignedRequest(image)
+
+        console.log(imageData)
+
+        setIsProcessing(false)
+
+        return { imageData, image }
+      } catch (err) {
+        setIsProcessing(false)
+        setUploadError(err.message)
+      }
+    },
+    [getSignedRequest, resizeImage]
+  )
+
+  const clearUploadError = () => {
+    setUploadError(null)
+  }
+
+  return { isProcessing, uploadError, uploadImage, clearUploadError }
 }

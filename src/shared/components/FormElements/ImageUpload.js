@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Box, Grid } from '@material-ui/core'
 
 import { useHttpClient } from '../../hooks/http-hook'
-import { useImageResizer } from '../../hooks/image-hook'
+import { useImageResize } from '../../hooks/image-hook'
 
 import ActionButton from '../UIElements/ActionButton'
 import LoadingSpinner from '../UIElements/LoadingSpinner'
@@ -32,7 +32,7 @@ const ImageUpload = props => {
     imageError,
     resizeImage,
     clearImageError,
-  } = useImageResizer()
+  } = useImageResize()
   const [file, setFile] = useState(null)
   const [previewUrl, setPreviewUrl] = useState()
   const [isValid, setIsValid] = useState()

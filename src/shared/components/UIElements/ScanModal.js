@@ -16,7 +16,7 @@ import {
 } from '@material-ui/core'
 
 import { useHttpClient } from '../../hooks/http-hook'
-import { useImageResizer } from '../../hooks/image-hook'
+import { useImageUpload } from '../../hooks/image-hook'
 
 import CameraAltIcon from '@material-ui/icons/CameraAlt'
 import PieceCard from '../../../pieces/components/PieceCard'
@@ -65,20 +65,19 @@ const LoadingImage = styled.img`
 `
 
 const ScanModal = props => {
+  const {
+    isProcessing,
+    imageError,
+    uploadImage,
+    imageData,
+    clearImageError,
+  } = useImageUpload()
+
   const [open, setOpen] = useState(false)
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
   const [foundScreen, setFoundScreen] = useState(false)
-  const [file, setFile] = useState(null)
+  // const [file, setFile] = useState(null)
   const [pieceId, setPieceId] = useState()
-  const [isValid, setIsValid] = useState()
-  const {
-    isRendering,
-    imageError,
-    resizeImage,
-    clearImageError,
-  } = useImageResizer()
-
-  const filePickerRef = useRef()
 
   useEffect(() => {
     if (!isLoading && !!pieceId) {
@@ -90,60 +89,18 @@ const ScanModal = props => {
     }
   }, [isLoading, pieceId])
 
-  // opens the file picker as soon as the modal is opened
+  useEffect(() => {
+    const startScan = async () => {
+      console.log('sending request')
+      setOpen(true)
 
-  // checks to make sure the file is valid
-  // NOTE: need stronger validation here? and need to reduce file size.
-  const pickHandler = async event => {
-    let pickedFile
-    let resizedFile
-    let fileIsValid = isValid
-    let imageData = {}
-
-    if (event.target.files && event.target.files.length === 1) {
-      pickedFile = event.target.files[0]
       try {
-        resizedFile = await resizeImage(pickedFile, 600)
-        setFile(resizedFile)
-        setIsValid(true)
-        imageData = await getSignedRequest(resizedFile)
-        fileIsValid = true
-        setOpen(true)
-      } catch (err) {}
-    } else {
-    }
-
-    inputHandler(resizedFile, fileIsValid, imageData)
-  }
-
-  // gets a signature as soon as the piece is selected
-  const getSignedRequest = async file => {
-    try {
-      const response = await sendRequest(
-        process.env.REACT_APP_BACKEND_URL + '/users/sign-s3',
-        'POST',
-        JSON.stringify({
-          fileName: file.name,
-          fileType: file.type,
-        }),
-        {
-          'Content-Type': 'application/json',
-        }
-      )
-      return response
-    } catch (err) {
-      new Error('Could not get signature')
-    }
-  }
-
-  const inputHandler = async (value, isValid, imageData) => {
-    console.log('sending request')
-    if (isValid) {
-      try {
+        const response = await uploadImage(props.file)
+        console.log(response)
         const awsRes = await sendRequest(
-          imageData.signedUrl,
+          response.imageData.signedUrl,
           'PUT',
-          value,
+          response.image,
           {},
           false
         )
@@ -154,44 +111,39 @@ const ScanModal = props => {
         const res = await sendRequest(
           `${REACT_APP_BACKEND_URL}/scans`,
           'POST',
-          JSON.stringify(imageData),
+          JSON.stringify(response.imageData),
           {
             'Content-Type': 'application/json',
           }
         )
-
-        if (res) setPieceId(res.pieceId)
+        if (res) {
+          setPieceId(res.pieceId)
+          console.log(res)
+        }
       } catch (err) {
         console.log(err)
       }
     }
-  }
 
-  useEffect(() => {
-    if (props.active) {
-      filePickerRef.current.click()
+    if (!!props.file) {
+      startScan()
     }
-  }, [props.active])
+  }, [props.file, uploadImage, sendRequest])
+
+  // useEffect(() => {
+  //   if (props.active) {
+  //     filePickerRef.current.click()
+  //   }
+  // }, [props.active])
 
   const handleClose = () => {
     setOpen(false)
     props.setActive(false)
     setPieceId()
-    setFile(null)
-    setIsValid(false)
-    filePickerRef.current.value = ''
   }
 
   return (
     <React.Fragment>
-      <input
-        id="image"
-        ref={filePickerRef}
-        style={{ display: 'none' }}
-        type="file"
-        accepts=".jpg, .png, .jpeg"
-        onChange={pickHandler}
-      />
       <NotificationModal fullscreen open={foundScreen} message="FOUND!" />
       <Dialog
         fullScreen
@@ -200,7 +152,7 @@ const ScanModal = props => {
         TransitionComponent={Transition}
       >
         <Container maxwidth="xs">
-          {(isRendering || isLoading) && (
+          {(isProcessing || isLoading) && (
             <Grid
               container
               direction="column"
@@ -218,7 +170,7 @@ const ScanModal = props => {
               </Grid>
             </Grid>
           )}
-          {!isLoading && !isRendering && !pieceId && (
+          {!isLoading && !isProcessing && !pieceId && (
             <React.Fragment>
               <Grid
                 container
