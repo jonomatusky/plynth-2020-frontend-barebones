@@ -18,16 +18,10 @@ const NewImage = () => {
 
   const history = useHistory()
 
-  const inputHandler = async (id, value, isValid, imageData) => {
+  const inputHandler = async (signedUrl, imageData, image, isValid) => {
     if (isValid) {
       try {
-        const awsRes = await sendRequest(
-          imageData.signedUrl,
-          'PUT',
-          value,
-          {},
-          false
-        )
+        const awsRes = await sendRequest(signedUrl, 'PUT', image, {}, false)
         if (awsRes.status !== 200) {
           console.log('Got a 200 error on AWS request')
         }

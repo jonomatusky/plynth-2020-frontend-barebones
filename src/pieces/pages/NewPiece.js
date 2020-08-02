@@ -51,6 +51,8 @@ const NewPiece = () => {
       id: sessionStorage.getItem('imageId'),
       ext: sessionStorage.getItem('imageExt'),
     })
+    sessionStorage.setItem('imageId', null)
+    sessionStorage.setItem('imageExt', null)
   }, [])
 
   const onSubmit = async formData => {

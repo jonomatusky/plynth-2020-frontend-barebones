@@ -16,7 +16,7 @@ const PieceContainer = styled(Grid)``
 
 const PieceBox = styled(Grid)`
   border: 1px solid ${theme.palette.secondary.main};
-  margin-top: 5vh;
+  margin-top: 1em;
   background: ${theme.palette.background.paper};
 `
 
@@ -61,8 +61,12 @@ const CardRow = styled(Grid)`
   border-top: 1px solid ${theme.palette.secondary.main};
 `
 
-const DescriptionText = styled(Grid)`
+const DescriptionBox = styled(Grid)`
   margin: 2rem;
+`
+
+const DescriptionText = styled(Typography)`
+  line-height: 2;
 `
 
 const PieceTitle = styled(Typography)`
@@ -70,7 +74,14 @@ const PieceTitle = styled(Typography)`
 `
 
 const LinkRow = styled(Grid)`
-  margin: 1rem 2rem;
+  margin: 0.5rem 2rem;
+`
+
+const BottomRow = styled(Grid)`
+  border-top: 1px solid ${theme.palette.secondary.main};
+  padding-left: 10px;
+  padding-right: 10px;
+  color: ${theme.palette.secondary.main};
 `
 
 const PieceCard = props => {
@@ -133,7 +144,9 @@ const PieceCard = props => {
             </TitleRow>
             <CardRow container>
               <DescriptionText item xs={12}>
-                <Typography>{loadedPiece.description}</Typography>
+                <DescriptionBox>
+                  <DescriptionText>{loadedPiece.description}</DescriptionText>
+                </DescriptionBox>
               </DescriptionText>
             </CardRow>
             {loadedPiece.links.map(link => {
@@ -148,8 +161,22 @@ const PieceCard = props => {
               )
             })}
             <Box height="2rem"></Box>
+            <BottomRow container justify="space-between">
+              <BarTitle>
+                <Typography color="inherit">
+                  {loadedPiece.issue || ''}
+                </Typography>
+              </BarTitle>
+
+              {!!props.onClose && (
+                <Grid>
+                  <Button color="inherit" onClick={props.onEdit}>
+                    Edit
+                  </Button>
+                </Grid>
+              )}
+            </BottomRow>
           </PieceBox>
-          <ActionButton onClick={props.onEdit} label="EDIT" variant="text" />
         </React.Fragment>
       )}
     </PieceContainer>

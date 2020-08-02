@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Box, Grid } from '@material-ui/core'
 
 import { useHttpClient } from '../../hooks/http-hook'
-import { useImageResize } from '../../hooks/image-hook'
+import { useImageUpload } from '../../hooks/image-hook'
 
 import ActionButton from '../UIElements/ActionButton'
 import LoadingSpinner from '../UIElements/LoadingSpinner'
@@ -11,6 +11,7 @@ import LoadingSpinner from '../UIElements/LoadingSpinner'
 import styled from 'styled-components'
 
 import theme from '../../../theme'
+import LoadingGraphic from '../UIElements/LoadingGraphic'
 
 const ImagePreview = styled(Box)`
   height: 90vw;
@@ -28,11 +29,11 @@ const Image = styled.img`
 const ImageUpload = props => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
   const {
-    isRendering,
-    imageError,
-    resizeImage,
-    clearImageError,
-  } = useImageResize()
+    isProcessing,
+    uploadError,
+    uploadImage,
+    clearUploadError,
+  } = useImageUpload()
   const [file, setFile] = useState(null)
   const [previewUrl, setPreviewUrl] = useState()
   const [isValid, setIsValid] = useState()
@@ -53,50 +54,38 @@ const ImageUpload = props => {
   // checks to make sure the file is valid
   // NOTE: need stronger validation here? and need to reduce file size.
   const pickHandler = async event => {
-    let pickedFile
-    let resizedFile
+    let response
     let fileIsValid = isValid
-    let imageData = {}
 
     if (event.target.files && event.target.files.length === 1) {
-      pickedFile = event.target.files[0]
+      const file = event.target.files[0]
 
       try {
-        resizedFile = await resizeImage(pickedFile, 600)
-        setFile(resizedFile)
+        response = await uploadImage(file)
         setIsValid(true)
-        imageData = await getSignedRequest(pickedFile)
         fileIsValid = true
-      } catch (err) {}
+        setFile(response.image)
+      } catch (err) {
+        setIsValid(false)
+        fileIsValid = false
+        console.log(err.message)
+      }
     } else {
+      setIsValid(false)
+      fileIsValid = false
     }
 
-    props.onInput(props.id, resizedFile, fileIsValid, imageData)
+    props.onInput(
+      response.signedUrl,
+      response.imageData,
+      response.image,
+      fileIsValid
+    )
   }
 
   const pickImageHandler = event => {
     event.preventDefault()
     filePickerRef.current.click()
-  }
-
-  // gets a signature as soon as the piece is selected
-  const getSignedRequest = async file => {
-    try {
-      const response = await sendRequest(
-        process.env.REACT_APP_BACKEND_URL + '/users/sign-s3',
-        'POST',
-        JSON.stringify({
-          fileName: file.name,
-          fileType: file.type,
-        }),
-        {
-          'Content-Type': 'application/json',
-        }
-      )
-      return response
-    } catch (err) {
-      new Error('Could not get signature')
-    }
   }
 
   return (
@@ -114,12 +103,8 @@ const ImageUpload = props => {
       <Grid item>
         <ImagePreview>
           {previewUrl && <Image src={previewUrl} alt="Preview" />}
-          {(isRendering || isLoading) && (
-            <Box height="100%" align="center">
-              <LoadingSpinner />
-            </Box>
-          )}
-          {!previewUrl && !isLoading && !isRendering && (
+          {(isProcessing || isLoading) && <LoadingGraphic />}
+          {!previewUrl && !isLoading && !isProcessing && (
             <ActionButton
               variant="text"
               onClick={pickImageHandler}

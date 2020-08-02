@@ -14,19 +14,20 @@ const title = 'Create New Piece'
 
 const NewImage = () => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
-  const [imageValue, setImageValue] = useState(null)
+  const [image, setImage] = useState(null)
   const [imageIsValid, setImageIsValid] = useState(false)
   const [imageData, setImageData] = useState({
-    signedUrl: null,
     url: null,
     awsFileName: null,
   })
+  const [signedUrl, setSignedUrl] = useState()
 
-  const inputHandler = (id, value, isValid, imageData) => {
+  const inputHandler = (signedUrl, imageData, image, isValid) => {
     if (isValid) {
-      setImageValue(value)
-      setImageIsValid(true)
+      setSignedUrl(signedUrl)
       setImageData(imageData)
+      setImage(image)
+      setImageIsValid(true)
     }
   }
 
@@ -35,13 +36,7 @@ const NewImage = () => {
   const imageSubmitHandler = async event => {
     event.preventDefault()
     try {
-      const awsRes = await sendRequest(
-        imageData.signedUrl,
-        'PUT',
-        imageValue,
-        {},
-        false
-      )
+      const awsRes = await sendRequest(signedUrl, 'PUT', image, {}, false)
       if (awsRes.status === 200) {
         sessionStorage.setItem('imageId', imageData.id)
         sessionStorage.setItem('imageExt', imageData.ext)

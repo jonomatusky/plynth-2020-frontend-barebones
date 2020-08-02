@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { AppBar, Toolbar, Button } from '@material-ui/core'
+import { AppBar, Toolbar } from '@material-ui/core'
 import ActionButton from '../UIElements/ActionButton'
 
 import { makeStyles } from '@material-ui/core/styles'

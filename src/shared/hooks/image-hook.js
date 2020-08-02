@@ -65,9 +65,10 @@ export const useImageResize = () => {
       setIsResizing(false)
       return blob
     } catch (err) {
-      setResizeError(err.message)
+      const error = new Error('Please upload an image file.')
+      setResizeError(error.message)
       setIsResizing(false)
-      throw err
+      throw error
     }
   }, [])
 
@@ -88,6 +89,7 @@ export const useSignedRequest = () => {
 
   const getSignedRequest = useCallback(
     async file => {
+      console.log('sending request')
       try {
         const response = await sendRequest(
           process.env.REACT_APP_BACKEND_URL + '/users/sign-s3',
@@ -100,10 +102,11 @@ export const useSignedRequest = () => {
             'Content-Type': 'application/json',
           }
         )
-        console.log('response: ' + response)
+        console.log('response: ' + JSON.stringify(response))
         return response
       } catch (err) {
-        new Error('Could not get signature')
+        const error = new Error('Please upload an image file.')
+        throw error
       }
     },
     [sendRequest]
@@ -134,38 +137,33 @@ export const useImageUpload = () => {
     clearImageError,
   } = useImageResize()
 
-  useEffect(() => {
-    if (signError || resizeError) {
-      setUploadError(true)
-    }
-  }, [signError, resizeError])
-
   const uploadImage = useCallback(
     async file => {
-      let image
-      let imageData
-
       setIsProcessing(true)
-
       try {
-        image = await resizeImage(file, 600)
-        imageData = await getSignedRequest(image)
+        let image = await resizeImage(file, 600)
+        console.log(image)
+        let { signedUrl, imageData } = await getSignedRequest(image)
 
         console.log(imageData)
+        console.log(signedUrl)
 
         setIsProcessing(false)
 
-        return { imageData, image }
-      } catch (err) {
+        return { signedUrl, imageData, image }
+      } catch (error) {
         setIsProcessing(false)
-        setUploadError(err.message)
+        setUploadError(error.message)
+        throw error
       }
     },
     [getSignedRequest, resizeImage]
   )
 
   const clearUploadError = () => {
-    setUploadError(null)
+    setUploadError()
+    clearSignError()
+    clearImageError()
   }
 
   return { isProcessing, uploadError, uploadImage, clearUploadError }

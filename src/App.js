@@ -55,7 +55,7 @@ const App = () => {
       <Route path="/demo" exact>
         <Demo />
       </Route>
-      <Redirect to="/pickups" />
+      <Redirect to="/collection" />
     </Switch>
   )
 

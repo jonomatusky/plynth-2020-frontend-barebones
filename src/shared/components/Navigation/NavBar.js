@@ -34,6 +34,8 @@ const useStyles = makeStyles(theme => ({
     borderTop: 1,
     borderColor: theme.palette.secondary.main,
     marginBottom: isInStandaloneMode() ? theme.spacing(4) : theme.spacing(0),
+    minHeight: '4rem',
+    padding: '0.5rem',
   },
   navBarActionRoot: {
     color: theme.palette.text.primary,
@@ -141,21 +143,19 @@ const MainHeader = props => {
               activeClassName="Mui-selected"
               classes={{ root: classes.navBarActionRoot }}
             />
-
             {/* <BottomNavigationAction
             label="Activity"
             icon={<FlashOnIcon />}
             onClick={pickImageHandler}
             /> */}
-            <Fab
+            <Button
               onClick={filePickerHandler}
-              variant="extended"
-              margin="1rem"
+              variant="contained"
               color="primary"
             >
               <FlashOnIcon />
               Scan
-            </Fab>
+            </Button>
             <BottomNavigationAction
               label="Create"
               icon={<AddCircleIcon />}

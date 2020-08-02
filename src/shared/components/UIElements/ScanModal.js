@@ -1,18 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import {
-  Fab,
-  AppBar,
   Dialog,
   Container,
   Grid,
   Box,
-  Button,
   Slide,
-  Hidden,
   Typography,
-  Fade,
-  Grow,
+  Button,
 } from '@material-ui/core'
 
 import { useHttpClient } from '../../hooks/http-hook'
@@ -23,11 +18,11 @@ import PieceCard from '../../../pieces/components/PieceCard'
 import ActionBar from '../Navigation/ActionBar'
 import NotificationModal from './NotificationModal'
 
-import { makeStyles } from '@material-ui/core/styles'
 import styled from 'styled-components'
 
 import theme from '../../../theme'
 
+import ErrorMessage from './ErrorMessage'
 import loadingImage from '../../../images/Plynth-Loading-GIF.gif'
 import foundImage from '../../../images/Plynth-Loading-Final.png'
 
@@ -37,70 +32,58 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
 })
 
-const isInStandaloneMode = () => {
-  return 'standalone' in window.navigator && window.navigator.standalone
-}
-
-const useStyles = makeStyles(theme => ({
-  bottomBar: {
-    top: 'auto',
-    bottom: 0,
-  },
-  fabButton: {
-    position: 'absolute',
-    bottom: isInStandaloneMode() ? theme.spacing(4) : theme.spacing(0),
-    zIndex: 1,
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    left: 0,
-    right: 0,
-    alignContent: 'center',
-  },
-}))
-
 const LoadingImage = styled.img`
   height: 50px;
   width: 50px;
-  margin: 2rem;
+`
+
+const StyledContainer = styled(Container)`
+  background-image: linear-gradient(
+    200deg,
+    ${theme.palette.primary.main}22,
+    ${theme.palette.primary.main}00
+  );
+  min-
+  height: 100vh;
 `
 
 const ScanModal = props => {
   const {
     isProcessing,
-    imageError,
+    uploadError,
     uploadImage,
-    imageData,
-    clearImageError,
+    clearUploadError,
   } = useImageUpload()
-
-  const [open, setOpen] = useState(false)
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
+  const [open, setOpen] = useState(false)
   const [foundScreen, setFoundScreen] = useState(false)
-  // const [file, setFile] = useState(null)
-  const [pieceId, setPieceId] = useState()
+  const [scanData, setScanData] = useState({
+    found: false,
+    pieceId: null,
+    scanId: null,
+  })
 
   useEffect(() => {
-    if (!isLoading && !!pieceId) {
+    if (scanData.found) {
       setFoundScreen(true)
       const timer = setTimeout(() => {
         setFoundScreen(false)
       }, 500)
       return () => clearTimeout(timer)
     }
-  }, [isLoading, pieceId])
+  }, [scanData])
 
   useEffect(() => {
     const startScan = async () => {
-      console.log('sending request')
       setOpen(true)
 
       try {
-        const response = await uploadImage(props.file)
-        console.log(response)
-        const awsRes = await sendRequest(
-          response.imageData.signedUrl,
+        const uploadedImage = await uploadImage(props.file)
+        console.log('uploaded image: ' + uploadedImage)
+        let awsRes = await sendRequest(
+          uploadedImage.signedUrl,
           'PUT',
-          response.image,
+          uploadedImage.image,
           {},
           false
         )
@@ -108,16 +91,16 @@ const ScanModal = props => {
           console.log('Got a 200 error on AWS request')
         }
 
-        const res = await sendRequest(
+        let res = await sendRequest(
           `${REACT_APP_BACKEND_URL}/scans`,
           'POST',
-          JSON.stringify(response.imageData),
+          JSON.stringify(uploadedImage.imageData),
           {
             'Content-Type': 'application/json',
           }
         )
         if (res) {
-          setPieceId(res.pieceId)
+          setScanData(res)
           console.log(res)
         }
       } catch (err) {
@@ -130,16 +113,31 @@ const ScanModal = props => {
     }
   }, [props.file, uploadImage, sendRequest])
 
-  // useEffect(() => {
-  //   if (props.active) {
-  //     filePickerRef.current.click()
-  //   }
-  // }, [props.active])
-
   const handleClose = () => {
     setOpen(false)
     props.setActive(false)
-    setPieceId()
+    setScanData({
+      found: false,
+      pieceId: null,
+      scanId: null,
+    })
+    clearError()
+  }
+
+  const handleMissingPiece = correct => {
+    console.log('scan id: ' + scanData.scanId)
+    try {
+      sendRequest(
+        `${REACT_APP_BACKEND_URL}/scans/${scanData.scanId}`,
+        'PATCH',
+        {
+          correct,
+        }
+      )
+    } catch (err) {}
+
+    clearUploadError()
+    handleClose()
   }
 
   return (
@@ -151,7 +149,7 @@ const ScanModal = props => {
         onClose={handleClose}
         TransitionComponent={Transition}
       >
-        <Container maxwidth="xs">
+        <StyledContainer maxwidth="xs">
           {(isProcessing || isLoading) && (
             <Grid
               container
@@ -160,45 +158,60 @@ const ScanModal = props => {
               alignItems="center"
               style={{ minHeight: '100vh' }}
             >
-              <Grid item xs={3} align="center">
-                <LoadingImage src={loadingImage} />
-                <Typography variant="h5">Searching...</Typography>
-                {/* <ActionBar
-                  secondaryAction={handleClose}
-                  secondaryLabel="Cancel"
-                /> */}
-              </Grid>
+              <LoadingImage src={loadingImage} />
+              <Typography variant="h5">Searching...</Typography>
+              <ActionBar
+                secondaryAction={handleClose}
+                secondaryLabel="Cancel"
+              />
             </Grid>
           )}
-          {!isLoading && !isProcessing && !pieceId && (
+          {/* Displays an error screen if no match was found, with the option for the user to report the error */}
+          {!isProcessing && !isLoading && !scanData.found && (
             <React.Fragment>
               <Grid
                 container
                 direction="column"
                 justify="center"
                 alignItems="center"
-                style={{ minHeight: '80vh' }}
+                style={{ minHeight: '100vh' }}
               >
                 <Grid item>
-                  <Box textAlign="center">
-                    <Typography variant="h6" align="center">
-                      Sorry! We couldn't find a match. Scan again or add a new
-                      piece.
-                    </Typography>
-                  </Box>
+                  {(!!uploadError || !!error) && (
+                    <Box textAlign="center">
+                      <Typography variant="h5">{uploadError}</Typography>
+                      <Typography variant="h6">{error}</Typography>
+                      <Button onClick={handleClose}>Close</Button>
+                    </Box>
+                  )}
+                  {!uploadError && !error && (
+                    <React.Fragment>
+                      <Box textAlign="center">
+                        <Typography variant="h6" align="center">
+                          Sorry, we couldn't find a matching piece.
+                        </Typography>
+                        <Typography align="center">
+                          Think this was an error? Let us know.
+                        </Typography>
+                      </Box>
+                      <ActionBar
+                        primaryAction={handleMissingPiece}
+                        primaryLabel="Close"
+                        secondaryAction={handleMissingPiece}
+                        secondaryLabel="Report Missing Piece"
+                      />
+                    </React.Fragment>
+                  )}
                 </Grid>
               </Grid>
-              <Box height="4rem"></Box>
-              <ActionBar primaryAction={handleClose} primaryLabel="Close" />
             </React.Fragment>
           )}
-          {!isLoading && pieceId && (
+          {scanData.found && scanData.pieceId && (
             <React.Fragment>
-              <PieceCard pieceId={pieceId} onClose={handleClose} />
-              <Box height="4rem"></Box>
+              <PieceCard pieceId={scanData.pieceId} onClose={handleClose} />
             </React.Fragment>
           )}
-        </Container>
+        </StyledContainer>
       </Dialog>
     </React.Fragment>
   )
