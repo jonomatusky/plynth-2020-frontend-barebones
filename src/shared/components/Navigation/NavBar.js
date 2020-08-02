@@ -10,7 +10,7 @@ import {
   BottomNavigationAction,
 } from '@material-ui/core'
 
-import ScanModal from '../UIElements/ScanModal'
+import ScanModal from '../../../scans/pages/ScanModal'
 import AlbumIcon from '@material-ui/icons/Album'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import FlashOnIcon from '@material-ui/icons/FlashOn'

@@ -13,13 +13,7 @@ const ErrorMessage = props => {
         alignItems="center"
         style={{ minHeight: '100vh' }}
       >
-        <Grid item>
-          <Box textAlign="center">
-            <Typography variant="h6" align="center">
-              {props.error}
-            </Typography>
-          </Box>
-        </Grid>
+        <Grid item></Grid>
       </Grid>
     </React.Fragment>
   )

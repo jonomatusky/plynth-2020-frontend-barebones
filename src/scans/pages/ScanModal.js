@@ -10,21 +10,21 @@ import {
   Button,
 } from '@material-ui/core'
 
-import { useHttpClient } from '../../hooks/http-hook'
-import { useImageUpload } from '../../hooks/image-hook'
+import { useHttpClient } from '../../shared/hooks/http-hook'
+import { useImageUpload } from '../../shared/hooks/image-hook'
 
 import CameraAltIcon from '@material-ui/icons/CameraAlt'
-import PieceCard from '../../../pieces/components/PieceCard'
-import ActionBar from '../Navigation/ActionBar'
-import NotificationModal from './NotificationModal'
+import PieceCard from '../../pieces/components/PieceCard'
+import ActionBar from '../../shared/components/Navigation/ActionBar'
+import NotificationModal from '../../shared/components/UIElements/NotificationModal'
 
 import styled from 'styled-components'
 
-import theme from '../../../theme'
+import theme from '../../theme'
 
-import ErrorMessage from './ErrorMessage'
-import loadingImage from '../../../images/Plynth-Loading-GIF.gif'
-import foundImage from '../../../images/Plynth-Loading-Final.png'
+import ErrorMessage from '../../shared/components/UIElements/ErrorMessage'
+import loadingImage from '../../images/Plynth-Loading-GIF.gif'
+import foundImage from '../../images/Plynth-Loading-Final.png'
 
 const { REACT_APP_BACKEND_URL } = process.env
 
@@ -207,9 +207,7 @@ const ScanModal = props => {
             </React.Fragment>
           )}
           {scanData.found && scanData.pieceId && (
-            <React.Fragment>
-              <PieceCard pieceId={scanData.pieceId} onClose={handleClose} />
-            </React.Fragment>
+            <PieceCard pieceId={scanData.pieceId} onClose={handleClose} />
           )}
         </StyledContainer>
       </Dialog>

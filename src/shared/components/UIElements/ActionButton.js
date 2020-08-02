@@ -1,12 +1,16 @@
 import React from 'react'
 
-import { Button, Typography } from '@material-ui/core'
+import { Button, Typography, Box } from '@material-ui/core'
 
 import styled from 'styled-components'
 
 const StyledButton = styled(Button)`
   border-radius: 0;
-  height: 4em;
+  padding: 0.6em;
+`
+
+const ButtonText = styled(Typography)`
+  font-size: 1.2em;
 `
 
 const ActionButton = props => {
@@ -18,9 +22,11 @@ const ActionButton = props => {
       variant={variant || 'contained'}
       {...other}
     >
-      <Typography variant="h6">
-        <strong>{label}</strong>
-      </Typography>
+      <Box>
+        <ButtonText>
+          <strong>{label}</strong>
+        </ButtonText>
+      </Box>
     </StyledButton>
   )
 }
