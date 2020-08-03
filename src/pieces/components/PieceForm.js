@@ -208,101 +208,115 @@ const PieceForm = props => {
   })
 
   return (
-    <React.Fragment>
-      <Formik
-        enableReinitialize="true"
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={props.onSubmit}
-      >
-        {({ values, isValid }) => (
-          <Form>
-            <Grid container direction="column" spacing={1}>
-              <Grid item>
-                <Grid container spacing={1}>
-                  <Grid item xs={4}>
-                    <ImageBox>
-                      {imageFilePath ? (
-                        <Image
-                          src={`${ASSET_URL}/${imageFilePath}`}
-                          alt="Preview"
-                        />
-                      ) : (
-                        <LoadingSpinner asOverlay />
-                      )}
-                    </ImageBox>
-                  </Grid>
-                  <Grid item xs={8}>
-                    <TitleField name="title" label="Title" type="text" />
-                    <TextField name="creatorDemo" label="Creator" type="text" />
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item>
-                <TextArea name="description" label="Description" type="text" />
-              </Grid>
-              <FieldArray name="links">
-                {({ insert, remove, push }) => (
-                  <React.Fragment>
-                    <Grid item>
-                      {values.links.length > 0 &&
-                        values.links.map((link, index) => (
-                          <FieldSet container direction="column" key={index}>
-                            <BarRow
-                              container
-                              justify="space-between"
-                              alignItems="center"
-                            >
-                              <BarTitle>
-                                <Typography color="inherit">Link</Typography>
-                              </BarTitle>
-                              <Grid>
-                                <Button
-                                  color="inherit"
-                                  onClick={() => remove(index)}
-                                >
-                                  Remove X
-                                </Button>
-                              </Grid>
-                            </BarRow>
-                            <Grid item>
-                              <Box margin="1rem">
-                                <TextField
-                                  label="URL"
-                                  name={`links.${index}.url`}
-                                  type="url"
-                                />
-                              </Box>
-                            </Grid>
-                            <Grid item>
-                              <Box margin="1rem">
-                                <TextField
-                                  name={`links.${index}.name`}
-                                  label="Link Text"
-                                  type="text"
-                                />
-                              </Box>
-                            </Grid>
-                          </FieldSet>
-                        ))}
-                      <ActionButton
-                        type="button"
-                        onClick={() => push({ name: '', url: '' })}
-                        label="Add Link"
-                        color="secondary"
+    <Grid container justify="center">
+      <Grid item xs={11}>
+        <Formik
+          enableReinitialize="true"
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={props.onSubmit}
+        >
+          {({ values, isValid }) => (
+            <Form>
+              <Grid container direction="column" spacing={1}>
+                <Grid item>
+                  <Grid container spacing={1}>
+                    <Grid item xs={4}>
+                      <ImageBox>
+                        {imageFilePath ? (
+                          <Image
+                            src={`${ASSET_URL}/${imageFilePath}`}
+                            alt="Preview"
+                          />
+                        ) : (
+                          <LoadingSpinner asOverlay />
+                        )}
+                      </ImageBox>
+                    </Grid>
+                    <Grid item xs={8}>
+                      <TitleField name="title" label="Title" type="text" />
+                      <TextField
+                        name="creatorDemo"
+                        label="Creator"
+                        type="text"
                       />
                     </Grid>
-                  </React.Fragment>
-                )}
-              </FieldArray>
-              <Grid item>
-                <ActionButton type="submit" label="Save" disabled={!isValid} />
+                  </Grid>
+                </Grid>
+                <Grid item>
+                  <TextArea
+                    name="description"
+                    label="Description"
+                    type="text"
+                  />
+                </Grid>
+                <FieldArray name="links">
+                  {({ insert, remove, push }) => (
+                    <React.Fragment>
+                      <Grid item>
+                        {values.links.length > 0 &&
+                          values.links.map((link, index) => (
+                            <FieldSet container direction="column" key={index}>
+                              <BarRow
+                                container
+                                justify="space-between"
+                                alignItems="center"
+                              >
+                                <BarTitle>
+                                  <Typography color="inherit">Link</Typography>
+                                </BarTitle>
+                                <Grid>
+                                  <Button
+                                    color="inherit"
+                                    onClick={() => remove(index)}
+                                  >
+                                    Remove X
+                                  </Button>
+                                </Grid>
+                              </BarRow>
+                              <Grid item>
+                                <Box margin="1rem">
+                                  <TextField
+                                    label="URL"
+                                    name={`links.${index}.url`}
+                                    type="url"
+                                  />
+                                </Box>
+                              </Grid>
+                              <Grid item>
+                                <Box margin="1rem">
+                                  <TextField
+                                    name={`links.${index}.name`}
+                                    label="Link Text"
+                                    type="text"
+                                  />
+                                </Box>
+                              </Grid>
+                            </FieldSet>
+                          ))}
+                        <ActionButton
+                          type="button"
+                          onClick={() => push({ name: '', url: '' })}
+                          label="Add Link"
+                          color="secondary"
+                        />
+                      </Grid>
+                    </React.Fragment>
+                  )}
+                </FieldArray>
+                <Grid item>
+                  <ActionButton
+                    type="submit"
+                    label="Save"
+                    disabled={!isValid}
+                  />
+                </Grid>
               </Grid>
-            </Grid>
-          </Form>
-        )}
-      </Formik>
-    </React.Fragment>
+            </Form>
+          )}
+        </Formik>
+      </Grid>
+    </Grid>
   )
 }
 

@@ -17,6 +17,7 @@ import CameraAltIcon from '@material-ui/icons/CameraAlt'
 import PieceCard from '../../pieces/components/PieceCard'
 import ActionBar from '../../shared/components/Navigation/ActionBar'
 import NotificationModal from '../../shared/components/UIElements/NotificationModal'
+import PrimaryModal from '../../shared/layouts/PrimaryModal'
 
 import styled from 'styled-components'
 
@@ -64,14 +65,14 @@ const ScanModal = props => {
   })
 
   useEffect(() => {
-    if (scanData.found) {
+    if (scanData.found && open) {
       setFoundScreen(true)
       const timer = setTimeout(() => {
         setFoundScreen(false)
       }, 500)
       return () => clearTimeout(timer)
     }
-  }, [scanData])
+  }, [scanData, open])
 
   useEffect(() => {
     const startScan = async () => {
@@ -143,14 +144,23 @@ const ScanModal = props => {
   return (
     <React.Fragment>
       <NotificationModal fullscreen open={foundScreen} message="FOUND!" />
-      <Dialog
-        fullScreen
-        open={open}
-        onClose={handleClose}
-        TransitionComponent={Transition}
-      >
-        <StyledContainer maxwidth="xs">
-          {(isProcessing || isLoading) && (
+      <PrimaryModal open={open} onClose={handleClose}>
+        {(isProcessing || isLoading) && (
+          <Grid
+            container
+            direction="column"
+            justify="center"
+            alignItems="center"
+            style={{ minHeight: '100vh' }}
+          >
+            <LoadingImage src={loadingImage} />
+            <Typography variant="h5">Searching...</Typography>
+            <Button onClick={handleClose}>Cancel</Button>
+          </Grid>
+        )}
+        {/* Displays an error screen if no match was found, with the option for the user to report the error */}
+        {!isProcessing && !isLoading && !scanData.found && (
+          <React.Fragment>
             <Grid
               container
               direction="column"
@@ -158,59 +168,40 @@ const ScanModal = props => {
               alignItems="center"
               style={{ minHeight: '100vh' }}
             >
-              <LoadingImage src={loadingImage} />
-              <Typography variant="h5">Searching...</Typography>
-              <ActionBar
-                secondaryAction={handleClose}
-                secondaryLabel="Cancel"
-              />
-            </Grid>
-          )}
-          {/* Displays an error screen if no match was found, with the option for the user to report the error */}
-          {!isProcessing && !isLoading && !scanData.found && (
-            <React.Fragment>
-              <Grid
-                container
-                direction="column"
-                justify="center"
-                alignItems="center"
-                style={{ minHeight: '100vh' }}
-              >
-                <Grid item>
-                  {(!!uploadError || !!error) && (
+              <Grid item>
+                {(!!uploadError || !!error) && (
+                  <Box textAlign="center">
+                    <Typography variant="h5">{uploadError}</Typography>
+                    <Typography variant="h6">{error}</Typography>
+                    <Button onClick={handleClose}>Close</Button>
+                  </Box>
+                )}
+                {!uploadError && !error && (
+                  <React.Fragment>
                     <Box textAlign="center">
-                      <Typography variant="h5">{uploadError}</Typography>
-                      <Typography variant="h6">{error}</Typography>
-                      <Button onClick={handleClose}>Close</Button>
+                      <Typography variant="h6" align="center">
+                        Sorry, we couldn't find a matching piece.
+                      </Typography>
+                      <Typography align="center">
+                        Think this was an error? Let us know.
+                      </Typography>
                     </Box>
-                  )}
-                  {!uploadError && !error && (
-                    <React.Fragment>
-                      <Box textAlign="center">
-                        <Typography variant="h6" align="center">
-                          Sorry, we couldn't find a matching piece.
-                        </Typography>
-                        <Typography align="center">
-                          Think this was an error? Let us know.
-                        </Typography>
-                      </Box>
-                      <ActionBar
-                        primaryAction={handleMissingPiece}
-                        primaryLabel="Close"
-                        secondaryAction={handleMissingPiece}
-                        secondaryLabel="Report Missing Piece"
-                      />
-                    </React.Fragment>
-                  )}
-                </Grid>
+                    <ActionBar
+                      primaryAction={handleMissingPiece}
+                      primaryLabel="Close"
+                      secondaryAction={handleMissingPiece}
+                      secondaryLabel="Report Missing Piece"
+                    />
+                  </React.Fragment>
+                )}
               </Grid>
-            </React.Fragment>
-          )}
-          {scanData.found && scanData.pieceId && (
-            <PieceCard pieceId={scanData.pieceId} onClose={handleClose} />
-          )}
-        </StyledContainer>
-      </Dialog>
+            </Grid>
+          </React.Fragment>
+        )}
+        {scanData.found && scanData.pieceId && (
+          <PieceCard pieceId={scanData.pieceId} onClose={handleClose} />
+        )}
+      </PrimaryModal>
     </React.Fragment>
   )
 }

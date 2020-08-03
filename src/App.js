@@ -15,6 +15,7 @@ import NewScan from './scans/pages/NewScan'
 import Scans from './scans/pages/Scans'
 import MyCollection from './pieces/pages/MyCollection'
 import ScanModalTest from './test/ScanModalTest'
+import CardTest from './pieces/pages/CardTest'
 import Demo from './test/Demo'
 
 import NavBar from './shared/components/Navigation/NavBar'
@@ -50,7 +51,7 @@ const App = () => {
         <MyCollection />
       </Route>
       <Route path="/test" exact>
-        <ScanModalTest />
+        <CardTest />
       </Route>
       <Route path="/demo" exact>
         <Demo />
