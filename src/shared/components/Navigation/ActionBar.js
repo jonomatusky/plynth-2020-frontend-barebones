@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
   bottomBar: {
     top: 'auto',
     bottom: 0,
-    background: theme.palette.background.paper,
+    background: '#00000000',
     paddingBottom: isInStandaloneMode() ? theme.spacing(4) : theme.spacing(0),
   },
 }))

@@ -14,11 +14,13 @@ import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
 const { REACT_APP_BACKEND_URL } = process.env
 const ASSET_URL = process.env.REACT_APP_ASSET_URL
 
-const ImageBox = styled.div``
+const ImageBox = styled.div`
+  padding-top: 2rem;
+`
 
 const Image = styled.img`
-  width: 100%;
-  height: 100%;
+  max-with: 100px;
+  max-height: 150px;
   object-fit: contain;
 `
 
@@ -219,29 +221,21 @@ const PieceForm = props => {
           {({ values, isValid }) => (
             <Form>
               <Grid container direction="column" spacing={1}>
-                <Grid item>
-                  <Grid container spacing={1}>
-                    <Grid item xs={4}>
-                      <ImageBox>
-                        {imageFilePath ? (
-                          <Image
-                            src={`${ASSET_URL}/${imageFilePath}`}
-                            alt="Preview"
-                          />
-                        ) : (
-                          <LoadingSpinner asOverlay />
-                        )}
-                      </ImageBox>
-                    </Grid>
-                    <Grid item xs={8}>
-                      <TitleField name="title" label="Title" type="text" />
-                      <TextField
-                        name="creatorDemo"
-                        label="Creator"
-                        type="text"
+                <Grid container justify="center">
+                  <ImageBox>
+                    {imageFilePath ? (
+                      <Image
+                        src={`${ASSET_URL}/${imageFilePath}`}
+                        alt="Preview"
                       />
-                    </Grid>
-                  </Grid>
+                    ) : (
+                      <LoadingSpinner asOverlay />
+                    )}
+                  </ImageBox>
+                </Grid>
+                <Grid item>
+                  <TitleField name="title" label="Title" type="text" />
+                  <TextField name="creatorDemo" label="Creator" type="text" />
                 </Grid>
                 <Grid item>
                   <TextArea

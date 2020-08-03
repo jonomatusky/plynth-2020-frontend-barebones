@@ -125,14 +125,17 @@ const ScanModal = props => {
     clearError()
   }
 
-  const handleMissingPiece = correct => {
+  const handleMissingPiece = () => {
     console.log('scan id: ' + scanData.scanId)
     try {
       sendRequest(
         `${REACT_APP_BACKEND_URL}/scans/${scanData.scanId}`,
         'PATCH',
+        JSON.stringify({
+          correct: false,
+        }),
         {
-          correct,
+          'Content-Type': 'application/json',
         }
       )
     } catch (err) {}
@@ -176,21 +179,21 @@ const ScanModal = props => {
                     <Button onClick={handleClose}>Close</Button>
                   </Box>
                 )}
-                {!uploadError && !error && (
+                {!isLoading && !scanData.pieceId && (
                   <React.Fragment>
                     <Box textAlign="center">
                       <Typography variant="h6" align="center">
                         Sorry, we couldn't find a matching piece.
                       </Typography>
                       <Typography align="center">
-                        Think this was an error? Let us know.
+                        Think this was an mistake? Let us know.
                       </Typography>
                     </Box>
                     <ActionBar
-                      primaryAction={handleMissingPiece}
+                      primaryAction={handleClose}
                       primaryLabel="Close"
                       secondaryAction={handleMissingPiece}
-                      secondaryLabel="Report Missing Piece"
+                      secondaryLabel="Report Error"
                     />
                   </React.Fragment>
                 )}
