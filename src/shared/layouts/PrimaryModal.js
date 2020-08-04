@@ -21,18 +21,9 @@ const StyledContainer = styled(Container)`
   z-index: 1;
 `
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />
-})
-
 const PrimaryModal = ({ open, handleClose, children }) => {
   return (
-    <Dialog
-      fullScreen
-      open={open}
-      onClose={handleClose}
-      TransitionComponent={Transition}
-    >
+    <Dialog fullScreen open={open} onClose={handleClose}>
       <ModalBackground />
       <StyledContainer maxWidth="xs" disableGutters={true}>
         {children}

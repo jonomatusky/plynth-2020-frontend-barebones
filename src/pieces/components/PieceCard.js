@@ -168,109 +168,111 @@ const PieceCard = props => {
 
   return (
     <PieceContainer container justify="center">
-      <Grid item xs={11}>
-        <PieceBox container direction="column">
-          <BarRow container justify="space-between">
-            <BarTitle>
-              <Typography color="inherit">{cardState.title}</Typography>
-            </BarTitle>
-            <Grid>
-              <BarAction color="inherit" onClick={cardState.topButtonAction}>
-                {cardState.topButtonLabel}
-              </BarAction>
-            </Grid>
-          </BarRow>
-          {cardState.mode === 'loading' && (
-            <Box height="80vh">
-              <LoadingGraphic />
-            </Box>
-          )}
-          {cardState.mode === 'view' && (
-            <Box>
-              <TopRow container>
-                <ImageBox item xs={6}>
-                  <PieceImage
-                    src={`${REACT_APP_ASSET_URL}/${loadedPiece.imageFilepath}`}
-                    alt="Preview"
-                  />
-                </ImageBox>
-                <TitleBox item xs={6}>
-                  <TitleText container direction="column" justify="center">
-                    <Box
-                      flexGrow={1}
-                      display="flex"
-                      alignItems="center"
-                      padding="1rem"
-                    >
-                      <PieceTitle variant="h5">{loadedPiece.title}</PieceTitle>
-                    </Box>
-                    <CardRow
-                      container
-                      direction="row"
-                      wrap="nowrap"
-                      alignItems="center"
-                    >
-                      <Box padding="0.5rem 0.75rem">
-                        <Avatar
-                          alt={loadedPiece.owner.displayName}
-                          src={loadedPiece.owner.avatar}
-                        />
-                      </Box>
-                      <Box flexGrow={1} paddingRight="0.5rem">
-                        <Typography variant="subtitle2">
-                          <strong>
-                            {loadedPiece.creatorDemo ||
-                              loadedPiece.owner.displayName}
-                          </strong>
-                        </Typography>
-                      </Box>
-                    </CardRow>
-                  </TitleText>
-                </TitleBox>
-              </TopRow>
-              <CardRow container justify="center">
-                <DescriptionBox item xs={11}>
-                  <DescriptionText>{loadedPiece.description}</DescriptionText>
-                </DescriptionBox>
-              </CardRow>
-              {loadedPiece.links.map(link => {
-                return (
-                  <LinkRow container key={link._id} justify="center">
-                    <Grid item xs={11}>
-                      <ActionButton
-                        target="_blank"
-                        href={link.url}
-                        label={link.name}
-                      />
-                    </Grid>
-                  </LinkRow>
-                )
-              })}
-              <CardRow container justify="center">
-                <ActionButton
-                  variant="text"
-                  label="+ Share This Piece"
-                  onClick={() => {}}
-                  color="secondary"
-                />
-              </CardRow>
-            </Box>
-          )}
-          {cardState.mode === 'edit' && (
-            <PieceForm pieceId={pieceId} onSubmit={onSubmit} />
-          )}
-          {!cardState.bottomButtonAction && <Box height="2rem" />}
-          {!!cardState.bottomButtonAction && (
-            <BottomRow container justify="center">
+      {!isLoading && (
+        <Grid item xs={11}>
+          <PieceBox container direction="column">
+            <BarRow container justify="space-between">
+              <BarTitle>
+                <Typography color="inherit">{cardState.title}</Typography>
+              </BarTitle>
               <Grid>
-                <Button color="inherit" onClick={cardState.bottomButtonAction}>
-                  {cardState.bottomButtonLabel}
-                </Button>
+                <BarAction color="inherit" onClick={cardState.topButtonAction}>
+                  {cardState.topButtonLabel}
+                </BarAction>
               </Grid>
-            </BottomRow>
-          )}
-        </PieceBox>
-      </Grid>
+            </BarRow>
+            {cardState.mode === 'view' && (
+              <Box>
+                <TopRow container>
+                  <ImageBox item xs={6}>
+                    <PieceImage
+                      src={`${REACT_APP_ASSET_URL}/${loadedPiece.imageFilepath}`}
+                      alt="Preview"
+                    />
+                  </ImageBox>
+                  <TitleBox item xs={6}>
+                    <TitleText container direction="column" justify="center">
+                      <Box
+                        flexGrow={1}
+                        display="flex"
+                        alignItems="center"
+                        padding="1rem"
+                      >
+                        <PieceTitle variant="h5">
+                          {loadedPiece.title}
+                        </PieceTitle>
+                      </Box>
+                      <CardRow
+                        container
+                        direction="row"
+                        wrap="nowrap"
+                        alignItems="center"
+                      >
+                        <Box padding="0.5rem 0.75rem">
+                          <Avatar
+                            alt={loadedPiece.owner.displayName}
+                            src={loadedPiece.owner.avatar}
+                          />
+                        </Box>
+                        <Box flexGrow={1} paddingRight="0.5rem">
+                          <Typography variant="subtitle2">
+                            <strong>
+                              {loadedPiece.creatorDemo ||
+                                loadedPiece.owner.displayName}
+                            </strong>
+                          </Typography>
+                        </Box>
+                      </CardRow>
+                    </TitleText>
+                  </TitleBox>
+                </TopRow>
+                <CardRow container justify="center">
+                  <DescriptionBox item xs={11}>
+                    <DescriptionText>{loadedPiece.description}</DescriptionText>
+                  </DescriptionBox>
+                </CardRow>
+                {loadedPiece.links.map(link => {
+                  return (
+                    <LinkRow container key={link._id} justify="center">
+                      <Grid item xs={11}>
+                        <ActionButton
+                          target="_blank"
+                          href={link.url}
+                          label={link.name}
+                        />
+                      </Grid>
+                    </LinkRow>
+                  )
+                })}
+                <CardRow container justify="center">
+                  <ActionButton
+                    variant="text"
+                    label="+ Share This Piece"
+                    onClick={() => {}}
+                    color="secondary"
+                  />
+                </CardRow>
+              </Box>
+            )}
+            {cardState.mode === 'edit' && (
+              <PieceForm pieceId={pieceId} onSubmit={onSubmit} />
+            )}
+            {!cardState.bottomButtonAction && <Box height="2rem" />}
+            {!!cardState.bottomButtonAction && (
+              <BottomRow container justify="center">
+                <Grid>
+                  <Button
+                    color="inherit"
+                    onClick={cardState.bottomButtonAction}
+                  >
+                    {cardState.bottomButtonLabel}
+                  </Button>
+                </Grid>
+              </BottomRow>
+            )}
+          </PieceBox>
+        </Grid>
+      )}
     </PieceContainer>
   )
 }

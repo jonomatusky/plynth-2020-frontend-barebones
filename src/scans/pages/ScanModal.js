@@ -29,10 +29,6 @@ import foundImage from '../../images/Plynth-Loading-Final.png'
 
 const { REACT_APP_BACKEND_URL } = process.env
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />
-})
-
 const LoadingImage = styled.img`
   height: 50px;
   width: 50px;
