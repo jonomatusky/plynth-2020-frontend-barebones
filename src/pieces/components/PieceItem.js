@@ -12,6 +12,8 @@ import {
 import PieceModal from '../pages/PieceModal'
 import { makeStyles } from '@material-ui/core/styles'
 
+const { REACT_APP_ASSET_URL } = process.env
+
 const useStyles = makeStyles(() => ({
   card: {},
   cardAction: {
@@ -32,7 +34,7 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-const PieceItem = props => {
+const PieceItem = ({ piece, ...props }) => {
   const [open, setOpen] = useState(false)
   const classes = useStyles()
 
@@ -52,8 +54,8 @@ const PieceItem = props => {
       <PieceModal
         open={open}
         onClose={handleClose}
-        pieceId={props.id}
-        key={props.id}
+        piece={piece}
+        key={props.key}
       />
       <Card>
         <CardActionArea onClick={handleClickOpen}>
@@ -61,8 +63,8 @@ const PieceItem = props => {
             <Grid item>
               <div className={classes.image}>
                 <CardMedia
-                  image={props.image}
-                  title={props.title}
+                  image={`${REACT_APP_ASSET_URL}/${piece.imageFilepath}`}
+                  title={piece.title}
                   className={classes.cover}
                 />
               </div>
@@ -71,10 +73,10 @@ const PieceItem = props => {
               <div className={classes.details}>
                 <CardContent p={0.5}>
                   <Typography component="h6" variant="h6">
-                    {props.title}
+                    {piece.title}
                   </Typography>
                   <Typography variant="subtitle1" color="textSecondary">
-                    {`by ${props.creatorDemo || 'Anonymous'}`}
+                    {`by ${piece.creatorDemo || 'Anonymous'}`}
                   </Typography>
                 </CardContent>
               </div>

@@ -14,56 +14,87 @@ import UpdatePiece from './pieces/pages/UpdatePiece'
 import NewScan from './scans/pages/NewScan'
 import Scans from './scans/pages/Scans'
 import MyCollection from './pieces/pages/MyCollection'
-import ScanModalTest from './test/ScanModalTest'
 import CardTest from './pieces/pages/CardTest'
 import Demo from './test/Demo'
+import LoggedOut from './scans/pages/LoggedOut'
 
 import NavBar from './shared/components/Navigation/NavBar'
 
 const App = () => {
   // allows routes to be changed later based on authentication/authorization
   let navRoutes
+  let noNavRoutes
 
-  navRoutes = (
-    <Switch>
-      <Route path="/create" exact>
-        <NewImage />
-      </Route>
-      <Route path="/create/piece" exact>
-        <NewPiece />
-      </Route>
-      <Route path="/pieces/:pieceId/edit">
-        <UpdatePiece />
-      </Route>
-      <Route path="/pieces/:pieceId">
-        <ViewPiece />
-      </Route>
-      <Route path="/pieces">
-        <ViewPieces />
-      </Route>
-      <Route path="/pickup" exact>
-        <NewScan />
-      </Route>
-      <Route path="/pickups" exact>
-        <Scans />
-      </Route>
-      <Route path="/collection" exact>
-        <MyCollection />
-      </Route>
-      <Route path="/test" exact>
-        <CardTest />
-      </Route>
-      <Route path="/demo" exact>
-        <Demo />
-      </Route>
-      <Redirect to="/collection" />
-    </Switch>
-  )
+  const WithNavBar = () => {
+    return (
+      <React.Fragment>
+        <Route path="/login">
+          <NavBar />
+        </Route>
+        <main>
+          <Switch>
+            <Route path="/login" exact>
+              <MyCollection />
+            </Route>
+            <Route path="/login/create" exact>
+              <NewImage />
+            </Route>
+            <Route path="/login/create/piece" exact>
+              <NewPiece />
+            </Route>
+            <Route path="/login/pieces/:pieceId/edit">
+              <UpdatePiece />
+            </Route>
+            <Route path="/login/pieces/:pieceId">
+              <ViewPiece />
+            </Route>
+            <Route path="/login/pieces">
+              <ViewPieces />
+            </Route>
+            <Route path="/login/pickup" exact>
+              <NewScan />
+            </Route>
+            <Route path="/login/pickups" exact>
+              <Scans />
+            </Route>
+            <Route path="/login/collection" exact>
+              <MyCollection />
+            </Route>
+            <Route path="/login/test" exact>
+              <CardTest />
+            </Route>
+            <Route path="/login/demo" exact>
+              <Demo />
+            </Route>
+          </Switch>
+        </main>
+      </React.Fragment>
+    )
+  }
+
+  const NoNavBar = () => {
+    return (
+      <main>
+        <Switch>
+          <Route path="/">
+            <LoggedOut />
+          </Route>
+        </Switch>
+      </main>
+    )
+  }
 
   return (
     <Router>
-      <NavBar />
-      <main>{navRoutes}</main>
+      <Switch>
+        <Route path="/" exact>
+          <NoNavBar />
+        </Route>
+        <Route>
+          <WithNavBar path="/login" exact />
+        </Route>
+        <Redirect to="/" />
+      </Switch>
     </Router>
   )
 }

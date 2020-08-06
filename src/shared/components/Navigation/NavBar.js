@@ -69,8 +69,8 @@ const MainHeader = props => {
   return (
     <React.Fragment>
       <ScanModal
-        active={scanModalIsActive}
-        setActive={setScanModalIsActive}
+        isOpen={scanModalIsActive}
+        setIsOpen={setScanModalIsActive}
         file={file}
       />
       <input

@@ -2,8 +2,6 @@ import React from 'react'
 import { Grid } from '@material-ui/core'
 import PieceItem from './PieceItem'
 
-const { REACT_APP_ASSET_URL } = process.env
-
 const PieceList = props => {
   if (props.items.length === 0) {
     return (
@@ -18,11 +16,12 @@ const PieceList = props => {
       {props.items.map(piece => (
         <PieceItem
           key={piece.id}
-          id={piece.id}
-          image={`${REACT_APP_ASSET_URL}/${piece.imageFilepath}`}
-          title={piece.title}
-          creator={piece.creator}
-          creatorDemo={piece.creatorDemo}
+          piece={piece}
+          // id={piece.id}
+          // image={`${REACT_APP_ASSET_URL}/${piece.imageFilepath}`}
+          // title={piece.title}
+          // creator={piece.creator}
+          // creatorDemo={piece.creatorDemo}
           setPieces={props.setPieces}
         />
       ))}

@@ -1,16 +1,16 @@
 import React from 'react'
+// import { useHttpClient } from '../../shared/hooks/http-hook'
 
 import PieceCard from '../components/PieceCard'
 import PrimaryModal from '../../shared/layouts/PrimaryModal'
 
-const ViewPiece = props => {
-  const { open, onClose, pieceId } = props
-
+// need to change loggedOut to auth instead of props
+const PieceModal = ({ open, onClose, piece }) => {
   return (
     <PrimaryModal open={open} onClose={onClose}>
-      <PieceCard pieceId={pieceId} onClose={onClose} />
+      <PieceCard piece={piece} onClose={onClose} />
     </PrimaryModal>
   )
 }
 
-export default ViewPiece
+export default PieceModal

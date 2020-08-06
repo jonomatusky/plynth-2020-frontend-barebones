@@ -34,16 +34,16 @@ const NotificationModal = props => {
           alignItems="center"
           style={{ minHeight: '100vh' }}
         >
-          <Grow in={props.open} timeout={500}>
-            <Grid item xs={3} align="center">
-              <Box align="center">
-                <FoundImage src={foundImage} />
-                <Typography variant="h5">
-                  <Box fontWeight="fontWeightBold">{props.message}</Box>
-                </Typography>
-              </Box>
-            </Grid>
-          </Grow>
+          {/* <Grow in={props.open} timeout={500}> */}
+          <Grid item xs={3} align="center">
+            <Box align="center">
+              <FoundImage src={foundImage} />
+              <Typography variant="h5">
+                <Box fontWeight="fontWeightBold">{props.message}</Box>
+              </Typography>
+            </Box>
+          </Grid>
+          {/* </Grow> */}
         </Grid>
       </FoundScreen>
     </Dialog>

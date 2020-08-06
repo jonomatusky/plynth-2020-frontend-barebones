@@ -87,20 +87,9 @@ const BottomRow = styled(Grid)`
   color: ${theme.palette.secondary.main};
 `
 
-const PieceCard = props => {
+const PieceCard = ({ piece, onClose, ...props }) => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
-  const [loadedPiece, setLoadedPiece] = useState()
   const [editMode, setEditMode] = useState(false)
-  const [cardState, setCardState] = useState({
-    mode: 'loading',
-    title: '',
-    topButtonAction: props.onClose,
-    topButtonLabel: 'Cancel X',
-    bottomButtonAction: null,
-    bottomButtonLabel: '',
-  })
-
-  const pieceId = props.pieceId
 
   const cancelEditMode = event => {
     setEditMode(false)
@@ -108,54 +97,17 @@ const PieceCard = props => {
 
   const enterEditMode = event => {
     setEditMode(true)
-    console.log('edit mode')
   }
 
   const handleDeletePiece = () => {
     return
   }
 
-  useEffect(() => {
-    if (loadedPiece && !editMode) {
-      setCardState({
-        mode: 'view',
-        title: loadedPiece.group || '',
-        topButtonAction: props.onClose,
-        topButtonLabel: 'Close X',
-        bottomButtonAction: enterEditMode,
-        bottomButtonLabel: 'Edit Your Piece',
-      })
-    } else if (loadedPiece && editMode) {
-      setCardState({
-        mode: 'edit',
-        title: 'Edit Your Piece',
-        topButtonAction: cancelEditMode,
-        topButtonLabel: 'Cancel X',
-        bottomButtonAction: handleDeletePiece,
-        bottomButtonLabel: 'Delete This Piece',
-      })
-    }
-  }, [loadedPiece, props, editMode])
-
-  useEffect(() => {
-    const fetchPiece = async () => {
-      try {
-        const responseData = await sendRequest(
-          `${REACT_APP_BACKEND_URL}/pieces/${pieceId}`
-        )
-        setLoadedPiece(responseData.piece)
-      } catch (err) {
-        console.log(err)
-      }
-    }
-    fetchPiece()
-  }, [sendRequest, pieceId])
-
   const onSubmit = async formData => {
     try {
       const pieceData = { pieceData: formData }
       await sendRequest(
-        `${REACT_APP_BACKEND_URL}/pieces/${pieceId}`,
+        `${REACT_APP_BACKEND_URL}/pieces/${piece.id}`,
         'PATCH',
         JSON.stringify(pieceData),
         {
@@ -166,113 +118,138 @@ const PieceCard = props => {
     } catch (err) {}
   }
 
+  const TopBar = () => {
+    let title = !editMode ? piece.group || '' : 'Edit your piece'
+    let onClick = !editMode ? onClose : cancelEditMode
+    let buttonLabel = !editMode ? 'Close X' : 'Cancel X'
+
+    return (
+      <BarRow container justify="space-between">
+        <BarTitle>
+          <Typography color="inherit">{title}</Typography>
+        </BarTitle>
+        <Grid>
+          <BarAction color="inherit" onClick={onClick}>
+            {buttonLabel}
+          </BarAction>
+        </Grid>
+      </BarRow>
+    )
+  }
+
+  const BottomBar = () => {
+    if (props.loggedOut) {
+      return (
+        <BottomRow container justify="center">
+          <Grid>
+            <Button color="inherit" href="http://www.plynth.com">
+              Get the Pynth App for More
+            </Button>
+          </Grid>
+        </BottomRow>
+      )
+    } else if (editMode) {
+      return (
+        <BottomRow container justify="center">
+          <Grid>
+            <Button color="inherit" onClick={handleDeletePiece}>
+              Delete This Piece
+            </Button>
+          </Grid>
+        </BottomRow>
+      )
+    } else {
+      return (
+        <BottomRow container justify="center">
+          <Grid>
+            <Button color="inherit" onClick={enterEditMode}>
+              Edit Your Piece
+            </Button>
+          </Grid>
+        </BottomRow>
+      )
+    }
+  }
+
   return (
     <PieceContainer container justify="center">
-      {!isLoading && (
-        <Grid item xs={11}>
-          <PieceBox container direction="column">
-            <BarRow container justify="space-between">
-              <BarTitle>
-                <Typography color="inherit">{cardState.title}</Typography>
-              </BarTitle>
-              <Grid>
-                <BarAction color="inherit" onClick={cardState.topButtonAction}>
-                  {cardState.topButtonLabel}
-                </BarAction>
-              </Grid>
-            </BarRow>
-            {cardState.mode === 'view' && (
-              <Box>
-                <TopRow container>
-                  <ImageBox item xs={6}>
-                    <PieceImage
-                      src={`${REACT_APP_ASSET_URL}/${loadedPiece.imageFilepath}`}
-                      alt="Preview"
-                    />
-                  </ImageBox>
-                  <TitleBox item xs={6}>
-                    <TitleText container direction="column" justify="center">
-                      <Box
-                        flexGrow={1}
-                        display="flex"
-                        alignItems="center"
-                        padding="1rem"
-                      >
-                        <PieceTitle variant="h5">
-                          {loadedPiece.title}
-                        </PieceTitle>
-                      </Box>
-                      <CardRow
-                        container
-                        direction="row"
-                        wrap="nowrap"
-                        alignItems="center"
-                      >
-                        <Box padding="0.5rem 0.75rem">
-                          <Avatar
-                            alt={loadedPiece.owner.displayName}
-                            src={loadedPiece.owner.avatar}
-                          />
-                        </Box>
-                        <Box flexGrow={1} paddingRight="0.5rem">
-                          <Typography variant="subtitle2">
-                            <strong>
-                              {loadedPiece.creatorDemo ||
-                                loadedPiece.owner.displayName}
-                            </strong>
-                          </Typography>
-                        </Box>
-                      </CardRow>
-                    </TitleText>
-                  </TitleBox>
-                </TopRow>
-                <CardRow container justify="center">
-                  <DescriptionBox item xs={11}>
-                    <DescriptionText>{loadedPiece.description}</DescriptionText>
-                  </DescriptionBox>
-                </CardRow>
-                {loadedPiece.links.map(link => {
-                  return (
-                    <LinkRow container key={link._id} justify="center">
-                      <Grid item xs={11}>
-                        <ActionButton
-                          target="_blank"
-                          href={link.url}
-                          label={link.name}
+      <Grid item xs={11}>
+        <PieceBox container direction="column">
+          <TopBar />
+          {!editMode && (
+            <Box>
+              <TopRow container>
+                <ImageBox item xs={6}>
+                  <PieceImage
+                    src={`${REACT_APP_ASSET_URL}/${piece.imageFilepath}`}
+                    alt="Preview"
+                  />
+                </ImageBox>
+                <TitleBox item xs={6}>
+                  <TitleText container direction="column" justify="center">
+                    <Box
+                      flexGrow={1}
+                      display="flex"
+                      alignItems="center"
+                      padding="1rem"
+                    >
+                      <PieceTitle variant="h5">{piece.title}</PieceTitle>
+                    </Box>
+                    <CardRow
+                      container
+                      direction="row"
+                      wrap="nowrap"
+                      alignItems="center"
+                    >
+                      <Box padding="0.5rem 0.75rem">
+                        <Avatar
+                          alt={piece.owner.displayName}
+                          src={piece.owner.avatar}
                         />
-                      </Grid>
-                    </LinkRow>
-                  )
-                })}
-                <CardRow container justify="center">
+                      </Box>
+                      <Box flexGrow={1} paddingRight="0.5rem">
+                        <Typography variant="subtitle2">
+                          <strong>
+                            {piece.creatorDemo || piece.owner.displayName}
+                          </strong>
+                        </Typography>
+                      </Box>
+                    </CardRow>
+                  </TitleText>
+                </TitleBox>
+              </TopRow>
+              <CardRow container justify="center">
+                <DescriptionBox item xs={11}>
+                  <DescriptionText>{piece.description}</DescriptionText>
+                </DescriptionBox>
+              </CardRow>
+              {piece.links.map(link => {
+                return (
+                  <LinkRow container key={link._id} justify="center">
+                    <Grid item xs={11}>
+                      <ActionButton
+                        target="_blank"
+                        href={link.url}
+                        label={link.name}
+                      />
+                    </Grid>
+                  </LinkRow>
+                )
+              })}
+              {/* <CardRow container justify="center">
                   <ActionButton
                     variant="text"
                     label="+ Share This Piece"
                     onClick={() => {}}
                     color="secondary"
                   />
-                </CardRow>
-              </Box>
-            )}
-            {cardState.mode === 'edit' && (
-              <PieceForm pieceId={pieceId} onSubmit={onSubmit} />
-            )}
-            {!cardState.bottomButtonAction && <Box height="2rem" />}
-            {!!cardState.bottomButtonAction && (
-              <BottomRow container justify="center">
-                <Grid>
-                  <Button
-                    color="inherit"
-                    onClick={cardState.bottomButtonAction}
-                  >
-                    {cardState.bottomButtonLabel}
-                  </Button>
-                </Grid>
-              </BottomRow>
-            )}
-          </PieceBox>
-        </Grid>
-      )}
+                </CardRow> */}
+            </Box>
+          )}
+          {editMode && <PieceForm pieceId={piece.id} onSubmit={onSubmit} />}
+          <BottomBar />
+        </PieceBox>
+      </Grid>
     </PieceContainer>
   )
 }
