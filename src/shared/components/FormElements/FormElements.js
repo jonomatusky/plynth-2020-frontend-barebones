@@ -30,6 +30,7 @@ const TextInput = styled.input`
   font: inherit;
   color: white;
   border: 1px solid;
+  border-radius: 0px;
   border-color: inherit;
   background: #1b1d1b;
   padding: 0.2rem 0.6rem 0.3rem 0.6rem;
