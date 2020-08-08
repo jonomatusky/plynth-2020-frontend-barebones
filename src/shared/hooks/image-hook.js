@@ -105,7 +105,9 @@ export const useSignedRequest = () => {
         console.log('response: ' + JSON.stringify(response))
         return response
       } catch (err) {
-        const error = new Error('Please upload an image file.')
+        const error = new Error(
+          'Unable to connect to server. Please try again.'
+        )
         throw error
       }
     },

@@ -34,14 +34,16 @@ const LoadingImage = styled.img`
   width: 50px;
 `
 
-const StyledContainer = styled(Container)`
-  background-image: linear-gradient(
-    200deg,
-    ${theme.palette.primary.main}22,
-    ${theme.palette.primary.main}00
-  );
-  min-
-  height: 100vh;
+const MessageScreen = styled(Box)`
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+`
+
+const CenteredGrid = styled(Grid)`
+  height: 100%;
 `
 
 const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
@@ -86,6 +88,7 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
         console.log('uploaded image: ' + uploadedImage)
       } catch (err) {
         setErrorMessage(err.message)
+        return
       }
 
       try {
@@ -104,6 +107,7 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
       } catch (err) {
         console.log(err)
         setErrorMessage('Unable to connect to server. Please try again.')
+        return
       }
 
       try {
@@ -115,7 +119,6 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
             'Content-Type': 'application/json',
           }
         )
-
         if (scanResponse) {
           setScanData(scanResponse)
           console.log(scanResponse)
@@ -123,6 +126,7 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
       } catch (err) {
         console.log(err)
         setErrorMessage(err.message)
+        return
       }
     }
 
@@ -148,7 +152,7 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
     console.log('scan id: ' + scanData.scan.id)
     try {
       sendRequest(
-        `${REACT_APP_BACKEND_URL}/scans/${scanData.scanId}`,
+        `${REACT_APP_BACKEND_URL}/scans/${scanData.scan.id}`,
         'PATCH',
         JSON.stringify({
           correct: false,
@@ -162,64 +166,97 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
     handleClose()
   }
 
+  const Content = () => {
+    if (errorMessage) {
+      return (
+        <MessageScreen>
+          <CenteredGrid
+            container
+            direction="column"
+            justify="center"
+            alignItems="center"
+          >
+            {errorMessage && (
+              <Box textAlign="center">
+                <Typography variant="h6">{errorMessage}</Typography>
+                <Button onClick={handleClose}>Close</Button>
+              </Box>
+            )}
+          </CenteredGrid>
+        </MessageScreen>
+      )
+    } else if (isLoading || isProcessing) {
+      return (
+        <MessageScreen>
+          <CenteredGrid
+            container
+            direction="column"
+            justify="center"
+            alignItems="center"
+          >
+            <Grid item>
+              <LoadingImage src={loadingImage} />
+            </Grid>
+            <Grid item>
+              <Typography variant="h5">Searching...</Typography>
+            </Grid>
+            <Grid item>
+              <Button onClick={handleClose}>Cancel</Button>
+            </Grid>
+          </CenteredGrid>
+        </MessageScreen>
+      )
+    } else if (showCard) {
+      return (
+        <Grid container direction="column" justify="center" alignItems="center">
+          <Box minHeight="2vh"></Box>
+          <PieceCard
+            piece={scanData.piece}
+            onClose={handleClose}
+            loggedOut={props.loggedOut}
+          />
+          <Box minHeight="2vh"></Box>
+        </Grid>
+      )
+    } else if (scanData.scan && !scanData.piece) {
+      return (
+        <MessageScreen>
+          <CenteredGrid
+            container
+            direction="column"
+            justify="center"
+            alignItems="center"
+          >
+            <Grid item>
+              <Typography variant="h6" align="center">
+                Sorry, we couldn't find a matching piece.
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography align="center">
+                Think this was a mistake? Let us know.
+              </Typography>
+            </Grid>
+
+            <ActionBar
+              primaryAction={handleClose}
+              primaryLabel="Close"
+              secondaryAction={handleMissingPiece}
+              secondaryLabel="Report Error"
+            />
+          </CenteredGrid>
+        </MessageScreen>
+      )
+    } else {
+      return <div></div>
+    }
+  }
+
   return (
     <React.Fragment>
       <NotificationModal fullscreen open={foundScreen} message="FOUND!" />
       <PrimaryModal open={isOpen} onClose={handleClose}>
-        <Grid
-          container
-          direction="column"
-          justify="center"
-          alignItems="center"
-          style={{ minHeight: '100vh' }}
-        >
-          {!showCard && (
-            <React.Fragment>
-              <LoadingImage src={loadingImage} />
-              <Typography variant="h5">Searching...</Typography>
-              <Button onClick={handleClose}>Cancel</Button>
-            </React.Fragment>
-          )}
-
-          {/* Displays an error screen if no match was found, with the option for the user to report the error */}
-
-          {showCard && !scanData.piece && (
-            <Grid item>
-              {errorMessage && (
-                <Box textAlign="center">
-                  <Typography variant="h6">{errorMessage}</Typography>
-                  <Button onClick={handleClose}>Close</Button>
-                </Box>
-              )}
-              {!uploadError && !error && (
-                <React.Fragment>
-                  <Box textAlign="center">
-                    <Typography variant="h6" align="center">
-                      Sorry, we couldn't find a matching piece.
-                    </Typography>
-                    <Typography align="center">
-                      Think this was an mistake? Let us know.
-                    </Typography>
-                  </Box>
-                  <ActionBar
-                    primaryAction={handleClose}
-                    primaryLabel="Close"
-                    secondaryAction={handleMissingPiece}
-                    secondaryLabel="Report Error"
-                  />
-                </React.Fragment>
-              )}
-            </Grid>
-          )}
-
-          {showCard && scanData.piece && (
-            <PieceCard
-              piece={scanData.piece}
-              onClose={handleClose}
-              loggedOut={props.loggedOut}
-            />
-          )}
-        </Grid>
+        <Content />
       </PrimaryModal>
     </React.Fragment>
   )

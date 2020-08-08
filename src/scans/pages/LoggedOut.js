@@ -18,7 +18,7 @@ const Background = styled.div`
     ${theme.palette.primary.main}50,
     ${theme.palette.primary.main}00
   );
-  position: absolute;
+  position: fixed;
   top: 0px;
   right: 0px;
   bottom: 0px;
@@ -26,7 +26,7 @@ const Background = styled.div`
 `
 
 const CenteredGrid = styled(Grid)`
-  height: 100vh;
+  height: 100%;
 `
 
 const StyledFab = styled(Fab)``
@@ -88,8 +88,7 @@ const LoggedOut = props => {
         accepts=".jpg, .png, .jpeg"
         onChange={pickHandler}
       />
-      <Background />
-      <Container maxWidth="xs">
+      <Background>
         <CenteredGrid
           container
           direction="column"
@@ -116,8 +115,7 @@ const LoggedOut = props => {
             </a>
           </LogoBox>
         </LogoBar>
-        {/* </Background> */}
-      </Container>
+      </Background>
     </React.Fragment>
   )
 }

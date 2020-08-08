@@ -5,6 +5,7 @@ import styled from 'styled-components'
 
 import { useHttpClient } from '../../shared/hooks/http-hook'
 
+import { BarRow } from '../../shared/components/UIElements/CardSections'
 import ActionButton from '../../shared/components/UIElements/ActionButton'
 import PieceForm from '../components/PieceForm'
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
@@ -14,28 +15,9 @@ import LoadingGraphic from '../../shared/components/UIElements/LoadingGraphic'
 
 const { REACT_APP_BACKEND_URL, REACT_APP_ASSET_URL } = process.env
 
-const PieceContainer = styled(Grid)`
-  margin: 1rem 0rem;
-`
-
 const PieceBox = styled(Grid)`
   border: 1px solid ${theme.palette.secondary.main};
   background: ${theme.palette.background.paper};
-`
-
-const BarRow = styled(Grid)`
-  background: ${theme.palette.secondary.main};
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-  color: ${theme.palette.background.paper};
-`
-
-const BarTitle = styled(Grid)`
-  font-weight: bold;
-`
-
-const BarAction = styled(Button)`
-  padding: 0;
 `
 
 const TopRow = styled(Grid)`
@@ -123,18 +105,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
     let onClick = !editMode ? onClose : cancelEditMode
     let buttonLabel = !editMode ? 'Close X' : 'Cancel X'
 
-    return (
-      <BarRow container justify="space-between">
-        <BarTitle>
-          <Typography color="inherit">{title}</Typography>
-        </BarTitle>
-        <Grid>
-          <BarAction color="inherit" onClick={onClick}>
-            {buttonLabel}
-          </BarAction>
-        </Grid>
-      </BarRow>
-    )
+    return <BarRow title={title} onClick={onClick} buttonLabel={buttonLabel} />
   }
 
   const BottomBar = () => {
@@ -172,8 +143,9 @@ const PieceCard = ({ piece, onClose, ...props }) => {
   }
 
   return (
-    <PieceContainer container justify="center">
+    <Grid container justify="center">
       <Grid item xs={11}>
+        <Box height="4vh"></Box>
         <PieceBox container direction="column">
           <TopBar />
           {!editMode && (
@@ -249,8 +221,9 @@ const PieceCard = ({ piece, onClose, ...props }) => {
           {editMode && <PieceForm pieceId={piece.id} onSubmit={onSubmit} />}
           <BottomBar />
         </PieceBox>
+        <Box height="4vh"></Box>
       </Grid>
-    </PieceContainer>
+    </Grid>
   )
 }
 

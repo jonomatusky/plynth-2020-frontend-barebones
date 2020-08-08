@@ -55,7 +55,6 @@ const MainHeader = props => {
 
   const filePickerHandler = event => {
     event.preventDefault()
-    setScanModalIsActive(true)
     filePickerRef.current.click()
   }
 
@@ -63,6 +62,7 @@ const MainHeader = props => {
     if (event.target.files && event.target.files.length === 1) {
       setFile(event.target.files[0])
     }
+    setScanModalIsActive(true)
     filePickerRef.current.value = ''
   }
 

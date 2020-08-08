@@ -32,8 +32,17 @@ const TextInput = styled.input`
   border: 1px solid;
   border-color: inherit;
   background: #1b1d1b;
-  padding: 0.2rem 0.75rem 0.4rem 0.75rem;
-  margin: 0rem 0rem 1rem 0rem;
+  padding: 0.2rem 0.6rem 0.3rem 0.6rem;
+  margin: 0.4rem 0rem 0.6rem 0rem;
+  font-weight: bold;
+  font-size: 1.2rem;
+  &:focus {
+    background: white;
+    color: ${theme.palette.background.default};
+    border-radius: 0px;
+    outline: 1px solid ${theme.palette.primary.main};
+    border: 1px solid ${theme.palette.primary.main};
+  }
 `
 
 const TitleInput = styled(TextInput)`

@@ -10,11 +10,12 @@ const ModalBackground = styled(Box)`
     ${theme.palette.primary.main}50,
     ${theme.palette.primary.main}00
   );
-  min-height: 100vh;
-  width: 100vw;
   position: fixed;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
   z-index: 0;
-  bottom: 0;
 `
 
 const StyledContainer = styled(Container)`

@@ -17,6 +17,7 @@ import MyCollection from './pieces/pages/MyCollection'
 import CardTest from './pieces/pages/CardTest'
 import Demo from './test/Demo'
 import LoggedOut from './scans/pages/LoggedOut'
+import BetaSignup from './users/pages/BetaSignup'
 
 import NavBar from './shared/components/Navigation/NavBar'
 
@@ -28,70 +29,59 @@ const App = () => {
   const WithNavBar = () => {
     return (
       <React.Fragment>
-        <Route path="/login">
+        <Route path="/">
           <NavBar />
         </Route>
         <main>
           <Switch>
-            <Route path="/login" exact>
-              <MyCollection />
-            </Route>
-            <Route path="/login/create" exact>
+            <Route path="/create" exact>
               <NewImage />
             </Route>
-            <Route path="/login/create/piece" exact>
+            <Route path="/create/piece" exact>
               <NewPiece />
             </Route>
-            <Route path="/login/pieces/:pieceId/edit">
+            <Route path="/pieces/:pieceId/edit">
               <UpdatePiece />
             </Route>
-            <Route path="/login/pieces/:pieceId">
+            <Route path="/pieces/:pieceId">
               <ViewPiece />
             </Route>
-            <Route path="/login/pieces">
+            <Route path="/pieces">
               <ViewPieces />
             </Route>
-            <Route path="/login/pickup" exact>
+            <Route path="/pickup" exact>
               <NewScan />
             </Route>
-            <Route path="/login/pickups" exact>
+            <Route path="/pickups" exact>
               <Scans />
             </Route>
-            <Route path="/login/collection" exact>
+            <Route path="/collection" exact>
               <MyCollection />
             </Route>
-            <Route path="/login/test" exact>
+            <Route path="/test" exact>
               <CardTest />
             </Route>
-            <Route path="/login/demo" exact>
+            <Route path="/demo" exact>
               <Demo />
             </Route>
+            <Redirect to="/" />
           </Switch>
         </main>
       </React.Fragment>
     )
   }
 
-  const NoNavBar = () => {
-    return (
-      <main>
-        <Switch>
-          <Route path="/">
-            <LoggedOut />
-          </Route>
-        </Switch>
-      </main>
-    )
-  }
-
   return (
     <Router>
       <Switch>
-        <Route path="/" exact>
-          <NoNavBar />
+        <Route path="/signup" exact>
+          <BetaSignup />
         </Route>
-        <Route>
-          <WithNavBar path="/login" exact />
+        <Route path="/" exact>
+          <LoggedOut />
+        </Route>
+        <Route path="/">
+          <WithNavBar />
         </Route>
         <Redirect to="/" />
       </Switch>
