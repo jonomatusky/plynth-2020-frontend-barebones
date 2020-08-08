@@ -113,7 +113,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
       return (
         <BottomRow container justify="center">
           <Grid>
-            <Button color="inherit" href="http://www.plynth.com">
+            <Button color="inherit" href="/signup">
               Get the Pynth App for More
             </Button>
           </Grid>
