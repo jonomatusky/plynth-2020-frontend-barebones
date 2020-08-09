@@ -5,55 +5,43 @@ import { useHttpClient } from '../../shared/hooks/http-hook'
 import { Container, Grid, Box } from '@material-ui/core'
 
 import PageTitle from '../../shared/components/UIElements/PageTitle'
-import PieceList from '../components/PieceList'
+import UserList from '../components/UserList'
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
 import ActionButton from '../../shared/components/UIElements/ActionButton'
 
 const { REACT_APP_BACKEND_URL } = process.env
 
-const title = 'My Pieces'
+const title = 'Users'
 
-const ViewPieces = () => {
-  const [loadedPieces, setLoadedPieces] = useState()
+const ViewUsers = () => {
+  const [loadedUsers, setLoadedUsers] = useState()
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
 
   useEffect(() => {
-    const fetchPieces = async () => {
+    const fetchUsers = async () => {
       try {
-        const responseData = await sendRequest(
-          `${REACT_APP_BACKEND_URL}/pieces`
-        )
-        setLoadedPieces(responseData.pieces)
+        const responseData = await sendRequest(`${REACT_APP_BACKEND_URL}/users`)
+        setLoadedUsers(responseData.users)
       } catch (err) {}
     }
-    fetchPieces()
+    fetchUsers()
   }, [sendRequest])
 
   return (
     <Container maxWidth="sm">
       <PageTitle title={title} />
       {isLoading && <LoadingSpinner asOverlay />}
-      {!isLoading && loadedPieces && (
+      {!isLoading && loadedUsers && (
         <Grid container direction="column" alignItems="stretch" spacing={2}>
           <Grid item xs={12}>
-            {/* <Button
-              variant="contained"
-              color="primary"
-              component={NavLink}
-              to={'/create'}
-              disableElevation={true}
-              fullWidth={true}
-            >
-              Create New Piece +
-            </Button> */}
             <ActionButton
               component={NavLink}
-              to={'/create'}
-              label="Create New Piece +"
+              to={'/signup'}
+              label="Add User +"
             ></ActionButton>
           </Grid>
           <Grid item>
-            <PieceList items={loadedPieces} />
+            <UserList items={loadedUsers} />
           </Grid>
         </Grid>
       )}
@@ -62,4 +50,4 @@ const ViewPieces = () => {
   )
 }
 
-export default ViewPieces
+export default ViewUsers

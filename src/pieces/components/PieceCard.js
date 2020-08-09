@@ -113,7 +113,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
       return (
         <BottomRow container justify="center">
           <Grid>
-            <Button color="inherit" href="/signup">
+            <Button color="inherit" href="/subscribe">
               Get the Pynth App for More
             </Button>
           </Grid>
@@ -173,12 +173,14 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                       wrap="nowrap"
                       alignItems="center"
                     >
-                      <Box padding="0.5rem 0.75rem">
-                        <Avatar
-                          alt={piece.owner.displayName}
-                          src={piece.owner.avatar}
-                        />
-                      </Box>
+                      <a href={piece.owner.links[0]}>
+                        <Box padding="0.5rem 0.75rem">
+                          <Avatar
+                            alt={piece.owner.displayName}
+                            src={piece.owner.avatarLink}
+                          />
+                        </Box>
+                      </a>
                       <Box flexGrow={1} paddingRight="0.5rem">
                         <Typography variant="subtitle2">
                           <strong>

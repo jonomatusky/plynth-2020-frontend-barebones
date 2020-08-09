@@ -16,15 +16,16 @@ import Scans from './scans/pages/Scans'
 import MyCollection from './pieces/pages/MyCollection'
 import CardTest from './pieces/pages/CardTest'
 import Demo from './test/Demo'
+import Signup from './users/pages/Signup'
 import LoggedOut from './scans/pages/LoggedOut'
 import BetaSignup from './users/pages/BetaSignup'
+import ViewUsers from './users/pages/ViewUsers'
+import UserProfile from './users/pages/UserProfile'
 
 import NavBar from './shared/components/Navigation/NavBar'
 
 const App = () => {
   // allows routes to be changed later based on authentication/authorization
-  let navRoutes
-  let noNavRoutes
 
   const WithNavBar = () => {
     return (
@@ -46,7 +47,7 @@ const App = () => {
             <Route path="/pieces/:pieceId">
               <ViewPiece />
             </Route>
-            <Route path="/pieces">
+            <Route path="/pieces" exact>
               <ViewPieces />
             </Route>
             <Route path="/pickup" exact>
@@ -64,6 +65,12 @@ const App = () => {
             <Route path="/demo" exact>
               <Demo />
             </Route>
+            <Route path="/users/:userId">
+              <UserProfile />
+            </Route>
+            <Route path="/users" exact>
+              <ViewUsers />
+            </Route>
             <Redirect to="/" />
           </Switch>
         </main>
@@ -75,6 +82,9 @@ const App = () => {
     <Router>
       <Switch>
         <Route path="/signup" exact>
+          <Signup />
+        </Route>
+        <Route path="/subscribe" exact>
           <BetaSignup />
         </Route>
         <Route path="/" exact>

@@ -12,6 +12,7 @@ const Background = styled.div`
   right: 0px;
   bottom: 0px;
   left: 0px;
+  z-index: -1;
 `
 
 export default Background

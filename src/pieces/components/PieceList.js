@@ -14,16 +14,7 @@ const PieceList = props => {
   return (
     <Grid container spacing={2}>
       {props.items.map(piece => (
-        <PieceItem
-          key={piece.id}
-          piece={piece}
-          // id={piece.id}
-          // image={`${REACT_APP_ASSET_URL}/${piece.imageFilepath}`}
-          // title={piece.title}
-          // creator={piece.creator}
-          // creatorDemo={piece.creatorDemo}
-          setPieces={props.setPieces}
-        />
+        <PieceItem key={piece.id} piece={piece} setPieces={props.setPieces} />
       ))}
     </Grid>
   )

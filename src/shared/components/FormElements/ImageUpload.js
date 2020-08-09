@@ -36,7 +36,7 @@ const ImageUpload = props => {
   } = useImageUpload()
   const [file, setFile] = useState(null)
   const [previewUrl, setPreviewUrl] = useState()
-  const [isValid, setIsValid] = useState()
+  const [isValid, setIsValid] = useState(false)
 
   const filePickerRef = useRef()
 

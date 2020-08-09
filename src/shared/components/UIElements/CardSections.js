@@ -32,43 +32,43 @@ export const ImageBox = styled(Grid)`
   padding: 0.5rem;
 `
 
-const PieceImage = styled.img`
+export const PieceImage = styled.img`
   width: 100%;
   height: 100%;
   max-height: 200px;
   object-fit: contain;
 `
 
-const TitleBox = styled(Grid)`
+export const TitleBox = styled(Grid)`
   border-left: 1px solid ${theme.palette.secondary.main};
 `
 
-const TitleText = styled(Grid)`
+export const TitleText = styled(Grid)`
   height: 100%;
 `
 
-const PieceTitle = styled(Typography)`
+export const PieceTitle = styled(Typography)`
   font-weight: bold;
   line-height: 1;
 `
 
-const CardRow = styled(Grid)`
+export const CardRow = styled(Grid)`
   border-top: 1px solid ${theme.palette.secondary.main};
 `
 
-const DescriptionBox = styled(Grid)`
+export const DescriptionBox = styled(Grid)`
   margin: 1.5rem 0rem 1rem 0rem;
 `
 
-const DescriptionText = styled(Typography)`
+export const DescriptionText = styled(Typography)`
   line-height: 1.5;
 `
 
-const LinkRow = styled(Grid)`
+export const LinkRow = styled(Grid)`
   margin: 1.25rem 0rem;
 `
 
-const BottomRow = styled(Grid)`
+export const BottomRow = styled(Grid)`
   border-top: 1px solid ${theme.palette.secondary.main};
   color: ${theme.palette.secondary.main};
 `
