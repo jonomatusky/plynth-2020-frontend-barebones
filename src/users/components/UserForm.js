@@ -63,7 +63,7 @@ const UserForm = props => {
       .min(6, 'Username must be at least 6 characters long')
       .max(30, 'Username must be no longer than 30 characters')
       .matches(
-        /^(?=.{6,30}$)(?!-)(?!.*-{2})[a-z0-9-]+(?<!-)$/,
+        /^(?=.{6,30}$)(?!-)(?!.*-{2})[a-z0-9-]$/,
         'Username must only contain lowercase characters a-z, numbers and -'
       )
       .required('Required'),
