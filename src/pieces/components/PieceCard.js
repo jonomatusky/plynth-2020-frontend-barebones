@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-import { Grid, Box, Button, Typography, Avatar } from '@material-ui/core'
+import { Grid, Box, Button, Typography, Avatar, Link } from '@material-ui/core'
 import styled from 'styled-components'
 
 import { useHttpClient } from '../../shared/hooks/http-hook'
@@ -50,6 +50,48 @@ const PieceTitle = styled(Typography)`
 
 const CardRow = styled(Grid)`
   border-top: 1px solid ${theme.palette.secondary.main};
+`
+
+const AvatarBox = styled(Box)`
+  color: white;
+  text-decoration: none;
+  &a {
+    color: white;
+    text-decoration: none;
+  }
+  &a:active {
+    color: white;
+    text-decoration: none;
+  }
+  &a:focus {
+    color: white;
+    text-decoration: none;
+  }
+  &a:visited {
+    color: white;
+    text-decoration: none;
+  }
+`
+
+const AvatarTypography = styled(Typography)`
+  color: white;
+  text-decoration: none;
+  &a {
+    color: white;
+    text-decoration: none;
+  }
+  &a:active {
+    color: white;
+    text-decoration: none;
+  }
+  &a:focus {
+    color: white;
+    text-decoration: none;
+  }
+  &a:visited {
+    color: white;
+    text-decoration: none;
+  }
 `
 
 const DescriptionBox = styled(Grid)`
@@ -167,28 +209,32 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                     >
                       <PieceTitle variant="h5">{piece.title}</PieceTitle>
                     </Box>
-                    <CardRow
-                      container
-                      direction="row"
-                      wrap="nowrap"
-                      alignItems="center"
+                    <a
+                      href={
+                        piece.owner.links[0] ? piece.owner.links[0].url : '#'
+                      }
                     >
-                      <a href={piece.owner.links[0]}>
+                      <CardRow
+                        container
+                        direction="row"
+                        wrap="nowrap"
+                        alignItems="center"
+                      >
                         <Box padding="0.5rem 0.75rem">
                           <Avatar
                             alt={piece.owner.displayName}
                             src={piece.owner.avatarLink}
                           />
                         </Box>
-                      </a>
-                      <Box flexGrow={1} paddingRight="0.5rem">
-                        <Typography variant="subtitle2">
-                          <strong>
-                            {piece.creatorDemo || piece.owner.displayName}
-                          </strong>
-                        </Typography>
-                      </Box>
-                    </CardRow>
+                        <AvatarBox flexGrow={1} paddingRight="0.5rem">
+                          <AvatarTypography variant="subtitle2">
+                            <strong>
+                              {piece.creatorDemo || piece.owner.displayName}
+                            </strong>
+                          </AvatarTypography>
+                        </AvatarBox>
+                      </CardRow>
+                    </a>
                   </TitleText>
                 </TitleBox>
               </TopRow>

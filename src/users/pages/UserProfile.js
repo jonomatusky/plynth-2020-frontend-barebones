@@ -48,7 +48,7 @@ const UserProfile = () => {
       } catch (err) {}
     }
     fetchPieces()
-  }, [sendRequest])
+  }, [sendRequest, userId])
 
   const handleClose = event => {
     history.goBack()
