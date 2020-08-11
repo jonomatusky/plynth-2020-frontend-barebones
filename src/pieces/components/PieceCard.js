@@ -92,6 +92,35 @@ const AvatarTypography = styled(Typography)`
     color: white;
     text-decoration: none;
   }
+  &a:hover {
+    color: white;
+    text-decoration: none;
+  }
+  &:hover {
+    color: white;
+    text-decoration: none;
+  }
+`
+
+const UnstyledLink = styled.a`
+  color: inherit;
+  text-decoration: none;
+  &:active {
+    color: white;
+    text-decoration: none;
+  }
+  &:focus {
+    color: white;
+    text-decoration: none;
+  }
+  &:visited {
+    color: white;
+    text-decoration: none;
+  }
+  &:hover {
+    color: white;
+    text-decoration: none;
+  }
 `
 
 const DescriptionBox = styled(Grid)`
@@ -209,7 +238,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                     >
                       <PieceTitle variant="h5">{piece.title}</PieceTitle>
                     </Box>
-                    <a
+                    <UnstyledLink
                       href={
                         piece.owner.links[0] ? piece.owner.links[0].url : '#'
                       }
@@ -234,7 +263,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                           </AvatarTypography>
                         </AvatarBox>
                       </CardRow>
-                    </a>
+                    </UnstyledLink>
                   </TitleText>
                 </TitleBox>
               </TopRow>
