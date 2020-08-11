@@ -31,8 +31,11 @@ const UserForm = props => {
   // const [imageFilePath, setImageFilePath] = useState(null)
   const [user, setUser] = useState({})
   const [imageUpload, setImageUpload] = useState({})
+  const [avatarLink, setAvatarLink] = useState()
 
   // const user = props.user
+
+  const userId = props.userId
 
   const [initialValues, setInitialValues] = useState({
     username: '',
@@ -41,22 +44,35 @@ const UserForm = props => {
     links: [],
   })
 
-  // useEffect(() => {
-  //   if (!!props.imageFilePath) {
-  //     setImageFilePath(props.imageFilePath)
-  //   }
-  // }, [props])
-
-  // useEffect(() => {
-  //   const fetchUsers = async () => {
-  //     try {
-  //       const responseData = await sendRequest(`${REACT_APP_BACKEND_URL}/users`)
-  //       setUsers(responseData.users)
-  //     } catch (err) {
-  //       console.log(err)
-  //     }
-  //   }
-  // }, [sendRequest, userId])
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const responseData = await sendRequest(
+          `${REACT_APP_BACKEND_URL}/users/${userId}`
+        )
+        const {
+          username,
+          displayName,
+          avatar,
+          avatarLink,
+          bio,
+          links,
+        } = responseData.user
+        setInitialValues({
+          username,
+          displayName,
+          avatar,
+          links,
+        })
+        setAvatarLink(avatarLink)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    if (!!userId) {
+      fetchUser()
+    }
+  }, [sendRequest, userId])
 
   const validationSchema = Yup.object({
     username: Yup.string()
@@ -86,38 +102,39 @@ const UserForm = props => {
     ),
   })
 
-  const handleSubmit = async values => {
-    if (imageUpload.isValid) {
-      try {
-        const awsRes = await sendRequest(
-          imageUpload.signedUrl,
-          'PUT',
-          imageUpload.image,
-          {},
-          false
-        )
-        console.log('awsRes: ' + awsRes)
-        if (awsRes.status === 200) {
-          props.onSubmit(values)
-        }
-      } catch (err) {
-        console.log(err)
-      }
-    }
-  }
+  // const handleSubmit = async values => {
+  //   if (imageUpload.isValid) {
+  //     try {
+  //       const awsRes = await sendRequest(
+  //         imageUpload.signedUrl,
+  //         'PUT',
+  //         imageUpload.image,
+  //         {},
+  //         false
+  //       )
+  //       console.log('awsRes: ' + awsRes)
+  //       if (awsRes.status === 200) {
+  //         props.onSubmit(values)
+  //       }
+  //     } catch (err) {
+  //       console.log(err)
+  //     }
+  //   }
+  // }
 
   return (
     <Formik
       enableReinitialize="true"
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={handleSubmit}
+      onSubmit={props.onSubmit}
     >
       {({ values, isValid, setFieldValue }) => (
         <Form>
           <Grid container direction="column" spacing={1}>
             <Grid item>
               <ImageUpload
+                previewUrl={avatarLink}
                 onInput={(signedUrl, imageData, image, isValid) => {
                   setFieldValue('avatar', `${imageData.id}.${imageData.ext}`)
                   setImageUpload({ signedUrl, imageData, image, isValid })

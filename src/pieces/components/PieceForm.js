@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { Grid, Box, Typography, Button } from '@material-ui/core'
 import { Formik, Form, FieldArray, useField } from 'formik'
 import * as Yup from 'yup'
+import Autocomplete from 'react-autocomplete'
 
 import styled from 'styled-components'
 import theme from '../../theme'
@@ -142,9 +143,37 @@ const FieldSet = styled(Grid)`
   margin-bottom: 1em;
 `
 
+const StyledAutocomplete = styled(Autocomplete)`
+  color: ${props =>
+    props.error ? theme.palette.error.main : theme.palette.secondary.main};
+  border-color: ${props =>
+    props.error ? theme.palette.error.main : theme.palette.secondary.main};
+  width: 100%;
+  font: inherit;
+  color: white;
+  border: 1px solid;
+  border-color: inherit;
+  background: #1b1d1b;
+  padding: 0.2rem 0.75rem 0.4rem 0.75rem;
+  margin: 0rem 0rem 1rem 0rem;
+`
+
+// const AutocompleteField = ({ label, ...props }) => {
+//   const [field, meta] = useField(props)
+//   const showError = meta.touched && meta.error
+//   return (
+//     <StyledAutocomplete error={showError}>
+//       <Label htmlFor={props.id || props.name}>{label}</Label>
+//       <Autocomplete {...props} />
+//       {showError ? <ErrorMessage>{meta.error}</ErrorMessage> : null}
+//     </StyledAutocomplete>
+//   )
+// }
+
 const PieceForm = props => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
   const [imageFilePath, setImageFilePath] = useState(null)
+  const [users, setUsers] = useState([])
 
   // const { register, handleSubmit, watch, errors } = useForm()
 
@@ -153,7 +182,7 @@ const PieceForm = props => {
   const [initialValues, setInitialValues] = useState({
     title: '',
     description: '',
-    creatorDemo: '',
+    creator: '',
     links: [],
   })
 
@@ -172,16 +201,17 @@ const PieceForm = props => {
         const {
           title,
           description,
-          creatorDemo,
+          owner,
           links,
           awsId,
           ext,
         } = responseData.piece
         setImageFilePath(`${awsId}.${ext}`)
+        console.log(owner.username)
         setInitialValues({
           title,
           description,
-          creatorDemo: creatorDemo || '',
+          ownerUsername: owner.username,
           links,
         })
       } catch (err) {
@@ -193,12 +223,41 @@ const PieceForm = props => {
     }
   }, [sendRequest, pieceId])
 
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const responseData = await sendRequest(`${REACT_APP_BACKEND_URL}/users`)
+        setUsers(responseData.users)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    fetchUsers()
+  }, [sendRequest, pieceId])
+
+  // const getSuggestions = value => {
+  //   const inputValue = value.trim().toLowerCase();
+  //   const inputLength = inputValue.length;
+
+  //   return inputLength === 0 ? [] : users.filter(user =>
+  //     user.username.toLowerCase().slice(0, inputLength) === inputValue
+  //   );
+  // };
+
+  // const getSuggestionValue = suggestion => suggestion.name
+
+  // const renderSuggestion = suggestion => (
+  //   <div>
+  //     {suggestion.name}
+  //   </div>
+  // );
+
   const validationSchema = Yup.object({
     title: Yup.string()
       .max(32, 'Must be 32 characters or less')
       .required('Required'),
     description: Yup.string(),
-    creatorDemo: Yup.string(),
+    creator: Yup.string(),
     links: Yup.array().of(
       Yup.object({
         name: Yup.string()
@@ -218,7 +277,7 @@ const PieceForm = props => {
           validationSchema={validationSchema}
           onSubmit={props.onSubmit}
         >
-          {({ values, isValid }) => (
+          {({ values, isValid, setFieldValue }) => (
             <Form>
               <Grid container direction="column" spacing={1}>
                 <Grid container justify="center">
@@ -235,7 +294,58 @@ const PieceForm = props => {
                 </Grid>
                 <Grid item>
                   <TitleField name="title" label="Title" type="text" />
-                  <TextField name="creatorDemo" label="Creator" type="text" />
+                </Grid>
+                <Grid item>
+                  <Autocomplete
+                    getItemValue={item => item.username}
+                    items={users}
+                    wrapperStyle={{}}
+                    shouldItemRender={(item, value) =>
+                      item.username.toLowerCase().indexOf(value.toLowerCase()) >
+                      -1
+                    }
+                    renderInput={props => {
+                      return (
+                        <StyledTextInput type="text">
+                          <Label htmlFor="Owner">Owner</Label>
+                          <TextInput
+                            name="ownerUsername"
+                            type="text"
+                            {...props}
+                          />
+                        </StyledTextInput>
+                      )
+                    }}
+                    renderMenu={function (items, value, style) {
+                      return (
+                        <div
+                          style={{
+                            ...style,
+                            ...this.menuStyle,
+                            zIndex: 1,
+                            position: 'absolute',
+                          }}
+                          children={items}
+                        />
+                      )
+                    }}
+                    renderItem={(item, isHighlighted) => (
+                      <div
+                        key={item.id}
+                        style={{
+                          background: isHighlighted ? 'lightgray' : 'white',
+                          color: 'black',
+                        }}
+                      >
+                        {item.username}
+                      </div>
+                    )}
+                    value={values.ownerUsername}
+                    onChange={e =>
+                      setFieldValue('ownerUsername', e.target.value)
+                    }
+                    onSelect={val => setFieldValue('ownerUsername', val)}
+                  />
                 </Grid>
                 <Grid item>
                   <TextArea

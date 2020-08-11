@@ -41,6 +41,12 @@ const ImageUpload = props => {
   const filePickerRef = useRef()
 
   useEffect(() => {
+    if (props.previewUrl) {
+      setPreviewUrl(props.previewUrl)
+    }
+  }, [props.previewUrl])
+
+  useEffect(() => {
     if (!file) {
       return
     }

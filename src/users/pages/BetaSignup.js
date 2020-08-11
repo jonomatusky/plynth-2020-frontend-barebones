@@ -13,11 +13,8 @@ import Background from '../../shared/components/UIElements/Background'
 import styled from 'styled-components'
 
 import {
-  PieceContainer,
   PieceBox,
   BarRow,
-  BarTitle,
-  BarAction,
 } from '../../shared/components/UIElements/CardSections'
 import ActionBar from '../../shared/components/Navigation/ActionBar'
 

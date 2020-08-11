@@ -15,6 +15,7 @@ import {
   DescriptionBox,
   DescriptionText,
   LinkRow,
+  BottomRow,
 } from '../../shared/components/UIElements/CardSections'
 import styled from 'styled-components'
 
@@ -33,22 +34,40 @@ const { REACT_APP_BACKEND_URL } = process.env
 
 const UserProfile = () => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
+  const [editMode, setEditMode] = useState(false)
   const [user, setUser] = useState()
   const userId = useParams().userId
 
   const history = useHistory()
 
   useEffect(() => {
-    const fetchPieces = async () => {
-      try {
-        const responseData = await sendRequest(
-          `${REACT_APP_BACKEND_URL}/users/${userId}`
-        )
-        setUser(responseData.user)
-      } catch (err) {}
+    if (editMode === false) {
+      const fetchUser = async () => {
+        try {
+          const responseData = await sendRequest(
+            `${REACT_APP_BACKEND_URL}/users/${userId}`
+          )
+          setUser(responseData.user)
+        } catch (err) {}
+      }
+      fetchUser()
     }
-    fetchPieces()
-  }, [sendRequest, userId])
+  }, [sendRequest, userId, editMode])
+
+  const handleSubmit = async values => {
+    try {
+      const userData = { user: values }
+      await sendRequest(
+        `${REACT_APP_BACKEND_URL}/users/${userId}`,
+        'PATCH',
+        JSON.stringify(userData),
+        {
+          'Content-Type': 'application/json',
+        }
+      )
+      setEditMode(false)
+    } catch (err) {}
+  }
 
   const handleClose = event => {
     history.goBack()
@@ -60,7 +79,7 @@ const UserProfile = () => {
       <Container maxWidth="xs">
         <Grid container justify="flex-start" direction="column" spacing={2}>
           <Box height="5vh"></Box>
-          {user && (
+          {user && !editMode && (
             <PieceBox container direction="column">
               <BarRow onClick={handleClose} buttonLabel="Close X" />
               <TopRow container>
@@ -98,7 +117,17 @@ const UserProfile = () => {
                   </LinkRow>
                 )
               })}
+              <BottomRow container justify="center">
+                <Grid>
+                  <Button color="inherit" onClick={setEditMode}>
+                    Edit User
+                  </Button>
+                </Grid>
+              </BottomRow>
             </PieceBox>
+          )}
+          {user && editMode && (
+            <UserForm userId={userId} onSubmit={handleSubmit} />
           )}
           <Box height="5vh"></Box>
         </Grid>
