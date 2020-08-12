@@ -44,6 +44,7 @@ const BetaSignup = () => {
   const handleSubmit = async values => {
     try {
       const userData = { user: values }
+      console.log(userData)
       await sendRequest(
         `${REACT_APP_BACKEND_URL}/users/signup`,
         'POST',

@@ -102,32 +102,32 @@ const UserForm = props => {
     ),
   })
 
-  // const handleSubmit = async values => {
-  //   if (imageUpload.isValid) {
-  //     try {
-  //       const awsRes = await sendRequest(
-  //         imageUpload.signedUrl,
-  //         'PUT',
-  //         imageUpload.image,
-  //         {},
-  //         false
-  //       )
-  //       console.log('awsRes: ' + awsRes)
-  //       if (awsRes.status === 200) {
-  //         props.onSubmit(values)
-  //       }
-  //     } catch (err) {
-  //       console.log(err)
-  //     }
-  //   }
-  // }
+  const handleSubmit = async values => {
+    if (imageUpload.isValid) {
+      try {
+        const awsRes = await sendRequest(
+          imageUpload.signedUrl,
+          'PUT',
+          imageUpload.image,
+          {},
+          false
+        )
+        console.log('awsRes: ' + awsRes)
+        if (awsRes.status === 200) {
+          props.onSubmit(values)
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    }
+  }
 
   return (
     <Formik
       enableReinitialize="true"
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={props.onSubmit}
+      onSubmit={handleSubmit}
     >
       {({ values, isValid, setFieldValue }) => (
         <Form>
