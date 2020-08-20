@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { NavLink } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import { useHttpClient } from '../../shared/hooks/http-hook'
-import { Container, Grid, Box } from '@material-ui/core'
+import { Container, Grid, Box, Button, Menu, MenuItem } from '@material-ui/core'
 
 import PageTitle from '../../shared/components/UIElements/PageTitle'
 import PieceList from '../components/PieceList'
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
 import ActionButton from '../../shared/components/UIElements/ActionButton'
+import SettingsIcon from '@material-ui/icons/Settings'
 
 const { REACT_APP_BACKEND_URL } = process.env
 
@@ -16,6 +17,7 @@ const title = 'My Pieces'
 const ViewPieces = () => {
   const [loadedPieces, setLoadedPieces] = useState()
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
+  const [anchorEl, setAnchorEl] = useState(null)
 
   useEffect(() => {
     const fetchPieces = async () => {
@@ -29,14 +31,41 @@ const ViewPieces = () => {
     fetchPieces()
   }, [sendRequest])
 
+  const handleClick = event => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+
   return (
-    <Container maxWidth="sm">
-      <PageTitle title={title} />
-      {isLoading && <LoadingSpinner asOverlay />}
-      {!isLoading && loadedPieces && (
-        <Grid container direction="column" alignItems="stretch" spacing={2}>
-          <Grid item xs={12}>
-            {/* <Button
+    <React.Fragment>
+      <Container maxWidth="sm">
+        <PageTitle title={title}>
+          <Button onClick={handleClick} endIcon={<SettingsIcon />}>
+            Settings
+          </Button>
+          <Menu
+            id="simple-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <MenuItem component={Link} to={'/users'}>
+              Users
+            </MenuItem>
+            <MenuItem component={Link} to={'/logout'}>
+              Logout
+            </MenuItem>
+          </Menu>
+        </PageTitle>
+        {isLoading && <LoadingSpinner asOverlay />}
+        {!isLoading && loadedPieces && (
+          <Grid container direction="column" alignItems="stretch" spacing={2}>
+            <Grid item xs={12}>
+              {/* <Button
               variant="contained"
               color="primary"
               component={NavLink}
@@ -46,19 +75,20 @@ const ViewPieces = () => {
             >
               Create New Piece +
             </Button> */}
-            <ActionButton
-              component={NavLink}
-              to={'/create'}
-              label="Create New Piece +"
-            ></ActionButton>
+              <ActionButton
+                component={Link}
+                to={'/create'}
+                label="Create New Piece +"
+              ></ActionButton>
+            </Grid>
+            <Grid item>
+              <PieceList items={loadedPieces} />
+            </Grid>
           </Grid>
-          <Grid item>
-            <PieceList items={loadedPieces} />
-          </Grid>
-        </Grid>
-      )}
-      <Box height="4rem"></Box>
-    </Container>
+        )}
+        <Box height="4rem"></Box>
+      </Container>
+    </React.Fragment>
   )
 }
 

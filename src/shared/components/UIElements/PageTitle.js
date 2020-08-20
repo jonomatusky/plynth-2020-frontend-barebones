@@ -3,11 +3,16 @@ import { Box, Typography } from '@material-ui/core'
 
 const PageTitle = props => {
   return (
-    <Typography variant="h5">
-      <Box pt={2} pb={2} align="left" fontWeight="fontWeightBold">
-        {props.title}
+    <Box pt={3} pb={2} display="flex" justifyItems="center">
+      <Box width="100%">
+        <Typography variant="h5">
+          <Box align="left" fontWeight="fontWeightBold">
+            {props.title}
+          </Box>
+        </Typography>
       </Box>
-    </Typography>
+      <Box flexShrink={0}>{props.children}</Box>
+    </Box>
   )
 }
 

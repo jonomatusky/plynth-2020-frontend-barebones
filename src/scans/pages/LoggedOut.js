@@ -1,5 +1,14 @@
 import React, { useState, useRef } from 'react'
-import { Container, Grid, Fab, Button, Typography } from '@material-ui/core'
+import { Link as RouterLink } from 'react-router-dom'
+import {
+  Container,
+  Grid,
+  Fab,
+  Button,
+  Typography,
+  Link,
+  Box,
+} from '@material-ui/core'
 
 import ScanModal from './ScanModal'
 import AlbumIcon from '@material-ui/icons/Album'
@@ -109,11 +118,26 @@ const LoggedOut = props => {
           </Grid>
         </CenteredGrid>
         <LogoBar>
-          <LogoBox>
-            <a href="http://www.plynth.com">
-              <Logo src={plynthLogo} alt="Plynth Logo" />
-            </a>
-          </LogoBox>
+          <Grid container direction="column" alignItems="center" spacing={1}>
+            <Grid item>
+              <Typography>
+                {`Already have an account? `}
+                <Link
+                  component={RouterLink}
+                  to="/login"
+                  color="inherit"
+                  underline="always"
+                >
+                  Sign In
+                </Link>
+              </Typography>
+            </Grid>
+            <Grid item>
+              <a href="http://www.plynth.com">
+                <Logo src={plynthLogo} alt="Plynth Logo" />
+              </a>
+            </Grid>
+          </Grid>
         </LogoBar>
       </Background>
     </React.Fragment>

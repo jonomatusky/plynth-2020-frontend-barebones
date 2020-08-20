@@ -19,7 +19,6 @@ const UpdatePiece = () => {
   const onSubmit = async formData => {
     try {
       const pieceData = { pieceData: formData }
-      console.log(pieceData)
       await sendRequest(
         `${REACT_APP_BACKEND_URL}/pieces/${pieceId}`,
         'PATCH',

@@ -85,7 +85,6 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
 
       try {
         uploadedImage = await uploadImage(props.file)
-        console.log('uploaded image: ' + uploadedImage)
       } catch (err) {
         setErrorMessage(err.message)
         return
@@ -121,7 +120,6 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
         )
         if (scanResponse) {
           setScanData(scanResponse)
-          console.log(scanResponse)
         }
       } catch (err) {
         console.log(err)
@@ -149,7 +147,6 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
   }
 
   const handleMissingPiece = () => {
-    console.log('scan id: ' + scanData.scan.id)
     try {
       sendRequest(
         `${REACT_APP_BACKEND_URL}/scans/${scanData.scan.id}`,

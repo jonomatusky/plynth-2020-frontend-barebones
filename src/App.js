@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   BrowserRouter as Router,
   Route,
   Redirect,
   Switch,
 } from 'react-router-dom'
+import { useAuth } from './shared/hooks/auth-hook'
+import { AuthContext } from './shared/context/auth-context'
 
 import NewImage from './pieces/pages/NewImage'
 import NewPiece from './pieces/pages/NewPiece'
@@ -16,19 +18,23 @@ import Scans from './scans/pages/Scans'
 import MyCollection from './pieces/pages/MyCollection'
 import CardTest from './pieces/pages/CardTest'
 import Demo from './test/Demo'
-import Signup from './users/pages/Signup'
+import SignUp from './users/pages/SignUp'
+import Login from './users/pages/Login'
 import LoggedOut from './scans/pages/LoggedOut'
 import BetaSignup from './users/pages/BetaSignup'
 import ViewUsers from './users/pages/ViewUsers'
 import UserProfile from './users/pages/UserProfile'
+import Logout from './users/pages/Logout'
 
 import NavBar from './shared/components/Navigation/NavBar'
 
 const App = () => {
-  // allows routes to be changed later based on authentication/authorization
+  const { token, login, logout, userId, isAdmin } = useAuth()
 
-  const WithNavBar = () => {
-    return (
+  let routes
+
+  if (token) {
+    routes = (
       <React.Fragment>
         <Route path="/">
           <NavBar />
@@ -51,7 +57,7 @@ const App = () => {
               <ViewPieces />
             </Route>
             <Route path="/pickup" exact>
-              <NewScan />
+              <LoggedOut />
             </Route>
             <Route path="/pickups" exact>
               <Scans />
@@ -71,31 +77,49 @@ const App = () => {
             <Route path="/users" exact>
               <ViewUsers />
             </Route>
-            <Redirect to="/" />
+            <Route path="/logout" exact>
+              <Logout />
+            </Route>
+            <Redirect to="/pieces" />
           </Switch>
         </main>
       </React.Fragment>
     )
+  } else {
+    routes = (
+      <main>
+        <Switch>
+          <Route path="/signup" exact>
+            <SignUp />
+          </Route>
+          <Route path="/login" exact>
+            <Login />
+          </Route>
+          <Route path="/subscribe" exact>
+            <BetaSignup />
+          </Route>
+          <Route path="/" exact>
+            <LoggedOut />
+          </Route>
+          <Redirect to="/" />
+        </Switch>
+      </main>
+    )
   }
 
   return (
-    <Router>
-      <Switch>
-        <Route path="/signup" exact>
-          <Signup />
-        </Route>
-        <Route path="/subscribe" exact>
-          <BetaSignup />
-        </Route>
-        <Route path="/" exact>
-          <LoggedOut />
-        </Route>
-        <Route path="/">
-          <WithNavBar />
-        </Route>
-        <Redirect to="/" />
-      </Switch>
-    </Router>
+    <AuthContext.Provider
+      value={{
+        isLoggedIn: !!token,
+        token: token,
+        isAdmin: isAdmin,
+        userId: userId,
+        login: login,
+        logout: logout,
+      }}
+    >
+      <Router>{routes}</Router>
+    </AuthContext.Provider>
   )
 }
 

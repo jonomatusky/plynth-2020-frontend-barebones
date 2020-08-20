@@ -11,13 +11,16 @@ export const useHttpClient = () => {
   const activeHttpRequests = useRef([])
 
   const sendRequest = useCallback(
-    async (url, method = 'GET', body = null, headers = {}, json = true) => {
+    async (extension, method = 'GET', body = null, headers = {}) => {
+      const url = `${REACT_APP_BACKEND_URL}/${extension}`
       setIsLoading(true)
 
-      if (url.search(REACT_APP_BACKEND_URL) !== -1) {
-        if (auth.token) {
-          headers['Authorization'] = 'Bearer ' + auth.token
-        }
+      if (method === 'POST' || method === 'PATCH') {
+        headers['Content-Type'] = 'application/json'
+      }
+
+      if (auth.token) {
+        headers.Authorization = auth.token
       }
 
       const httpAbortCtrl = new AbortController()
@@ -34,18 +37,9 @@ export const useHttpClient = () => {
           reqCtrl => reqCtrl !== httpAbortCtrl
         )
 
-        let data
-
-        if (json) {
-          data = await response.json()
-          if (!response.ok) {
-            throw new Error(data.message)
-          }
-        } else {
-          data = response
-          if (!response.ok) {
-            throw new Error('Problem fulfilling HTTP request')
-          }
+        const data = await response.json()
+        if (!response.ok) {
+          throw new Error(data.message)
         }
 
         setIsLoading(false)

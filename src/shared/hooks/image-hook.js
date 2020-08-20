@@ -89,7 +89,6 @@ export const useSignedRequest = () => {
 
   const getSignedRequest = useCallback(
     async file => {
-      console.log('sending request')
       try {
         const response = await sendRequest(
           process.env.REACT_APP_BACKEND_URL + '/users/sign-s3',
@@ -102,7 +101,6 @@ export const useSignedRequest = () => {
             'Content-Type': 'application/json',
           }
         )
-        console.log('response: ' + JSON.stringify(response))
         return response
       } catch (err) {
         const error = new Error(

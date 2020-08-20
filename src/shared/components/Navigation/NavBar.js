@@ -105,20 +105,19 @@ const MainHeader = props => {
                 color="inherit"
                 component={NavLink}
                 activeClassName="Mui-selected"
-                to={'/create'}
+                to={'/pieces'}
               >
-                Create
+                My Pieces
               </Button>
               <Button
                 color="inherit"
                 component={NavLink}
                 activeClassName="Mui-selected"
-                to={'/pieces'}
+                to={'/users'}
               >
-                My Pieces
+                Users
               </Button>
             </Box>
-
             <Button variant="contained" component={NavLink} to={'/pickup'}>
               New Pickup
             </Button>

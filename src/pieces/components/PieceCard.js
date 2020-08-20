@@ -11,6 +11,7 @@ import PieceForm from '../components/PieceForm'
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
 
 import theme from '../../theme'
+// import Menu from '../../shared/components/Navigation/Menu'
 import LoadingGraphic from '../../shared/components/UIElements/LoadingGraphic'
 
 const { REACT_APP_BACKEND_URL, REACT_APP_ASSET_URL } = process.env
@@ -142,6 +143,7 @@ const BottomRow = styled(Grid)`
 
 const PieceCard = ({ piece, onClose, ...props }) => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
+  const [menuIsOpen, setMenuIsOpen] = useState(true)
   const [editMode, setEditMode] = useState(false)
 
   const cancelEditMode = event => {
@@ -170,6 +172,8 @@ const PieceCard = ({ piece, onClose, ...props }) => {
       setEditMode(false)
     } catch (err) {}
   }
+
+  const handleShare = event => {}
 
   const TopBar = () => {
     let title = !editMode ? piece.group || '' : 'Edit your piece'
@@ -286,13 +290,13 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                 )
               })}
               {/* <CardRow container justify="center">
-                  <ActionButton
-                    variant="text"
-                    label="+ Share This Piece"
-                    onClick={() => {}}
-                    color="secondary"
-                  />
-                </CardRow> */}
+                <ActionButton
+                  variant="text"
+                  label="+ Share This Piece"
+                  onClick={handleShare}
+                  color="secondary"
+                />
+              </CardRow> */}
             </Box>
           )}
           {editMode && <PieceForm pieceId={piece.id} onSubmit={onSubmit} />}

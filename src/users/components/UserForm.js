@@ -112,7 +112,6 @@ const UserForm = props => {
           {},
           false
         )
-        console.log('awsRes: ' + awsRes)
         if (awsRes.status === 200) {
           props.onSubmit(values)
         }

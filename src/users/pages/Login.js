@@ -10,7 +10,7 @@ import {
   Link,
 } from '@material-ui/core'
 
-import SignUpForm from '../components/SignUpForm'
+import LoginForm from '../components/LoginForm'
 import PageTitle from '../../shared/components/UIElements/PageTitle'
 import Background from '../../shared/components/UIElements/Background'
 
@@ -36,7 +36,7 @@ const SignUp = () => {
   const handleSubmit = async values => {
     try {
       const responseData = await sendRequest(
-        REACT_APP_BACKEND_URL + '/auth/signup',
+        REACT_APP_BACKEND_URL + '/auth/login',
         'POST',
         JSON.stringify({
           user: values,
@@ -46,8 +46,7 @@ const SignUp = () => {
         }
       )
 
-      auth.login(responseData.userId, responseData.token)
-      history.push('/collection')
+      auth.login(responseData.user, responseData.token)
     } catch (err) {
       console.log(err)
     }
@@ -61,16 +60,14 @@ const SignUp = () => {
           <Box height="5vh"></Box>
           {!submitted ? (
             <Grid item>
-              <PageTitle title="Sign Up" />
-              <Typography>
-                Fill out the form below to create an account.
-              </Typography>
+              <PageTitle title="Log In" />
+              <Typography>Fill out the form below to log in.</Typography>
             </Grid>
           ) : (
             <React.Fragment>
               <Grid item>
                 <PageTitle title="Thanks!" />
-                <Typography>Account Created!</Typography>
+                <Typography>Signed In!</Typography>
               </Grid>
               <Grid item>
                 <Button onClick={handleClose}>Close</Button>
@@ -84,7 +81,7 @@ const SignUp = () => {
                 <Grid container justify="center" alignItems="center">
                   <Grid item xs={11}>
                     <Box height="0.75rem"></Box>
-                    <SignUpForm onSubmit={handleSubmit} />
+                    <LoginForm onSubmit={handleSubmit} />
                     <Box height="0.75rem"></Box>
                   </Grid>
                 </Grid>
@@ -92,15 +89,15 @@ const SignUp = () => {
             </Grid>
           )}
           <Grid item>
-            <Typography>Already have an account?</Typography>
+            <Typography>Don't have an account?</Typography>
             <Link
               onClick={() => {
-                history.push('/login')
+                history.push('/signup')
               }}
               color="inherit"
               variant="body1"
             >
-              <strong>Log In</strong>
+              <strong>Sign Up</strong>
             </Link>
           </Grid>
         </Grid>

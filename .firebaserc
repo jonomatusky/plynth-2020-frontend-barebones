@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "plynth-2020"
+    "default": "plynth-2020",
+    "staging": "plynth-2020-staging"
   }
 }
