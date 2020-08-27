@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 
-import { Grid, Box, Button, Typography, Avatar, Link } from '@material-ui/core'
+import { Grid, Box, Button, Typography, Avatar } from '@material-ui/core'
 import styled from 'styled-components'
 
 import { useHttpClient } from '../../shared/hooks/http-hook'
@@ -9,6 +10,7 @@ import { BarRow } from '../../shared/components/UIElements/CardSections'
 import ActionButton from '../../shared/components/UIElements/ActionButton'
 import PieceForm from '../components/PieceForm'
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 
 import theme from '../../theme'
 // import Menu from '../../shared/components/Navigation/Menu'
@@ -187,9 +189,9 @@ const PieceCard = ({ piece, onClose, ...props }) => {
     if (props.loggedOut) {
       return (
         <BottomRow container justify="center">
-          <Grid>
-            <Button color="inherit" href="/subscribe">
-              Get the Pynth App for More
+          <Grid item>
+            <Button component={Link} color="inherit" to="/signup">
+              Sign Up to Save to your Colleciton
             </Button>
           </Grid>
         </BottomRow>
@@ -197,7 +199,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
     } else if (editMode) {
       return (
         <BottomRow container justify="center">
-          <Grid>
+          <Grid item>
             <Button color="inherit" onClick={handleDeletePiece}>
               Delete This Piece
             </Button>
@@ -207,7 +209,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
     } else {
       return (
         <BottomRow container justify="center">
-          <Grid>
+          <Grid item>
             <Button color="inherit" onClick={enterEditMode}>
               Edit Your Piece
             </Button>
@@ -254,10 +256,14 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                         alignItems="center"
                       >
                         <Box padding="0.5rem 0.75rem">
-                          <Avatar
-                            alt={piece.owner.displayName}
-                            src={piece.owner.avatarLink}
-                          />
+                          {piece.owner.avatar ? (
+                            <Avatar
+                              alt={piece.owner.displayName}
+                              src={piece.owner.avatarLink}
+                            />
+                          ) : (
+                            <AccountCircleIcon />
+                          )}
                         </Box>
                         <AvatarBox flexGrow={1} paddingRight="0.5rem">
                           <AvatarTypography variant="subtitle2">
@@ -299,7 +305,17 @@ const PieceCard = ({ piece, onClose, ...props }) => {
               </CardRow> */}
             </Box>
           )}
-          {editMode && <PieceForm pieceId={piece.id} onSubmit={onSubmit} />}
+          {editMode && (
+            <Grid
+              container
+              direction="column"
+              justify="center"
+              alignItems="stretch"
+            >
+              <PieceForm pieceId={piece.id} onSubmit={onSubmit} />
+            </Grid>
+          )}
+          <Box height="4vh"></Box>
           <BottomBar />
         </PieceBox>
         <Box height="4vh"></Box>

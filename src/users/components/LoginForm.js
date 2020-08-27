@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid } from '@material-ui/core'
+import { Grid, Box } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
@@ -28,14 +28,27 @@ const SignInForm = props => {
       <Form>
         <Grid container direction="column" spacing={1}>
           <Grid item>
-            <TextField name="email" label="Email" type="text" />
+            <TextField
+              name="email"
+              label="Email"
+              type="text"
+              autocapitalize="none"
+              autocorrect="off"
+            />
           </Grid>
           <Grid item>
-            <TextField name="password" label="Password" type="password" />
+            <TextField
+              name="password"
+              label="Password"
+              type="password"
+              autocapitalize="none"
+              autocorrect="off"
+            />
           </Grid>
           <Grid item>
             <ActionButton type="submit" label="Submit" />
           </Grid>
+          <Box height="2vh"></Box>
         </Grid>
       </Form>
     </Formik>

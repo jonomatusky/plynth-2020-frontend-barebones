@@ -3,28 +3,16 @@ import React from 'react'
 
 import PieceCard from '../components/PieceCard'
 import PrimaryModal from '../../shared/layouts/PrimaryModal'
-import { Grid, Button } from '@material-ui/core'
-import { useHistory } from 'react-router-dom'
+import { Grid, Box } from '@material-ui/core'
 
 // need to change loggedOut to auth instead of props
 const PieceModal = ({ open, onClose, piece }) => {
-  const history = useHistory()
-
   return (
     <PrimaryModal open={open} onClose={onClose}>
-      <Grid container direction="column" alignItems="center">
-        <Grid item>
-          <PieceCard piece={piece} onClose={onClose} />
-        </Grid>
-        <Grid item>
-          <Button
-            onClick={() => {
-              history.push(`/pieces/${piece.id}`)
-            }}
-          >
-            View Full Screen
-          </Button>
-        </Grid>
+      <Grid container direction="column" justify="center" alignItems="center">
+        <Box minHeight="2vh"></Box>
+        <PieceCard piece={piece} onClose={onClose} />
+        <Box minHeight="2vh"></Box>
       </Grid>
     </PrimaryModal>
   )

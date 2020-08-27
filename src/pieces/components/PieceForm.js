@@ -207,7 +207,6 @@ const PieceForm = props => {
           ext,
         } = responseData.piece
         setImageFilePath(`${awsId}.${ext}`)
-        console.log(owner.username)
         setInitialValues({
           title,
           description,
@@ -269,158 +268,167 @@ const PieceForm = props => {
   })
 
   return (
-    <Grid container justify="center">
-      <Grid item xs={11}>
-        <Formik
-          enableReinitialize="true"
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={props.onSubmit}
-        >
-          {({ values, isValid, setFieldValue }) => (
-            <Form>
-              <Grid container direction="column" spacing={1}>
-                <Grid container justify="center">
-                  <ImageBox>
-                    {imageFilePath ? (
-                      <Image
-                        src={`${ASSET_URL}/${imageFilePath}`}
-                        alt="Preview"
-                      />
-                    ) : (
-                      <LoadingSpinner asOverlay />
-                    )}
-                  </ImageBox>
-                </Grid>
-                <Grid item>
-                  <TitleField name="title" label="Title" type="text" />
-                </Grid>
-                <Grid item>
-                  <Autocomplete
-                    getItemValue={item => item.username}
-                    items={users}
-                    wrapperStyle={{}}
-                    shouldItemRender={(item, value) =>
-                      item.username.toLowerCase().indexOf(value.toLowerCase()) >
-                      -1
-                    }
-                    renderInput={props => {
-                      return (
-                        <StyledTextInput type="text">
-                          <Label htmlFor="Owner">Owner</Label>
-                          <TextInput
-                            name="ownerUsername"
-                            type="text"
-                            {...props}
+    <Box>
+      <Grid container justify="center">
+        <Grid item xs={11}>
+          <Formik
+            enableReinitialize="true"
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={props.onSubmit}
+          >
+            {({ values, isValid, setFieldValue }) => (
+              <Form>
+                <Grid container direction="column" spacing={1}>
+                  <Grid container justify="center">
+                    <ImageBox>
+                      {imageFilePath ? (
+                        <Image
+                          src={`${ASSET_URL}/${imageFilePath}`}
+                          alt="Preview"
+                        />
+                      ) : (
+                        <LoadingSpinner asOverlay />
+                      )}
+                    </ImageBox>
+                  </Grid>
+                  <Grid item>
+                    <TitleField name="title" label="Title" type="text" />
+                  </Grid>
+                  <Grid item>
+                    <Autocomplete
+                      getItemValue={item => item.username}
+                      items={users}
+                      wrapperStyle={{}}
+                      shouldItemRender={(item, value) =>
+                        item.username
+                          .toLowerCase()
+                          .indexOf(value.toLowerCase()) > -1
+                      }
+                      renderInput={props => {
+                        return (
+                          <StyledTextInput type="text">
+                            <Label htmlFor="Owner">Owner</Label>
+                            <TextInput
+                              name="ownerUsername"
+                              type="text"
+                              {...props}
+                            />
+                          </StyledTextInput>
+                        )
+                      }}
+                      renderMenu={function (items, value, style) {
+                        return (
+                          <div
+                            style={{
+                              ...style,
+                              ...this.menuStyle,
+                              zIndex: 1,
+                              position: 'absolute',
+                            }}
+                            children={items}
                           />
-                        </StyledTextInput>
-                      )
-                    }}
-                    renderMenu={function (items, value, style) {
-                      return (
+                        )
+                      }}
+                      renderItem={(item, isHighlighted) => (
                         <div
+                          key={item.id}
                           style={{
-                            ...style,
-                            ...this.menuStyle,
-                            zIndex: 1,
-                            position: 'absolute',
+                            background: isHighlighted ? 'lightgray' : 'white',
+                            color: 'black',
                           }}
-                          children={items}
-                        />
-                      )
-                    }}
-                    renderItem={(item, isHighlighted) => (
-                      <div
-                        key={item.id}
-                        style={{
-                          background: isHighlighted ? 'lightgray' : 'white',
-                          color: 'black',
-                        }}
-                      >
-                        {item.username}
-                      </div>
-                    )}
-                    value={values.ownerUsername}
-                    onChange={e =>
-                      setFieldValue('ownerUsername', e.target.value)
-                    }
-                    onSelect={val => setFieldValue('ownerUsername', val)}
-                  />
-                </Grid>
-                <Grid item>
-                  <TextArea
-                    name="description"
-                    label="Description"
-                    type="text"
-                  />
-                </Grid>
-                <FieldArray name="links">
-                  {({ insert, remove, push }) => (
-                    <React.Fragment>
-                      <Grid item>
-                        {values.links.length > 0 &&
-                          values.links.map((link, index) => (
-                            <FieldSet container direction="column" key={index}>
-                              <BarRow
+                        >
+                          {item.username}
+                        </div>
+                      )}
+                      value={values.ownerUsername}
+                      onChange={e =>
+                        setFieldValue('ownerUsername', e.target.value)
+                      }
+                      onSelect={val => setFieldValue('ownerUsername', val)}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <TextArea
+                      name="description"
+                      label="Description"
+                      type="text"
+                    />
+                  </Grid>
+                  <FieldArray name="links">
+                    {({ insert, remove, push }) => (
+                      <React.Fragment>
+                        <Grid item>
+                          {values.links.length > 0 &&
+                            values.links.map((link, index) => (
+                              <FieldSet
                                 container
-                                justify="space-between"
-                                alignItems="center"
+                                direction="column"
+                                key={index}
                               >
-                                <BarTitle>
-                                  <Typography color="inherit">Link</Typography>
-                                </BarTitle>
-                                <Grid>
-                                  <Button
-                                    color="inherit"
-                                    onClick={() => remove(index)}
-                                  >
-                                    Remove X
-                                  </Button>
+                                <BarRow
+                                  container
+                                  justify="space-between"
+                                  alignItems="center"
+                                >
+                                  <BarTitle>
+                                    <Typography color="inherit">
+                                      Link
+                                    </Typography>
+                                  </BarTitle>
+                                  <Grid>
+                                    <Button
+                                      color="inherit"
+                                      onClick={() => remove(index)}
+                                    >
+                                      Remove X
+                                    </Button>
+                                  </Grid>
+                                </BarRow>
+                                <Grid item>
+                                  <Box margin="1rem">
+                                    <TextField
+                                      label="URL"
+                                      name={`links.${index}.url`}
+                                      type="url"
+                                    />
+                                  </Box>
                                 </Grid>
-                              </BarRow>
-                              <Grid item>
-                                <Box margin="1rem">
-                                  <TextField
-                                    label="URL"
-                                    name={`links.${index}.url`}
-                                    type="url"
-                                  />
-                                </Box>
-                              </Grid>
-                              <Grid item>
-                                <Box margin="1rem">
-                                  <TextField
-                                    name={`links.${index}.name`}
-                                    label="Link Text"
-                                    type="text"
-                                  />
-                                </Box>
-                              </Grid>
-                            </FieldSet>
-                          ))}
-                        <ActionButton
-                          type="button"
-                          onClick={() => push({ name: '', url: '' })}
-                          label="Add Link"
-                          color="secondary"
-                        />
-                      </Grid>
-                    </React.Fragment>
-                  )}
-                </FieldArray>
-                <Grid item>
-                  <ActionButton
-                    type="submit"
-                    label="Save"
-                    disabled={!isValid}
-                  />
+                                <Grid item>
+                                  <Box margin="1rem">
+                                    <TextField
+                                      name={`links.${index}.name`}
+                                      label="Link Text"
+                                      type="text"
+                                    />
+                                  </Box>
+                                </Grid>
+                              </FieldSet>
+                            ))}
+                          <ActionButton
+                            type="button"
+                            onClick={() => push({ name: '', url: '' })}
+                            label="Add Link"
+                            color="secondary"
+                          />
+                        </Grid>
+                      </React.Fragment>
+                    )}
+                  </FieldArray>
+                  <Grid item>
+                    <ActionButton
+                      type="submit"
+                      label="Save"
+                      disabled={!isValid}
+                    />
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Form>
-          )}
-        </Formik>
+              </Form>
+            )}
+          </Formik>
+        </Grid>
       </Grid>
-    </Grid>
+    </Box>
   )
 }
 

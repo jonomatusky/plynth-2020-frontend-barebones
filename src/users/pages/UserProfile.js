@@ -84,7 +84,9 @@ const UserProfile = () => {
               <BarRow onClick={handleClose} buttonLabel="Close X" />
               <TopRow container>
                 <ImageBox item xs={6}>
-                  <PieceImage src={user.avatarLink} alt="Preview" />
+                  {user.avatar && (
+                    <PieceImage src={user.avatarLink} alt="Preview" />
+                  )}
                 </ImageBox>
                 <TitleBox item xs={6}>
                   <TitleText container direction="column" justify="center">
@@ -129,7 +131,7 @@ const UserProfile = () => {
           {user && editMode && (
             <UserForm userId={userId} onSubmit={handleSubmit} />
           )}
-          <Box height="5vh"></Box>
+          <Box height="10vh"></Box>
         </Grid>
       </Container>
     </React.Fragment>

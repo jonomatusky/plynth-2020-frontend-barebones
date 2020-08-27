@@ -16,7 +16,6 @@ import {
   PieceBox,
   BarRow,
 } from '../../shared/components/UIElements/CardSections'
-import ActionBar from '../../shared/components/Navigation/ActionBar'
 
 const { REACT_APP_BACKEND_URL } = process.env
 
@@ -80,15 +79,12 @@ const BetaSignup = () => {
                 <PageTitle title="Thanks!" />
                 <Typography>
                   You're all signed up. We'll let you know as soon as the beta's
-                  available. If you don't want to wait, check out our monthly
-                  merch subscription service here:
+                  available. In the meantime, check out our website for more
+                  info.
                 </Typography>
               </Grid>
               <Grid item>
-                <ActionButton
-                  href="http://www.plynth.com"
-                  label="Join the Club"
-                />
+                <ActionButton href="http://www.plynth.com" label="Learn more" />
               </Grid>
             </React.Fragment>
           )}
@@ -112,6 +108,8 @@ const BetaSignup = () => {
                                 name="email"
                                 label="Email"
                                 type="text"
+                                autocapitalize="none"
+                                autocorrect="off"
                               />
                             </Grid>
                             <Grid item>

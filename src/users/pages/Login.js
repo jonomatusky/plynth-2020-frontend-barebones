@@ -88,7 +88,7 @@ const SignUp = () => {
               </PieceBox>
             </Grid>
           )}
-          <Grid item>
+          {/* <Grid item>
             <Typography>Don't have an account?</Typography>
             <Link
               onClick={() => {
@@ -99,7 +99,7 @@ const SignUp = () => {
             >
               <strong>Sign Up</strong>
             </Link>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Container>
     </React.Fragment>

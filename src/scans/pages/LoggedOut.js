@@ -1,22 +1,10 @@
 import React, { useState, useRef } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
-import {
-  Container,
-  Grid,
-  Fab,
-  Button,
-  Typography,
-  Link,
-  Box,
-} from '@material-ui/core'
+import { Grid, Fab, Typography, Link, Box } from '@material-ui/core'
 
 import ScanModal from './ScanModal'
-import AlbumIcon from '@material-ui/icons/Album'
-import AddCircleIcon from '@material-ui/icons/AddCircle'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
-import FlashOnIcon from '@material-ui/icons/FlashOn'
 import plynthLogo from '../../images/plynth-logo-white.png'
-import loadingGraphic from '../../images/Plynth-Loading-GIF.gif'
 
 import theme from '../../theme'
 import styled from 'styled-components'
@@ -118,7 +106,12 @@ const LoggedOut = props => {
           </Grid>
         </CenteredGrid>
         <LogoBar>
-          <Grid container direction="column" alignItems="center" spacing={1}>
+          <Grid container direction="column" alignItems="center" spacing={0}>
+            <Grid item>
+              <a href="http://www.plynth.com">
+                <Logo src={plynthLogo} alt="Plynth Logo" />
+              </a>
+            </Grid>
             <Grid item>
               <Typography>
                 {`Already have an account? `}
@@ -131,11 +124,6 @@ const LoggedOut = props => {
                   Sign In
                 </Link>
               </Typography>
-            </Grid>
-            <Grid item>
-              <a href="http://www.plynth.com">
-                <Logo src={plynthLogo} alt="Plynth Logo" />
-              </a>
             </Grid>
           </Grid>
         </LogoBar>

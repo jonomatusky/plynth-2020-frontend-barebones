@@ -50,41 +50,47 @@ const PieceItem = ({ piece, ...props }) => {
   }
 
   return (
-    <Grid item xs={12}>
+    <React.Fragment>
       <PieceModal
         open={open}
         onClose={handleClose}
         piece={piece}
         key={props.key}
       />
-      <Card>
-        <CardActionArea onClick={handleClickOpen}>
-          <Grid container wrap={'nowrap'}>
-            <Grid item>
-              <div className={classes.image}>
-                <CardMedia
-                  image={`${REACT_APP_ASSET_URL}/${piece.imageFilepath}`}
-                  title={piece.title}
-                  className={classes.cover}
-                />
-              </div>
+      <Grid item xs={12}>
+        <Card>
+          <CardActionArea onClick={handleClickOpen}>
+            <Grid container wrap={'nowrap'}>
+              <Grid item>
+                <div className={classes.image}>
+                  <CardMedia
+                    image={`${REACT_APP_ASSET_URL}/${piece.imageFilepath}`}
+                    title={piece.title}
+                    className={classes.cover}
+                  />
+                </div>
+              </Grid>
+              <Grid item>
+                <div className={classes.details}>
+                  <CardContent p={0.5}>
+                    <Typography component="h6" variant="h6">
+                      {piece.title}
+                    </Typography>
+                    <Typography variant="subtitle1" color="textSecondary">
+                      {`by ${
+                        piece.creators[0]
+                          ? piece.creators[0].displayName
+                          : piece.owner.displayName
+                      }`}
+                    </Typography>
+                  </CardContent>
+                </div>
+              </Grid>
             </Grid>
-            <Grid item>
-              <div className={classes.details}>
-                <CardContent p={0.5}>
-                  <Typography component="h6" variant="h6">
-                    {piece.title}
-                  </Typography>
-                  <Typography variant="subtitle1" color="textSecondary">
-                    {`by ${piece.creatorDemo || 'Anonymous'}`}
-                  </Typography>
-                </CardContent>
-              </div>
-            </Grid>
-          </Grid>
-        </CardActionArea>
-      </Card>
-    </Grid>
+          </CardActionArea>
+        </Card>
+      </Grid>
+    </React.Fragment>
   )
 }
 

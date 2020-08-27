@@ -39,7 +39,11 @@ export const useHttpClient = () => {
         if (json) {
           data = await response.json()
           if (!response.ok) {
-            throw new Error(data.message)
+            if (data.message === 'Failed to fetch') {
+              throw new Error('Problem fulfilling HTTP request')
+            } else {
+              throw new Error(data.message)
+            }
           }
         } else {
           data = response
@@ -56,7 +60,7 @@ export const useHttpClient = () => {
         throw err
       }
     },
-    []
+    [auth.token]
   )
 
   const clearError = () => {

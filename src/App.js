@@ -74,9 +74,6 @@ const App = () => {
             <Route path="/users/:userId">
               <UserProfile />
             </Route>
-            <Route path="/users" exact>
-              <ViewUsers />
-            </Route>
             <Route path="/logout" exact>
               <Logout />
             </Route>
@@ -90,7 +87,7 @@ const App = () => {
       <main>
         <Switch>
           <Route path="/signup" exact>
-            <SignUp />
+            <BetaSignup />
           </Route>
           <Route path="/login" exact>
             <Login />

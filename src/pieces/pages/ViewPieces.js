@@ -53,9 +53,6 @@ const ViewPieces = () => {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <MenuItem component={Link} to={'/users'}>
-              Users
-            </MenuItem>
             <MenuItem component={Link} to={'/logout'}>
               Logout
             </MenuItem>
@@ -65,16 +62,6 @@ const ViewPieces = () => {
         {!isLoading && loadedPieces && (
           <Grid container direction="column" alignItems="stretch" spacing={2}>
             <Grid item xs={12}>
-              {/* <Button
-              variant="contained"
-              color="primary"
-              component={NavLink}
-              to={'/create'}
-              disableElevation={true}
-              fullWidth={true}
-            >
-              Create New Piece +
-            </Button> */}
               <ActionButton
                 component={Link}
                 to={'/create'}
