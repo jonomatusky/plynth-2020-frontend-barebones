@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
 
 import { useHttpClient } from '../../shared/hooks/http-hook'
 import { Container, Grid, Box, Button, Menu, MenuItem } from '@material-ui/core'
+import { AuthContext } from '../../shared/context/auth-context'
 
 import PageTitle from '../../shared/components/UIElements/PageTitle'
 import PieceList from '../components/PieceList'
@@ -18,12 +19,18 @@ const ViewPieces = () => {
   const [loadedPieces, setLoadedPieces] = useState()
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
   const [anchorEl, setAnchorEl] = useState(null)
+  const auth = useContext(AuthContext)
 
   useEffect(() => {
     const fetchPieces = async () => {
       try {
         const responseData = await sendRequest(
-          `${REACT_APP_BACKEND_URL}/pieces`
+          `${REACT_APP_BACKEND_URL}/users/me/pieces`,
+          'GET',
+          null,
+          {
+            Authorization: 'Bearer ' + auth.token,
+          }
         )
         setLoadedPieces(responseData.pieces)
       } catch (err) {}

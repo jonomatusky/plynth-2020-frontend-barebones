@@ -107,8 +107,8 @@ const BetaSignup = () => {
                               <TextField
                                 name="email"
                                 label="Email"
-                                type="text"
-                                autocapitalize="none"
+                                type="email"
+                                autocapitalize="off"
                                 autocorrect="off"
                               />
                             </Grid>

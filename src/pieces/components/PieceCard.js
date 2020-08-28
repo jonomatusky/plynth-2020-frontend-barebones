@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
 
 import { Grid, Box, Button, Typography, Avatar } from '@material-ui/core'
@@ -11,6 +11,7 @@ import ActionButton from '../../shared/components/UIElements/ActionButton'
 import PieceForm from '../components/PieceForm'
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
+import { AuthContext } from '../../shared/context/auth-context'
 
 import theme from '../../theme'
 // import Menu from '../../shared/components/Navigation/Menu'
@@ -147,6 +148,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
   const [menuIsOpen, setMenuIsOpen] = useState(true)
   const [editMode, setEditMode] = useState(false)
+  const auth = useContext(AuthContext)
 
   const cancelEditMode = event => {
     setEditMode(false)
@@ -191,7 +193,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
         <BottomRow container justify="center">
           <Grid item>
             <Button component={Link} color="inherit" to="/signup">
-              Sign Up to Save to your Colleciton
+              Sign Up to Save to your Collection
             </Button>
           </Grid>
         </BottomRow>
@@ -206,7 +208,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
           </Grid>
         </BottomRow>
       )
-    } else {
+    } else if (piece.id === auth.userId) {
       return (
         <BottomRow container justify="center">
           <Grid item>
@@ -216,6 +218,8 @@ const PieceCard = ({ piece, onClose, ...props }) => {
           </Grid>
         </BottomRow>
       )
+    } else {
+      return null
     }
   }
 

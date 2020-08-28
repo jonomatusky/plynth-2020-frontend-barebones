@@ -11,9 +11,8 @@ import { AuthContext } from './shared/context/auth-context'
 import NewImage from './pieces/pages/NewImage'
 import NewPiece from './pieces/pages/NewPiece'
 import ViewPiece from './pieces/pages/ViewPiece'
-import ViewPieces from './pieces/pages/ViewPieces'
+import ViewPieces from './pieces/pages/MyPieces'
 import UpdatePiece from './pieces/pages/UpdatePiece'
-import NewScan from './scans/pages/NewScan'
 import Scans from './scans/pages/Scans'
 import MyCollection from './pieces/pages/MyCollection'
 import CardTest from './pieces/pages/CardTest'
@@ -22,14 +21,13 @@ import SignUp from './users/pages/SignUp'
 import Login from './users/pages/Login'
 import LoggedOut from './scans/pages/LoggedOut'
 import BetaSignup from './users/pages/BetaSignup'
-import ViewUsers from './users/pages/ViewUsers'
 import UserProfile from './users/pages/UserProfile'
 import Logout from './users/pages/Logout'
 
 import NavBar from './shared/components/Navigation/NavBar'
 
 const App = () => {
-  const { token, login, logout, userId, isAdmin } = useAuth()
+  const { token, login, logout, userId } = useAuth()
 
   let routes
 
@@ -109,7 +107,6 @@ const App = () => {
       value={{
         isLoggedIn: !!token,
         token: token,
-        isAdmin: isAdmin,
         userId: userId,
         login: login,
         logout: logout,
