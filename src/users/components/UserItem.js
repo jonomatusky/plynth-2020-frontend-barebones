@@ -63,9 +63,6 @@ const UserItem = ({ user, ...props }) => {
                   <Typography component="h6" variant="h6">
                     {user.displayName}
                   </Typography>
-                  {/* <Typography variant="subtitle1" color="textSecondary">
-                    {`by ${user.creatorDemo || 'Anonymous'}`}
-                  </Typography> */}
                 </CardContent>
               </div>
             </Grid>

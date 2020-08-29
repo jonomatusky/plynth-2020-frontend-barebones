@@ -250,7 +250,9 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                     </Box>
                     <UnstyledLink
                       href={
-                        piece.owner.links[0] ? piece.owner.links[0].url : '#'
+                        piece.owner.links && piece.owner.links[0]
+                          ? piece.owner.links[0].url
+                          : '#'
                       }
                     >
                       <CardRow
@@ -271,9 +273,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                         </Box>
                         <AvatarBox flexGrow={1} paddingRight="0.5rem">
                           <AvatarTypography variant="subtitle2">
-                            <strong>
-                              {piece.creatorDemo || piece.owner.displayName}
-                            </strong>
+                            <strong>{piece.owner.displayName}</strong>
                           </AvatarTypography>
                         </AvatarBox>
                       </CardRow>

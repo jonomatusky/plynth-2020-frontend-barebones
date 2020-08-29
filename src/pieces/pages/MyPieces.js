@@ -36,7 +36,7 @@ const ViewPieces = () => {
       } catch (err) {}
     }
     fetchPieces()
-  }, [sendRequest])
+  }, [sendRequest, auth.token])
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget)

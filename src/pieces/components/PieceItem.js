@@ -77,11 +77,8 @@ const PieceItem = ({ piece, ...props }) => {
                       {piece.title}
                     </Typography>
                     <Typography variant="subtitle1" color="textSecondary">
-                      {`by ${
-                        piece.creators[0]
-                          ? piece.creators[0].displayName
-                          : piece.owner.displayName
-                      }`}
+                      {piece.owner.displayName &&
+                        `by ${piece.owner.displayName}`}
                     </Typography>
                   </CardContent>
                 </div>
