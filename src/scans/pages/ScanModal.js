@@ -62,6 +62,7 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
     piece: null,
     scan: null,
   })
+  const [submittedMissingPiece, setSubmittedMissingPiece] = useState(false)
 
   useEffect(() => {
     if (scanData.found && isOpen) {
@@ -141,12 +142,14 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
       piece: null,
       scan: null,
     })
+    setSubmittedMissingPiece(false)
     clearError()
     clearUploadError()
     setErrorMessage()
   }
 
   const handleMissingPiece = () => {
+    console.log(scanData)
     try {
       sendRequest(
         `${REACT_APP_BACKEND_URL}/scans/${scanData.scan.id}`,
@@ -160,7 +163,7 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
       )
     } catch (err) {}
 
-    handleClose()
+    setSubmittedMissingPiece(true)
   }
 
   const Content = () => {
@@ -225,21 +228,29 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
             alignItems="center"
           >
             <Grid item>
-              <Typography variant="h6" align="center">
-                Sorry, we couldn't find a matching piece.
-              </Typography>
+              {submittedMissingPiece ? (
+                <Typography variant="h6" align="center">
+                  Thanks for letting us know!
+                </Typography>
+              ) : (
+                <Typography variant="h6" align="center">
+                  Sorry, we couldn't find a matching piece.
+                </Typography>
+              )}
             </Grid>
             <Grid item>
-              <Typography align="center">
-                Think this was a mistake? Let us know.
-              </Typography>
+              {!submittedMissingPiece && (
+                <Typography align="center">
+                  Think this was a mistake? Let us know.
+                </Typography>
+              )}
             </Grid>
 
             <ActionBar
               primaryAction={handleClose}
               primaryLabel="Close"
-              secondaryAction={handleMissingPiece}
-              secondaryLabel="Report Error"
+              secondaryAction={!submittedMissingPiece && handleMissingPiece}
+              secondaryLabel={!submittedMissingPiece && 'Report Error'}
             />
           </CenteredGrid>
         </MessageScreen>
