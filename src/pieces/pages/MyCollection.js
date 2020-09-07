@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { useHttpClient } from '../../shared/hooks/http-hook'
+import { useApiClient } from '../../shared/hooks/api-hook'
 
 import { Container, Box } from '@material-ui/core'
 
@@ -14,25 +14,21 @@ const title = 'My Collection'
 
 const MyCollection = () => {
   const [loadedPieces, setLoadedPieces] = useState()
-  const { isLoading, error, sendRequest, clearError } = useHttpClient()
+  const { isLoading, error, sendRequest, clearError } = useApiClient()
   const auth = useContext(AuthContext)
+  let token = auth.token
 
   useEffect(() => {
     const fetchPieces = async () => {
       try {
-        const responseData = await sendRequest(
-          `${REACT_APP_BACKEND_URL}/users/me/collection`,
-          'GET',
-          null,
-          {
-            Authorization: 'Bearer ' + auth.token,
-          }
-        )
+        const responseData = await sendRequest(`/users/me/collection`)
+        console.log('setting pieces')
         setLoadedPieces(responseData.pieces)
       } catch (err) {}
     }
+
     fetchPieces()
-  }, [sendRequest, auth.token])
+  }, [sendRequest])
 
   return (
     <Container maxWidth="sm">

@@ -1,8 +1,7 @@
 import React, { useState, useContext } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
-import { Grid, Box, Button, Typography, Avatar } from '@material-ui/core'
-import styled from 'styled-components'
+import { Grid, Box, Button, Avatar } from '@material-ui/core'
 
 import { useHttpClient } from '../../shared/hooks/http-hook'
 
@@ -13,142 +12,34 @@ import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import { AuthContext } from '../../shared/context/auth-context'
 
-import theme from '../../theme'
-// import Menu from '../../shared/components/Navigation/Menu'
 import LoadingGraphic from '../../shared/components/UIElements/LoadingGraphic'
 
+import {
+  PieceBox,
+  TopRow,
+  ImageBox,
+  PieceImage,
+  TitleBox,
+  TitleText,
+  PieceTitle,
+  CardRow,
+  AvatarBox,
+  AvatarTypography,
+  UnstyledLink,
+  DescriptionBox,
+  DescriptionText,
+  LinkRow,
+  BottomRow,
+} from '../../shared/components/UIElements/CardSections'
+
 const { REACT_APP_BACKEND_URL, REACT_APP_ASSET_URL } = process.env
-
-const PieceBox = styled(Grid)`
-  border: 1px solid ${theme.palette.secondary.main};
-  background: ${theme.palette.background.paper};
-`
-
-const TopRow = styled(Grid)`
-  display: flex;
-`
-
-const ImageBox = styled(Grid)`
-  padding: 0.5rem;
-`
-
-const PieceImage = styled.img`
-  width: 100%;
-  height: 100%;
-  max-height: 200px;
-  object-fit: contain;
-`
-
-const TitleBox = styled(Grid)`
-  border-left: 1px solid ${theme.palette.secondary.main};
-`
-
-const TitleText = styled(Grid)`
-  height: 100%;
-`
-
-const PieceTitle = styled(Typography)`
-  font-weight: bold;
-  line-height: 1;
-`
-
-const CardRow = styled(Grid)`
-  border-top: 1px solid ${theme.palette.secondary.main};
-`
-
-const AvatarBox = styled(Box)`
-  color: white;
-  text-decoration: none;
-  &a {
-    color: white;
-    text-decoration: none;
-  }
-  &a:active {
-    color: white;
-    text-decoration: none;
-  }
-  &a:focus {
-    color: white;
-    text-decoration: none;
-  }
-  &a:visited {
-    color: white;
-    text-decoration: none;
-  }
-`
-
-const AvatarTypography = styled(Typography)`
-  color: white;
-  text-decoration: none;
-  &a {
-    color: white;
-    text-decoration: none;
-  }
-  &a:active {
-    color: white;
-    text-decoration: none;
-  }
-  &a:focus {
-    color: white;
-    text-decoration: none;
-  }
-  &a:visited {
-    color: white;
-    text-decoration: none;
-  }
-  &a:hover {
-    color: white;
-    text-decoration: none;
-  }
-  &:hover {
-    color: white;
-    text-decoration: none;
-  }
-`
-
-const UnstyledLink = styled.a`
-  color: inherit;
-  text-decoration: none;
-  &:active {
-    color: white;
-    text-decoration: none;
-  }
-  &:focus {
-    color: white;
-    text-decoration: none;
-  }
-  &:visited {
-    color: white;
-    text-decoration: none;
-  }
-  &:hover {
-    color: white;
-    text-decoration: none;
-  }
-`
-
-const DescriptionBox = styled(Grid)`
-  margin: 1.5rem 0rem 1rem 0rem;
-`
-
-const DescriptionText = styled(Typography)`
-  line-height: 1.5;
-`
-
-const LinkRow = styled(Grid)`
-  margin: 1.25rem 0rem;
-`
-
-const BottomRow = styled(Grid)`
-  border-top: 1px solid ${theme.palette.secondary.main};
-  color: ${theme.palette.secondary.main};
-`
 
 const PieceCard = ({ piece, onClose, ...props }) => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
   const [menuIsOpen, setMenuIsOpen] = useState(true)
   const [editMode, setEditMode] = useState(false)
   const auth = useContext(AuthContext)
+  const history = useHistory()
 
   const cancelEditMode = event => {
     setEditMode(false)
@@ -208,11 +99,16 @@ const PieceCard = ({ piece, onClose, ...props }) => {
           </Grid>
         </BottomRow>
       )
-    } else if (piece.id === auth.userId) {
+    } else if (piece.owner.id === auth.userId) {
       return (
         <BottomRow container justify="center">
           <Grid item>
-            <Button color="inherit" onClick={enterEditMode}>
+            <Button
+              color="inherit"
+              onClick={() => {
+                history.push(`/admin/pieces/${piece.id}/edit`)
+              }}
+            >
               Edit Your Piece
             </Button>
           </Grid>
@@ -230,7 +126,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
         <PieceBox container direction="column">
           <TopBar />
           {!editMode && (
-            <Box>
+            <React.Fragment>
               <TopRow container>
                 <ImageBox item xs={6}>
                   <PieceImage
@@ -248,13 +144,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                     >
                       <PieceTitle variant="h5">{piece.title}</PieceTitle>
                     </Box>
-                    <UnstyledLink
-                      href={
-                        piece.owner.links && piece.owner.links[0]
-                          ? piece.owner.links[0].url
-                          : '#'
-                      }
-                    >
+                    <UnstyledLink to={`/${piece.owner.username}`}>
                       <CardRow
                         container
                         direction="row"
@@ -307,7 +197,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                   color="secondary"
                 />
               </CardRow> */}
-            </Box>
+            </React.Fragment>
           )}
           {editMode && (
             <Grid

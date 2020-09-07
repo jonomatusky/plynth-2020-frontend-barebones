@@ -1,9 +1,14 @@
 import React from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { Container, Grid, Box } from '@material-ui/core'
+import { Container, Grid, Box, Button } from '@material-ui/core'
 
 import PieceForm from '../components/PieceForm'
-import PageTitle from '../../shared/components/UIElements/PageTitle'
+import Background from '../../shared/components/UIElements/Background'
+import {
+  BarRow,
+  PieceBox,
+  BottomRow,
+} from '../../shared/components/UIElements/CardSections'
 import { useHttpClient } from '../../shared/hooks/http-hook'
 
 const { REACT_APP_BACKEND_URL } = process.env
@@ -27,20 +32,32 @@ const UpdatePiece = () => {
           'Content-Type': 'application/json',
         }
       )
-      history.push(`/pieces/${pieceId}`)
+      history.push(`/admin/pieces/${pieceId}`)
     } catch (err) {}
   }
 
   return (
-    <Container maxWidth="xs">
-      <PageTitle title={title} />
-      <Grid container width="100%">
-        <Grid container direction="column">
-          <PieceForm pieceId={pieceId} onSubmit={onSubmit} />
+    <React.Fragment>
+      <Background />
+      <Container maxWidth="sm">
+        <Grid container justify="flex-start" direction="column">
+          <Box height="5vh"></Box>
+          <PieceBox container direction="column">
+            <BarRow
+              onClick={() => {
+                history.goBack()
+              }}
+              buttonLabel={'Close X'}
+            />
+            <Grid item>
+              <PieceForm pieceId={pieceId} onSubmit={onSubmit} />
+            </Grid>
+            <Box height="4vh"></Box>
+          </PieceBox>
+          <Box height="10vh"></Box>
         </Grid>
-      </Grid>
-      <Box height="5rem" />
-    </Container>
+      </Container>
+    </React.Fragment>
   )
 }
 

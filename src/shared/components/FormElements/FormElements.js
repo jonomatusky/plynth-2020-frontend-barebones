@@ -6,19 +6,46 @@ import { useField } from 'formik'
 import styled from 'styled-components'
 import theme from '../../../theme'
 
-const ImageBox = styled.div``
+export const ImageBox = styled.div`
+  padding-top: 2rem;
+`
 
-const Image = styled.img`
-  width: 100%;
-  height: 100%;
+export const Image = styled.img`
+  max-with: 100px;
+  max-height: 150px;
   object-fit: contain;
 `
 
-const StyledTextInput = styled.div`
+export const BarRow = styled(Grid)`
+  background: ${theme.palette.secondary.main};
+  padding-left: 10px;
+  padding-right: 10px;
+  color: ${theme.palette.background.paper};
+  align-content: center;
+`
+
+export const BarTitle = styled(Grid)`
+  font-weight: bold;
+`
+
+export const FieldSet = styled(Grid)`
+  border: 1px solid ${theme.palette.secondary.main};
+  margin-bottom: 1em;
+`
+
+const StyledInput = styled.div`
   color: ${props =>
     props.error ? theme.palette.error.main : theme.palette.secondary.main};
   border-color: ${props =>
     props.error ? theme.palette.error.main : theme.palette.secondary.main};
+`
+
+const StyledCheckboxInput = styled.div`
+  color: ${props =>
+    props.error ? theme.palette.error.main : theme.palette.secondary.main};
+  border-color: ${props =>
+    props.error ? theme.palette.error.main : theme.palette.secondary.main};
+  display: inline;
 `
 
 const Label = styled.label`
@@ -61,6 +88,13 @@ const TextAreaInput = styled.textarea`
   background: #1b1d1b;
   padding: 0.2rem 0.75rem 0.4rem 0.75rem;
   margin: 0rem 0rem 1rem 0rem;
+  &:focus {
+    background: white;
+    color: ${theme.palette.background.default};
+    border-radius: 0px;
+    outline: 1px solid ${theme.palette.primary.main};
+    border: 1px solid ${theme.palette.primary.main};
+  }
 `
 
 const ErrorMessage = styled.div`
@@ -71,11 +105,11 @@ export const TextField = ({ label, ...props }) => {
   const [field, meta] = useField(props)
   const showError = meta.touched && meta.error
   return (
-    <StyledTextInput error={showError}>
+    <StyledInput error={showError}>
       <Label htmlFor={props.id || props.name}>{label}</Label>
       <TextInput {...field} {...props} />
       {showError ? <ErrorMessage>{meta.error}</ErrorMessage> : null}
-    </StyledTextInput>
+    </StyledInput>
   )
 }
 
@@ -83,11 +117,11 @@ export const TitleField = ({ label, ...props }) => {
   const [field, meta] = useField(props)
   const showError = meta.touched && meta.error
   return (
-    <StyledTextInput error={showError}>
+    <StyledInput error={showError}>
       <Label htmlFor={props.id || props.name}>{label}</Label>
       <TitleInput {...field} {...props} />
       {showError ? <ErrorMessage>{meta.error}</ErrorMessage> : null}
-    </StyledTextInput>
+    </StyledInput>
   )
 }
 
@@ -95,27 +129,162 @@ export const TextArea = ({ label, ...props }) => {
   const [field, meta] = useField(props)
   const showError = meta.touched && meta.error
   return (
-    <StyledTextInput error={showError}>
+    <StyledInput error={showError}>
       <Label htmlFor={props.id || props.name}>{label}</Label>
       <TextAreaInput {...field} {...props} />
       {showError ? <ErrorMessage>{meta.error}</ErrorMessage> : null}
-    </StyledTextInput>
+    </StyledInput>
   )
 }
 
-export const BarRow = styled(Grid)`
-  background: ${theme.palette.secondary.main};
-  padding-left: 10px;
-  padding-right: 10px;
-  color: ${theme.palette.background.paper};
-  align-content: center;
+const CheckButtonInput = styled.button`
+  width: 20px;
+  height: 20px;
+  font: inherit;
+  color: white;
+  border: 1px solid;
+  border-color: inherit;
+  background: #1b1d1b;
+  text-align: left;
+  padding: 0;
+  margin-right: 0.5rem;
+  &:focus {
+    background: white;
+    color: ${theme.palette.background.default};
+    border-radius: 0px;
+    outline: 1px solid ${theme.palette.primary.main};
+    border: 1px solid ${theme.palette.primary.main};
 `
 
-export const BarTitle = styled(Grid)`
-  font-weight: bold;
+const CheckIcon = styled.svg`
+  fill: none;
+  stroke: white;
+  stroke-width: 3;
 `
 
-export const FieldSet = styled(Grid)`
-  border: 1px solid ${theme.palette.secondary.main};
-  margin-bottom: 1em;
-`
+export const Checkmark = () => {
+  return (
+    <CheckIcon viewBox="0 0 24 24">
+      <polyline points="20 6 9 17 4 12" />
+    </CheckIcon>
+  )
+}
+
+export const CheckButton = ({ label, checked, onClick, ...props }) => {
+  const [field, meta] = useField(props)
+  const showError = meta.touched && meta.error
+
+  const handleClick = event => {
+    event.preventDefault()
+    onClick()
+  }
+
+  return (
+    <StyledCheckboxInput error={showError}>
+      {checked ? (
+        <CheckButtonInput
+          onClick={handleClick}
+          style={{ background: theme.palette.secondary.main }}
+        >
+          <svg
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M3 9.35714L8.07549 14L17 4"
+              stroke="black"
+              stroke-width="3"
+            />
+          </svg>
+        </CheckButtonInput>
+      ) : (
+        <CheckButtonInput onClick={handleClick}></CheckButtonInput>
+      )}
+      <Label htmlFor={props.id || props.name}>{label}</Label>
+      {showError ? <ErrorMessage>{meta.error}</ErrorMessage> : null}
+    </StyledCheckboxInput>
+  )
+}
+
+// const StyledAutocomplete = styled(Autocomplete)`
+//   color: ${props =>
+//     props.error ? theme.palette.error.main : theme.palette.secondary.main};
+//   border-color: ${props =>
+//     props.error ? theme.palette.error.main : theme.palette.secondary.main};
+//   width: 100%;
+//   font: inherit;
+//   color: white;
+//   border: 1px solid;
+//   border-color: inherit;
+//   background: #1b1d1b;
+//   padding: 0.2rem 0.75rem 0.4rem 0.75rem;
+//   margin: 0rem 0rem 1rem 0rem;
+// `
+
+// const AutocompleteField = ({ label, ...props }) => {
+//   const [field, meta] = useField(props)
+//   const showError = meta.touched && meta.error
+//   return (
+//     <StyledAutocomplete error={showError}>
+//       <Label htmlFor={props.id || props.name}>{label}</Label>
+//       <Autocomplete {...props} />
+//       {showError ? <ErrorMessage>{meta.error}</ErrorMessage> : null}
+//     </StyledAutocomplete>
+//   )
+// }
+
+// const CheckboxInput = styled.div`
+//   color: white;
+//   border: 1px solid;
+//   border-color: ${props =>
+//     props.error ? theme.palette.error.main : theme.palette.secondary.main};
+//   background: ${props => (props.checked ? 'salmon' : '#1b1d1b')};
+//   width: 1.2rem;
+//   height: 1.2rem;
+//   margin: 0rem 0.5rem 1rem 0rem;
+//   transition: all 150ms;
+
+//   ${HiddenCheckbox}:focus + & {
+//     box-shadow: 0 0 0 3px pink;
+//   }
+//   ${Icon} {
+//     visibility: ${props => (props.checked ? 'visible' : 'hidden')};
+//   }
+// `
+
+// const HiddenCheckbox = styled.input.attrs({ type: 'checkbox' })`
+//   border: 0;
+//   clip: rect(0 0 0 0);
+//   clippath: inset(50%);
+//   height: 1px;
+//   margin: -1px;
+//   overflow: hidden;
+//   padding: 0;
+//   position: absolute;
+//   white-space: nowrap;
+//   width: 1px;
+// `
+
+// const Icon = styled.svg`
+//   fill: none;
+//   stroke: white;
+//   stroke-width: 2px;
+// `
+
+// const getSuggestions = value => {
+//   const inputValue = value.trim().toLowerCase();
+//   const inputLength = inputValue.length;
+
+//   return inputLength === 0 ? [] : users.filter(user =>
+//     user.username.toLowerCase().slice(0, inputLength) === inputValue
+//   );
+// };
+
+// const getSuggestionValue = suggestion => suggestion.name
+
+// const renderSuggestion = suggestion => (
+//   <div>
+//     {suggestion.name}
+//   </div>
+// );

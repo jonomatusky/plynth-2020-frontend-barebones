@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 
-import { Container, Grid, Box, Typography, Button } from '@material-ui/core'
+import {
+  Container,
+  Grid,
+  Box,
+  Typography,
+  Button,
+  Paper,
+} from '@material-ui/core'
 import {
   PieceBox,
   BarRow,
-  TopRow,
-  ImageBox,
-  PieceImage,
-  TitleBox,
-  TitleText,
+  Avatar,
+  ProfileTopRow,
   CardRow,
   PieceTitle,
   DescriptionBox,
@@ -22,13 +26,12 @@ import styled from 'styled-components'
 import { useHttpClient } from '../../shared/hooks/http-hook'
 
 import ActionButton from '../../shared/components/UIElements/ActionButton'
-import UserForm from '../components/UserForm'
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
-import PageTitle from '../../shared/components/UIElements/PageTitle'
 import Background from '../../shared/components/UIElements/Background'
 
 import theme from '../../theme'
 import LoadingGraphic from '../../shared/components/UIElements/LoadingGraphic'
+import NotFound from '../../shared/components/Navigation/NotFound'
 
 const { REACT_APP_BACKEND_URL } = process.env
 
@@ -36,7 +39,7 @@ const UserProfile = () => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
   const [editMode, setEditMode] = useState(false)
   const [user, setUser] = useState()
-  const userId = useParams().userId
+  const username = useParams().username
 
   const history = useHistory()
 
@@ -45,62 +48,54 @@ const UserProfile = () => {
       const fetchUser = async () => {
         try {
           const responseData = await sendRequest(
-            `${REACT_APP_BACKEND_URL}/users/${userId}`
+            `${REACT_APP_BACKEND_URL}/users/${username}`
           )
           setUser(responseData.user)
         } catch (err) {}
       }
       fetchUser()
     }
-  }, [sendRequest, userId, editMode])
-
-  const handleSubmit = async values => {
-    try {
-      const userData = { user: values }
-      await sendRequest(
-        `${REACT_APP_BACKEND_URL}/users/${userId}`,
-        'PATCH',
-        JSON.stringify(userData),
-        {
-          'Content-Type': 'application/json',
-        }
-      )
-      setEditMode(false)
-    } catch (err) {}
-  }
+  }, [sendRequest, username, editMode])
 
   const handleClose = event => {
     history.goBack()
   }
 
+  const TopRow = styled(Grid)``
+
+  const ImageBox = styled(Grid)`
+    padding: 0.5rem 1.5rem;
+  `
+
   return (
     <React.Fragment>
       <Background />
-      <Container maxWidth="xs">
-        <Grid container justify="flex-start" direction="column" spacing={2}>
-          <Box height="5vh"></Box>
-          {user && !editMode && (
+      <Container maxWidth="sm">
+        {!user && !isLoading && error && <NotFound />}
+        {user && !isLoading && (
+          <Grid container justify="flex-start" direction="column">
+            <Box height="5vh"></Box>
             <PieceBox container direction="column">
               <BarRow onClick={handleClose} buttonLabel="Close X" />
-              <TopRow container>
-                <ImageBox item xs={6}>
-                  {user.avatar && (
-                    <PieceImage src={user.avatarLink} alt="Preview" />
-                  )}
-                </ImageBox>
-                <TitleBox item xs={6}>
-                  <TitleText container direction="column" justify="center">
-                    <Box
-                      flexGrow={1}
-                      display="flex"
-                      alignItems="center"
-                      padding="1rem"
-                    >
-                      <PieceTitle variant="h5">{user.displayName}</PieceTitle>
-                    </Box>
-                  </TitleText>
-                </TitleBox>
-              </TopRow>
+              <ProfileTopRow
+                container
+                alignContent="center"
+                alignItems="center"
+                justify="center"
+              >
+                <Grid item xs={5}>
+                  <Box>
+                    {user.avatar && (
+                      <Avatar src={user.avatarLink} alt="Preview" />
+                    )}
+                  </Box>
+                </Grid>
+                <Grid item xs={7}>
+                  <Box textAlign="left" padding={1} overflow="hidden">
+                    <PieceTitle variant="h5">{user.displayName}</PieceTitle>
+                  </Box>
+                </Grid>
+              </ProfileTopRow>
               <CardRow container justify="center">
                 <DescriptionBox item xs={11}>
                   <DescriptionText>{user.bio}</DescriptionText>
@@ -119,20 +114,11 @@ const UserProfile = () => {
                   </LinkRow>
                 )
               })}
-              <BottomRow container justify="center">
-                <Grid>
-                  <Button color="inherit" onClick={setEditMode}>
-                    Edit User
-                  </Button>
-                </Grid>
-              </BottomRow>
+              <Box height="4vh"></Box>
             </PieceBox>
-          )}
-          {user && editMode && (
-            <UserForm userId={userId} onSubmit={handleSubmit} />
-          )}
-          <Box height="10vh"></Box>
-        </Grid>
+            <Box height="10vh"></Box>
+          </Grid>
+        )}
       </Container>
     </React.Fragment>
   )

@@ -117,7 +117,7 @@ const LoggedOut = props => {
                 {`Already have an account? `}
                 <Link
                   component={RouterLink}
-                  to="/login"
+                  to="/s/login"
                   color="inherit"
                   underline="always"
                 >

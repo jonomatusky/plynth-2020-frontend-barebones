@@ -1,6 +1,8 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+import { Grid, Box, Typography } from '@material-ui/core'
+
 import styled from 'styled-components'
-import { Grid, Button, Typography } from '@material-ui/core'
 import theme from '../../../theme'
 
 export const PieceBox = styled(Grid)`
@@ -65,7 +67,7 @@ export const DescriptionText = styled(Typography)`
 `
 
 export const LinkRow = styled(Grid)`
-  margin: 1.25rem 0rem;
+  margin: 0.75rem 0rem;
 `
 
 export const BottomRow = styled(Grid)`
@@ -89,3 +91,105 @@ export const BarRow = ({ title, buttonLabel, ...props }) => {
     </Bar>
   )
 }
+
+export const ProfileTopRow = styled(Grid)`
+  display: flex;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+`
+
+const ImageCropper = styled.div`
+  width: 100px;
+  height: 100px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 50%;
+  margin: 0 auto;
+`
+
+export const AvatarImage = styled.img`
+  display: inline;
+  margin: 0 auto;
+  margin-left: -25%; //centers the image
+  height: 100%;
+  width: auto;
+`
+
+export const AvatarBox = styled(Box)`
+  color: white;
+  text-decoration: none;
+  &a {
+    color: white;
+    text-decoration: none;
+  }
+  &a:active {
+    color: white;
+    text-decoration: none;
+  }
+  &a:focus {
+    color: white;
+    text-decoration: none;
+  }
+  &a:visited {
+    color: white;
+    text-decoration: none;
+  }
+`
+
+export const AvatarTypography = styled(Typography)`
+  color: white;
+  text-decoration: none;
+  &a {
+    color: white;
+    text-decoration: none;
+  }
+  &a:active {
+    color: white;
+    text-decoration: none;
+  }
+  &a:focus {
+    color: white;
+    text-decoration: none;
+  }
+  &a:visited {
+    color: white;
+    text-decoration: none;
+  }
+  &a:hover {
+    color: white;
+    text-decoration: none;
+  }
+  &:hover {
+    color: white;
+    text-decoration: none;
+  }
+`
+
+export const Avatar = ({ src, alt }) => {
+  return (
+    <ImageCropper>
+      <AvatarImage src={src} alt={alt} />
+    </ImageCropper>
+  )
+}
+
+export const UnstyledLink = styled(Link)`
+  color: inherit;
+  text-decoration: none;
+  &:active {
+    color: white;
+    text-decoration: none;
+  }
+  &:focus {
+    color: white;
+    text-decoration: none;
+  }
+  &:visited {
+    color: white;
+    text-decoration: none;
+  }
+  &:hover {
+    color: white;
+    text-decoration: none;
+  }
+`

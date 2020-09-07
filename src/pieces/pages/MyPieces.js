@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
 
-import { useHttpClient } from '../../shared/hooks/http-hook'
+import { useApiClient } from '../../shared/hooks/api-hook'
 import { Container, Grid, Box, Button, Menu, MenuItem } from '@material-ui/core'
 import { AuthContext } from '../../shared/context/auth-context'
 
@@ -15,28 +15,25 @@ const { REACT_APP_BACKEND_URL } = process.env
 
 const title = 'My Pieces'
 
-const ViewPieces = () => {
+const MyPieces = () => {
   const [loadedPieces, setLoadedPieces] = useState()
-  const { isLoading, error, sendRequest, clearError } = useHttpClient()
+  const { isLoading, error, sendRequest, clearError } = useApiClient()
   const [anchorEl, setAnchorEl] = useState(null)
   const auth = useContext(AuthContext)
+  let token = auth.token
 
   useEffect(() => {
+    console.log('useEffect')
     const fetchPieces = async () => {
       try {
-        const responseData = await sendRequest(
-          `${REACT_APP_BACKEND_URL}/users/me/pieces`,
-          'GET',
-          null,
-          {
-            Authorization: 'Bearer ' + auth.token,
-          }
-        )
+        const responseData = await sendRequest(`/users/me/pieces`)
+        console.log('setting pieces')
         setLoadedPieces(responseData.pieces)
       } catch (err) {}
     }
+
     fetchPieces()
-  }, [sendRequest, auth.token])
+  }, [sendRequest])
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget)
@@ -60,30 +57,30 @@ const ViewPieces = () => {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <MenuItem component={Link} to={'/logout'}>
+            <MenuItem component={Link} to={'/admin/logout'}>
               Logout
             </MenuItem>
           </Menu>
         </PageTitle>
-        {isLoading && <LoadingSpinner asOverlay />}
-        {!isLoading && loadedPieces && (
-          <Grid container direction="column" alignItems="stretch" spacing={2}>
-            <Grid item xs={12}>
-              <ActionButton
-                component={Link}
-                to={'/create'}
-                label="Create New Piece +"
-              ></ActionButton>
-            </Grid>
+        <Grid container direction="column" alignItems="stretch" spacing={2}>
+          <Grid item xs={12}>
+            <ActionButton
+              component={Link}
+              to={'/create'}
+              label="Create New Piece +"
+            ></ActionButton>
+          </Grid>
+          {isLoading && <LoadingSpinner asOverlay />}
+          {!isLoading && loadedPieces && (
             <Grid item>
               <PieceList items={loadedPieces} />
             </Grid>
-          </Grid>
-        )}
+          )}
+        </Grid>
         <Box height="4rem"></Box>
       </Container>
     </React.Fragment>
   )
 }
 
-export default ViewPieces
+export default MyPieces

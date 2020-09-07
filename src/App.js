@@ -11,7 +11,7 @@ import { AuthContext } from './shared/context/auth-context'
 import NewImage from './pieces/pages/NewImage'
 import NewPiece from './pieces/pages/NewPiece'
 import ViewPiece from './pieces/pages/ViewPiece'
-import ViewPieces from './pieces/pages/MyPieces'
+import MyPieces from './pieces/pages/MyPieces'
 import UpdatePiece from './pieces/pages/UpdatePiece'
 import Scans from './scans/pages/Scans'
 import MyCollection from './pieces/pages/MyCollection'
@@ -27,80 +27,93 @@ import Logout from './users/pages/Logout'
 import NavBar from './shared/components/Navigation/NavBar'
 
 const App = () => {
-  const { token, login, logout, userId } = useAuth()
+  const { token, isLoading, login, logout, userId } = useAuth()
 
   let routes
 
-  if (token) {
-    routes = (
-      <React.Fragment>
-        <Route path="/">
-          <NavBar />
-        </Route>
-        <main>
-          <Switch>
-            <Route path="/create" exact>
-              <NewImage />
-            </Route>
-            <Route path="/create/piece" exact>
-              <NewPiece />
-            </Route>
-            <Route path="/pieces/:pieceId/edit">
-              <UpdatePiece />
-            </Route>
-            <Route path="/pieces/:pieceId">
-              <ViewPiece />
-            </Route>
-            <Route path="/pieces" exact>
-              <ViewPieces />
-            </Route>
-            <Route path="/pickup" exact>
-              <LoggedOut />
-            </Route>
-            <Route path="/pickups" exact>
-              <Scans />
-            </Route>
-            <Route path="/collection" exact>
-              <MyCollection />
-            </Route>
-            <Route path="/test" exact>
-              <CardTest />
-            </Route>
-            <Route path="/demo" exact>
-              <Demo />
-            </Route>
-            <Route path="/users/:userId">
-              <UserProfile />
-            </Route>
-            <Route path="/logout" exact>
-              <Logout />
-            </Route>
-            <Redirect to="/pieces" />
-          </Switch>
-        </main>
-      </React.Fragment>
-    )
-  } else {
-    routes = (
-      <main>
-        <Switch>
-          <Route path="/signup" exact>
-            <BetaSignup />
-          </Route>
-          <Route path="/login" exact>
-            <Login />
-          </Route>
-          <Route path="/subscribe" exact>
-            <BetaSignup />
-          </Route>
-          <Route path="/" exact>
-            <LoggedOut />
-          </Route>
-          <Redirect to="/" />
-        </Switch>
-      </main>
+  const PrivateRoute = ({ component: Component, ...rest }) => {
+    return !isLoading ? (
+      <Route
+        {...rest}
+        render={props =>
+          token ? (
+            <React.Fragment>
+              <NavBar />
+              <main>
+                <Component {...props} />
+              </main>
+            </React.Fragment>
+          ) : (
+            <Redirect to="/" />
+          )
+        }
+      />
+    ) : (
+      <div></div>
     )
   }
+
+  const PublicRoute = ({ component: Component, restricted, ...rest }) => {
+    return !isLoading ? (
+      <Route
+        {...rest}
+        render={props =>
+          !token || !restricted ? (
+            <main>
+              <Component {...props} />
+            </main>
+          ) : (
+            <Redirect to="/admin/pieces" />
+          )
+        }
+      />
+    ) : (
+      <div></div>
+    )
+  }
+
+  routes = (
+    <Switch>
+      <PublicRoute
+        restricted={true}
+        component={BetaSignup}
+        path="/s/signup"
+        exact
+      />
+      <PublicRoute restricted={true} component={Login} path="/s/login" exact />
+      <PublicRoute
+        restricted={true}
+        component={BetaSignup}
+        path="/s/subscribe"
+        exact
+      />
+      <PublicRoute restricted={true} component={LoggedOut} path="/" exact />
+
+      <PrivateRoute component={NewImage} path="/admin/create" exact />
+      <PrivateRoute component={NewPiece} path="/admin/create/piece" exact />
+      <PrivateRoute
+        component={UpdatePiece}
+        path="/admin/pieces/:pieceId/edit"
+      />
+      <PrivateRoute component={ViewPiece} path="/admin/pieces/:pieceId" />
+      <PrivateRoute component={MyPieces} path="/admin/pieces" exact />
+      <PrivateRoute component={LoggedOut} path="/pickup" exact />
+      <PrivateRoute component={Scans} path="/admin/pickups" exact />
+      <PrivateRoute component={MyCollection} path="/admin/collection" exact />
+      <PrivateRoute component={CardTest} path="/admin/test" exact />
+      <PrivateRoute component={Demo} path="/admin/demo" exact />
+      <PrivateRoute component={Logout} path="/admin/logout" exact />
+      <Redirect from="/admin" to="/" />
+
+      <PublicRoute
+        restricted={false}
+        component={UserProfile}
+        path="/:username"
+      />
+
+      <Redirect to="/" />
+    </Switch>
+  )
 
   return (
     <AuthContext.Provider

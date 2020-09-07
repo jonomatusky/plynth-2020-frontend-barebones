@@ -40,7 +40,7 @@ const UserItem = ({ user, ...props }) => {
   const history = useHistory()
 
   const handleClick = () => {
-    history.push(`/users/${user.id}`)
+    history.push(`/users/${user.username}`)
   }
 
   return (

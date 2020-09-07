@@ -6,11 +6,13 @@ export const useAuth = () => {
   const [token, setToken] = useState(null)
   const [tokenExpirationDate, setTokenExpirationDate] = useState()
   const [userId, setUserId] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   const login = useCallback((user, token, expirationDate) => {
     const id = user.id
 
     setToken(token)
+    setIsLoading(false)
     setUserId(id)
     const tokenExpirationDate =
       expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60 * 24)
@@ -31,7 +33,12 @@ export const useAuth = () => {
     setToken(null)
     setTokenExpirationDate(null)
     setUserId(null)
+    setIsLoading(false)
     localStorage.removeItem('userData')
+  }, [])
+
+  const doneLoading = useCallback(() => {
+    setIsLoading(false)
   }, [])
 
   useEffect(() => {
@@ -44,6 +51,12 @@ export const useAuth = () => {
   }, [token, logout, tokenExpirationDate])
 
   useEffect(() => {
+    if (!token) {
+      doneLoading()
+    }
+  }, [token, doneLoading])
+
+  useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem('userData'))
     if (
       storedData &&
@@ -54,5 +67,5 @@ export const useAuth = () => {
     }
   }, [login])
 
-  return { token, login, logout, userId }
+  return { token, isLoading, login, logout, userId }
 }

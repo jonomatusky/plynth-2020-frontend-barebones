@@ -3,7 +3,7 @@ import { AuthContext } from '../context/auth-context'
 
 const { REACT_APP_BACKEND_URL } = process.env
 
-export const useHttpClient = () => {
+export const useApiClient = () => {
   const auth = useContext(AuthContext)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState()
@@ -12,7 +12,7 @@ export const useHttpClient = () => {
 
   const sendRequest = useCallback(
     async (extension, method = 'GET', body = null, headers = {}) => {
-      const url = `${REACT_APP_BACKEND_URL}/${extension}`
+      const url = `${REACT_APP_BACKEND_URL}${extension}`
       setIsLoading(true)
 
       if (method === 'POST' || method === 'PATCH') {
@@ -20,7 +20,7 @@ export const useHttpClient = () => {
       }
 
       if (auth.token) {
-        headers.Authorization = auth.token
+        headers.Authorization = 'Bearer ' + auth.token
       }
 
       const httpAbortCtrl = new AbortController()
@@ -45,12 +45,16 @@ export const useHttpClient = () => {
         setIsLoading(false)
         return data
       } catch (err) {
-        setError(err.message)
-        setIsLoading(false)
-        throw err
+        console.log(err)
+        if (err.name === 'AbortError') console.log('request aborted')
+        else {
+          setError(err.message)
+          setIsLoading(false)
+          throw err
+        }
       }
     },
-    []
+    [auth.token]
   )
 
   const clearError = () => {

@@ -47,6 +47,7 @@ const SignUp = () => {
       )
 
       auth.login(responseData.user, responseData.token)
+      history.push('/admin/pieces')
     } catch (err) {
       console.log(err)
     }

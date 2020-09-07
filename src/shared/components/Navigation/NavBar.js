@@ -89,7 +89,7 @@ const MainHeader = props => {
                 color="inherit"
                 component={NavLink}
                 activeClassName="Mui-selected"
-                to={'/pickups'}
+                to={'/admin/pickups'}
               >
                 Activity
               </Button>
@@ -97,7 +97,7 @@ const MainHeader = props => {
                 color="inherit"
                 component={NavLink}
                 activeClassName="Mui-selected"
-                to={'/collection'}
+                to={'/admin/collection'}
               >
                 Collection
               </Button>
@@ -105,7 +105,7 @@ const MainHeader = props => {
                 color="inherit"
                 component={NavLink}
                 activeClassName="Mui-selected"
-                to={'/pieces'}
+                to={'/admin/pieces'}
               >
                 My Pieces
               </Button>
@@ -113,12 +113,16 @@ const MainHeader = props => {
                 color="inherit"
                 component={NavLink}
                 activeClassName="Mui-selected"
-                to={'/users'}
+                to={'/admin/users'}
               >
                 Users
               </Button>
             </Box>
-            <Button variant="contained" component={NavLink} to={'/pickup'}>
+            <Button
+              variant="contained"
+              component={NavLink}
+              to={'/admin/pickup'}
+            >
               New Pickup
             </Button>
           </Toolbar>
@@ -138,7 +142,7 @@ const MainHeader = props => {
               label="Collection"
               icon={<AlbumIcon />}
               component={NavLink}
-              to={'/collection'}
+              to={'/admin/collection'}
               activeClassName="Mui-selected"
               classes={{ root: classes.navBarActionRoot }}
             />
@@ -159,7 +163,7 @@ const MainHeader = props => {
               label="Create"
               icon={<AddCircleIcon />}
               component={NavLink}
-              to={'/pieces'}
+              to={'/admin/pieces'}
               activeClassName="Mui-selected"
               classes={{ root: classes.navBarActionRoot }}
             />
