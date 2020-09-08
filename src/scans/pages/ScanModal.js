@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 
 import {
   Dialog,
@@ -63,6 +64,7 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
     scan: null,
   })
   const [submittedMissingPiece, setSubmittedMissingPiece] = useState(false)
+  const history = useHistory()
 
   useEffect(() => {
     if (scanData.found && isOpen) {
@@ -72,13 +74,16 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
       }, 500)
       const timer1 = setTimeout(() => {
         setShowCard(true)
+        if (scanData.piece.isDirect) {
+          history.push(`/${scanData.piece.owner.username}`)
+        }
       }, 300)
       return () => {
         clearTimeout(timer1)
         clearTimeout(timer2)
       }
     }
-  }, [scanData, isOpen])
+  }, [scanData, history, isOpen])
 
   useEffect(() => {
     const startScan = async () => {

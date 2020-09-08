@@ -145,7 +145,7 @@ const PieceForm = props => {
                         setFieldValue('isDirect', !values.isDirect)
                       }
                       name="isDirect"
-                      label="Skip this page and take users to your profile?"
+                      label="Skip this page and take users directly to your profile?"
                       checked={values.isDirect}
                     />
                   </Grid>

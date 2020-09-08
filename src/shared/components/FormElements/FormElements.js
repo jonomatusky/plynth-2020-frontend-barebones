@@ -40,14 +40,6 @@ const StyledInput = styled.div`
     props.error ? theme.palette.error.main : theme.palette.secondary.main};
 `
 
-const StyledCheckboxInput = styled.div`
-  color: ${props =>
-    props.error ? theme.palette.error.main : theme.palette.secondary.main};
-  border-color: ${props =>
-    props.error ? theme.palette.error.main : theme.palette.secondary.main};
-  display: inline;
-`
-
 const Label = styled.label`
   color: inherit;
 `
@@ -83,11 +75,15 @@ const TextAreaInput = styled.textarea`
   font: inherit;
   color: white;
   border: 1px solid;
+  border-radius: 0px;
   border-color: inherit;
-  resize: none;
   background: #1b1d1b;
-  padding: 0.2rem 0.75rem 0.4rem 0.75rem;
-  margin: 0rem 0rem 1rem 0rem;
+  padding: 0.2rem 0.6rem 0.3rem 0.6rem;
+  margin: 0.4rem 0rem 0.6rem 0rem;
+  font-weight: bold;
+  font-size: 1.2rem;
+  resize: vertical;
+  rows: 3;
   &:focus {
     background: white;
     color: ${theme.palette.background.default};
@@ -137,6 +133,13 @@ export const TextArea = ({ label, ...props }) => {
   )
 }
 
+const StyledCheckboxInput = styled.div`
+  color: ${props =>
+    props.error ? theme.palette.error.main : theme.palette.secondary.main};
+  border-color: ${props =>
+    props.error ? theme.palette.error.main : theme.palette.secondary.main};
+`
+
 const CheckButtonInput = styled.button`
   width: 20px;
   height: 20px;
@@ -180,28 +183,38 @@ export const CheckButton = ({ label, checked, onClick, ...props }) => {
   }
 
   return (
-    <StyledCheckboxInput error={showError}>
-      {checked ? (
-        <CheckButtonInput
-          onClick={handleClick}
-          style={{ background: theme.palette.secondary.main }}
-        >
-          <svg
-            viewBox="0 0 20 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M3 9.35714L8.07549 14L17 4"
-              stroke="black"
-              stroke-width="3"
-            />
-          </svg>
-        </CheckButtonInput>
-      ) : (
-        <CheckButtonInput onClick={handleClick}></CheckButtonInput>
-      )}
-      <Label htmlFor={props.id || props.name}>{label}</Label>
+    <StyledCheckboxInput error={showError} style={{ marginBottom: '0.6rem' }}>
+      <Grid container alignItems="center">
+        <Grid item xs={1}>
+          <StyledCheckboxInput error={showError}>
+            {checked ? (
+              <CheckButtonInput
+                onClick={handleClick}
+                style={{ background: theme.palette.secondary.main }}
+              >
+                <svg
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 9.35714L8.07549 14L17 4"
+                    stroke="black"
+                    strokeWidth="3"
+                  />
+                </svg>
+              </CheckButtonInput>
+            ) : (
+              <CheckButtonInput onClick={handleClick}></CheckButtonInput>
+            )}
+          </StyledCheckboxInput>
+        </Grid>
+        <Grid item xs={11}>
+          <StyledCheckboxInput error={showError}>
+            <Label htmlFor={props.id || props.name}>{label}</Label>
+          </StyledCheckboxInput>
+        </Grid>
+      </Grid>
       {showError ? <ErrorMessage>{meta.error}</ErrorMessage> : null}
     </StyledCheckboxInput>
   )
