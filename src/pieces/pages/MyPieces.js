@@ -66,7 +66,7 @@ const MyPieces = () => {
           <Grid item xs={12}>
             <ActionButton
               component={Link}
-              to={'/create'}
+              to={'/admin/create'}
               label="Create New Piece +"
             ></ActionButton>
           </Grid>
