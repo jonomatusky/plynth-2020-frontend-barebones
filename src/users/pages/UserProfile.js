@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
+import { AuthContext } from '../../shared/context/auth-context'
 
 import {
   Container,
@@ -41,6 +42,7 @@ const UserProfile = () => {
   const [user, setUser] = useState()
   const username = useParams().username
 
+  const auth = useContext(AuthContext)
   const history = useHistory()
 
   useEffect(() => {
@@ -58,14 +60,8 @@ const UserProfile = () => {
   }, [sendRequest, username, editMode])
 
   const handleClose = event => {
-    history.goBack()
+    history.push('/')
   }
-
-  const TopRow = styled(Grid)``
-
-  const ImageBox = styled(Grid)`
-    padding: 0.5rem 1.5rem;
-  `
 
   return (
     <React.Fragment>
