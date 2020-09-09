@@ -13,9 +13,8 @@ import {
   Image,
   ImageBox,
   CheckButton,
+  LinkBarRow,
 } from '../../shared/components/FormElements/FormElements'
-
-import { BarRow } from '../../shared/components/UIElements/CardSections'
 
 import styled from 'styled-components'
 import theme from '../../theme'
@@ -37,7 +36,6 @@ const PieceForm = props => {
   const [initialValues, setInitialValues] = useState({
     title: '',
     description: '',
-    creator: '',
     links: [],
     isDirect: false,
   })
@@ -57,7 +55,6 @@ const PieceForm = props => {
         const {
           title,
           description,
-          owner,
           links,
           awsId,
           ext,
@@ -67,7 +64,6 @@ const PieceForm = props => {
         setInitialValues({
           title,
           description,
-          ownerUsername: owner.username,
           links,
           isDirect,
         })
@@ -97,7 +93,6 @@ const PieceForm = props => {
       .max(32, 'Must be 32 characters or less')
       .required('Required'),
     description: Yup.string(),
-    creator: Yup.string(),
     links: Yup.array().of(
       Yup.object({
         name: Yup.string()
@@ -158,32 +153,21 @@ const PieceForm = props => {
                               <FieldSet
                                 container
                                 direction="column"
-                                alignItems="stretch"
                                 key={index}
                               >
-                                <BarRow
-                                  container
-                                  justify="space-between"
-                                  alignItems="center"
-                                >
-                                  <BarTitle>
-                                    <Typography color="inherit">
-                                      Link
-                                    </Typography>
-                                  </BarTitle>
-                                  <Grid>
-                                    <Button
-                                      color="inherit"
-                                      onClick={() => remove(index)}
-                                    >
-                                      Remove X
-                                    </Button>
-                                  </Grid>
-                                </BarRow>
+                                <LinkBarRow
+                                  title="Link"
+                                  buttonLabel="Remove X"
+                                  onClick={() => remove(index)}
+                                />
                                 <Grid container justify="center">
                                   <Grid item xs={11}>
-                                    <Grid container direction="column">
-                                      <Box height="0.5rem" />
+                                    <Grid
+                                      container
+                                      direction="column"
+                                      spacing={1}
+                                    >
+                                      <Box height="1rem" />
                                       <Grid item>
                                         <TextField
                                           label="URL"
@@ -198,7 +182,7 @@ const PieceForm = props => {
                                           type="text"
                                         />
                                       </Grid>
-                                      <Box height="0.5rem" />
+                                      <Box height="1rem" />
                                     </Grid>
                                   </Grid>
                                 </Grid>
@@ -207,7 +191,7 @@ const PieceForm = props => {
                           <ActionButton
                             type="button"
                             onClick={() => push({ name: '', url: '' })}
-                            label="+ Add Link"
+                            label="+ Add A Link"
                             variant="text"
                           />
                         </Grid>

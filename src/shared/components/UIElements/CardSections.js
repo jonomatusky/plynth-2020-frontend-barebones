@@ -10,17 +10,17 @@ export const PieceBox = styled(Grid)`
   background: ${theme.palette.background.paper};
 `
 
-const Bar = styled(Grid)`
+export const Bar = styled(Grid)`
   background: ${theme.palette.secondary.main};
   color: ${theme.palette.background.paper};
 `
 
-const BarTitle = styled(Grid)`
+export const BarTitle = styled(Grid)`
   font-weight: bold;
   padding-left: 0.5rem;
 `
 
-const BarAction = styled.button`
+export const BarAction = styled.button`
   background: none;
   border: none;
   padding-right: 0.5rem;

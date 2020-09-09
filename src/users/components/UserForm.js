@@ -1,23 +1,16 @@
 import React, { useState, useEffect } from 'react'
 // import { useForm, Controller } from 'react-hook-form'
-import { Grid, Box, Typography, Button } from '@material-ui/core'
-import { Formik, Form, FieldArray, isValid } from 'formik'
+import { Grid, Box } from '@material-ui/core'
+import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
 
 import {
   TextField,
   FieldSet,
+  LinkBarRow,
 } from '../../shared/components/FormElements/FormElements'
 
-import styled from 'styled-components'
-import theme from '../../theme'
-
-import { ImageBox } from '../../shared/components/FormElements/FormElements'
 import ImageUpload from '../../shared/components/FormElements/ImageUpload'
-import {
-  PieceBox,
-  BarRow,
-} from '../../shared/components/UIElements/CardSections'
 
 import { useHttpClient } from '../../shared/hooks/http-hook'
 import ActionButton from '../../shared/components/UIElements/ActionButton'
@@ -40,6 +33,7 @@ const UserForm = props => {
   const [initialValues, setInitialValues] = useState({
     username: '',
     displayName: '',
+    bio: '',
     avatar: '',
     links: [],
   })
@@ -61,6 +55,7 @@ const UserForm = props => {
         setInitialValues({
           username,
           displayName,
+          bio,
           avatar,
           links,
         })
@@ -92,6 +87,7 @@ const UserForm = props => {
       .max(30, 'Enter a name under 30 characters')
       .required('Required'),
     avatar: Yup.string(),
+    bio: Yup.string(),
     links: Yup.array().of(
       Yup.object({
         name: Yup.string()
@@ -153,28 +149,32 @@ const UserForm = props => {
                     {values.links.length > 0 &&
                       values.links.map((link, index) => (
                         <FieldSet container direction="column" key={index}>
-                          <BarRow
+                          <LinkBarRow
                             title="Link"
                             buttonLabel="Remove X"
                             onClick={() => remove(index)}
                           />
-                          <Grid item>
-                            <Box margin="1rem">
-                              <TextField
-                                label="URL"
-                                name={`links.${index}.url`}
-                                type="url"
-                              />
-                            </Box>
-                          </Grid>
-                          <Grid item>
-                            <Box margin="1rem">
-                              <TextField
-                                name={`links.${index}.name`}
-                                label="Link Text"
-                                type="text"
-                              />
-                            </Box>
+                          <Grid container justify="center">
+                            <Grid item xs={11}>
+                              <Grid container direction="column" spacing={1}>
+                                <Box height="1rem" />
+                                <Grid item>
+                                  <TextField
+                                    label="URL"
+                                    name={`links.${index}.url`}
+                                    type="url"
+                                  />
+                                </Grid>
+                                <Grid item>
+                                  <TextField
+                                    name={`links.${index}.name`}
+                                    label="Link Text"
+                                    type="text"
+                                  />
+                                </Grid>
+                                <Box height="1rem" />
+                              </Grid>
+                            </Grid>
                           </Grid>
                         </FieldSet>
                       ))}

@@ -1,6 +1,6 @@
 import React from 'react'
 // import { useForm, Controller } from 'react-hook-form'
-import { Grid } from '@material-ui/core'
+import { Grid, Typography } from '@material-ui/core'
 import { useField } from 'formik'
 
 import styled from 'styled-components'
@@ -26,6 +26,12 @@ export const BarRow = styled(Grid)`
 
 export const BarTitle = styled(Grid)`
   font-weight: bold;
+`
+
+export const BarAction = styled.button`
+  background: none;
+  border: none;
+  padding: 0;
 `
 
 export const FieldSet = styled(Grid)`
@@ -301,3 +307,22 @@ export const CheckButton = ({ label, checked, onClick, ...props }) => {
 //     {suggestion.name}
 //   </div>
 // );
+
+export const LinkBarRow = ({ title, buttonLabel, ...props }) => {
+  return (
+    <BarRow container justify="space-between">
+      <BarTitle>
+        <Typography color="inherit">
+          <b>{title}</b>
+        </Typography>
+      </BarTitle>
+      <Grid>
+        <BarAction {...props}>
+          <Typography color="inherit">
+            <b>{buttonLabel}</b>
+          </Typography>
+        </BarAction>
+      </Grid>
+    </BarRow>
+  )
+}

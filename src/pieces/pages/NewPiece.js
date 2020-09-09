@@ -17,18 +17,6 @@ const ASSET_URL = process.env.REACT_APP_ASSET_URL
 
 const title = 'Create New Piece'
 
-const ImageBox = styled(Box)`
-  width: 10rem;
-  height: 10rem;
-  margin-bottom: 1rem;
-`
-
-const Image = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-`
-
 const NewPiece = () => {
   const [imageData, setImageData] = useState({
     id: null,

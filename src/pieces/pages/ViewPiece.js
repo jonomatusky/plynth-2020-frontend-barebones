@@ -40,7 +40,7 @@ const ViewPiece = () => {
         <PieceCard
           piece={piece}
           onClose={() => {
-            history.goBack()
+            history.push('/admin/pieces')
           }}
         />
       )}
