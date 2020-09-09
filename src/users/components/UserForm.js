@@ -29,7 +29,7 @@ const UserForm = props => {
 
   // const user = props.user
 
-  const userId = props.userId
+  const username = props.username
 
   const [initialValues, setInitialValues] = useState({
     username: '',
@@ -45,10 +45,9 @@ const UserForm = props => {
     const fetchUser = async () => {
       try {
         const responseData = await sendRequest(
-          `${REACT_APP_BACKEND_URL}/users/${userId}`
+          `${REACT_APP_BACKEND_URL}/users/${username}`
         )
         const {
-          username,
           displayName,
           bio,
           links,
@@ -69,10 +68,10 @@ const UserForm = props => {
         console.log(err)
       }
     }
-    if (!!userId) {
+    if (!!username) {
       fetchUser()
     }
-  }, [sendRequest, userId])
+  }, [sendRequest, username])
 
   const validationSchema = Yup.object({
     username: Yup.string()
