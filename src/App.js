@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import {
   BrowserRouter as Router,
   Route,
@@ -17,7 +17,7 @@ import Scans from './scans/pages/Scans'
 import MyCollection from './pieces/pages/MyCollection'
 import CardTest from './pieces/pages/CardTest'
 import Demo from './test/Demo'
-import SignUp from './users/pages/SignUp'
+// import SignUp from './users/pages/SignUp'
 import Login from './users/pages/Login'
 import LoggedOut from './scans/pages/LoggedOut'
 import BetaSignup from './users/pages/BetaSignup'
@@ -74,12 +74,12 @@ const App = () => {
 
   routes = (
     <Switch>
-      <PublicRoute
+      {/* <PublicRoute
         restricted={true}
         component={BetaSignup}
         path="/s/signup"
         exact
-      />
+      /> */}
       <PublicRoute restricted={true} component={Login} path="/s/login" exact />
       <PublicRoute
         restricted={true}
