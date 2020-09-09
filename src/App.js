@@ -14,7 +14,7 @@ import ViewPiece from './pieces/pages/ViewPiece'
 import MyPieces from './pieces/pages/MyPieces'
 import UpdatePiece from './pieces/pages/UpdatePiece'
 import Scans from './scans/pages/Scans'
-import MyCollection from './pieces/pages/MyCollection'
+import MyProfile from './users/pages/MyProfile'
 import CardTest from './pieces/pages/CardTest'
 import Demo from './test/Demo'
 // import SignUp from './users/pages/SignUp'
@@ -97,9 +97,10 @@ const App = () => {
       />
       <PrivateRoute component={ViewPiece} path="/admin/pieces/:pieceId" />
       <PrivateRoute component={MyPieces} path="/admin/pieces" exact />
-      <PrivateRoute component={LoggedOut} path="/pickup" exact />
+      <PrivateRoute component={LoggedOut} path="/admin/pickup" exact />
       <PrivateRoute component={Scans} path="/admin/pickups" exact />
-      <PrivateRoute component={MyCollection} path="/admin/collection" exact />
+      {/* <PrivateRoute component={MyCollection} path="/admin/collection" exact /> */}
+      <PrivateRoute component={MyProfile} path="/admin/profile" exact />
       <PrivateRoute component={CardTest} path="/admin/test" exact />
       <PrivateRoute component={Demo} path="/admin/demo" exact />
       <PrivateRoute component={Logout} path="/admin/logout" exact />

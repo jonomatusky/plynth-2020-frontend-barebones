@@ -14,7 +14,7 @@ import ScanModal from '../../../scans/pages/ScanModal'
 import AlbumIcon from '@material-ui/icons/Album'
 import AddCircleIcon from '@material-ui/icons/AddCircle'
 import FlashOnIcon from '@material-ui/icons/FlashOn'
-import ActionButton from '../UIElements/ActionButton'
+import PersonIcon from '@material-ui/icons/Person'
 import { NavLink } from 'react-router-dom'
 
 import { makeStyles } from '@material-ui/core/styles'
@@ -89,17 +89,9 @@ const MainHeader = props => {
                 color="inherit"
                 component={NavLink}
                 activeClassName="Mui-selected"
-                to={'/admin/pickups'}
+                to={'/admin/pickup'}
               >
-                Activity
-              </Button>
-              <Button
-                color="inherit"
-                component={NavLink}
-                activeClassName="Mui-selected"
-                to={'/admin/collection'}
-              >
-                Collection
+                Test
               </Button>
               <Button
                 color="inherit"
@@ -113,18 +105,11 @@ const MainHeader = props => {
                 color="inherit"
                 component={NavLink}
                 activeClassName="Mui-selected"
-                to={'/admin/users'}
+                to={'/admin/profile'}
               >
-                Users
+                My Profile
               </Button>
             </Box>
-            <Button
-              variant="contained"
-              component={NavLink}
-              to={'/admin/pickup'}
-            >
-              New Pickup
-            </Button>
           </Toolbar>
         </AppBar>
         <Toolbar />
@@ -139,31 +124,26 @@ const MainHeader = props => {
             }}
           >
             <BottomNavigationAction
-              label="Collection"
-              icon={<AlbumIcon />}
+              label="Test"
+              icon={<FlashOnIcon />}
               component={NavLink}
-              to={'/admin/collection'}
+              to={'/admin/pickup'}
               activeClassName="Mui-selected"
               classes={{ root: classes.navBarActionRoot }}
             />
-            {/* <BottomNavigationAction
-            label="Activity"
-            icon={<FlashOnIcon />}
-            onClick={pickImageHandler}
-            /> */}
-            <Button
-              onClick={filePickerHandler}
-              variant="contained"
-              color="primary"
-            >
-              <FlashOnIcon />
-              Scan
-            </Button>
             <BottomNavigationAction
-              label="Create"
-              icon={<AddCircleIcon />}
+              label="My Pieces"
+              icon={<AlbumIcon />}
               component={NavLink}
               to={'/admin/pieces'}
+              activeClassName="Mui-selected"
+              classes={{ root: classes.navBarActionRoot }}
+            />
+            <BottomNavigationAction
+              label="My Profile"
+              icon={<PersonIcon />}
+              component={NavLink}
+              to={'/admin/profile'}
               activeClassName="Mui-selected"
               classes={{ root: classes.navBarActionRoot }}
             />

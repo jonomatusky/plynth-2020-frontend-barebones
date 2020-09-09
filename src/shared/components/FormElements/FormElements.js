@@ -39,18 +39,18 @@ export const FieldSet = styled(Grid)`
   margin-bottom: 1em;
 `
 
-const StyledInput = styled.div`
+export const StyledInput = styled.div`
   color: ${props =>
     props.error ? theme.palette.error.main : theme.palette.secondary.main};
   border-color: ${props =>
     props.error ? theme.palette.error.main : theme.palette.secondary.main};
 `
 
-const Label = styled.label`
+export const Label = styled.label`
   color: inherit;
 `
 
-const TextInput = styled.input`
+export const TextInput = styled.input`
   width: 100%;
   font: inherit;
   color: white;

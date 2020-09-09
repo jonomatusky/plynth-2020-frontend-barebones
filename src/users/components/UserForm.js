@@ -8,6 +8,7 @@ import {
   TextField,
   FieldSet,
   LinkBarRow,
+  TextArea,
 } from '../../shared/components/FormElements/FormElements'
 
 import ImageUpload from '../../shared/components/FormElements/ImageUpload'
@@ -34,6 +35,8 @@ const UserForm = props => {
     username: '',
     displayName: '',
     bio: '',
+    email: '',
+    password: '',
     avatar: '',
     links: [],
   })
@@ -47,16 +50,18 @@ const UserForm = props => {
         const {
           username,
           displayName,
-          avatar,
-          avatarLink,
           bio,
           links,
+          email,
+          avatar,
+          avatarLink,
         } = responseData.user
         setInitialValues({
-          username,
-          displayName,
-          bio,
-          avatar,
+          username: username || '',
+          displayName: displayName || '',
+          bio: bio || '',
+          email: email || '',
+          avatar: avatar || null,
           links,
         })
         setAvatarLink(avatarLink)
@@ -129,7 +134,7 @@ const UserForm = props => {
           <Grid container direction="column" spacing={1}>
             <Grid item>
               <ImageUpload
-                previewUrl={avatarLink}
+                previewUrl={values.avatar ? avatarLink : undefined}
                 onInput={(signedUrl, imageData, image, isValid) => {
                   setFieldValue('avatar', `${imageData.id}.${imageData.ext}`)
                   setImageUpload({ signedUrl, imageData, image, isValid })
@@ -141,6 +146,12 @@ const UserForm = props => {
             </Grid>
             <Grid item>
               <TextField name="username" label="Username" type="text" />
+            </Grid>
+            <Grid item>
+              <TextArea name="bio" label="Bio" type="text" />
+            </Grid>
+            <Grid item>
+              <TextField name="email" label="Email" type="email" />
             </Grid>
             <FieldArray name="links">
               {({ insert, remove, push }) => (

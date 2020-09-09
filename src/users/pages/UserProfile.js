@@ -20,9 +20,7 @@ import {
   DescriptionBox,
   DescriptionText,
   LinkRow,
-  BottomRow,
 } from '../../shared/components/UIElements/CardSections'
-import styled from 'styled-components'
 
 import { useHttpClient } from '../../shared/hooks/http-hook'
 
@@ -30,7 +28,6 @@ import ActionButton from '../../shared/components/UIElements/ActionButton'
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
 import Background from '../../shared/components/UIElements/Background'
 
-import theme from '../../theme'
 import LoadingGraphic from '../../shared/components/UIElements/LoadingGraphic'
 import NotFound from '../../shared/components/Navigation/NotFound'
 
