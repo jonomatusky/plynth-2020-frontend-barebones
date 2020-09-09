@@ -66,7 +66,7 @@ const NewPiece = () => {
           'Content-Type': 'application/json',
         }
       )
-      history.push(`/pieces/${res.pieceId}`)
+      history.push(`/admin/pieces/${res.pieceId}`)
     } catch (err) {}
   }
 

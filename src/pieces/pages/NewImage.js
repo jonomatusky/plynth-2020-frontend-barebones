@@ -40,7 +40,7 @@ const NewImage = () => {
       if (awsRes.status === 200) {
         sessionStorage.setItem('imageId', imageData.id)
         sessionStorage.setItem('imageExt', imageData.ext)
-        history.push('/create/piece')
+        history.push('/admin/create/piece')
       }
     } catch (err) {
       console.log(err)
