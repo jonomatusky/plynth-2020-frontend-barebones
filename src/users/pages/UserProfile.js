@@ -1,19 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { AuthContext } from '../../shared/context/auth-context'
 
-import {
-  Container,
-  Grid,
-  Box,
-  Typography,
-  Button,
-  Paper,
-} from '@material-ui/core'
+import { Container, Grid, Box, Avatar } from '@material-ui/core'
 import {
   PieceBox,
   BarRow,
-  Avatar,
   ProfileTopRow,
   CardRow,
   PieceTitle,
@@ -21,6 +12,7 @@ import {
   DescriptionText,
   LinkRow,
 } from '../../shared/components/UIElements/CardSections'
+import { makeStyles } from '@material-ui/core/styles'
 
 import { useHttpClient } from '../../shared/hooks/http-hook'
 
@@ -33,13 +25,21 @@ import NotFound from '../../shared/components/Navigation/NotFound'
 
 const { REACT_APP_BACKEND_URL } = process.env
 
+const useStyles = makeStyles(theme => ({
+  large: {
+    width: theme.spacing(12),
+    height: theme.spacing(12),
+  },
+}))
+
 const UserProfile = () => {
+  const classes = useStyles()
+
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
   const [editMode, setEditMode] = useState(false)
   const [user, setUser] = useState()
   const username = useParams().username
 
-  const auth = useContext(AuthContext)
   const history = useHistory()
 
   useEffect(() => {
@@ -77,11 +77,17 @@ const UserProfile = () => {
                 justify="center"
               >
                 <Grid item xs={5}>
-                  <Box>
-                    {user.avatar && (
-                      <Avatar src={user.avatarLink} alt="Preview" />
-                    )}
-                  </Box>
+                  <Grid container justify="center">
+                    <Grid item>
+                      {user.avatar && (
+                        <Avatar
+                          src={user.avatarLink}
+                          alt="Preview"
+                          className={classes.large}
+                        />
+                      )}
+                    </Grid>
+                  </Grid>
                 </Grid>
                 <Grid item xs={7}>
                   <Box textAlign="left" padding={1} overflow="hidden">
