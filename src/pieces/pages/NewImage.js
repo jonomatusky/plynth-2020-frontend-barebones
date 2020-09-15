@@ -6,6 +6,7 @@ import { useHttpClient } from '../../shared/hooks/http-hook'
 import { Container, Grid } from '@material-ui/core'
 
 import PageTitle from '../../shared/components/UIElements/PageTitle'
+import ErrorBar from '../../shared/components/UIElements/ErrorBar'
 import ImageUpload from '../../shared/components/FormElements/ImageUpload'
 import ActionButton from '../../shared/components/UIElements/ActionButton'
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
@@ -48,22 +49,25 @@ const NewImage = () => {
   }
 
   return (
-    <Container maxWidth="xs">
-      <PageTitle title={title} />
-      <form onSubmit={imageSubmitHandler}>
-        {isLoading && <LoadingSpinner asOverlay />}
-        <Grid container direction="column" spacing={2}>
-          <ImageUpload center id="image" onInput={inputHandler} />
-          <Grid item>
-            <ActionButton
-              type="submit"
-              disabled={!imageIsValid}
-              label="Create Piece"
-            />
+    <React.Fragment>
+      <ErrorBar open={!!error} error={error} handleClose={clearError} />
+      <Container maxWidth="xs">
+        <PageTitle title={title} />
+        <form onSubmit={imageSubmitHandler}>
+          {isLoading && <LoadingSpinner asOverlay />}
+          <Grid container direction="column" spacing={2}>
+            <ImageUpload center id="image" onInput={inputHandler} />
+            <Grid item>
+              <ActionButton
+                type="submit"
+                disabled={!imageIsValid}
+                label="Create Piece"
+              />
+            </Grid>
           </Grid>
-        </Grid>
-      </form>
-    </Container>
+        </form>
+      </Container>
+    </React.Fragment>
   )
 }
 

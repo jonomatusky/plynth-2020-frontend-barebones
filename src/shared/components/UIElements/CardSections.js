@@ -108,12 +108,18 @@ const ImageCropper = styled.div`
 `
 
 export const AvatarImage = styled.img`
-  display: inline;
-  margin: 0 auto;
-  margin-left: -25%; //centers the image
-  height: 100%;
   width: auto;
+  height: 100%;
+  margin-left: -50px;
 `
+
+export const Avatar = ({ src, alt }) => {
+  return (
+    <ImageCropper>
+      <AvatarImage src={src} alt={alt} />
+    </ImageCropper>
+  )
+}
 
 export const AvatarBox = styled(Box)`
   color: white;
@@ -164,14 +170,6 @@ export const AvatarTypography = styled(Typography)`
     text-decoration: none;
   }
 `
-
-export const Avatar = ({ src, alt }) => {
-  return (
-    <ImageCropper>
-      <AvatarImage src={src} alt={alt} />
-    </ImageCropper>
-  )
-}
 
 export const UnstyledLink = styled(Link)`
   color: inherit;

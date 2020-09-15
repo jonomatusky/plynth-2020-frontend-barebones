@@ -6,14 +6,12 @@ import { useHttpClient } from '../../shared/hooks/http-hook'
 import { Container, Box, Grid } from '@material-ui/core'
 
 import PieceForm from '../components/PieceForm'
+import ErrorBar from '../../shared/components/UIElements/ErrorBar'
+
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
 import PageTitle from '../../shared/components/UIElements/PageTitle'
 
-import styled from 'styled-components'
-import theme from '../../theme'
-
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
-const ASSET_URL = process.env.REACT_APP_ASSET_URL
 
 const title = 'Create New Piece'
 
@@ -59,27 +57,22 @@ const NewPiece = () => {
   }
 
   return (
-    <Container maxWidth="xs">
-      <PageTitle title={title} />
-      <Grid container direction="column">
-        {/* <Grid container justify="center">
-          <ImageBox>
-            <Image
-              src={`${ASSET_URL}/`}
-              alt="Preview"
+    <React.Fragment>
+      <ErrorBar open={!!error} error={error} handleClose={clearError} />
+      <Container maxWidth="xs">
+        <PageTitle title={title} />
+        <Grid container direction="column">
+          <Grid item>
+            {isLoading && <LoadingSpinner asOverlay />}
+            <PieceForm
+              onSubmit={onSubmit}
+              imageFilePath={`${imageData.id}.${imageData.ext}`}
             />
-          </ImageBox>
-        </Grid> */}
-        <Grid item>
-          {isLoading && <LoadingSpinner asOverlay />}
-          <PieceForm
-            onSubmit={onSubmit}
-            imageFilePath={`${imageData.id}.${imageData.ext}`}
-          />
+          </Grid>
         </Grid>
-      </Grid>
-      <Box height="5rem" />
-    </Container>
+        <Box height="5rem" />
+      </Container>
+    </React.Fragment>
   )
 }
 

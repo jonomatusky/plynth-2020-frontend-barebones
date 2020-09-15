@@ -54,7 +54,7 @@ const NotFound = () => {
         <Grid item>
           <Link
             component={RouterLink}
-            to="/s/login"
+            to="/"
             color="inherit"
             underline="always"
           >

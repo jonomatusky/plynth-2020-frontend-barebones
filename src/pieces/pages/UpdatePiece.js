@@ -2,12 +2,12 @@ import React from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { Container, Grid, Box, Button } from '@material-ui/core'
 
-import PieceForm from '../components/PieceForm'
 import Background from '../../shared/components/UIElements/Background'
+import ErrorBar from '../../shared/components/UIElements/ErrorBar'
+import PieceForm from '../components/PieceForm'
 import {
   BarRow,
   PieceBox,
-  BottomRow,
 } from '../../shared/components/UIElements/CardSections'
 import { useHttpClient } from '../../shared/hooks/http-hook'
 
@@ -38,6 +38,7 @@ const UpdatePiece = () => {
 
   return (
     <React.Fragment>
+      <ErrorBar open={!!error} error={error} handleClose={clearError} />
       <Background />
       <Container maxWidth="sm">
         <Grid container justify="flex-start" direction="column">

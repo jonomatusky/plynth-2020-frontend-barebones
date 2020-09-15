@@ -15,13 +15,12 @@ import MyPieces from './pieces/pages/MyPieces'
 import UpdatePiece from './pieces/pages/UpdatePiece'
 import Scans from './scans/pages/Scans'
 import MyProfile from './users/pages/MyProfile'
-import CardTest from './pieces/pages/CardTest'
-import Demo from './test/Demo'
 // import SignUp from './users/pages/SignUp'
 import Login from './users/pages/Login'
 import LoggedOut from './scans/pages/LoggedOut'
 import BetaSignup from './users/pages/BetaSignup'
 import UserProfile from './users/pages/UserProfile'
+import ChangePassword from './users/pages/ChangePassword'
 import Logout from './users/pages/Logout'
 
 import NavBar from './shared/components/Navigation/NavBar'
@@ -101,8 +100,11 @@ const App = () => {
       <PrivateRoute component={Scans} path="/admin/pickups" exact />
       {/* <PrivateRoute component={MyCollection} path="/admin/collection" exact /> */}
       <PrivateRoute component={MyProfile} path="/admin/profile" exact />
-      <PrivateRoute component={CardTest} path="/admin/test" exact />
-      <PrivateRoute component={Demo} path="/admin/demo" exact />
+      <PrivateRoute
+        component={ChangePassword}
+        path="/admin/profile/password/change"
+        exact
+      />
       <PrivateRoute component={Logout} path="/admin/logout" exact />
       <Redirect from="/admin" to="/" />
 

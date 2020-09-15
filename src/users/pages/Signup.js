@@ -10,12 +10,11 @@ import {
   Link,
 } from '@material-ui/core'
 
-import SignUpForm from '../components/SignUpForm'
-import PageTitle from '../../shared/components/UIElements/PageTitle'
-import Background from '../../shared/components/UIElements/Background'
-
 import { AuthContext } from '../../shared/context/auth-context'
-
+import ErrorBar from '../../shared/components/UIElements/ErrorBar'
+import Background from '../../shared/components/UIElements/Background'
+import PageTitle from '../../shared/components/UIElements/PageTitle'
+import SignUpForm from '../components/SignUpForm'
 import {
   PieceBox,
   BarRow,
@@ -55,6 +54,7 @@ const SignUp = () => {
 
   return (
     <React.Fragment>
+      <ErrorBar open={!!error} error={error} handleClose={clearError} />
       <Background />
       <Container maxWidth="xs">
         <Grid container justify="flex-start" direction="column" spacing={2}>
