@@ -15,6 +15,7 @@ import MyPieces from './pieces/pages/MyPieces'
 import UpdatePiece from './pieces/pages/UpdatePiece'
 import Scans from './scans/pages/Scans'
 import MyProfile from './users/pages/MyProfile'
+import UpdateProfile from './users/pages/UpdateProfile'
 // import SignUp from './users/pages/SignUp'
 import Login from './users/pages/Login'
 import LoggedOut from './scans/pages/LoggedOut'
@@ -38,6 +39,27 @@ const App = () => {
           token ? (
             <React.Fragment>
               <NavBar />
+              <main>
+                <Component {...props} />
+              </main>
+            </React.Fragment>
+          ) : (
+            <Redirect to="/" />
+          )
+        }
+      />
+    ) : (
+      <div></div>
+    )
+  }
+
+  const PrivateNoNavRoute = ({ component: Component, ...rest }) => {
+    return !isLoading ? (
+      <Route
+        {...rest}
+        render={props =>
+          token ? (
+            <React.Fragment>
               <main>
                 <Component {...props} />
               </main>
@@ -99,6 +121,11 @@ const App = () => {
       <PrivateRoute component={LoggedOut} path="/admin/pickup" exact />
       <PrivateRoute component={Scans} path="/admin/pickups" exact />
       {/* <PrivateRoute component={MyCollection} path="/admin/collection" exact /> */}
+      <PrivateNoNavRoute
+        component={UpdateProfile}
+        path="/admin/profile/edit"
+        exact
+      />
       <PrivateRoute component={MyProfile} path="/admin/profile" exact />
       <PrivateRoute
         component={ChangePassword}

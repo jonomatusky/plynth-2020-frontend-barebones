@@ -104,114 +104,106 @@ const PieceForm = props => {
   })
 
   return (
-    <Box>
-      <Grid container justify="center">
-        <Grid item xs={11}>
-          <Formik
-            enableReinitialize="true"
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={props.onSubmit}
-          >
-            {({ values, isValid, setFieldValue }) => (
-              <Form>
-                <Grid container direction="column" spacing={1}>
-                  <Grid container justify="center">
-                    <ImageBox>
-                      {imageFilePath ? (
-                        <Image
-                          src={`${ASSET_URL}/${imageFilePath}`}
-                          alt="Preview"
-                        />
-                      ) : (
-                        <LoadingSpinner asOverlay />
-                      )}
-                    </ImageBox>
-                  </Grid>
-                  <Grid item>
-                    <TitleField name="title" label="Title" />
-                  </Grid>
-                  <Grid item>
-                    <TextArea name="description" label="Description" />
-                  </Grid>
-                  <Grid item>
-                    <CheckButton
-                      onClick={() =>
-                        setFieldValue('isDirect', !values.isDirect)
-                      }
-                      name="isDirect"
-                      label="Skip this page and take users directly to your profile?"
-                      checked={values.isDirect}
-                    />
-                  </Grid>
-                  <FieldArray name="links">
-                    {({ insert, remove, push }) => (
-                      <React.Fragment>
-                        <Grid item>
-                          {values.links.length > 0 &&
-                            values.links.map((link, index) => (
-                              <FieldSet
-                                container
-                                direction="column"
-                                key={index}
-                              >
-                                <LinkBarRow
-                                  title="Link"
-                                  buttonLabel="Remove X"
-                                  onClick={() => remove(index)}
-                                />
-                                <Grid container justify="center">
-                                  <Grid item xs={11}>
-                                    <Grid
-                                      container
-                                      direction="column"
-                                      spacing={1}
-                                    >
-                                      <Box height="1rem" />
-                                      <Grid item>
-                                        <TextField
-                                          label="URL"
-                                          name={`links.${index}.url`}
-                                          type="url"
-                                        />
-                                      </Grid>
-                                      <Grid item>
-                                        <TextField
-                                          name={`links.${index}.name`}
-                                          label="Link Text"
-                                          type="text"
-                                        />
-                                      </Grid>
-                                      <Box height="1rem" />
+    <Grid container justify="center">
+      <Grid item xs={11}>
+        <Formik
+          enableReinitialize="true"
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={props.onSubmit}
+        >
+          {({ values, isValid, setFieldValue }) => (
+            <Form>
+              <Grid container direction="column" spacing={1}>
+                <Grid container justify="center">
+                  <ImageBox>
+                    {imageFilePath ? (
+                      <Image
+                        src={`${ASSET_URL}/${imageFilePath}`}
+                        alt="Preview"
+                      />
+                    ) : (
+                      <LoadingSpinner asOverlay />
+                    )}
+                  </ImageBox>
+                </Grid>
+                <Grid item>
+                  <TitleField name="title" label="Title" />
+                </Grid>
+                <Grid item>
+                  <TextArea name="description" label="Description" />
+                </Grid>
+                <Grid item>
+                  <CheckButton
+                    onClick={() => setFieldValue('isDirect', !values.isDirect)}
+                    name="isDirect"
+                    label="Skip this page and take users directly to your profile?"
+                    checked={values.isDirect}
+                  />
+                </Grid>
+                <FieldArray name="links">
+                  {({ insert, remove, push }) => (
+                    <React.Fragment>
+                      <Grid item>
+                        {values.links.length > 0 &&
+                          values.links.map((link, index) => (
+                            <FieldSet container direction="column" key={index}>
+                              <LinkBarRow
+                                title="Link"
+                                buttonLabel="Remove X"
+                                onClick={() => remove(index)}
+                              />
+                              <Grid container justify="center">
+                                <Grid item xs={11}>
+                                  <Grid
+                                    container
+                                    direction="column"
+                                    spacing={1}
+                                  >
+                                    <Box height="1rem" />
+                                    <Grid item>
+                                      <TextField
+                                        label="URL"
+                                        name={`links.${index}.url`}
+                                        type="url"
+                                      />
                                     </Grid>
+                                    <Grid item>
+                                      <TextField
+                                        name={`links.${index}.name`}
+                                        label="Link Text"
+                                        type="text"
+                                      />
+                                    </Grid>
+                                    <Box height="1rem" />
                                   </Grid>
                                 </Grid>
-                              </FieldSet>
-                            ))}
-                          <ActionButton
-                            type="button"
-                            onClick={() => push({ name: '', url: '' })}
-                            label="+ Add A Link"
-                            variant="text"
-                          />
-                        </Grid>
-                      </React.Fragment>
-                    )}
-                  </FieldArray>
-                  <Grid item>
-                    <ActionButton
-                      type="submit"
-                      label="Save"
-                      disabled={!isValid}
-                    />
-                  </Grid>
+                              </Grid>
+                            </FieldSet>
+                          ))}
+                        <ActionButton
+                          type="button"
+                          onClick={() => push({ name: '', url: '' })}
+                          label="+ Add A Link"
+                          variant="text"
+                        />
+                      </Grid>
+                    </React.Fragment>
+                  )}
+                </FieldArray>
+                <Grid item>
+                  <ActionButton
+                    type="submit"
+                    label="Save"
+                    disabled={!isValid}
+                  />
                 </Grid>
-              </Form>
-            )}
-          </Formik>
-        </Grid>
+              </Grid>
+            </Form>
+          )}
+        </Formik>
       </Grid>
-    </Box>
+    </Grid>
   )
 }
 

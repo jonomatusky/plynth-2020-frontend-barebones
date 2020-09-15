@@ -4,6 +4,7 @@ import { Box, Grid } from '@material-ui/core'
 
 import { useHttpClient } from '../../hooks/http-hook'
 import { useImageUpload } from '../../hooks/image-hook'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 import ActionButton from '../UIElements/ActionButton'
 import LoadingSpinner from '../UIElements/LoadingSpinner'
@@ -109,7 +110,9 @@ const ImageUpload = props => {
       <Grid item>
         <ImagePreview>
           {previewUrl && <Image src={previewUrl} alt="Preview" />}
-          {(isProcessing || isLoading) && <LoadingGraphic />}
+          {(isProcessing || isLoading) && (
+            <CircularProgress size="2rem" color="inherit" thickness={6} />
+          )}
           {!previewUrl && !isLoading && !isProcessing && (
             <ActionButton
               variant="text"
