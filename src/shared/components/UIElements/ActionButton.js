@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { Button, Typography, Box } from '@material-ui/core'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 import styled from 'styled-components'
 import theme from '../../../theme'
@@ -13,6 +14,7 @@ const StyledButton = styled(Button)`
     ${theme.palette.primary.main},
     #920748
   );
+  height: 2.5rem;
 `
 
 const ButtonText = styled(Typography)`
@@ -20,7 +22,7 @@ const ButtonText = styled(Typography)`
 `
 
 const ActionButton = props => {
-  const { fullWidth, label, variant, ...other } = props
+  const { fullWidth, label, variant, loading, ...other } = props
 
   if (variant === 'text') {
     return (
@@ -43,13 +45,19 @@ const ActionButton = props => {
         color={variant && variant === 'text' ? 'default' : 'primary'}
         fullWidth={fullWidth || true}
         variant={variant || 'contained'}
+        disableRipple={props.loading}
         {...other}
       >
-        <Box>
-          <ButtonText>
-            <strong>{label}</strong>
-          </ButtonText>
-        </Box>
+        {!loading && (
+          <Box>
+            <ButtonText>
+              <strong>{label}</strong>
+            </ButtonText>
+          </Box>
+        )}
+        {loading && (
+          <CircularProgress size="1.25rem" color="inherit" thickness={6} />
+        )}
       </StyledButton>
     )
   }
