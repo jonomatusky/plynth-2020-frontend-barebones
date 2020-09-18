@@ -2,13 +2,10 @@ import React from 'react'
 import { Container, Grid, Box, Typography } from '@material-ui/core'
 
 import LoginForm from '../components/LoginForm'
-import PageTitle from '../../shared/components/UIElements/PageTitle'
-import Background from '../../shared/components/UIElements/Background'
+import PageTitle from '../../shared/components/ui/PageTitle'
+import Background from '../../shared/components/ui/Background'
 
-import {
-  PieceBox,
-  BarRow,
-} from '../../shared/components/UIElements/CardSections'
+import { PieceBox, BarRow } from '../../shared/components/ui/CardSections'
 
 const SignUp = () => {
   return (

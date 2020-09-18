@@ -6,10 +6,10 @@ import { useHttpClient } from '../../shared/hooks/http-hook'
 import { Container, Box, Grid } from '@material-ui/core'
 
 import PieceForm from '../components/PieceForm'
-import ErrorBar from '../../shared/components/UIElements/ErrorBar'
+import ErrorBar from '../../shared/components/notifications/ErrorBar'
 
-import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
-import PageTitle from '../../shared/components/UIElements/PageTitle'
+import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
+import PageTitle from '../../shared/components/ui/PageTitle'
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
 

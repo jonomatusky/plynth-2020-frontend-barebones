@@ -23,19 +23,19 @@ import {
   DescriptionText,
   LinkRow,
   BottomRow,
-} from '../../shared/components/UIElements/CardSections'
+} from '../../shared/components/ui/CardSections'
 import SettingsIcon from '@material-ui/icons/Settings'
 
 import { useApiClient } from '../../shared/hooks/api-hook'
 import UserForm from '../components/UserForm'
 
-import ErrorBar from '../../shared/components/UIElements/ErrorBar'
-import ActionButton from '../../shared/components/UIElements/ActionButton'
-import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
-import Background from '../../shared/components/UIElements/Background'
-import PageTitle from '../../shared/components/UIElements/PageTitle'
+import ErrorBar from '../../shared/components/notifications/ErrorBar'
+import ActionButton from '../../shared/components/ui/ActionButton'
+import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
+import Background from '../../shared/components/ui/Background'
+import PageTitle from '../../shared/components/ui/PageTitle'
 
-import LoadingGraphic from '../../shared/components/UIElements/LoadingGraphic'
+import LoadingGraphic from '../../shared/components/ui/LoadingGraphic'
 
 const title = 'My Profile'
 
@@ -47,21 +47,24 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const MyProfile = () => {
+  const auth = useContext(AuthContext)
   const classes = useStyles()
   const { isLoading, error, sendRequest, clearError } = useApiClient()
-  const [user, setUser] = useState()
+  // const [user, setUser] = useState()
   const [editMode, setEditMode] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null)
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const responseData = await sendRequest(`/users/me`)
-        setUser(responseData.user)
-      } catch (err) {}
-    }
-    fetchUser()
-  }, [sendRequest])
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     try {
+  //       const responseData = await sendRequest(`/users/me`)
+  //       setUser(responseData.user)
+  //     } catch (err) {}
+  //   }
+  //   fetchUser()
+  // }, [sendRequest])
+
+  let user = auth.user
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget)
@@ -113,7 +116,7 @@ const MyProfile = () => {
                     <Grid item xs={5}>
                       <Grid container justify="center">
                         <Grid item>
-                          {user.avatar && (
+                          {user.avatarLink && (
                             <Avatar
                               src={user.avatarLink}
                               alt="Preview"
@@ -134,19 +137,21 @@ const MyProfile = () => {
                       <DescriptionText>{user.bio}</DescriptionText>
                     </DescriptionBox>
                   </CardRow>
-                  {user.links.map(link => {
-                    return (
-                      <LinkRow container key={link._id} justify="center">
-                        <Grid item xs={11}>
-                          <ActionButton
-                            target="_blank"
-                            href={link.url}
-                            label={link.name}
-                          />
-                        </Grid>
-                      </LinkRow>
-                    )
-                  })}
+                  {user.links &&
+                    user.links.length > 0 &&
+                    user.links.map(link => {
+                      return (
+                        <LinkRow container key={link._id} justify="center">
+                          <Grid item xs={11}>
+                            <ActionButton
+                              target="_blank"
+                              href={link.url}
+                              label={link.name}
+                            />
+                          </Grid>
+                        </LinkRow>
+                      )
+                    })}
                   <Box height="4vh"></Box>
                   <BottomRow container justify="center">
                     <Grid>

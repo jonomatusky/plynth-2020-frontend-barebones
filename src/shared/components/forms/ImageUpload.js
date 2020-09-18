@@ -6,13 +6,13 @@ import { useHttpClient } from '../../hooks/http-hook'
 import { useImageUpload } from '../../hooks/image-hook'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
-import ActionButton from '../UIElements/ActionButton'
-import LoadingSpinner from '../UIElements/LoadingSpinner'
+import ActionButton from '../ui/ActionButton'
+import LoadingSpinner from '../ui/LoadingSpinner'
 
 import styled from 'styled-components'
 
 import theme from '../../../theme'
-import LoadingGraphic from '../UIElements/LoadingGraphic'
+import LoadingGraphic from '../ui/LoadingGraphic'
 
 const ImagePreview = styled(Box)`
   height: 90vw;

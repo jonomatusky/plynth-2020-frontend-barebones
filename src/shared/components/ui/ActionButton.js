@@ -14,7 +14,7 @@ const StyledButton = styled(Button)`
     ${theme.palette.primary.main},
     #920748
   );
-  height: 2.5rem;
+  min-height: 2.5rem;
 `
 
 const ButtonText = styled(Typography)`
@@ -22,7 +22,7 @@ const ButtonText = styled(Typography)`
 `
 
 const ActionButton = props => {
-  const { fullWidth, label, variant, loading, ...other } = props
+  const { fullWidth, label, variant, loading, onClick, ...other } = props
 
   if (variant === 'text') {
     return (
@@ -30,6 +30,7 @@ const ActionButton = props => {
         color={'default'}
         fullWidth={fullWidth || true}
         variant={variant}
+        onClick={onClick}
         {...other}
       >
         <Box>
@@ -46,6 +47,7 @@ const ActionButton = props => {
         fullWidth={fullWidth || true}
         variant={variant || 'contained'}
         disableRipple={props.loading}
+        onClick={!loading ? onClick : null}
         {...other}
       >
         {!loading && (

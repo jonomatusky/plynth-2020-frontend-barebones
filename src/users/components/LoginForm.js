@@ -3,14 +3,14 @@ import { Grid, Box } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
-import { TextField } from '../../shared/components/FormElements/FormElements'
-import ErrorBar from '../../shared/components/UIElements/ErrorBar'
+import { TextField } from '../../shared/components/forms/FormElements'
+import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import { useApiClient } from '../../shared/hooks/api-hook'
 
 import { useHistory } from 'react-router-dom'
 import { AuthContext } from '../../shared/context/auth-context'
 
-import ActionButton from '../../shared/components/UIElements/ActionButton'
+import ActionButton from '../../shared/components/ui/ActionButton'
 
 const SignInForm = props => {
   const auth = useContext(AuthContext)

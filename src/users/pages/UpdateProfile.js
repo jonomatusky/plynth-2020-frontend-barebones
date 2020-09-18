@@ -1,25 +1,23 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 
 import { Container, Grid, Box } from '@material-ui/core'
-import {
-  PieceBox,
-  BarRow,
-} from '../../shared/components/UIElements/CardSections'
+import { PieceBox, BarRow } from '../../shared/components/ui/CardSections'
 import SettingsIcon from '@material-ui/icons/Settings'
 
+import { AuthContext } from '../../shared/context/auth-context'
 import { useApiClient } from '../../shared/hooks/api-hook'
 import UserForm from '../components/UserForm'
 import PieceForm from '../../pieces/components/PieceForm'
 
-import ErrorBar from '../../shared/components/UIElements/ErrorBar'
-import ActionButton from '../../shared/components/UIElements/ActionButton'
-import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
-import Background from '../../shared/components/UIElements/Background'
-import PageTitle from '../../shared/components/UIElements/PageTitle'
+import ErrorBar from '../../shared/components/notifications/ErrorBar'
+import ActionButton from '../../shared/components/ui/ActionButton'
+import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
+import Background from '../../shared/components/ui/Background'
+import PageTitle from '../../shared/components/ui/PageTitle'
 
-import LoadingGraphic from '../../shared/components/UIElements/LoadingGraphic'
+import LoadingGraphic from '../../shared/components/ui/LoadingGraphic'
 
 const title = 'Edit My Profile'
 
@@ -31,29 +29,36 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const MyProfile = () => {
+  const auth = useContext(AuthContext)
   const classes = useStyles()
   const { isLoading, error, sendRequest, clearError } = useApiClient()
-  const [user, setUser] = useState()
+  // const [user, setUser] = useState()
   const history = useHistory()
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const responseData = await sendRequest(`/users/me`)
-        setUser(responseData.user)
-      } catch (err) {}
-    }
-    fetchUser()
-  }, [sendRequest])
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     try {
+  //       const responseData = await sendRequest(`/users/me`)
+  //       setUser(responseData.user)
+  //     } catch (err) {}
+  //   }
+  //   fetchUser()
+  // }, [sendRequest])
+
+  let user = auth.user
 
   const handleSubmit = async values => {
     try {
       const userData = { user: values }
-      await sendRequest(`/users/me`, 'PATCH', JSON.stringify(userData))
+      const response = await sendRequest(
+        `/users/me`,
+        'PATCH',
+        JSON.stringify(userData)
+      )
+      auth.updateUser(response.user)
     } catch (err) {}
     history.push('/admin/profile')
   }
-
   const handleCancel = () => {
     history.push('/admin/profile')
   }

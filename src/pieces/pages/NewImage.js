@@ -5,11 +5,11 @@ import { useHttpClient } from '../../shared/hooks/http-hook'
 
 import { Container, Grid } from '@material-ui/core'
 
-import PageTitle from '../../shared/components/UIElements/PageTitle'
-import ErrorBar from '../../shared/components/UIElements/ErrorBar'
-import ImageUpload from '../../shared/components/FormElements/ImageUpload'
-import ActionButton from '../../shared/components/UIElements/ActionButton'
-import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
+import PageTitle from '../../shared/components/ui/PageTitle'
+import ErrorBar from '../../shared/components/notifications/ErrorBar'
+import ImageUpload from '../../shared/components/forms/ImageUpload'
+import ActionButton from '../../shared/components/ui/ActionButton'
+import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
 
 const title = 'Create New Piece'
 

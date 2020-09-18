@@ -14,14 +14,14 @@ import {
   ImageBox,
   CheckButton,
   LinkBarRow,
-} from '../../shared/components/FormElements/FormElements'
+} from '../../shared/components/forms/FormElements'
 
 import styled from 'styled-components'
 import theme from '../../theme'
 
 import { useHttpClient } from '../../shared/hooks/http-hook'
-import ActionButton from '../../shared/components/UIElements/ActionButton'
-import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
+import ActionButton from '../../shared/components/ui/ActionButton'
+import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
 
 const { REACT_APP_BACKEND_URL } = process.env
 const ASSET_URL = process.env.REACT_APP_ASSET_URL

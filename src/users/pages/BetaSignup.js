@@ -6,16 +6,13 @@ import { useHttpClient } from '../../shared/hooks/http-hook'
 import { Container, Grid, Box, Typography, Button } from '@material-ui/core'
 
 import theme from '../../theme'
-import { TextField } from '../../shared/components/FormElements/FormElements'
-import ActionButton from '../../shared/components/UIElements/ActionButton'
-import PageTitle from '../../shared/components/UIElements/PageTitle'
-import Background from '../../shared/components/UIElements/Background'
+import { TextField } from '../../shared/components/forms/FormElements'
+import ActionButton from '../../shared/components/ui/ActionButton'
+import PageTitle from '../../shared/components/ui/PageTitle'
+import Background from '../../shared/components/ui/Background'
 import styled from 'styled-components'
 
-import {
-  PieceBox,
-  BarRow,
-} from '../../shared/components/UIElements/CardSections'
+import { PieceBox, BarRow } from '../../shared/components/ui/CardSections'
 
 const { REACT_APP_BACKEND_URL } = process.env
 

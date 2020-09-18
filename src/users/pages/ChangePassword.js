@@ -2,14 +2,11 @@ import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { Container, Grid, Box, Typography } from '@material-ui/core'
 
-import PageTitle from '../../shared/components/UIElements/PageTitle'
-import Background from '../../shared/components/UIElements/Background'
+import PageTitle from '../../shared/components/ui/PageTitle'
+import Background from '../../shared/components/ui/Background'
 import SetPasswordForm from '../components/SetPasswordForm'
 
-import {
-  PieceBox,
-  BarRow,
-} from '../../shared/components/UIElements/CardSections'
+import { PieceBox, BarRow } from '../../shared/components/ui/CardSections'
 
 // need to change loggedOut to auth instead of props
 const ChangePassword = () => {

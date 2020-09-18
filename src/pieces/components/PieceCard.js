@@ -5,14 +5,14 @@ import { Grid, Box, Button, Avatar } from '@material-ui/core'
 
 import { useHttpClient } from '../../shared/hooks/http-hook'
 
-import { BarRow } from '../../shared/components/UIElements/CardSections'
-import ActionButton from '../../shared/components/UIElements/ActionButton'
+import { BarRow } from '../../shared/components/ui/CardSections'
+import ActionButton from '../../shared/components/ui/ActionButton'
 import PieceForm from '../components/PieceForm'
-import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
+import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import { AuthContext } from '../../shared/context/auth-context'
 
-import LoadingGraphic from '../../shared/components/UIElements/LoadingGraphic'
+import LoadingGraphic from '../../shared/components/ui/LoadingGraphic'
 
 import {
   PieceBox,
@@ -30,7 +30,7 @@ import {
   DescriptionText,
   LinkRow,
   BottomRow,
-} from '../../shared/components/UIElements/CardSections'
+} from '../../shared/components/ui/CardSections'
 
 const { REACT_APP_BACKEND_URL, REACT_APP_ASSET_URL } = process.env
 
@@ -99,7 +99,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
           </Grid>
         </BottomRow>
       )
-    } else if (piece.owner.id === auth.userId) {
+    } else if (piece.owner.id === auth.user.id) {
       return (
         <BottomRow container justify="center">
           <Grid item>

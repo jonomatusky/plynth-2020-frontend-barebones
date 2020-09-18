@@ -59,7 +59,7 @@ export const TextInput = styled.input`
   border-color: inherit;
   background: #1b1d1b;
   padding: 0.2rem 0.6rem 0.3rem 0.6rem;
-  margin: 0.4rem 0rem 0.6rem 0rem;
+  margin: 0.4rem 0rem 0.4rem 0rem;
   font-weight: bold;
   font-size: 1.2rem;
   &:focus {
@@ -85,7 +85,7 @@ const TextAreaInput = styled.textarea`
   border-color: inherit;
   background: #1b1d1b;
   padding: 0.2rem 0.6rem 0.3rem 0.6rem;
-  margin: 0.4rem 0rem 0.6rem 0rem;
+  margin: 0.4rem 0rem 0.4rem 0rem;
   font-weight: bold;
   font-size: 1.2rem;
   resize: vertical;
@@ -110,7 +110,7 @@ export const TextField = ({ label, ...props }) => {
     <StyledInput error={showError}>
       <Label htmlFor={props.id || props.name}>{label}</Label>
       <TextInput {...field} {...props} />
-      {showError ? <ErrorMessage>{meta.error}</ErrorMessage> : null}
+      {showError ? <ErrorMessage>Error: {meta.error}</ErrorMessage> : null}
     </StyledInput>
   )
 }
@@ -122,7 +122,7 @@ export const TitleField = ({ label, ...props }) => {
     <StyledInput error={showError}>
       <Label htmlFor={props.id || props.name}>{label}</Label>
       <TitleInput {...field} {...props} />
-      {showError ? <ErrorMessage>{meta.error}</ErrorMessage> : null}
+      {showError ? <ErrorMessage>Error: {meta.error}</ErrorMessage> : null}
     </StyledInput>
   )
 }
@@ -134,7 +134,7 @@ export const TextArea = ({ label, ...props }) => {
     <StyledInput error={showError}>
       <Label htmlFor={props.id || props.name}>{label}</Label>
       <TextAreaInput {...field} {...props} />
-      {showError ? <ErrorMessage>{meta.error}</ErrorMessage> : null}
+      {showError ? <ErrorMessage>Error: {meta.error}</ErrorMessage> : null}
     </StyledInput>
   )
 }

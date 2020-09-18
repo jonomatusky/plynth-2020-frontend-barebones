@@ -5,11 +5,11 @@ import { useApiClient } from '../../shared/hooks/api-hook'
 import { Container, Grid, Box } from '@material-ui/core'
 import { AuthContext } from '../../shared/context/auth-context'
 
-import ErrorBar from '../../shared/components/UIElements/ErrorBar'
-import PageTitle from '../../shared/components/UIElements/PageTitle'
+import ErrorBar from '../../shared/components/notifications/ErrorBar'
+import PageTitle from '../../shared/components/ui/PageTitle'
 import PieceList from '../components/PieceList'
-import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
-import ActionButton from '../../shared/components/UIElements/ActionButton'
+import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
+import ActionButton from '../../shared/components/ui/ActionButton'
 
 const title = 'My Pieces'
 

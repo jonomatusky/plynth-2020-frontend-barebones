@@ -8,7 +8,7 @@ import theme from '../../../theme'
 import ClearIcon from '@material-ui/icons/Clear'
 
 const StyledErrorContent = styled(SnackbarContent)`
-  background-color: ${theme.palette.error.main};
+  background-color: ${theme.palette.secondary.main};
   border-radius: 0;
   font-weight: bold;
 `
@@ -25,7 +25,7 @@ const MessageBar = props => {
       onClose={props.handleClose}
     >
       <StyledErrorContent
-        message={props.error}
+        message={props.message}
         action={
           <StyledButton
             onClick={props.handleClose}

@@ -1,22 +1,26 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { Container, Grid, Box, Button } from '@material-ui/core'
 
-import Background from '../../shared/components/UIElements/Background'
-import ErrorBar from '../../shared/components/UIElements/ErrorBar'
+import Background from '../../shared/components/ui/Background'
+import ErrorBar from '../../shared/components/notifications/ErrorBar'
+import NotificationModal from '../../shared/components/notifications/NotificationModal'
+import ActionBar from '../../shared/components/navigation/ActionBar'
 import PieceForm from '../components/PieceForm'
 import {
   BarRow,
   PieceBox,
-} from '../../shared/components/UIElements/CardSections'
-import { useHttpClient } from '../../shared/hooks/http-hook'
+  BottomRow,
+} from '../../shared/components/ui/CardSections'
+import { useApiClient } from '../../shared/hooks/api-hook'
 
 const { REACT_APP_BACKEND_URL } = process.env
 
 const title = 'Edit Piece'
 
 const UpdatePiece = () => {
-  const { isLoading, error, sendRequest, clearError } = useHttpClient()
+  const { isLoading, error, sendRequest, clearError } = useApiClient()
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
   const pieceId = useParams().pieceId
 
   const history = useHistory()
@@ -25,19 +29,43 @@ const UpdatePiece = () => {
     try {
       const pieceData = { pieceData: formData }
       await sendRequest(
-        `${REACT_APP_BACKEND_URL}/pieces/${pieceId}`,
+        `/pieces/${pieceId}`,
         'PATCH',
-        JSON.stringify(pieceData),
-        {
-          'Content-Type': 'application/json',
-        }
+        JSON.stringify(pieceData)
       )
       history.push(`/admin/pieces/${pieceId}`)
     } catch (err) {}
   }
 
+  const handleDelete = async () => {
+    await sendRequest(`/pieces/${pieceId}`, 'DELETE')
+    history.push(`/admin/pieces/`)
+  }
+
+  const handleOpenDeleteModal = () => {
+    setDeleteModalIsOpen(true)
+  }
+
+  const handleCloseDeleteModal = () => {
+    setDeleteModalIsOpen(false)
+  }
+
   return (
     <React.Fragment>
+      <NotificationModal
+        primaryMessage="Delete This Piece"
+        secondaryMessage={`This action cannot be undo. Your image will be removed from our database
+        and you will need to re-add it for fans to scan it. Any fans that scan
+        the item will see a "No Match" screen.`}
+        primaryAction={handleDelete}
+        primaryActionLabel="Delete"
+        secondaryAction={handleCloseDeleteModal}
+        secondaryActionLabel="Cancel"
+        open={deleteModalIsOpen}
+        handleClose={() => {
+          setDeleteModalIsOpen(false)
+        }}
+      ></NotificationModal>
       <ErrorBar open={!!error} error={error} handleClose={clearError} />
       <Background />
       <Container maxWidth="sm">
@@ -45,6 +73,7 @@ const UpdatePiece = () => {
           <Box height="5vh"></Box>
           <PieceBox container direction="column">
             <BarRow
+              title="Edit Your Piece"
               onClick={() => {
                 history.goBack()
               }}
@@ -54,8 +83,15 @@ const UpdatePiece = () => {
               <PieceForm pieceId={pieceId} onSubmit={onSubmit} />
             </Grid>
             <Box height="4vh"></Box>
+            <BottomRow container justify="center">
+              <Grid>
+                <Button color="inherit" onClick={handleOpenDeleteModal}>
+                  Delete This Piece
+                </Button>
+              </Grid>
+            </BottomRow>
           </PieceBox>
-          <Box height="10vh"></Box>
+          <Box height="4vh"></Box>
         </Grid>
       </Container>
     </React.Fragment>

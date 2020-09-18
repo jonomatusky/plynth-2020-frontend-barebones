@@ -2,12 +2,13 @@ import React, { useState, useEffect, useContext } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { useHttpClient } from '../../shared/hooks/http-hook'
 
-import { Container } from '@material-ui/core'
+import { Container, Grid, Box } from '@material-ui/core'
 import { AuthContext } from '../../shared/context/auth-context'
-import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
+import Background from '../../shared/components/ui/Background'
+import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
 
 import PieceCard from '../components/PieceCard'
-import ErrorBar from '../../shared/components/UIElements/ErrorBar'
+import ErrorBar from '../../shared/components/notifications/ErrorBar'
 
 const { REACT_APP_BACKEND_URL } = process.env
 
@@ -34,7 +35,7 @@ const ViewPiece = () => {
 
   return (
     <React.Fragment>
-      <ErrorBar open={!!error} error={error} handleClose={clearError} />
+      <Background />
       <Container maxWidth="sm">
         {isLoading && !piece && <LoadingSpinner asOverlay />}
         {!isLoading && piece && (

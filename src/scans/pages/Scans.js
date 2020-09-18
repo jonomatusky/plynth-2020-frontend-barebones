@@ -3,9 +3,9 @@ import { useHttpClient } from '../../shared/hooks/http-hook'
 
 import { Container, Box } from '@material-ui/core'
 
-import PageTitle from '../../shared/components/UIElements/PageTitle'
+import PageTitle from '../../shared/components/ui/PageTitle'
 import ScanList from '../components/ScanList'
-import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
+import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
 
 const { REACT_APP_BACKEND_URL } = process.env
 

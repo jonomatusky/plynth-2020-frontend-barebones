@@ -13,9 +13,12 @@ import NewPiece from './pieces/pages/NewPiece'
 import ViewPiece from './pieces/pages/ViewPiece'
 import MyPieces from './pieces/pages/MyPieces'
 import UpdatePiece from './pieces/pages/UpdatePiece'
-import Scans from './scans/pages/Scans'
+// import Scans from './scans/pages/Scans'
 import MyProfile from './users/pages/MyProfile'
 import UpdateProfile from './users/pages/UpdateProfile'
+import UserSignup1 from './signup/pages/UserSignup1'
+import UserSignup2 from './signup/pages/UserSignup2'
+import SignupSuccess from './signup/pages/SignupSuccess'
 // import SignUp from './users/pages/SignUp'
 import Login from './users/pages/Login'
 import LoggedOut from './scans/pages/LoggedOut'
@@ -24,10 +27,11 @@ import UserProfile from './users/pages/UserProfile'
 import ChangePassword from './users/pages/ChangePassword'
 import Logout from './users/pages/Logout'
 
-import NavBar from './shared/components/Navigation/NavBar'
+import NavBar from './shared/components/navigation/NavBar'
+import NotificationModal from './shared/components/notifications/NotificationModal'
 
 const App = () => {
-  const { token, isLoading, login, logout, userId } = useAuth()
+  const { token, isLoading, login, logout, user, updateUser } = useAuth()
 
   let routes
 
@@ -95,12 +99,6 @@ const App = () => {
 
   routes = (
     <Switch>
-      {/* <PublicRoute
-        restricted={true}
-        component={BetaSignup}
-        path="/s/signup"
-        exact
-      /> */}
       <PublicRoute restricted={true} component={Login} path="/s/login" exact />
       <PublicRoute
         restricted={true}
@@ -110,16 +108,44 @@ const App = () => {
       />
       <PublicRoute restricted={true} component={LoggedOut} path="/" exact />
 
-      <PrivateRoute component={NewImage} path="/admin/create" exact />
-      <PrivateRoute component={NewPiece} path="/admin/create/piece" exact />
-      <PrivateRoute
+      <PublicRoute
+        restricted={true}
+        component={UserSignup1}
+        path="/signup"
+        exact
+      />
+
+      <PrivateNoNavRoute
+        component={UserSignup2}
+        path="/admin/get-started/profile"
+        exact
+      />
+      <PrivateNoNavRoute
+        component={SignupSuccess}
+        path="/admin/get-started/success"
+        exact
+      />
+
+      <PrivateNoNavRoute
+        component={UpdateProfile}
+        path="/admin/profile/edit"
+        exact
+      />
+
+      <PrivateNoNavRoute component={NewImage} path="/admin/create" exact />
+      <PrivateNoNavRoute
+        component={NewPiece}
+        path="/admin/create/piece"
+        exact
+      />
+      <PrivateNoNavRoute
         component={UpdatePiece}
         path="/admin/pieces/:pieceId/edit"
       />
       <PrivateRoute component={ViewPiece} path="/admin/pieces/:pieceId" />
       <PrivateRoute component={MyPieces} path="/admin/pieces" exact />
       <PrivateRoute component={LoggedOut} path="/admin/pickup" exact />
-      <PrivateRoute component={Scans} path="/admin/pickups" exact />
+      {/* <PrivateRoute component={Scans} path="/admin/pickups" exact /> */}
       {/* <PrivateRoute component={MyCollection} path="/admin/collection" exact /> */}
       <PrivateNoNavRoute
         component={UpdateProfile}
@@ -150,9 +176,10 @@ const App = () => {
       value={{
         isLoggedIn: !!token,
         token: token,
-        userId: userId,
+        user: user,
         login: login,
         logout: logout,
+        updateUser: updateUser,
       }}
     >
       <Router>{routes}</Router>

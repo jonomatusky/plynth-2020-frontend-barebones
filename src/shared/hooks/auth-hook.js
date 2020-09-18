@@ -5,23 +5,44 @@ let logoutTimer
 export const useAuth = () => {
   const [token, setToken] = useState(null)
   const [tokenExpirationDate, setTokenExpirationDate] = useState()
-  const [userId, setUserId] = useState(null)
+  const [user, setUser] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
 
   const login = useCallback((user, token, expirationDate) => {
-    const id = user.id
-
     setToken(token)
     setIsLoading(false)
-    setUserId(id)
+    setUser(user)
+
+    let {
+      id,
+      username,
+      displayName,
+      bio,
+      links,
+      completedSignup,
+      avatar,
+      avatarLink,
+    } = user
+
+    console.log('username: ' + username)
+
     const tokenExpirationDate =
       expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60 * 24)
     setTokenExpirationDate(tokenExpirationDate)
+    // this is where I could set addititional user data in localStorage (eg, avatar link, bio, links, etc)
+    // it would need to be updated when a user changes their info (eg, uploads a new photo)
     localStorage.setItem(
       'userData',
       JSON.stringify({
         user: {
           id,
+          username,
+          displayName,
+          bio,
+          links,
+          completedSignup,
+          avatar,
+          avatarLink,
         },
         token: token,
         expiration: tokenExpirationDate.toISOString(),
@@ -29,10 +50,43 @@ export const useAuth = () => {
     )
   }, [])
 
+  const updateUser = useCallback(user => {
+    setIsLoading(false)
+    setUser(user)
+
+    let {
+      id,
+      username,
+      displayName,
+      bio,
+      links,
+      completedSignup,
+      avatar,
+      avatarLink,
+    } = user
+
+    console.log('username: ' + username)
+
+    let storeData = JSON.parse(localStorage.getItem('userData'))
+
+    storeData.user = {
+      id,
+      username,
+      displayName,
+      bio,
+      links,
+      completedSignup,
+      avatar,
+      avatarLink,
+    }
+
+    localStorage.setItem('userData', JSON.stringify(storeData))
+  }, [])
+
   const logout = useCallback(() => {
     setToken(null)
     setTokenExpirationDate(null)
-    setUserId(null)
+    setUser(null)
     setIsLoading(false)
     localStorage.removeItem('userData')
   }, [])
@@ -67,5 +121,5 @@ export const useAuth = () => {
     }
   }, [login])
 
-  return { token, isLoading, login, logout, userId }
+  return { token, isLoading, login, logout, user, updateUser }
 }

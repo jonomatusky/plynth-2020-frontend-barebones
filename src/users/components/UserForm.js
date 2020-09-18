@@ -9,37 +9,25 @@ import {
   FieldSet,
   LinkBarRow,
   TextArea,
-} from '../../shared/components/FormElements/FormElements'
+} from '../../shared/components/forms/FormElements'
 
-import ImageUpload from '../../shared/components/FormElements/ImageUpload'
+import ImageUpload from '../../shared/components/forms/ImageUpload'
 
 import { useHttpClient } from '../../shared/hooks/http-hook'
-import ActionButton from '../../shared/components/UIElements/ActionButton'
-import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
-
-const { REACT_APP_BACKEND_URL } = process.env
-const ASSET_URL = process.env.REACT_APP_ASSET_URL
+import ActionButton from '../../shared/components/ui/ActionButton'
+import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
 
 const UserForm = props => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
   // const [imageFilePath, setImageFilePath] = useState(null)
   const [imageUpload, setImageUpload] = useState(null)
 
-  const {
-    username,
-    displayName,
-    bio,
-    links,
-    email,
-    avatar,
-    avatarLink,
-  } = props.user
+  const { username, displayName, bio, links, avatar, avatarLink } = props.user
 
   const initialValues = {
     username: username || '',
     displayName: displayName || '',
     bio: bio || '',
-    email: email || '',
     avatar: avatar || null,
     links,
   }
@@ -113,7 +101,7 @@ const UserForm = props => {
                 <Box height="1rem"></Box>
                 <Grid item>
                   <ImageUpload
-                    previewUrl={values.avatar ? avatarLink : undefined}
+                    previewUrl={avatarLink || undefined}
                     onInput={(signedUrl, imageData, image, isValid) => {
                       setFieldValue(
                         'avatar',
@@ -132,14 +120,12 @@ const UserForm = props => {
                 <Grid item>
                   <TextArea name="bio" label="Bio" />
                 </Grid>
-                <Grid item>
-                  <TextField name="email" label="Email" type="email" />
-                </Grid>
                 <FieldArray name="links">
                   {({ insert, remove, push }) => (
                     <React.Fragment>
                       <Grid item>
-                        {values.links.length > 0 &&
+                        {values.links &&
+                          values.links.length > 0 &&
                           values.links.map((link, index) => (
                             <FieldSet container direction="column" key={index}>
                               <LinkBarRow

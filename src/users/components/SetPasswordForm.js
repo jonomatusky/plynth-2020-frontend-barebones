@@ -4,12 +4,12 @@ import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
 import { useApiClient } from '../../shared/hooks/api-hook'
-import ErrorBar from '../../shared/components/UIElements/ErrorBar'
-import MessageBar from '../../shared/components/UIElements/MessageBar'
+import ErrorBar from '../../shared/components/notifications/ErrorBar'
+import MessageBar from '../../shared/components/notifications/MessageBar'
 
-import { TextField } from '../../shared/components/FormElements/FormElements'
+import { TextField } from '../../shared/components/forms/FormElements'
 
-import ActionButton from '../../shared/components/UIElements/ActionButton'
+import ActionButton from '../../shared/components/ui/ActionButton'
 
 const SetPasswordForm = props => {
   const [success, setSuccess] = useState(false)
@@ -45,10 +45,7 @@ const SetPasswordForm = props => {
   }
 
   const validationSchema = Yup.object({
-    password: Yup.string().min(
-      5,
-      'Password must be at least 5 characters long'
-    ),
+    password: Yup.string(),
     newPassword: Yup.string().min(
       5,
       'Password must be at least 5 characters long'

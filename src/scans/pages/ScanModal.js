@@ -16,15 +16,14 @@ import { useImageUpload } from '../../shared/hooks/image-hook'
 
 import CameraAltIcon from '@material-ui/icons/CameraAlt'
 import PieceCard from '../../pieces/components/PieceCard'
-import ActionBar from '../../shared/components/Navigation/ActionBar'
-import NotificationModal from '../../shared/components/UIElements/NotificationModal'
+import ActionBar from '../../shared/components/navigation/ActionBar'
+import NotificationModal from '../../shared/components/notifications/FoundModal'
 import PrimaryModal from '../../shared/layouts/PrimaryModal'
 
 import styled from 'styled-components'
 
 import theme from '../../theme'
 
-import ErrorMessage from '../../shared/components/UIElements/ErrorMessage'
 import loadingImage from '../../images/Plynth-Loading-GIF.gif'
 import foundImage from '../../images/Plynth-Loading-Final.png'
 

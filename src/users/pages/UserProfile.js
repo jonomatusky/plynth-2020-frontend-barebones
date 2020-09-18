@@ -11,17 +11,17 @@ import {
   DescriptionBox,
   DescriptionText,
   LinkRow,
-} from '../../shared/components/UIElements/CardSections'
+} from '../../shared/components/ui/CardSections'
 import { makeStyles } from '@material-ui/core/styles'
 
 import { useHttpClient } from '../../shared/hooks/http-hook'
 
-import ActionButton from '../../shared/components/UIElements/ActionButton'
-import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
-import Background from '../../shared/components/UIElements/Background'
+import ActionButton from '../../shared/components/ui/ActionButton'
+import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
+import Background from '../../shared/components/ui/Background'
 
-import LoadingGraphic from '../../shared/components/UIElements/LoadingGraphic'
-import NotFound from '../../shared/components/Navigation/NotFound'
+import LoadingGraphic from '../../shared/components/ui/LoadingGraphic'
+import NotFound from '../../shared/components/navigation/NotFound'
 
 const { REACT_APP_BACKEND_URL } = process.env
 
