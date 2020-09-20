@@ -32,7 +32,7 @@ import UserForm from '../components/UserForm'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import ActionButton from '../../shared/components/ui/ActionButton'
 import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
-import Background from '../../shared/components/ui/Background'
+import Background from '../../shared/layouts/Background'
 import PageTitle from '../../shared/components/ui/PageTitle'
 
 import LoadingGraphic from '../../shared/components/ui/LoadingGraphic'

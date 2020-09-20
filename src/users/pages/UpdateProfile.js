@@ -1,25 +1,17 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import React, { useContext } from 'react'
+import { useHistory } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 
 import { Container, Grid, Box } from '@material-ui/core'
 import { PieceBox, BarRow } from '../../shared/components/ui/CardSections'
-import SettingsIcon from '@material-ui/icons/Settings'
 
 import { AuthContext } from '../../shared/context/auth-context'
 import { useApiClient } from '../../shared/hooks/api-hook'
 import UserForm from '../components/UserForm'
-import PieceForm from '../../pieces/components/PieceForm'
 
+import Background from '../../shared/layouts/Background'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
-import ActionButton from '../../shared/components/ui/ActionButton'
 import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
-import Background from '../../shared/components/ui/Background'
-import PageTitle from '../../shared/components/ui/PageTitle'
-
-import LoadingGraphic from '../../shared/components/ui/LoadingGraphic'
-
-const title = 'Edit My Profile'
 
 const useStyles = makeStyles(theme => ({
   large: {
@@ -71,15 +63,19 @@ const MyProfile = () => {
         {isLoading && <LoadingSpinner asOverlay />}
         {user && !isLoading && (
           <Grid container justify="flex-start" direction="column">
-            <PageTitle title={title} />
+            <Box height="4vh"></Box>
             <PieceBox container direction="column">
-              <BarRow onClick={handleCancel} buttonLabel={'Cancel X'} />
+              <BarRow
+                title="Edit My Profile"
+                onClick={handleCancel}
+                buttonLabel={'Cancel X'}
+              />
               <Grid item>
                 <UserForm user={user} onSubmit={handleSubmit} />
               </Grid>
               <Box height="4vh"></Box>
             </PieceBox>
-            <Box height="10vh"></Box>
+            <Box height="4vh"></Box>
           </Grid>
         )}
       </Container>

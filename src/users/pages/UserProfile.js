@@ -18,7 +18,7 @@ import { useHttpClient } from '../../shared/hooks/http-hook'
 
 import ActionButton from '../../shared/components/ui/ActionButton'
 import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
-import Background from '../../shared/components/ui/Background'
+import Background from '../../shared/layouts/Background'
 
 import LoadingGraphic from '../../shared/components/ui/LoadingGraphic'
 import NotFound from '../../shared/components/navigation/NotFound'

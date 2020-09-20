@@ -3,7 +3,7 @@ import React from 'react'
 import { Container, Grid, Box } from '@material-ui/core'
 import { PieceBox } from '../components/ui/CardSections'
 
-import Background from '../components/ui/Background'
+import Background from '../layouts/Background'
 import PageTitle from '../components/ui/PageTitle'
 
 const FormLayout = ({ children, title }, ...props) => {

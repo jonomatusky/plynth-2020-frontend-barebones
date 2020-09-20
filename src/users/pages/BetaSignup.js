@@ -9,7 +9,7 @@ import theme from '../../theme'
 import { TextField } from '../../shared/components/forms/FormElements'
 import ActionButton from '../../shared/components/ui/ActionButton'
 import PageTitle from '../../shared/components/ui/PageTitle'
-import Background from '../../shared/components/ui/Background'
+import Background from '../../shared/layouts/Background'
 import styled from 'styled-components'
 
 import { PieceBox, BarRow } from '../../shared/components/ui/CardSections'

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { Container, Grid, Box, Button } from '@material-ui/core'
 
-import Background from '../../shared/components/ui/Background'
+import Background from '../../shared/layouts/Background'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import NotificationModal from '../../shared/components/notifications/NotificationModal'
 import ActionBar from '../../shared/components/navigation/ActionBar'

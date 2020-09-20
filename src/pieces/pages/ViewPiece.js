@@ -4,7 +4,7 @@ import { useHttpClient } from '../../shared/hooks/http-hook'
 
 import { Container, Grid, Box } from '@material-ui/core'
 import { AuthContext } from '../../shared/context/auth-context'
-import Background from '../../shared/components/ui/Background'
+import Background from '../../shared/layouts/Background'
 import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
 
 import PieceCard from '../components/PieceCard'

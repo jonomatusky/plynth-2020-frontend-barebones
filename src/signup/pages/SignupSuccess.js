@@ -3,7 +3,7 @@ import { Link, useHistory } from 'react-router-dom'
 import { Container, Grid, Box, Typography } from '@material-ui/core'
 
 import PageTitle from '../../shared/components/ui/PageTitle'
-import Background from '../../shared/components/ui/Background'
+import Background from '../../shared/layouts/Background'
 import ActionButton from '../../shared/components/ui/ActionButton'
 
 import { PieceBox, BarRow } from '../../shared/components/ui/CardSections'

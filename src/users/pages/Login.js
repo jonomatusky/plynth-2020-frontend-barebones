@@ -3,7 +3,7 @@ import { Container, Grid, Box, Typography } from '@material-ui/core'
 
 import LoginForm from '../components/LoginForm'
 import PageTitle from '../../shared/components/ui/PageTitle'
-import Background from '../../shared/components/ui/Background'
+import Background from '../../shared/layouts/Background'
 
 import { PieceBox, BarRow } from '../../shared/components/ui/CardSections'
 

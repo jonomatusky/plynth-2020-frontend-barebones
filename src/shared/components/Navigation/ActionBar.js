@@ -15,6 +15,7 @@ const useStyles = makeStyles(theme => ({
     bottom: 0,
     background: '#00000000',
     paddingBottom: isInStandaloneMode() ? theme.spacing(4) : theme.spacing(0),
+    elevation: 0.0,
   },
 }))
 

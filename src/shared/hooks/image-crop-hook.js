@@ -148,7 +148,7 @@ export const useSignedRequest = () => {
   }
 }
 
-export const useImageUpload = () => {
+export const useImageCropUpload = () => {
   const [isProcessing, setIsProcessing] = useState(false)
   const [uploadError, setUploadError] = useState(false)
 

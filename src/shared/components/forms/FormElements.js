@@ -7,13 +7,14 @@ import styled from 'styled-components'
 import theme from '../../../theme'
 
 export const ImageBox = styled.div`
-  padding-top: 2rem;
+  height: 250px;
+  width: 250px;
 `
 
 export const Image = styled.img`
-  max-with: 100px;
-  max-height: 150px;
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 `
 
 export const BarRow = styled(Grid)`

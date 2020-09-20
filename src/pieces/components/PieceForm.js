@@ -115,17 +115,22 @@ const PieceForm = props => {
           {({ values, isValid, setFieldValue }) => (
             <Form>
               <Grid container direction="column" spacing={1}>
-                <Grid container justify="center">
-                  <ImageBox>
-                    {imageFilePath ? (
-                      <Image
-                        src={`${ASSET_URL}/${imageFilePath}`}
-                        alt="Preview"
-                      />
-                    ) : (
-                      <LoadingSpinner asOverlay />
-                    )}
-                  </ImageBox>
+                <Box height="1rem"></Box>
+                <Grid item>
+                  <Grid container justify="center">
+                    <Grid item>
+                      <ImageBox>
+                        {imageFilePath ? (
+                          <Image
+                            src={`${ASSET_URL}/${imageFilePath}`}
+                            alt="Preview"
+                          />
+                        ) : (
+                          <LoadingSpinner asOverlay />
+                        )}
+                      </ImageBox>
+                    </Grid>
+                  </Grid>
                 </Grid>
                 <Grid item>
                   <TitleField name="title" label="Title" />
@@ -186,11 +191,13 @@ const PieceForm = props => {
                           onClick={() => push({ name: '', url: '' })}
                           label="+ Add A Link"
                           variant="text"
+                          color="secondary"
                         />
                       </Grid>
                     </React.Fragment>
                   )}
                 </FieldArray>
+                <Box height="1rem"></Box>
                 <Grid item>
                   <ActionButton
                     type="submit"
