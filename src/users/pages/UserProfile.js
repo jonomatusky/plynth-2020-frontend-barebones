@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 
 import { Container, Grid, Box, Avatar } from '@material-ui/core'
@@ -14,6 +14,7 @@ import {
 } from '../../shared/components/ui/CardSections'
 import { makeStyles } from '@material-ui/core/styles'
 
+import { AuthContext } from '../../shared/context/auth-context'
 import { useHttpClient } from '../../shared/hooks/http-hook'
 
 import ActionButton from '../../shared/components/ui/ActionButton'
@@ -33,31 +34,33 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const UserProfile = () => {
+  const auth = useContext(AuthContext)
   const classes = useStyles()
 
   const { isLoading, error, sendRequest, clearError } = useHttpClient()
-  const [editMode, setEditMode] = useState(false)
   const [user, setUser] = useState()
   const username = useParams().username
 
   const history = useHistory()
 
   useEffect(() => {
-    if (editMode === false) {
-      const fetchUser = async () => {
-        try {
-          const responseData = await sendRequest(
-            `${REACT_APP_BACKEND_URL}/users/${username}`
-          )
-          setUser(responseData.user)
-        } catch (err) {}
-      }
-      fetchUser()
+    const fetchUser = async () => {
+      try {
+        const responseData = await sendRequest(
+          `${REACT_APP_BACKEND_URL}/users/${username}`
+        )
+        setUser(responseData.user)
+      } catch (err) {}
     }
-  }, [sendRequest, username, editMode])
+    fetchUser()
+  }, [sendRequest, username])
 
   const handleClose = event => {
-    history.push('/')
+    if (auth.user) {
+      history.goBack()
+    } else {
+      history.push('/')
+    }
   }
 
   return (

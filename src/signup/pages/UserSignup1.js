@@ -7,6 +7,7 @@ import * as Yup from 'yup'
 import { AuthContext } from '../../shared/context/auth-context'
 import { useApiClient } from '../../shared/hooks/api-hook'
 
+import Background from '../../shared/layouts/Background'
 import FormLayout from '../../shared/layouts/FormLayout'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import ActionButton from '../../shared/components/ui/ActionButton'
@@ -71,57 +72,57 @@ const UserSignup1 = ({ values }) => {
 
   return (
     <>
-      <FormLayout title={title}>
-        <BarRow onClick={handleCancel} buttonLabel={'Cancel X'} />
-        <Grid item>
-          <ErrorBar open={!!error} error={error} handleClose={clearError} />
-          <Grid container justify="center">
-            <Grid item xs={11}>
-              <Formik
-                enableReinitialize="true"
-                initialValues={initialValues}
-                validationSchema={validationSchema}
-                onSubmit={handleSubmit}
-              >
-                {() => (
-                  <Form>
-                    <Grid container direction="column" spacing={1}>
-                      <Box height="1rem"></Box>
-                      <Grid item>
-                        <TextField name="email" label="Email" type="email" />
-                      </Grid>
-                      <Grid item>
-                        <TextField name="username" label="Username" />
-                      </Grid>
-                      <Grid item>
-                        <TextField
-                          name="password"
-                          label="Password"
-                          type="password"
-                        />
-                      </Grid>
-                      <Grid item>
-                        <TextField
-                          name="passwordConfirmation"
-                          label="Confirm Password"
-                          type="password"
-                        />
-                      </Grid>
-                      <Box height="4vh"></Box>
-                      <Grid item>
-                        <ActionButton
-                          type="submit"
-                          label="Create Account"
-                          loading={isLoading}
-                        />
-                      </Grid>
-                    </Grid>
-                  </Form>
-                )}
-              </Formik>
-            </Grid>
-          </Grid>
-        </Grid>
+      <ErrorBar open={!!error} error={error} handleClose={clearError} />
+      <Background />
+      <FormLayout
+        title={title}
+        bar={
+          <BarRow
+            buttonLabel="Cancel X"
+            onClick={() => {
+              history.push('/')
+            }}
+          />
+        }
+      >
+        <Formik
+          enableReinitialize="true"
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {() => (
+            <Form>
+              <Grid container direction="column" spacing={1}>
+                <Grid item>
+                  <TextField name="email" label="Email" type="email" />
+                </Grid>
+                <Grid item>
+                  <TextField name="username" label="Username" />
+                </Grid>
+                <Box height="1rem"></Box>
+                <Grid item>
+                  <TextField name="password" label="Password" type="password" />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    name="passwordConfirmation"
+                    label="Confirm Password"
+                    type="password"
+                  />
+                </Grid>
+                <Box height="1.5rem"></Box>
+                <Grid item>
+                  <ActionButton
+                    type="submit"
+                    label="Create Account"
+                    loading={isLoading}
+                  />
+                </Grid>
+              </Grid>
+            </Form>
+          )}
+        </Formik>
       </FormLayout>
     </>
   )

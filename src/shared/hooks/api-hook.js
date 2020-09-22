@@ -45,12 +45,12 @@ export const useApiClient = () => {
         setIsLoading(false)
         return data
       } catch (err) {
-        console.log(err)
         if (err.name === 'AbortError') {
           console.log('request aborted')
         } else if (err.name === 'TypeError') {
+          setError('There is a problem with your network. Please try again.')
           setIsLoading(false)
-          setError('Unable to connect to server. Please try again.')
+          throw err
         } else {
           setError(err.message)
           setIsLoading(false)

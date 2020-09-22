@@ -42,10 +42,10 @@ const SignInForm = props => {
   }
 
   const validationSchema = Yup.object({
-    email: Yup.string()
+    Subject: Yup.string()
       .email('Please provide your email address.')
       .required('Required'),
-    password: Yup.string().required('Required'),
+    Message: Yup.string().required('Required'),
   })
 
   return (

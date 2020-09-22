@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Grid } from '@material-ui/core'
+import { Grid, Box } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
@@ -16,17 +16,13 @@ const SetPasswordForm = props => {
   const { isLoading, error, sendRequest, clearError } = useApiClient()
 
   const handleSubmit = async (values, { resetForm }) => {
-    delete values.passwordConfirmation
+    delete values.emailConfirmation
 
     if (!isLoading) {
       try {
-        const passwordData = { password: values }
+        const request = { user: values }
 
-        await sendRequest(
-          `/auth/password`,
-          'PATCH',
-          JSON.stringify(passwordData)
-        )
+        await sendRequest(`/auth/email`, 'PATCH', JSON.stringify(request))
 
         console.log('success!')
         props.onSubmit(values)
@@ -36,19 +32,18 @@ const SetPasswordForm = props => {
 
   const initialValues = {
     password: '',
-    newPassword: '',
-    passwordConfirmation: '',
+    email: '',
+    emailConfirmation: '',
   }
 
   const validationSchema = Yup.object({
     password: Yup.string(),
-    newPassword: Yup.string().min(
-      5,
-      'Password must be at least 5 characters long'
-    ),
-    passwordConfirmation: Yup.string().oneOf(
-      [Yup.ref('newPassword'), null],
-      'Passwords must match'
+    email: Yup.string()
+      .email('Please provide your email address')
+      .required('Required'),
+    emailConfirmation: Yup.string().oneOf(
+      [Yup.ref('email'), null],
+      'Addresses do not match'
     ),
   })
 
@@ -69,29 +64,28 @@ const SetPasswordForm = props => {
         <Form>
           <Grid container direction="column" spacing={1}>
             <Grid item>
+              <TextField name="email" label="New Email Addresss" type="email" />
+            </Grid>
+            <Grid item>
+              <TextField
+                name="emailConfirmation"
+                label="Retype New Email Addresss"
+                type="email"
+              />
+            </Grid>
+            <Box height="1rem"></Box>
+            <Grid item>
               <TextField
                 name="password"
-                label="Current Password"
+                label="Confirm Your Password"
                 type="password"
               />
             </Grid>
-            <Grid item>
-              <TextField
-                name="newPassword"
-                label="New Password"
-                type="password"
-              />
-            </Grid>
-            <Grid item>
-              <TextField
-                name="passwordConfirmation"
-                label="Confirm New Password"
-                type="password"
-              />
-            </Grid>
+            <Box height="1.5rem"></Box>
             <Grid item>
               <ActionButton type="submit" label="Submit" loading={isLoading} />
             </Grid>
+            <Box height="1rem"></Box>
           </Grid>
         </Form>
       </Formik>

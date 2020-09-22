@@ -1,22 +1,25 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Container, Grid, Box, Typography } from '@material-ui/core'
 
+import { AuthContext } from '../../shared/context/auth-context'
 import PageTitle from '../../shared/components/ui/PageTitle'
 import Background from '../../shared/layouts/Background'
-import SetPasswordForm from '../components/SetPasswordForm'
+import EmailForm from '../components/EmailForm'
 
 import { PieceBox, BarRow } from '../../shared/components/ui/CardSections'
 
 // need to change loggedOut to auth instead of props
-const ChangePassword = () => {
+const UpdateEmail = () => {
+  const auth = useContext(AuthContext)
+  const user = auth.user
   const history = useHistory()
 
   const handleSubmit = () => {
     console.log('submitted')
     history.push({
       pathname: '/admin/profile',
-      state: { message: 'Password successfully updated.' },
+      state: { message: 'Email successfully updated.' },
     })
   }
 
@@ -25,10 +28,11 @@ const ChangePassword = () => {
       <Background />
       <Container maxWidth="xs">
         <Grid container justify="flex-start" direction="column" spacing={2}>
-          <Box height="5vh"></Box>
           <Grid item>
-            <PageTitle title="Set Password" />
-            <Typography>Change your password</Typography>
+            <PageTitle title="Email Preferences" />
+          </Grid>
+          <Grid item>
+            <Typography>Update your email address.</Typography>
           </Grid>
           <Grid item>
             <PieceBox container direction="column">
@@ -40,9 +44,9 @@ const ChangePassword = () => {
               />
               <Grid container justify="center" alignItems="center">
                 <Grid item xs={11}>
-                  <Box height="0.75rem"></Box>
-                  <SetPasswordForm onSubmit={handleSubmit} />
-                  <Box height="0.75rem"></Box>
+                  <Box height="1rem"></Box>
+                  <EmailForm user={user} onSubmit={handleSubmit} />
+                  <Box height="1.5rem"></Box>
                 </Grid>
               </Grid>
             </PieceBox>
@@ -53,4 +57,4 @@ const ChangePassword = () => {
   )
 }
 
-export default ChangePassword
+export default UpdateEmail

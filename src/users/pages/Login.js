@@ -1,38 +1,32 @@
 import React from 'react'
-import { Container, Grid, Box, Typography } from '@material-ui/core'
+import { useHistory } from 'react-router-dom'
 
+import FormLayout from '../../shared/layouts/FormLayout'
 import LoginForm from '../components/LoginForm'
-import PageTitle from '../../shared/components/ui/PageTitle'
 import Background from '../../shared/layouts/Background'
 
-import { PieceBox, BarRow } from '../../shared/components/ui/CardSections'
+import { BarRow } from '../../shared/components/ui/CardSections'
 
 const SignUp = () => {
+  const history = useHistory()
+
   return (
-    <React.Fragment>
+    <>
       <Background />
-      <Container maxWidth="xs">
-        <Grid container justify="flex-start" direction="column" spacing={2}>
-          <Box height="5vh"></Box>
-          <Grid item>
-            <PageTitle title="Log In" />
-            <Typography>Fill out the form below to log in.</Typography>
-          </Grid>
-          <Grid item>
-            <PieceBox container direction="column">
-              <BarRow />
-              <Grid container justify="center" alignItems="center">
-                <Grid item xs={11}>
-                  <Box height="0.75rem"></Box>
-                  <LoginForm />
-                  <Box height="1rem"></Box>
-                </Grid>
-              </Grid>
-            </PieceBox>
-          </Grid>
-        </Grid>
-      </Container>
-    </React.Fragment>
+      <FormLayout
+        title="Log In"
+        bar={
+          <BarRow
+            onClick={() => {
+              history.push('/')
+            }}
+            buttonLabel={'Cancel X'}
+          />
+        }
+      >
+        <LoginForm />
+      </FormLayout>
+    </>
   )
 }
 

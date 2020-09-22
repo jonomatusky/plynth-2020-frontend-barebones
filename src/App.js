@@ -25,11 +25,13 @@ import Login from './users/pages/Login'
 import LoggedOut from './scans/pages/LoggedOut'
 import BetaSignup from './users/pages/BetaSignup'
 import UserProfile from './users/pages/UserProfile'
+import UpdateEmail from './users/pages/UpdateEmail'
 import ChangePassword from './users/pages/ChangePassword'
+import ChangeUsername from './users/pages/ChangeUsername'
+import ContactSupport from './users/pages/ContactSupport'
 import Logout from './users/pages/Logout'
 
 import NavBar from './shared/components/navigation/NavBar'
-import NotificationModal from './shared/components/notifications/NotificationModal'
 
 const App = () => {
   const { token, isLoading, login, logout, user, updateUser } = useAuth()
@@ -160,8 +162,23 @@ const App = () => {
       />
       <PrivateRoute component={MyProfile} path="/admin/profile" exact />
       <PrivateRoute
+        component={UpdateEmail}
+        path="/admin/profile/email/change"
+        exact
+      />
+      <PrivateRoute
         component={ChangePassword}
         path="/admin/profile/password/change"
+        exact
+      />
+      <PrivateRoute
+        component={ChangeUsername}
+        path="/admin/profile/username/change"
+        exact
+      />
+      <PrivateRoute
+        component={ContactSupport}
+        path="/admin/profile/help"
         exact
       />
       <PrivateRoute component={Logout} path="/admin/logout" exact />

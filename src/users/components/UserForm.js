@@ -87,103 +87,88 @@ const UserForm = props => {
   }
 
   return (
-    <Grid container justify="center">
-      <Grid item xs={11}>
-        <Formik
-          enableReinitialize="true"
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-        >
-          {({ values, isValid, setFieldValue }) => (
-            <Form>
-              <Grid container direction="column" spacing={1}>
-                <Box height="1rem"></Box>
-                <Grid item>
-                  <ImageUpload
-                    previewUrl={avatarLink || undefined}
-                    onInput={(signedUrl, imageData, image, isValid) => {
-                      setFieldValue(
-                        'avatar',
-                        `${imageData.id}.${imageData.ext}`
-                      )
-                      setImageUpload({ signedUrl, imageData, image, isValid })
-                    }}
-                  />
-                </Grid>
-                <Grid item>
-                  <TextField name="displayName" label="Name" />
-                </Grid>
-                <Grid item>
-                  <TextField name="username" label="Username" />
-                </Grid>
-                <Grid item>
-                  <TextArea name="bio" label="Bio" />
-                </Grid>
-                <FieldArray name="links">
-                  {({ insert, remove, push }) => (
-                    <React.Fragment>
-                      <Grid item>
-                        {values.links &&
-                          values.links.length > 0 &&
-                          values.links.map((link, index) => (
-                            <FieldSet container direction="column" key={index}>
-                              <LinkBarRow
-                                title="Link"
-                                buttonLabel="Remove X"
-                                onClick={() => remove(index)}
-                              />
-                              <Grid container justify="center">
-                                <Grid item xs={11}>
-                                  <Grid
-                                    container
-                                    direction="column"
-                                    spacing={1}
-                                  >
-                                    <Box height="1rem" />
-                                    <Grid item>
-                                      <TextField
-                                        label="URL"
-                                        name={`links.${index}.url`}
-                                        type="url"
-                                      />
-                                    </Grid>
-                                    <Grid item>
-                                      <TextField
-                                        name={`links.${index}.name`}
-                                        label="Link Text"
-                                        type="text"
-                                      />
-                                    </Grid>
-                                    <Box height="1rem" />
-                                  </Grid>
+    <Formik
+      enableReinitialize="true"
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={handleSubmit}
+    >
+      {({ values, isValid, setFieldValue }) => (
+        <Form>
+          <Grid container direction="column" spacing={1}>
+            <Box height="1rem"></Box>
+            <Grid item>
+              <ImageUpload
+                previewUrl={avatarLink || undefined}
+                onInput={(signedUrl, imageData, image, isValid) => {
+                  setFieldValue('avatar', `${imageData.id}.${imageData.ext}`)
+                  setImageUpload({ signedUrl, imageData, image, isValid })
+                }}
+              />
+            </Grid>
+            <Grid item>
+              <TextField name="displayName" label="Name" />
+            </Grid>
+            <Grid item>
+              <TextField name="username" label="Username" />
+            </Grid>
+            <Grid item>
+              <TextArea name="bio" label="Bio" />
+            </Grid>
+            <FieldArray name="links">
+              {({ insert, remove, push }) => (
+                <React.Fragment>
+                  <Grid item>
+                    {values.links &&
+                      values.links.length > 0 &&
+                      values.links.map((link, index) => (
+                        <FieldSet container direction="column" key={index}>
+                          <LinkBarRow
+                            title="Link"
+                            buttonLabel="Remove X"
+                            onClick={() => remove(index)}
+                          />
+                          <Grid container justify="center">
+                            <Grid item xs={11}>
+                              <Grid container direction="column" spacing={1}>
+                                <Box height="1rem" />
+                                <Grid item>
+                                  <TextField
+                                    label="URL"
+                                    name={`links.${index}.url`}
+                                    type="url"
+                                  />
                                 </Grid>
+                                <Grid item>
+                                  <TextField
+                                    name={`links.${index}.name`}
+                                    label="Link Text"
+                                    type="text"
+                                  />
+                                </Grid>
+                                <Box height="1rem" />
                               </Grid>
-                            </FieldSet>
-                          ))}
-                        <ActionButton
-                          type="button"
-                          onClick={() => push({ name: '', url: '' })}
-                          label="+ Add A Link"
-                          variant="text"
-                        />
-                      </Grid>
-                    </React.Fragment>
-                  )}
-                </FieldArray>
-                <Grid item>
-                  <ActionButton
-                    type="submit"
-                    label="Save"
-                    loading={isLoading}
-                  />
-                </Grid>
-              </Grid>
-            </Form>
-          )}
-        </Formik>
-      </Grid>
-    </Grid>
+                            </Grid>
+                          </Grid>
+                        </FieldSet>
+                      ))}
+                    <ActionButton
+                      type="button"
+                      onClick={() => push({ name: '', url: '' })}
+                      label="+ Add A Link"
+                      variant="text"
+                    />
+                  </Grid>
+                </React.Fragment>
+              )}
+            </FieldArray>
+            <Grid item>
+              <ActionButton type="submit" label="Save" loading={isLoading} />
+            </Grid>
+          </Grid>
+        </Form>
+      )}
+    </Formik>
   )
 }
 

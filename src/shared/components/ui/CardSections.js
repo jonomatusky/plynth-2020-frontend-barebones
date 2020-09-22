@@ -173,7 +173,7 @@ export const AvatarTypography = styled(Typography)`
 
 export const UnstyledLink = styled(Link)`
   color: inherit;
-  text-decoration: none;
+  ${props => `text-decoration: ${props.textDecoration || `none`};`}
   &:active {
     color: white;
     text-decoration: none;

@@ -14,7 +14,7 @@ const StyledButton = styled(Button)`
     ${theme.palette.primary.main},
     #920748
   );
-  min-height: 2.5rem;
+  min-height: 2.75rem;
 `
 
 const ButtonText = styled(Typography)`
