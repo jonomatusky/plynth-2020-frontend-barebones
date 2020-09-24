@@ -42,10 +42,10 @@ const FormLayout = ({ children, title, message, bar }, ...props) => {
                   </Grid>
                 </Grid>
               </Grid>
-              <Box height="4vh"></Box>
+              <Box height="2rem"></Box>
             </PieceBox>
           </Grid>
-          <Box height="4vh"></Box>
+          <Box height="2rem"></Box>
         </Grid>
       </Container>
     </React.Fragment>
