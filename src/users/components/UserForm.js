@@ -11,16 +11,28 @@ import {
   TextArea,
 } from '../../shared/components/forms/FormElements'
 
-import ImageUpload from '../../shared/components/forms/ImageUpload'
+import AvatarInput from './AvatarInput'
 
-import { useHttpClient } from '../../shared/hooks/http-hook'
+import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import ActionButton from '../../shared/components/ui/ActionButton'
-import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
+import { useApiClient } from '../../shared/hooks/api-hook'
 
 const UserForm = props => {
-  const { isLoading, error, sendRequest, clearError } = useHttpClient()
-  // const [imageFilePath, setImageFilePath] = useState(null)
-  const [imageUpload, setImageUpload] = useState(null)
+  const { isLoading, error, sendRequest, clearError } = useApiClient()
+
+  const handleSubmit = async values => {
+    try {
+      const userData = { user: values }
+      const response = await sendRequest(
+        `/users/me`,
+        'PATCH',
+        JSON.stringify(userData)
+      )
+      auth.updateUser(response.user)
+      props.onSubmit(values)
+    } catch (err) {}
+    history.push('/admin/profile')
+  }
 
   const { username, displayName, bio, links, avatar, avatarLink } = props.user
 
@@ -61,67 +73,41 @@ const UserForm = props => {
     ),
   })
 
-  const handleSubmit = async values => {
-    console.log('submitting')
-    try {
-      if (imageUpload) {
-        if (imageUpload.isValid) {
-          const awsRes = await sendRequest(
-            imageUpload.signedUrl,
-            'PUT',
-            imageUpload.image,
-            {},
-            false
-          )
-          if (awsRes.status === 200) {
-            props.onSubmit(values)
-          }
-        }
-      } else {
-        console.log('submitting form values')
-        props.onSubmit(values)
-      }
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
   return (
-    <Formik
-      enableReinitialize="true"
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={handleSubmit}
-    >
-      {({ values, isValid, setFieldValue }) => (
-        <Form>
-          <Grid container direction="column" spacing={1}>
-            <Box height="1rem"></Box>
-            <Grid item>
-              <ImageUpload
-                previewUrl={avatarLink || undefined}
-                onInput={(signedUrl, imageData, image, isValid) => {
-                  setFieldValue('avatar', `${imageData.id}.${imageData.ext}`)
-                  setImageUpload({ signedUrl, imageData, image, isValid })
-                }}
-              />
-            </Grid>
-            <Grid item>
-              <TextField name="displayName" label="Name" />
-            </Grid>
-            <Grid item>
-              <TextField name="username" label="Username" />
-            </Grid>
-            <Grid item>
-              <TextArea name="bio" label="Bio" />
-            </Grid>
-            <FieldArray name="links">
-              {({ insert, remove, push }) => (
-                <React.Fragment>
-                  <Grid item>
-                    {values.links &&
-                      values.links.length > 0 &&
-                      values.links.map((link, index) => (
+    <>
+      <ErrorBar open={!!error} error={error} handleClose={clearError} />
+      <Formik
+        enableReinitialize="true"
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        {({ values, isValid, setFieldValue }) => (
+          <Form>
+            <Grid container direction="column" spacing={1}>
+              <Box height="1rem"></Box>
+              <Grid item>
+                <AvatarInput
+                  imageUrl={avatarLink || undefined}
+                  onInput={avatar => {
+                    setFieldValue('avatar', avatar)
+                  }}
+                />
+              </Grid>
+              <Grid item>
+                <TextField name="displayName" label="Name" />
+              </Grid>
+              <Grid item>
+                <TextField name="username" label="Username" />
+              </Grid>
+              <Grid item>
+                <TextArea name="bio" label="Bio" />
+              </Grid>
+              <FieldArray name="links">
+                {({ insert, remove, push }) => (
+                  <React.Fragment>
+                    <Grid item>
+                      {(values.links || []).map((link, index) => (
                         <FieldSet container direction="column" key={index}>
                           <LinkBarRow
                             title="Link"
@@ -152,23 +138,24 @@ const UserForm = props => {
                           </Grid>
                         </FieldSet>
                       ))}
-                    <ActionButton
-                      type="button"
-                      onClick={() => push({ name: '', url: '' })}
-                      label="+ Add A Link"
-                      variant="text"
-                    />
-                  </Grid>
-                </React.Fragment>
-              )}
-            </FieldArray>
-            <Grid item>
-              <ActionButton type="submit" label="Save" loading={isLoading} />
+                      <ActionButton
+                        type="button"
+                        onClick={() => push({ name: '', url: '' })}
+                        label="+ Add A Link"
+                        variant="text"
+                      />
+                    </Grid>
+                  </React.Fragment>
+                )}
+              </FieldArray>
+              <Grid item>
+                <ActionButton type="submit" label="Save" loading={isLoading} />
+              </Grid>
             </Grid>
-          </Grid>
-        </Form>
-      )}
-    </Formik>
+          </Form>
+        )}
+      </Formik>
+    </>
   )
 }
 
