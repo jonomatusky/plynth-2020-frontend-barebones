@@ -1,13 +1,10 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Container, Grid, Fab, Typography } from '@material-ui/core'
+import { Container, Grid, Fab, Typography, Button } from '@material-ui/core'
 import styled from 'styled-components'
 
-import { useHttpClient } from '../../shared/hooks/http-hook'
-import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
-import ImageCropper from '../components/ImageCropper'
-import ActionButton from '../../shared/components/ui/ActionButton'
+import ImageCropper from '../../shared/components/imageHandling/ImageCropper'
 import AddAPhotoIcon from '@material-ui/icons/AddAPhoto'
 
 const CenterScreen = styled.div`
@@ -24,12 +21,13 @@ const CenteredGrid = styled(Grid)`
 
 const PieceImageCrop = () => {
   const history = useHistory()
-  const { isLoading, error, sendRequest, clearError } = useHttpClient()
+  const [file, setFile] = useState(null)
+  const [imageSrc, setImageSrc] = useState(null)
+  const [isUploading, setIsUploading] = useState(false)
 
   const setUploadMode = () => {
     setFile(null)
   }
-  const [file, setFile] = useState(null)
 
   const filePickerRef = useRef()
 
@@ -39,6 +37,7 @@ const PieceImageCrop = () => {
   }
 
   const pickHandler = async event => {
+    setIsUploading(true)
     if (event.target.files && event.target.files.length === 1) {
       setFile(event.target.files[0])
     }
@@ -47,32 +46,39 @@ const PieceImageCrop = () => {
 
   const submitHandler = async response => {
     try {
-      let imageData = response.imageData
-
-      await sendRequest(response.signedUrl, 'PUT', response.image, {}, false)
-
-      sessionStorage.setItem('imageId', imageData.id)
-      sessionStorage.setItem('imageExt', imageData.ext)
+      sessionStorage.setItem('imageFilepath', response.imageFilepath)
       history.push('/admin/create/piece')
     } catch (err) {
       console.log(err)
     }
   }
 
+  useEffect(() => {
+    if (!file) {
+      setImageSrc(null)
+    } else {
+      const fileReader = new FileReader()
+      fileReader.onload = () => {
+        setImageSrc(fileReader.result)
+      }
+      fileReader.readAsDataURL(file)
+    }
+    setIsUploading(false)
+  }, [file])
+
   return (
     <>
-      <ErrorBar open={!!error} error={error} handleClose={clearError} />
       <input
         id="image"
         ref={filePickerRef}
         style={{ display: 'none' }}
         type="file"
-        accepts=".jpg, .png, .jpeg"
+        accept=".jpg, .png, .jpeg"
         onChange={pickHandler}
       />
-      <Container maxWidth="sm" disableGutters>
-        {isLoading && <LoadingSpinner asOverlay />}
-        {!isLoading && !file && (
+      {isUploading && <LoadingSpinner asOverlay />}
+      {!isUploading && !file && (
+        <Container maxWidth="sm" disableGutters>
           <CenterScreen>
             <CenteredGrid
               container
@@ -97,28 +103,29 @@ const PieceImageCrop = () => {
                 </Grid>
               </Grid>
               <Grid item>
-                <ActionButton
+                <Button
                   onClick={() => {
                     history.push('/admin/pieces')
                   }}
-                  label="Cancel"
                   variant="text"
-                  fullWidth={false}
-                />
+                >
+                  Cancel
+                </Button>
               </Grid>
             </CenteredGrid>
           </CenterScreen>
-        )}
-        {!isLoading && file && (
-          <>
-            <ImageCropper
-              file={file}
-              onCancel={setUploadMode}
-              onSubmit={submitHandler}
-            />
-          </>
-        )}
-      </Container>
+        </Container>
+      )}
+      {!isUploading && file && (
+        <>
+          <ImageCropper
+            imageSrc={imageSrc}
+            file={file}
+            onCancel={setUploadMode}
+            onSubmit={submitHandler}
+          />
+        </>
+      )}
     </>
   )
 }
