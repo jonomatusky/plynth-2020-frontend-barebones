@@ -8,8 +8,7 @@ import {
 import { useAuth } from './shared/hooks/auth-hook'
 import { AuthContext } from './shared/context/auth-context'
 
-import NewImage from './pieces/pages/NewImage'
-import PieceImageCrop from './imageEditing/pages/PieceImageCrop'
+import NewPieceImage from './pieces/pages/NewPieceImage'
 import NewPiece from './pieces/pages/NewPiece'
 import ViewPiece from './pieces/pages/ViewPiece'
 import MyPieces from './pieces/pages/MyPieces'
@@ -135,9 +134,8 @@ const App = () => {
         exact
       />
 
-      <PrivateNoNavRoute component={NewImage} path="/admin/create" exact />
       <PrivateNoNavRoute
-        component={PieceImageCrop}
+        component={NewPieceImage}
         path="/admin/create/style"
         exact
       />
@@ -150,7 +148,7 @@ const App = () => {
         component={UpdatePiece}
         path="/admin/pieces/:pieceId/edit"
       />
-      <PrivateRoute component={ViewPiece} path="/admin/pieces/:pieceId" />
+      <PrivateNoNavRoute component={ViewPiece} path="/admin/pieces/:pieceId" />
       <PrivateRoute component={MyPieces} path="/admin/pieces" exact />
       <PrivateRoute component={LoggedOut} path="/admin/pickup" exact />
       {/* <PrivateRoute component={Scans} path="/admin/pickups" exact /> */}
