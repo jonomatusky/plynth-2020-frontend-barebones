@@ -66,10 +66,6 @@ const UserSignup1 = ({ values }) => {
     } catch (err) {}
   }
 
-  const handleCancel = () => {
-    history.push('/')
-  }
-
   return (
     <>
       <ErrorBar open={!!error} error={error} handleClose={clearError} />
