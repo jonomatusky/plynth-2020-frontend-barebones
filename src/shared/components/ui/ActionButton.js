@@ -1,7 +1,6 @@
 import React from 'react'
 
-import { Button, Typography, Box } from '@material-ui/core'
-import CircularProgress from '@material-ui/core/CircularProgress'
+import { Button, Typography, Box, CircularProgress } from '@material-ui/core'
 
 import styled from 'styled-components'
 import theme from '../../../theme'

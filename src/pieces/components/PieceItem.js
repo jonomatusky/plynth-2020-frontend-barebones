@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
 import {
   Grid,
   Card,
@@ -7,7 +6,6 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  Button,
 } from '@material-ui/core'
 import PieceModal from '../pages/PieceModal'
 import { makeStyles } from '@material-ui/core/styles'

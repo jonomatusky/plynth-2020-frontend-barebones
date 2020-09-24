@@ -119,7 +119,7 @@ export const useSignedRequest = () => {
     async file => {
       try {
         const response = await sendRequest(
-          process.env.REACT_APP_BACKEND_URL + '/users/sign-s3',
+          process.env.REACT_APP_BACKEND_URL + '/auth/sign-s3',
           'POST',
           JSON.stringify({
             fileName: file.name,
@@ -152,18 +152,8 @@ export const useImageUpload = () => {
   const [isProcessing, setIsProcessing] = useState(false)
   const [uploadError, setUploadError] = useState(false)
 
-  const {
-    isSigning,
-    signError,
-    getSignedRequest,
-    clearSignError,
-  } = useSignedRequest()
-  const {
-    isResizing,
-    resizeError,
-    resizeImage,
-    clearImageError,
-  } = useImageResize()
+  const { getSignedRequest, clearSignError } = useSignedRequest()
+  const { resizeImage, clearImageError } = useImageResize()
 
   const uploadImage = useCallback(
     async (file, croppedAreaPixels) => {
@@ -171,14 +161,11 @@ export const useImageUpload = () => {
       try {
         let image = await resizeImage(file, 600, croppedAreaPixels)
         console.log(image)
-        let { signedUrl, imageData } = await getSignedRequest(image)
-
-        console.log(imageData)
-        console.log(signedUrl)
+        let response = await getSignedRequest(image)
 
         setIsProcessing(false)
 
-        return { signedUrl, imageData, image }
+        return { ...response, image }
       } catch (error) {
         setIsProcessing(false)
         setUploadError(error.message)

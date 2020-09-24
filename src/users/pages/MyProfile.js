@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { useHistory } from 'react-router-dom'
 import { AuthContext } from '../../shared/context/auth-context'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -16,7 +15,6 @@ import {
 } from '@material-ui/core'
 import {
   PieceBox,
-  BarRow,
   ProfileTopRow,
   CardRow,
   PieceTitle,
@@ -28,16 +26,10 @@ import {
 } from '../../shared/components/ui/CardSections'
 import SettingsIcon from '@material-ui/icons/Settings'
 
-import { useApiClient } from '../../shared/hooks/api-hook'
-
 import MessageBar from '../../shared/components/notifications/MessageBar'
-import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import ActionButton from '../../shared/components/ui/ActionButton'
-import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
 import Background from '../../shared/layouts/Background'
 import PageTitle from '../../shared/components/ui/PageTitle'
-
-import LoadingGraphic from '../../shared/components/ui/LoadingGraphic'
 
 const title = 'My Profile'
 
@@ -72,7 +64,7 @@ const MyProfile = props => {
         handleClose={() => setMessage(null)}
       />
       <Background />
-      <Container maxWidth="sm">
+      <Container maxWidth="xs">
         <PageTitle title={title}>
           <Button onClick={handleClick} endIcon={<SettingsIcon />}>
             Settings

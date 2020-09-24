@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useContext } from 'react'
 import { Grid } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
@@ -69,7 +69,7 @@ const UsernameForm = props => {
         onSubmit={handleSubmit}
       >
         <Form>
-          <Grid container direction="column" spacing={1}>
+          <Grid container direction="column" spacing={3}>
             <Grid item>
               <TextField name="username" label="Username" />
             </Grid>

@@ -2,7 +2,6 @@ import React from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import { Container, Grid, Box, Typography } from '@material-ui/core'
 
-import PageTitle from '../../shared/components/ui/PageTitle'
 import Background from '../../shared/layouts/Background'
 import ActionButton from '../../shared/components/ui/ActionButton'
 

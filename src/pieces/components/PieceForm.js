@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react'
-// import { useForm, Controller } from 'react-hook-form'
-import { Grid, Box, Typography, Button } from '@material-ui/core'
-import { Formik, Form, FieldArray, useField } from 'formik'
+import React from 'react'
+import { Grid, Box } from '@material-ui/core'
+import { Formik, Form, FieldArray } from 'formik'
 import * as Yup from 'yup'
 
 import {
@@ -9,84 +8,45 @@ import {
   TitleField,
   FieldSet,
   TextArea,
-  BarTitle,
   Image,
   ImageBox,
   CheckButton,
   LinkBarRow,
 } from '../../shared/components/forms/FormElements'
 
-import styled from 'styled-components'
-import theme from '../../theme'
-
-import { useHttpClient } from '../../shared/hooks/http-hook'
+import { useApiClient } from '../../shared/hooks/api-hook'
+import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import ActionButton from '../../shared/components/ui/ActionButton'
-import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
 
-const { REACT_APP_BACKEND_URL } = process.env
 const ASSET_URL = process.env.REACT_APP_ASSET_URL
 
 const PieceForm = props => {
-  const { isLoading, error, sendRequest, clearError } = useHttpClient()
-  const [imageFilePath, setImageFilePath] = useState(null)
-  const [users, setUsers] = useState([])
+  const { isLoading, error, sendRequest, clearError } = useApiClient()
 
-  const pieceId = props.pieceId
+  const piece = props.piece
+  const { id, title, description, links, awsId, ext, isDirect } = piece || {}
 
-  const [initialValues, setInitialValues] = useState({
-    title: '',
-    description: '',
-    links: [],
-    isDirect: false,
-  })
+  const imageFilepath =
+    props.imageFilepath || (awsId && ext ? `${awsId}.${ext}` : null)
+  const initialValues = {
+    title,
+    description,
+    links,
+    isDirect,
+  }
 
-  useEffect(() => {
-    if (!!props.imageFilePath) {
-      setImageFilePath(props.imageFilePath)
-    }
-  }, [props])
+  const handleSubmit = async formData => {
+    let url = piece ? `/pieces/${id}` : `/pieces`
+    let method = piece ? 'PATCH' : 'POST'
 
-  useEffect(() => {
-    const fetchPiece = async () => {
-      try {
-        const responseData = await sendRequest(
-          `${REACT_APP_BACKEND_URL}/pieces/${pieceId}`
-        )
-        const {
-          title,
-          description,
-          links,
-          awsId,
-          ext,
-          isDirect,
-        } = responseData.piece
-        setImageFilePath(`${awsId}.${ext}`)
-        setInitialValues({
-          title,
-          description,
-          links,
-          isDirect,
-        })
-      } catch (err) {
-        console.log(err)
-      }
-    }
-    if (!!pieceId) {
-      fetchPiece()
-    }
-  }, [sendRequest, pieceId])
+    formData.images = [imageFilepath]
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const responseData = await sendRequest(`${REACT_APP_BACKEND_URL}/users`)
-        setUsers(responseData.users)
-      } catch (err) {
-        console.log(err)
-      }
-    }
-    fetchUsers()
-  }, [sendRequest, pieceId])
+    try {
+      const pieceData = { piece: formData }
+      let response = await sendRequest(url, method, JSON.stringify(pieceData))
+      props.onSubmit(response)
+    } catch (err) {}
+  }
 
   const validationSchema = Yup.object({
     title: Yup.string()
@@ -104,54 +64,53 @@ const PieceForm = props => {
   })
 
   return (
-    <Grid container justify="center">
-      <Grid item xs={11}>
-        <Formik
-          enableReinitialize="true"
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={props.onSubmit}
-        >
-          {({ values, isValid, setFieldValue }) => (
-            <Form>
-              <Grid container direction="column" spacing={1}>
-                <Box height="1rem"></Box>
-                <Grid item>
-                  <Grid container justify="center">
-                    <Grid item>
-                      <ImageBox>
-                        {imageFilePath ? (
+    <>
+      <ErrorBar open={!!error} error={error} handleClose={clearError} />
+      <Grid container justify="center">
+        <Grid item xs={11}>
+          <Formik
+            enableReinitialize="true"
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+          >
+            {({ values, isValid, setFieldValue }) => (
+              <Form>
+                <Grid container direction="column" spacing={1}>
+                  <Box height="1rem"></Box>
+                  <Grid item>
+                    <Grid container justify="center">
+                      <Grid item>
+                        <ImageBox>
                           <Image
-                            src={`${ASSET_URL}/${imageFilePath}`}
+                            src={`${ASSET_URL}/${imageFilepath}`}
                             alt="Preview"
                           />
-                        ) : (
-                          <LoadingSpinner asOverlay />
-                        )}
-                      </ImageBox>
+                        </ImageBox>
+                      </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
-                <Grid item>
-                  <TitleField name="title" label="Title" />
-                </Grid>
-                <Grid item>
-                  <TextArea name="description" label="Description" />
-                </Grid>
-                <Grid item>
-                  <CheckButton
-                    onClick={() => setFieldValue('isDirect', !values.isDirect)}
-                    name="isDirect"
-                    label="Skip this page and take users directly to your profile?"
-                    checked={values.isDirect}
-                  />
-                </Grid>
-                <FieldArray name="links">
-                  {({ insert, remove, push }) => (
-                    <React.Fragment>
-                      <Grid item>
-                        {values.links.length > 0 &&
-                          values.links.map((link, index) => (
+                  <Grid item>
+                    <TitleField name="title" label="Title" />
+                  </Grid>
+                  <Grid item>
+                    <TextArea name="description" label="Description" />
+                  </Grid>
+                  <Grid item>
+                    <CheckButton
+                      onClick={() =>
+                        setFieldValue('isDirect', !values.isDirect)
+                      }
+                      name="isDirect"
+                      label="Skip this page and take users directly to your profile?"
+                      checked={values.isDirect}
+                    />
+                  </Grid>
+                  <FieldArray name="links">
+                    {({ insert, remove, push }) => (
+                      <React.Fragment>
+                        <Grid item>
+                          {(values.links || []).map((link, index) => (
                             <FieldSet container direction="column" key={index}>
                               <LinkBarRow
                                 title="Link"
@@ -186,31 +145,33 @@ const PieceForm = props => {
                               </Grid>
                             </FieldSet>
                           ))}
-                        <ActionButton
-                          type="button"
-                          onClick={() => push({ name: '', url: '' })}
-                          label="+ Add A Link"
-                          variant="text"
-                          color="secondary"
-                        />
-                      </Grid>
-                    </React.Fragment>
-                  )}
-                </FieldArray>
-                <Box height="1rem"></Box>
-                <Grid item>
-                  <ActionButton
-                    type="submit"
-                    label="Save"
-                    disabled={!isValid}
-                  />
+                          <ActionButton
+                            type="button"
+                            onClick={() => push({ name: '', url: '' })}
+                            label="+ Add A Link"
+                            variant="text"
+                            color="secondary"
+                            loading={isLoading}
+                          />
+                        </Grid>
+                      </React.Fragment>
+                    )}
+                  </FieldArray>
+                  <Box height="1rem"></Box>
+                  <Grid item>
+                    <ActionButton
+                      type="submit"
+                      label="Save"
+                      disabled={!isValid}
+                    />
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Form>
-          )}
-        </Formik>
+              </Form>
+            )}
+          </Formik>
+        </Grid>
       </Grid>
-    </Grid>
+    </>
   )
 }
 

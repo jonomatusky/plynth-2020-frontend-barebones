@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Box } from '@material-ui/core'
 
 import FormLayout from '../../shared/layouts/FormLayout'
 import ContactSupportForm from '../components/ContactSupportForm'
@@ -39,7 +38,7 @@ const SignUp = () => {
         bar={
           <BarRow
             onClick={() => {
-              history.push('/')
+              history.push('/admin/profile')
             }}
             buttonLabel={'Cancel X'}
           />

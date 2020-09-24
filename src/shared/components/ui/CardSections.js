@@ -98,28 +98,28 @@ export const ProfileTopRow = styled(Grid)`
   padding-bottom: 2rem;
 `
 
-const ImageCropper = styled.div`
-  width: 100px;
-  height: 100px;
-  position: relative;
-  overflow: hidden;
-  border-radius: 50%;
-  margin: 0 auto;
-`
+// const ImageCropper = styled.div`
+//   width: 100px;
+//   height: 100px;
+//   position: relative;
+//   overflow: hidden;
+//   border-radius: 50%;
+//   margin: 0 auto;
+// `
 
-export const AvatarImage = styled.img`
-  width: auto;
-  height: 100%;
-  margin-left: -50px;
-`
+// export const AvatarImage = styled.img`
+//   width: auto;
+//   height: 100%;
+//   margin-left: -50px;
+// `
 
-export const Avatar = ({ src, alt }) => {
-  return (
-    <ImageCropper>
-      <AvatarImage src={src} alt={alt} />
-    </ImageCropper>
-  )
-}
+// export const Avatar = ({ src, alt }) => {
+//   return (
+//     <ImageCropper>
+//       <AvatarImage src={src} alt={alt} />
+//     </ImageCropper>
+//   )
+// }
 
 export const AvatarBox = styled(Box)`
   color: white;

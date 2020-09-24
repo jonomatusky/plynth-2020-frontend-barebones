@@ -6,6 +6,7 @@ import { useHttpClient } from '../../shared/hooks/http-hook'
 import { Container, Grid, Box, Typography, Button } from '@material-ui/core'
 
 import theme from '../../theme'
+import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import { TextField } from '../../shared/components/forms/FormElements'
 import ActionButton from '../../shared/components/ui/ActionButton'
 import PageTitle from '../../shared/components/ui/PageTitle'
@@ -58,87 +59,97 @@ const BetaSignup = () => {
   })
 
   return (
-    <Background>
-      <Container maxWidth="xs">
-        <Grid container justify="flex-start" direction="column" spacing={2}>
-          <Box height="10vh"></Box>
-          {!submitted ? (
-            <Grid item>
-              <PageTitle title="Sign Up" />
-              <Typography>
-                We're opening up our beta app in just a few more weeks. Sign up
-                here to get notified when we launch.
-              </Typography>
-            </Grid>
-          ) : (
-            <React.Fragment>
+    <>
+      <ErrorBar open={!!error} error={error} handleClose={clearError} />
+      <Background>
+        <Container maxWidth="xs">
+          <Grid container justify="flex-start" direction="column" spacing={2}>
+            <Box height="10vh"></Box>
+            {!submitted ? (
               <Grid item>
-                <PageTitle title="Thanks!" />
+                <PageTitle title="Sign Up" />
                 <Typography>
-                  You're all signed up. We'll let you know as soon as the beta's
-                  available. In the meantime, check out our website for more
-                  info.
+                  We're opening up our beta app in just a few more weeks. Sign
+                  up here to get notified when we launch.
                 </Typography>
               </Grid>
+            ) : (
+              <React.Fragment>
+                <Grid item>
+                  <PageTitle title="Thanks!" />
+                  <Typography>
+                    You're all signed up. We'll let you know as soon as the
+                    beta's available. In the meantime, check out our website for
+                    more info.
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <ActionButton
+                    href="http://www.plynth.com"
+                    label="Learn more"
+                  />
+                </Grid>
+              </React.Fragment>
+            )}
+            {!submitted && (
               <Grid item>
-                <ActionButton href="http://www.plynth.com" label="Learn more" />
-              </Grid>
-            </React.Fragment>
-          )}
-          {!submitted && (
-            <Grid item>
-              <Formik
-                initialValues={{ email: '' }}
-                validationSchema={validationSchema}
-                onSubmit={handleSubmit}
-              >
-                <Form>
-                  <PieceBox container direction="column">
-                    <BarRow buttonLabel="Cancel X" onClick={handleClose} />
-                    <Box minHeight="20vh">
-                      <Grid container justify="center" alignItems="center">
-                        <Grid item xs={11}>
-                          <Grid container direction="column" spacing={1}>
-                            <Box height="0.75rem"></Box>
-                            <Grid item>
-                              <TextField
-                                name="email"
-                                label="Email"
-                                type="email"
-                                autocapitalize="off"
-                                autocorrect="off"
-                              />
+                <Formik
+                  initialValues={{ email: '' }}
+                  validationSchema={validationSchema}
+                  onSubmit={handleSubmit}
+                >
+                  <Form>
+                    <PieceBox container direction="column">
+                      <BarRow buttonLabel="Cancel X" onClick={handleClose} />
+                      <Box minHeight="20vh">
+                        <Grid container justify="center" alignItems="center">
+                          <Grid item xs={11}>
+                            <Grid container direction="column" spacing={1}>
+                              <Box height="0.75rem"></Box>
+                              <Grid item>
+                                <TextField
+                                  name="email"
+                                  label="Email"
+                                  type="email"
+                                  autocapitalize="off"
+                                  autocorrect="off"
+                                />
+                              </Grid>
+                              <Grid item>
+                                <Box color={theme.palette.secondary.main}>
+                                  <Typography variant="body2">
+                                    <em>
+                                      By submitting this form, you agree to
+                                      recieve updates from the Plynth team.
+                                    </em>
+                                  </Typography>
+                                </Box>
+                              </Grid>
+                              <Box height="1.5rem"></Box>
                             </Grid>
-                            <Grid item>
-                              <Box color={theme.palette.secondary.main}>
-                                <Typography variant="body2">
-                                  <em>
-                                    By submitting this form, you agree to
-                                    recieve updates from the Plynth team.
-                                  </em>
-                                </Typography>
-                              </Box>
-                            </Grid>
-                            <Box height="1.5rem"></Box>
                           </Grid>
                         </Grid>
-                      </Grid>
-                    </Box>
-                    <ActionButton type="submit" label="Submit" />
-                  </PieceBox>
-                </Form>
-              </Formik>
-            </Grid>
-          )}
-          {/* <ActionBar secondaryAction={handleClose} secondaryLabel="Cancel" /> */}
-        </Grid>
-      </Container>
-      <BottomButton>
-        <Grid container justify="center">
-          <Button onClick={handleClose}>Return to Home Screen</Button>
-        </Grid>
-      </BottomButton>
-    </Background>
+                      </Box>
+                      <ActionButton
+                        type="submit"
+                        label="Submit"
+                        loading={isLoading}
+                      />
+                    </PieceBox>
+                  </Form>
+                </Formik>
+              </Grid>
+            )}
+            {/* <ActionBar secondaryAction={handleClose} secondaryLabel="Cancel" /> */}
+          </Grid>
+        </Container>
+        <BottomButton>
+          <Grid container justify="center">
+            <Button onClick={handleClose}>Return to Home Screen</Button>
+          </Grid>
+        </BottomButton>
+      </Background>
+    </>
   )
 }
 

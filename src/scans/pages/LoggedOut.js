@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
-import { Grid, Fab, Typography, Link, Box } from '@material-ui/core'
+import { Grid, Fab, Typography, Link } from '@material-ui/core'
 
 import ScanModal from './ScanModal'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
@@ -48,8 +48,6 @@ const LogoBar = styled.div`
   right: 0;
 `
 
-const LogoBox = styled.div``
-
 const LoggedOut = props => {
   const [scanModalIsActive, setScanModalIsActive] = useState(false)
   const [file, setFile] = useState(null)
@@ -82,7 +80,7 @@ const LoggedOut = props => {
         ref={filePickerRef}
         style={{ display: 'none' }}
         type="file"
-        accepts=".jpg, .png, .jpeg"
+        accept=".jpg, .png, .jpeg"
         onChange={pickHandler}
       />
       <Background>

@@ -193,7 +193,7 @@ const ScanLoadingTest = () => {
         ref={filePickerRef}
         style={{ display: 'none' }}
         type="file"
-        accepts=".jpg, .png, .jpeg"
+        accept=".jpg, .png, .jpeg"
         onChange={pickHandler}
       />
       <Dialog
