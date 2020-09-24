@@ -1,40 +1,44 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { Container, Grid, Box, Button } from '@material-ui/core'
 
+import { useApiClient } from '../../shared/hooks/api-hook'
 import Background from '../../shared/layouts/Background'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import NotificationModal from '../../shared/components/notifications/NotificationModal'
-import ActionBar from '../../shared/components/navigation/ActionBar'
+import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
 import PieceForm from '../components/PieceForm'
 import {
   BarRow,
   PieceBox,
   BottomRow,
 } from '../../shared/components/ui/CardSections'
-import { useApiClient } from '../../shared/hooks/api-hook'
 
-const { REACT_APP_BACKEND_URL } = process.env
-
-const title = 'Edit Piece'
-
-const UpdatePiece = () => {
+const UpdatePiece = props => {
   const { isLoading, error, sendRequest, clearError } = useApiClient()
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
+  const [piece, setPiece] = useState()
   const pieceId = useParams().pieceId
+  const propPiece = (props.location.data || {}).piece
 
   const history = useHistory()
 
-  const onSubmit = async formData => {
-    try {
-      const pieceData = { pieceData: formData }
-      await sendRequest(
-        `/pieces/${pieceId}`,
-        'PATCH',
-        JSON.stringify(pieceData)
-      )
-      history.push(`/admin/pieces/${pieceId}`)
-    } catch (err) {}
+  useEffect(() => {
+    if (!propPiece || propPiece.id !== pieceId) {
+      const fetchPieces = async () => {
+        try {
+          const responseData = await sendRequest(`/pieces/${pieceId}`)
+          setPiece(responseData.piece)
+        } catch (err) {}
+      }
+      fetchPieces()
+    } else {
+      setPiece(propPiece)
+    }
+  }, [sendRequest, pieceId, propPiece])
+
+  const handleSubmit = async response => {
+    history.push(`/admin/pieces/${response.piece.id}`)
   }
 
   const handleDelete = async () => {
@@ -51,7 +55,7 @@ const UpdatePiece = () => {
   }
 
   return (
-    <React.Fragment>
+    <>
       <NotificationModal
         primaryMessage="Delete This Piece"
         secondaryMessage={`This action cannot be undo. Your image will be removed from our database
@@ -65,36 +69,40 @@ const UpdatePiece = () => {
         handleClose={() => {
           setDeleteModalIsOpen(false)
         }}
-      ></NotificationModal>
+      />
       <ErrorBar open={!!error} error={error} handleClose={clearError} />
       <Background />
       <Container maxWidth="sm">
-        <Grid container justify="flex-start" direction="column">
-          <Box height="5vh"></Box>
-          <PieceBox container direction="column">
-            <BarRow
-              title="Edit Your Piece"
-              onClick={() => {
-                history.goBack()
-              }}
-              buttonLabel={'Close X'}
-            />
-            <Grid item>
-              <PieceForm pieceId={pieceId} onSubmit={onSubmit} />
-            </Grid>
-            <Box height="4vh"></Box>
-            <BottomRow container justify="center">
-              <Grid>
-                <Button color="inherit" onClick={handleOpenDeleteModal}>
-                  Delete This Piece
-                </Button>
+        {!isLoading && piece ? (
+          <Grid container justify="flex-start" direction="column">
+            <Box height="5vh"></Box>
+            <PieceBox container direction="column">
+              <BarRow
+                title="Edit Your Piece"
+                onClick={() => {
+                  history.goBack()
+                }}
+                buttonLabel={'Close X'}
+              />
+              <Grid item>
+                <PieceForm piece={piece} onSubmit={handleSubmit} />
               </Grid>
-            </BottomRow>
-          </PieceBox>
-          <Box height="4vh"></Box>
-        </Grid>
+              <Box height="4vh"></Box>
+              <BottomRow container justify="center">
+                <Grid>
+                  <Button color="inherit" onClick={handleOpenDeleteModal}>
+                    Delete This Piece
+                  </Button>
+                </Grid>
+              </BottomRow>
+            </PieceBox>
+            <Box height="4vh"></Box>
+          </Grid>
+        ) : (
+          isLoading && !piece && <LoadingSpinner asOverlay />
+        )}
       </Container>
-    </React.Fragment>
+    </>
   )
 }
 

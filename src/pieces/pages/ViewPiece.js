@@ -1,42 +1,38 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { useHttpClient } from '../../shared/hooks/http-hook'
 
-import { Container, Grid, Box } from '@material-ui/core'
-import { AuthContext } from '../../shared/context/auth-context'
+import { useApiClient } from '../../shared/hooks/api-hook'
+import { Container } from '@material-ui/core'
 import Background from '../../shared/layouts/Background'
 import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
 
 import PieceCard from '../components/PieceCard'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
 
-const { REACT_APP_BACKEND_URL } = process.env
-
-const ViewPiece = () => {
-  const { isLoading, error, sendRequest, clearError } = useHttpClient()
-  const [piece, setPiece] = useState()
-  const [isMine, setIsMine] = useState(false)
-  const auth = useContext(AuthContext)
+const ViewPiece = props => {
+  const { isLoading, error, sendRequest, clearError } = useApiClient()
+  const [piece, setPiece] = useState((props.location.data || {}).piece)
   const pieceId = useParams().pieceId
 
   const history = useHistory()
 
   useEffect(() => {
-    const fetchPieces = async () => {
-      try {
-        const responseData = await sendRequest(
-          `${REACT_APP_BACKEND_URL}/pieces/${pieceId}`
-        )
-        setPiece(responseData.piece)
-      } catch (err) {}
+    if (!piece || piece.id !== pieceId) {
+      const fetchPieces = async () => {
+        try {
+          const responseData = await sendRequest(`/pieces/${pieceId}`)
+          setPiece(responseData.piece)
+        } catch (err) {}
+      }
+      fetchPieces()
     }
-    fetchPieces()
-  }, [sendRequest, pieceId])
+  }, [sendRequest, pieceId, piece])
 
   return (
     <React.Fragment>
+      <ErrorBar open={!!error} error={error} handleClose={clearError} />
       <Background />
-      <Container maxWidth="sm">
+      <Container maxWidth="sm" disableGutters>
         {isLoading && !piece && <LoadingSpinner asOverlay />}
         {!isLoading && piece && (
           <PieceCard

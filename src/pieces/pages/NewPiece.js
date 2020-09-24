@@ -2,63 +2,35 @@ import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Container, Box, Grid } from '@material-ui/core'
 
-import { useHttpClient } from '../../shared/hooks/http-hook'
-import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import Background from '../../shared/layouts/Background'
 import PieceForm from '../components/PieceForm'
 import { PieceBox, BarRow } from '../../shared/components/ui/CardSections'
 import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
-
 const NewPiece = () => {
-  const [imageData, setImageData] = useState({
-    id: null,
-    ext: null,
-  })
-  const { isLoading, error, sendRequest, clearError } = useHttpClient()
+  const [imageFilepath, setImageFilepath] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   const history = useHistory()
 
   useEffect(() => {
-    if (
-      !sessionStorage.getItem('imageId') ||
-      !sessionStorage.getItem('imageExt')
-    ) {
+    if (!sessionStorage.getItem('imageFilepath')) {
       console.log('no image in session storage')
       history.push('/')
     } else {
-      setImageData({
-        id: sessionStorage.getItem('imageId'),
-        ext: sessionStorage.getItem('imageExt'),
-      })
+      let imageFilepath = sessionStorage.getItem('imageFilepath')
+      setImageFilepath(imageFilepath)
+      sessionStorage.removeItem('imageFilepath')
+      setIsLoading(false)
     }
   }, [history])
 
-  // useEffect(() => {
-
-  //   sessionStorage.removeItem('imageId')
-  //   sessionStorage.removeItem('imageExt')
-  // }, [])
-
-  const onSubmit = async formData => {
-    try {
-      const pieceData = { imageData, pieceData: formData }
-      const res = await sendRequest(
-        BACKEND_URL + '/pieces/',
-        'POST',
-        JSON.stringify(pieceData),
-        {
-          'Content-Type': 'application/json',
-        }
-      )
-      history.push(`/admin/pieces/${res.pieceId}`)
-    } catch (err) {}
+  const handleSubmit = async response => {
+    history.push(`/admin/pieces/${response.piece.id}`)
   }
 
   return (
     <React.Fragment>
-      <ErrorBar open={!!error} error={error} handleClose={clearError} />
       <Background />
       <Container maxWidth="sm">
         {isLoading && <LoadingSpinner asOverlay />}
@@ -75,8 +47,8 @@ const NewPiece = () => {
               />
               <Grid item>
                 <PieceForm
-                  onSubmit={onSubmit}
-                  imageFilePath={`${imageData.id}.${imageData.ext}`}
+                  onSubmit={handleSubmit}
+                  imageFilepath={imageFilepath}
                 />
               </Grid>
               <Box height="4vh"></Box>
