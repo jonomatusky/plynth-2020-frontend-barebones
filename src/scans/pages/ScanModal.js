@@ -1,33 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 
-import {
-  Dialog,
-  Container,
-  Grid,
-  Box,
-  Slide,
-  Typography,
-  Button,
-} from '@material-ui/core'
+import { Grid, Box, Typography, Button } from '@material-ui/core'
 
-import { useHttpClient } from '../../shared/hooks/http-hook'
+import { useApiClient } from '../../shared/hooks/api-hook'
 import { useImageUpload } from '../../shared/hooks/image-hook'
 
-import CameraAltIcon from '@material-ui/icons/CameraAlt'
 import PieceCard from '../../pieces/components/PieceCard'
 import ActionBar from '../../shared/components/navigation/ActionBar'
-import NotificationModal from '../../shared/components/notifications/FoundModal'
+import FoundModal from '../../shared/components/notifications/FoundModal'
 import PrimaryModal from '../../shared/layouts/PrimaryModal'
 
 import styled from 'styled-components'
 
-import theme from '../../theme'
-
 import loadingImage from '../../images/Plynth-Loading-GIF.gif'
-import foundImage from '../../images/Plynth-Loading-Final.png'
-
-const { REACT_APP_BACKEND_URL } = process.env
 
 const LoadingImage = styled.img`
   height: 50px;
@@ -53,10 +39,9 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
     uploadImage,
     clearUploadError,
   } = useImageUpload()
-  const { isLoading, error, sendRequest, clearError } = useHttpClient()
+  const { isLoading, error, sendRequest, clearError } = useApiClient()
   const [foundScreen, setFoundScreen] = useState(false)
   const [showCard, setShowCard] = useState(false)
-  const [errorMessage, setErrorMessage] = useState(null)
   const [scanData, setScanData] = useState({
     found: false,
     piece: null,
@@ -86,51 +71,17 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
 
   useEffect(() => {
     const startScan = async () => {
-      let uploadedImage
+      let response
 
       try {
-        uploadedImage = await uploadImage(props.file)
-      } catch (err) {
-        setErrorMessage(err.message)
-        return
-      }
-
-      try {
-        if (uploadedImage) {
-          let awsRes = await sendRequest(
-            uploadedImage.signedUrl,
-            'PUT',
-            uploadedImage.image,
-            {},
-            false
-          )
-          if (awsRes.status !== 200) {
-            console.log('Got a 200 error on AWS request')
-          }
-        }
-      } catch (err) {
-        console.log(err)
-        setErrorMessage('Unable to connect to server. Please try again.')
-        return
-      }
-
-      try {
-        let scanResponse = await sendRequest(
-          `${REACT_APP_BACKEND_URL}/scans`,
-          'POST',
-          JSON.stringify(uploadedImage.imageData),
-          {
-            'Content-Type': 'application/json',
-          }
-        )
-        if (scanResponse) {
-          setScanData(scanResponse)
-        }
-      } catch (err) {
-        console.log(err)
-        setErrorMessage(err.message)
-        return
-      }
+        response = await uploadImage(props.file)
+        let { signedUrl, imageFilepath, image } = response
+        await sendRequest(signedUrl, 'PUT', image)
+        let scanResponse = await sendRequest(`/scans`, 'POST', {
+          imageFilepath: imageFilepath,
+        })
+        setScanData(scanResponse)
+      } catch (err) {}
     }
 
     if (!!props.file) {
@@ -149,43 +100,40 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
     setSubmittedMissingPiece(false)
     clearError()
     clearUploadError()
-    setErrorMessage()
   }
 
   const handleMissingPiece = () => {
     console.log(scanData)
     try {
-      sendRequest(
-        `${REACT_APP_BACKEND_URL}/scans/${scanData.scan.id}`,
-        'PATCH',
-        JSON.stringify({
-          correct: false,
-        }),
-        {
-          'Content-Type': 'application/json',
-        }
-      )
+      sendRequest(`/scans/${scanData.scan.id}`, 'PATCH', {
+        correct: false,
+      })
     } catch (err) {}
 
     setSubmittedMissingPiece(true)
   }
 
   const Content = () => {
-    if (errorMessage) {
+    if (error || uploadError) {
       return (
         <MessageScreen>
           <CenteredGrid
             container
             direction="column"
-            justify="center"
             alignItems="center"
+            align="center"
+            justify="center"
           >
-            {errorMessage && (
-              <Box textAlign="center">
-                <Typography variant="h6">{errorMessage}</Typography>
-                <Button onClick={handleClose}>Close</Button>
-              </Box>
-            )}
+            <Grid item>
+              <Grid container justify="center">
+                <Grid item xs={10}>
+                  <Typography variant="h6">{error || uploadError}</Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item>
+              <Button onClick={handleClose}>Close</Button>
+            </Grid>
           </CenteredGrid>
         </MessageScreen>
       )
@@ -266,7 +214,7 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
 
   return (
     <React.Fragment>
-      <NotificationModal fullscreen open={foundScreen} message="FOUND!" />
+      <FoundModal fullscreen open={foundScreen} message="FOUND!" />
       <PrimaryModal open={isOpen} onClose={handleClose}>
         <Content />
       </PrimaryModal>

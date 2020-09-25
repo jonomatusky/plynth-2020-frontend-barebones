@@ -26,8 +26,6 @@ const CenteredGrid = styled(Grid)`
   height: 100%;
 `
 
-const StyledFab = styled(Fab)``
-
 const Logo = styled.img`
   opacity: 0.4;
   width: 80vw;
@@ -61,8 +59,8 @@ const LoggedOut = props => {
 
   const pickHandler = async event => {
     if (event.target.files && event.target.files.length === 1) {
-      setScanModalIsActive(true)
       setFile(event.target.files[0])
+      setScanModalIsActive(true)
     }
     filePickerRef.current.value = ''
   }
@@ -93,9 +91,9 @@ const LoggedOut = props => {
           spacing={1}
         >
           <Grid item>
-            <StyledFab size="large" onClick={filePickerHandler} color="primary">
+            <Fab size="large" onClick={filePickerHandler} color="primary">
               <PhotoCameraIcon />
-            </StyledFab>
+            </Fab>
           </Grid>
           <Grid item>
             <Typography variant="h6">

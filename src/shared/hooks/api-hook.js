@@ -1,5 +1,6 @@
-import { useState, useCallback, useRef, useEffect, useContext } from 'react'
+import { useState, useCallback, useContext } from 'react'
 import { AuthContext } from '../context/auth-context'
+import axios from 'axios'
 
 const { REACT_APP_BACKEND_URL } = process.env
 
@@ -8,54 +9,53 @@ export const useApiClient = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState()
 
-  const activeHttpRequests = useRef([])
-
   const sendRequest = useCallback(
-    async (extension, method = 'GET', body = null, headers = {}) => {
-      const url = `${REACT_APP_BACKEND_URL}${extension}`
+    async (url, method = 'GET', data = null, headers = {}) => {
+      let message
+
+      if (url.indexOf('.') < 0) {
+        if (auth.token) {
+          headers.Authorization = 'Bearer ' + auth.token
+        }
+        url = REACT_APP_BACKEND_URL.concat(url)
+      } else if (url.search('amazonaws') !== -1) {
+        message = 'Unable to upload image. Please try again.'
+      }
+
       setIsLoading(true)
 
-      if (method === 'POST' || method === 'PATCH') {
-        headers['Content-Type'] = 'application/json'
-      }
+      const CancelToken = axios.CancelToken
+      const source = CancelToken.source()
 
-      if (auth.token) {
-        headers.Authorization = 'Bearer ' + auth.token
-      }
-
-      const httpAbortCtrl = new AbortController()
-      activeHttpRequests.current.push(httpAbortCtrl)
       try {
-        const response = await fetch(url, {
+        const response = await axios.request({
+          url,
           method,
-          body,
+          data,
           headers,
-          signal: httpAbortCtrl.signal,
+          cancelToken: source.token,
+          timeout: 10000,
         })
 
-        activeHttpRequests.current = activeHttpRequests.current.filter(
-          reqCtrl => reqCtrl !== httpAbortCtrl
-        )
-
-        const data = await response.json()
-        if (!response.ok) {
-          throw new Error(data.message)
-        }
-
         setIsLoading(false)
-        return data
+        return response.data
       } catch (err) {
-        if (err.name === 'AbortError') {
-          console.log('request aborted')
-        } else if (err.name === 'TypeError') {
-          setError('There is a problem with your network. Please try again.')
-          setIsLoading(false)
-          throw err
+        if (axios.isCancel(err)) {
+          console.log('Request canceled', err.message)
+          return
+        } else if (err.response) {
+          console.log(err.response)
+          setError(message || err.response.data.message)
+        } else if (err.request) {
+          console.log(err.request)
+          setError(
+            'Unable to connect to server. Please check your internet connection.'
+          )
         } else {
-          setError(err.message)
-          setIsLoading(false)
-          throw err
+          console.log('Error', err.message)
         }
+        setIsLoading(false)
+        throw err
       }
     },
     [auth.token]
@@ -64,12 +64,6 @@ export const useApiClient = () => {
   const clearError = () => {
     setError(null)
   }
-
-  useEffect(() => {
-    return () => {
-      activeHttpRequests.current.forEach(abortCtrl => abortCtrl.abort())
-    }
-  }, [])
 
   return { isLoading, error, sendRequest, clearError }
 }
