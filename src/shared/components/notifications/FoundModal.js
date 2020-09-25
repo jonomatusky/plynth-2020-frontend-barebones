@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Dialog, Grid, Box, Typography, Fade, Grow } from '@material-ui/core'
+import { Dialog, Grid, Box, Typography, Fade } from '@material-ui/core'
 
 import styled from 'styled-components'
 import theme from '../../../theme'
@@ -23,7 +23,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Fade in={props.open} timeout={500} ref={ref} {...props} />
 })
 
-const NotificationModal = props => {
+const FoundModal = props => {
   return (
     <Dialog fullScreen open={props.open} TransitionComponent={Transition}>
       <FoundScreen>
@@ -50,4 +50,4 @@ const NotificationModal = props => {
   )
 }
 
-export default NotificationModal
+export default FoundModal

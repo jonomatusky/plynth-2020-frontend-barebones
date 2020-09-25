@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 import { useApiClient } from '../../shared/hooks/api-hook'
 import { Container, Grid, Box } from '@material-ui/core'
-import { AuthContext } from '../../shared/context/auth-context'
 
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import PageTitle from '../../shared/components/ui/PageTitle'
@@ -16,7 +15,6 @@ const title = 'My Pieces'
 const MyPieces = () => {
   const [loadedPieces, setLoadedPieces] = useState()
   const { isLoading, error, sendRequest, clearError } = useApiClient()
-  const auth = useContext(AuthContext)
 
   useEffect(() => {
     console.log('useEffect')

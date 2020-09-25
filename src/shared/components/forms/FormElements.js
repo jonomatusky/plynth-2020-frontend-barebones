@@ -1,5 +1,4 @@
 import React from 'react'
-// import { useForm, Controller } from 'react-hook-form'
 import { Grid, Typography } from '@material-ui/core'
 import { useField } from 'formik'
 
@@ -181,6 +180,7 @@ export const Checkmark = () => {
 }
 
 export const CheckButton = ({ label, checked, onClick, ...props }) => {
+  // eslint-disable-next-line no-unused-vars
   const [field, meta] = useField(props)
   const showError = meta.touched && meta.error
 

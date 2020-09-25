@@ -35,7 +35,7 @@ const UserProfile = () => {
   const auth = useContext(AuthContext)
   const classes = useStyles()
 
-  const { isLoading, error, sendRequest, clearError } = useHttpClient()
+  const { isLoading, error, sendRequest } = useHttpClient()
   const [user, setUser] = useState()
   const username = useParams().username
 

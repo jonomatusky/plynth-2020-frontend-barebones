@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useContext } from 'react'
 import { Grid, Box } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
@@ -20,15 +20,13 @@ const SignInForm = props => {
   const handleSubmit = async values => {
     if (!isLoading) {
       try {
-        const responseData = await sendRequest(
-          '/auth/login',
-          'POST',
-          JSON.stringify({
-            user: values,
-          })
-        )
+        const response = await sendRequest('/auth/login', 'POST', {
+          user: values,
+        })
 
-        auth.login(responseData.user, responseData.token)
+        console.log(response)
+
+        auth.login(response.user, response.token)
         history.push('/admin/pieces')
       } catch (err) {
         console.log(err)

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dialog, Container, Box, Slide } from '@material-ui/core'
+import { Dialog, Container, Box } from '@material-ui/core'
 
 import theme from '../../theme'
 import styled from 'styled-components'
@@ -26,7 +26,7 @@ const PrimaryModal = ({ open, handleClose, children }) => {
   return (
     <Dialog fullScreen open={open} onClose={handleClose}>
       <ModalBackground />
-      <StyledContainer maxWidth="xs" disableGutters={true}>
+      <StyledContainer maxWidth="xs" disableGutters>
         {children}
       </StyledContainer>
     </Dialog>
