@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
-import { useHttpClient } from '../../shared/hooks/http-hook'
+import { useApiClient } from '../../shared/hooks/api-hook'
 
 import { Container, Grid } from '@material-ui/core'
 
@@ -14,7 +14,7 @@ import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
 const title = 'Create New Piece'
 
 const NewImage = () => {
-  const { isLoading, error, sendRequest, clearError } = useHttpClient()
+  const { isLoading, error, sendRequest, clearError } = useApiClient()
   const [image, setImage] = useState(null)
   const [imageIsValid, setImageIsValid] = useState(false)
   const [imageData, setImageData] = useState({
@@ -37,7 +37,7 @@ const NewImage = () => {
   const imageSubmitHandler = async event => {
     event.preventDefault()
     try {
-      const awsRes = await sendRequest(signedUrl, 'PUT', image, {}, false)
+      const awsRes = await sendRequest(signedUrl, 'PUT', image)
       if (awsRes.status === 200) {
         sessionStorage.setItem('imageId', imageData.id)
         sessionStorage.setItem('imageExt', imageData.ext)

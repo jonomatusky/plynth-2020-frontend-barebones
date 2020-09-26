@@ -15,14 +15,12 @@ import {
 import { makeStyles } from '@material-ui/core/styles'
 
 import { AuthContext } from '../../shared/context/auth-context'
-import { useHttpClient } from '../../shared/hooks/http-hook'
+import { useApiClient } from '../../shared/hooks/api-hook'
 
 import ActionButton from '../../shared/components/ui/ActionButton'
 import Background from '../../shared/layouts/Background'
 
 import NotFound from '../../shared/components/navigation/NotFound'
-
-const { REACT_APP_BACKEND_URL } = process.env
 
 const useStyles = makeStyles(theme => ({
   large: {
@@ -35,7 +33,7 @@ const UserProfile = () => {
   const auth = useContext(AuthContext)
   const classes = useStyles()
 
-  const { isLoading, error, sendRequest } = useHttpClient()
+  const { isLoading, error, sendRequest } = useApiClient()
   const [user, setUser] = useState()
   const username = useParams().username
 
@@ -44,9 +42,7 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const responseData = await sendRequest(
-          `${REACT_APP_BACKEND_URL}/users/${username}`
-        )
+        const responseData = await sendRequest(`/users/${username}`)
         setUser(responseData.user)
       } catch (err) {}
     }

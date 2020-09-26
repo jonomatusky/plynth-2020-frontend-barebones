@@ -5,9 +5,7 @@ import * as Yup from 'yup'
 
 import { useApiClient } from '../../shared/hooks/api-hook'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
-
 import { TextField, TextArea } from '../../shared/components/forms/FormElements'
-
 import ActionButton from '../../shared/components/ui/ActionButton'
 
 const EmailForm = props => {
@@ -18,11 +16,7 @@ const EmailForm = props => {
       try {
         const request = { message: { ...values, type: 'support' } }
 
-        let response = await sendRequest(
-          `/messages`,
-          'POST',
-          JSON.stringify(request)
-        )
+        let response = await sendRequest(`/messages`, 'POST', request)
 
         console.log('success!')
         resetForm({})

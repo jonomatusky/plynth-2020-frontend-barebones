@@ -54,11 +54,7 @@ const UserSignup2 = ({ values }) => {
   const handleSubmit = async values => {
     try {
       let userData = { user: values }
-      const response = await sendRequest(
-        `/users/me`,
-        'PATCH',
-        JSON.stringify(userData)
-      )
+      const response = await sendRequest(`/users/me`, 'PATCH', userData)
 
       auth.updateUser(response.user)
       history.push('/admin/get-started/success')

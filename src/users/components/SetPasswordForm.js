@@ -6,9 +6,7 @@ import * as Yup from 'yup'
 import { useApiClient } from '../../shared/hooks/api-hook'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import MessageBar from '../../shared/components/notifications/MessageBar'
-
 import { TextField } from '../../shared/components/forms/FormElements'
-
 import ActionButton from '../../shared/components/ui/ActionButton'
 
 const SetPasswordForm = props => {
@@ -22,11 +20,7 @@ const SetPasswordForm = props => {
       try {
         const passwordData = { password: values }
 
-        await sendRequest(
-          `/auth/password`,
-          'PATCH',
-          JSON.stringify(passwordData)
-        )
+        await sendRequest(`/auth/password`, 'PATCH', passwordData)
 
         console.log('success!')
         props.onSubmit(values)

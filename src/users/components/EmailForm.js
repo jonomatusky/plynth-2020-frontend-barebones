@@ -21,11 +21,7 @@ const EmailForm = props => {
       try {
         const request = { user: values }
 
-        let response = await sendRequest(
-          `/auth/email`,
-          'PATCH',
-          JSON.stringify(request)
-        )
+        let response = await sendRequest(`/auth/email`, 'PATCH', request)
 
         console.log('success!')
         props.onSubmit(values, response)

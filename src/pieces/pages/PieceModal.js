@@ -1,9 +1,8 @@
 import React from 'react'
-// import { useHttpClient } from '../../shared/hooks/http-hook'
+import { Grid, Box } from '@material-ui/core'
 
 import PieceCard from '../components/PieceCard'
 import PrimaryModal from '../../shared/layouts/PrimaryModal'
-import { Grid, Box } from '@material-ui/core'
 
 // need to change loggedOut to auth instead of props
 const PieceModal = ({ open, onClose, piece }) => {

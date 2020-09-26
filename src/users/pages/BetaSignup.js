@@ -2,20 +2,17 @@ import React, { useState } from 'react'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import { useHistory } from 'react-router-dom'
-import { useHttpClient } from '../../shared/hooks/http-hook'
 import { Container, Grid, Box, Typography, Button } from '@material-ui/core'
+import styled from 'styled-components'
 
 import theme from '../../theme'
+import { useApiClient } from '../../shared/hooks/api-hook'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
+import { PieceBox, BarRow } from '../../shared/components/ui/CardSections'
 import { TextField } from '../../shared/components/forms/FormElements'
 import ActionButton from '../../shared/components/ui/ActionButton'
 import PageTitle from '../../shared/components/ui/PageTitle'
 import Background from '../../shared/layouts/Background'
-import styled from 'styled-components'
-
-import { PieceBox, BarRow } from '../../shared/components/ui/CardSections'
-
-const { REACT_APP_BACKEND_URL } = process.env
 
 const BottomButton = styled.div`
   top: 'auto';
@@ -29,7 +26,7 @@ const BottomButton = styled.div`
 `
 
 const BetaSignup = () => {
-  const { isLoading, error, sendRequest, clearError } = useHttpClient()
+  const { isLoading, error, sendRequest, clearError } = useApiClient()
   const history = useHistory()
   const [submitted, setSubmitted] = useState(false)
 
@@ -40,14 +37,7 @@ const BetaSignup = () => {
   const handleSubmit = async values => {
     try {
       const userData = { user: values }
-      await sendRequest(
-        `${REACT_APP_BACKEND_URL}/users/subscribe`,
-        'POST',
-        JSON.stringify(userData),
-        {
-          'Content-Type': 'application/json',
-        }
-      )
+      await sendRequest(`/users/subscribe`, 'POST', userData)
       setSubmitted(true)
     } catch (err) {}
   }

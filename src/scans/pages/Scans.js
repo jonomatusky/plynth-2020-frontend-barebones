@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useHttpClient } from '../../shared/hooks/http-hook'
+import { useApiClient } from '../../shared/hooks/api-hook'
 
 import { Container, Box } from '@material-ui/core'
 
@@ -7,18 +7,16 @@ import PageTitle from '../../shared/components/ui/PageTitle'
 import ScanList from '../components/ScanList'
 import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
 
-const { REACT_APP_BACKEND_URL } = process.env
-
 const title = 'Activity'
 
 const Scans = () => {
   const [loadedScans, setLoadedScans] = useState()
-  const { isLoading, error, sendRequest, clearError } = useHttpClient()
+  const { isLoading, sendRequest } = useApiClient()
 
   useEffect(() => {
     const fetchScans = async () => {
       try {
-        const responseData = await sendRequest(`${REACT_APP_BACKEND_URL}/scans`)
+        const responseData = await sendRequest(`/scans`)
         setLoadedScans(responseData.scans)
       } catch (err) {}
     }

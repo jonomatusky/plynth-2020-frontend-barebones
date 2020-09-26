@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 
 import { Box, Grid } from '@material-ui/core'
 
-import { useHttpClient } from '../../hooks/http-hook'
+import { useApiClient } from '../../hooks/api-hook'
 import { useImageUpload } from '../../hooks/image-hook'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
@@ -27,7 +27,7 @@ const Image = styled.img`
 `
 
 const ImageUpload = props => {
-  const { isLoading, error, sendRequest, clearError } = useHttpClient()
+  const { isLoading, error, sendRequest, clearError } = useApiClient()
   const {
     isProcessing,
     uploadError,
@@ -69,7 +69,7 @@ const ImageUpload = props => {
       try {
         response = await uploadImage(file)
         avatar = `${response.imageData.id}.${response.imageData.ext}`
-        await sendRequest(response.signedUrl, 'PUT', response.image, {}, false)
+        await sendRequest(response.signedUrl, 'PUT', response.image)
         setFile(response.image)
         props.onInput(avatar)
         setPreviewUrl(null)

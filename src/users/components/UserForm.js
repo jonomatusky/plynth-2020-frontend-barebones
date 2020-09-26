@@ -20,7 +20,7 @@ const UserForm = props => {
     //   const response = await sendRequest(
     //     `/users/me`,
     //     'PATCH',
-    //     JSON.stringify(userData)
+    //     userData
     //   )
     //   auth.updateUser(response.user)
     //   props.onSubmit(values)

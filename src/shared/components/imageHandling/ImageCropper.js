@@ -4,7 +4,7 @@ import { AppBar, Toolbar, Slider } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import styled from 'styled-components'
 
-import { useHttpClient } from '../../hooks/http-hook'
+import { useApiClient } from '../../hooks/api-hook'
 import { useImageUpload } from '../../hooks/image-hook'
 import ErrorBar from '../notifications/ErrorBar'
 import LoadingSpinner from '../ui/LoadingSpinner'
@@ -55,7 +55,7 @@ const ImageCropper = props => {
     uploadImage,
     clearUploadError,
   } = useImageUpload()
-  const { isLoading, error, sendRequest, clearError } = useHttpClient()
+  const { isLoading, error, sendRequest, clearError } = useApiClient()
 
   const [crop, setCrop] = useState({ x: 0, y: 0 })
   const [zoom, setZoom] = useState(1)
@@ -68,7 +68,7 @@ const ImageCropper = props => {
     try {
       let response = await uploadImage(props.file, croppedAreaPixels)
       const { signedUrl, imageUrl, imageFilepath, image } = response
-      await sendRequest(signedUrl, 'PUT', image, {}, false)
+      await sendRequest(signedUrl, 'PUT', image)
 
       props.onSubmit({ imageUrl, imageFilepath })
     } catch (err) {

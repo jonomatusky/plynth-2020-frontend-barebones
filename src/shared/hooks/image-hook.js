@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { useHttpClient } from './http-hook'
+import { useApiClient } from './api-hook'
 
 const loadImgAsync = imgSrc => {
   return new Promise((resolve, reject) => {
@@ -113,22 +113,15 @@ export const useSignedRequest = () => {
     error: signError,
     sendRequest,
     clearError: clearSignError,
-  } = useHttpClient()
+  } = useApiClient()
 
   const getSignedRequest = useCallback(
     async file => {
       try {
-        const response = await sendRequest(
-          process.env.REACT_APP_BACKEND_URL + '/auth/sign-s3',
-          'POST',
-          JSON.stringify({
-            fileName: file.name,
-            fileType: file.type,
-          }),
-          {
-            'Content-Type': 'application/json',
-          }
-        )
+        const response = await sendRequest('/auth/sign-s3', 'POST', {
+          fileName: file.name,
+          fileType: file.type,
+        })
         return response
       } catch (err) {
         const error = new Error(

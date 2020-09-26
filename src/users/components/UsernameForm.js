@@ -6,9 +6,7 @@ import * as Yup from 'yup'
 import { useApiClient } from '../../shared/hooks/api-hook'
 import { AuthContext } from '../../shared/context/auth-context'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
-
 import { TextField } from '../../shared/components/forms/FormElements'
-
 import ActionButton from '../../shared/components/ui/ActionButton'
 
 const UsernameForm = props => {
@@ -25,11 +23,7 @@ const UsernameForm = props => {
       try {
         const userData = { user: values }
 
-        const response = await sendRequest(
-          `/users/me`,
-          'PATCH',
-          JSON.stringify(userData)
-        )
+        const response = await sendRequest(`/users/me`, 'PATCH', userData)
 
         console.log('success!')
         auth.updateUser(response.user)

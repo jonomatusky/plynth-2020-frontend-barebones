@@ -55,11 +55,7 @@ const UserSignup1 = ({ values }) => {
     try {
       let { email, username, password } = values
       let userData = { user: { email, username, password } }
-      const response = await sendRequest(
-        `/auth/signup`,
-        'POST',
-        JSON.stringify(userData)
-      )
+      const response = await sendRequest(`/auth/signup`, 'POST', userData)
 
       auth.login(response.user, response.token)
       history.push('/admin/get-started/profile')
