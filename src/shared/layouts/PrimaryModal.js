@@ -7,7 +7,7 @@ import styled from 'styled-components'
 const ModalBackground = styled(Box)`
   background-image: linear-gradient(
     0deg,
-    ${theme.palette.primary.main}50,
+    ${theme.palette.primary.main}70,
     ${theme.palette.primary.main}00
   );
   position: fixed;
@@ -24,7 +24,17 @@ const StyledContainer = styled(Container)`
 
 const PrimaryModal = ({ open, handleClose, children }) => {
   return (
-    <Dialog fullScreen open={open} onClose={handleClose}>
+    <Dialog
+      fullScreen
+      open={open}
+      onClose={handleClose}
+      PaperProps={{
+        style: {
+          backgroundColor: theme.palette.background.default,
+          boxShadow: 'none',
+        },
+      }}
+    >
       <ModalBackground />
       <StyledContainer maxWidth="xs" disableGutters>
         {children}

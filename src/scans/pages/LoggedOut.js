@@ -12,7 +12,7 @@ import styled from 'styled-components'
 const Background = styled.div`
   background-image: linear-gradient(
     0deg,
-    ${theme.palette.primary.main}50,
+    ${theme.palette.primary.main}70,
     ${theme.palette.primary.main}00
   );
   position: fixed;
