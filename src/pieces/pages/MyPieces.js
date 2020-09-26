@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { useApiClient } from '../../shared/hooks/api-hook'
 import { Container, Grid, Box } from '@material-ui/core'
 
+import Background from '../../shared/layouts/Background'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import PageTitle from '../../shared/components/ui/PageTitle'
 import PieceList from '../components/PieceList'
@@ -32,6 +33,7 @@ const MyPieces = () => {
   return (
     <React.Fragment>
       <ErrorBar open={!!error} error={error} handleClose={clearError} />
+      <Background />
       <Container maxWidth="sm">
         <PageTitle title={title} />
         <Grid container direction="column" alignItems="stretch" spacing={2}>
@@ -49,7 +51,7 @@ const MyPieces = () => {
             </Grid>
           )}
         </Grid>
-        <Box height="4rem"></Box>
+        <Box height="5rem"></Box>
       </Container>
     </React.Fragment>
   )

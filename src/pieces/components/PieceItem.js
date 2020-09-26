@@ -6,9 +6,12 @@ import {
   CardContent,
   CardMedia,
   Typography,
+  Paper,
 } from '@material-ui/core'
 import PieceModal from '../pages/PieceModal'
 import { makeStyles } from '@material-ui/core/styles'
+import styled from 'styled-components'
+import theme from '../../theme'
 
 const { REACT_APP_ASSET_URL } = process.env
 
@@ -31,6 +34,10 @@ const useStyles = makeStyles(() => ({
     width: '100%',
   },
 }))
+
+const StyledPaper = styled(Paper)`
+  background-color: ${theme.palette.background.default};
+`
 
 const PieceItem = ({ piece, ...props }) => {
   const [open, setOpen] = useState(false)
@@ -57,32 +64,34 @@ const PieceItem = ({ piece, ...props }) => {
       />
       <Grid item xs={12}>
         <Card>
-          <CardActionArea onClick={handleClickOpen}>
-            <Grid container wrap={'nowrap'}>
-              <Grid item>
-                <div className={classes.image}>
-                  <CardMedia
-                    image={`${REACT_APP_ASSET_URL}/${piece.imageFilepath}`}
-                    title={piece.title}
-                    className={classes.cover}
-                  />
-                </div>
+          <StyledPaper>
+            <CardActionArea onClick={handleClickOpen}>
+              <Grid container wrap={'nowrap'}>
+                <Grid item>
+                  <div className={classes.image}>
+                    <CardMedia
+                      image={`${REACT_APP_ASSET_URL}/${piece.imageFilepath}`}
+                      title={piece.title}
+                      className={classes.cover}
+                    />
+                  </div>
+                </Grid>
+                <Grid item>
+                  <div className={classes.details}>
+                    <CardContent p={0.5}>
+                      <Typography component="h6" variant="h6">
+                        {piece.title}
+                      </Typography>
+                      <Typography variant="subtitle1" color="textSecondary">
+                        {piece.owner.displayName &&
+                          `by ${piece.owner.displayName}`}
+                      </Typography>
+                    </CardContent>
+                  </div>
+                </Grid>
               </Grid>
-              <Grid item>
-                <div className={classes.details}>
-                  <CardContent p={0.5}>
-                    <Typography component="h6" variant="h6">
-                      {piece.title}
-                    </Typography>
-                    <Typography variant="subtitle1" color="textSecondary">
-                      {piece.owner.displayName &&
-                        `by ${piece.owner.displayName}`}
-                    </Typography>
-                  </CardContent>
-                </div>
-              </Grid>
-            </Grid>
-          </CardActionArea>
+            </CardActionArea>
+          </StyledPaper>
         </Card>
       </Grid>
     </React.Fragment>
