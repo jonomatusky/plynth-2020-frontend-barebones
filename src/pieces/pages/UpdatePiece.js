@@ -77,7 +77,7 @@ const UpdatePiece = props => {
               onClick={() => {
                 history.goBack()
               }}
-              buttonLabel={'Close X'}
+              buttonLabel={'Cancel X'}
             />
           }
           bottom={

@@ -13,7 +13,7 @@ import {
   ImageBox,
   CheckButton,
 } from '../../shared/components/forms/FormElements'
-import LinksList from '../../shared/components/forms/LinksList'
+import LinksList from '../../shared/components/forms/LinkList'
 
 const ASSET_URL = process.env.REACT_APP_ASSET_URL
 
@@ -87,25 +87,30 @@ const PieceForm = props => {
                 </Grid>
               </Grid>
               <Grid item>
-                <TitleField name="title" label="Title" />
+                <TitleField name="title" label="Title (Required)" />
               </Grid>
               <Grid item>
                 <CheckButton
                   onClick={() => setFieldValue('isDirect', !values.isDirect)}
                   name="isDirect"
-                  label="Skip this page and take users directly to your profile?"
+                  label="Skip this page and take users directly to my profile"
                   checked={values.isDirect}
                 />
               </Grid>
               <Grid item>
                 <TextArea name="description" label="Description" />
               </Grid>
+              <Box height="1rem" />
               <Grid item>
                 <LinksList links={values.links} />
               </Grid>
               <Box height="1rem"></Box>
               <Grid item>
-                <ActionButton type="submit" label="Save" loading={isLoading} />
+                <ActionButton
+                  type="submit"
+                  label={`Save & Close`}
+                  loading={isLoading}
+                />
               </Grid>
             </Grid>
           </Form>

@@ -8,11 +8,12 @@ import theme from '../../../theme'
 export const ImageBox = styled.div`
   height: 250px;
   width: 250px;
+  text-align: center;
 `
 
 export const Image = styled.img`
-  width: 100%;
-  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
   object-fit: cover;
 `
 
