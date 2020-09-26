@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { Container, Grid, Box, Button } from '@material-ui/core'
+import { Button } from '@material-ui/core'
 
 import { useApiClient } from '../../shared/hooks/api-hook'
 import Background from '../../shared/layouts/Background'
@@ -8,11 +8,8 @@ import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import NotificationModal from '../../shared/components/notifications/NotificationModal'
 import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
 import PieceForm from '../components/PieceForm'
-import {
-  BarRow,
-  PieceBox,
-  BottomRow,
-} from '../../shared/components/ui/CardSections'
+import { BarRow } from '../../shared/components/ui/CardSections'
+import FormLayout from '../../shared/layouts/FormLayout'
 
 const UpdatePiece = props => {
   const { isLoading, error, sendRequest, clearError } = useApiClient()
@@ -72,36 +69,28 @@ const UpdatePiece = props => {
       />
       <ErrorBar open={!!error} error={error} handleClose={clearError} />
       <Background />
-      <Container maxWidth="sm">
-        {!isLoading && piece ? (
-          <Grid container justify="flex-start" direction="column">
-            <Box height="5vh"></Box>
-            <PieceBox container direction="column">
-              <BarRow
-                title="Edit Your Piece"
-                onClick={() => {
-                  history.goBack()
-                }}
-                buttonLabel={'Close X'}
-              />
-              <Grid item>
-                <PieceForm piece={piece} onSubmit={handleSubmit} />
-              </Grid>
-              <Box height="4vh"></Box>
-              <BottomRow container justify="center">
-                <Grid>
-                  <Button color="inherit" onClick={handleOpenDeleteModal}>
-                    Delete This Piece
-                  </Button>
-                </Grid>
-              </BottomRow>
-            </PieceBox>
-            <Box height="4vh"></Box>
-          </Grid>
-        ) : (
-          isLoading && !piece && <LoadingSpinner asOverlay />
-        )}
-      </Container>
+      {!isLoading && piece ? (
+        <FormLayout
+          bar={
+            <BarRow
+              title="Edit Your Piece"
+              onClick={() => {
+                history.goBack()
+              }}
+              buttonLabel={'Close X'}
+            />
+          }
+          bottom={
+            <Button color="inherit" onClick={handleOpenDeleteModal}>
+              Delete This Piece
+            </Button>
+          }
+        >
+          <PieceForm piece={piece} onSubmit={handleSubmit} />
+        </FormLayout>
+      ) : (
+        isLoading && !piece && <LoadingSpinner asOverlay />
+      )}
     </>
   )
 }

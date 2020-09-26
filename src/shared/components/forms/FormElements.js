@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid, Typography } from '@material-ui/core'
+import { Grid, Button } from '@material-ui/core'
 import { useField } from 'formik'
 
 import styled from 'styled-components'
@@ -21,14 +21,14 @@ export const BarRow = styled(Grid)`
   padding-left: 10px;
   padding-right: 10px;
   color: ${theme.palette.background.paper};
-  align-content: center;
 `
 
 export const BarTitle = styled(Grid)`
   font-weight: bold;
 `
 
-export const BarAction = styled.button`
+export const BarAction = styled(Button)`
+  text-transform: none;
   background: none;
   border: none;
   padding: 0;
@@ -36,7 +36,6 @@ export const BarAction = styled.button`
 
 export const FieldSet = styled(Grid)`
   border: 1px solid ${theme.palette.secondary.main};
-  margin-bottom: 1em;
 `
 
 export const StyledInput = styled.div`
@@ -57,14 +56,14 @@ export const TextInput = styled.input`
   border: 1px solid;
   border-radius: 0px;
   border-color: inherit;
-  background: #1b1d1b;
+  background: ${theme.palette.background.input};
   padding: 0.2rem 0.6rem 0.3rem 0.6rem;
   margin: 0.4rem 0rem 0.4rem 0rem;
   font-weight: bold;
   font-size: 1.2rem;
   &:focus {
     background: white;
-    color: ${theme.palette.background.default};
+    color: ${theme.palette.background.input};
     border-radius: 0px;
     outline: 1px solid ${theme.palette.primary.main};
     border: 1px solid ${theme.palette.primary.main};
@@ -83,16 +82,18 @@ const TextAreaInput = styled.textarea`
   border: 1px solid;
   border-radius: 0px;
   border-color: inherit;
-  background: #1b1d1b;
+  background: ${theme.palette.background.input};
   padding: 0.2rem 0.6rem 0.3rem 0.6rem;
   margin: 0.4rem 0rem 0.4rem 0rem;
   font-weight: bold;
   font-size: 1.2rem;
+  resize: none;
   resize: vertical;
-  rows: 3;
+  display: block;
+  height: 6em;
   &:focus {
     background: white;
-    color: ${theme.palette.background.default};
+    color: ${theme.palette.background.input};
     border-radius: 0px;
     outline: 1px solid ${theme.palette.primary.main};
     border: 1px solid ${theme.palette.primary.main};
@@ -153,13 +154,13 @@ const CheckButtonInput = styled.button`
   color: white;
   border: 1px solid;
   border-color: inherit;
-  background: #1b1d1b;
+  background: ${theme.palette.background.input};
   text-align: left;
   padding: 0;
   margin-right: 0.5rem;
   &:focus {
     background: white;
-    color: ${theme.palette.background.default};
+    color: ${theme.palette.background.input};
     border-radius: 0px;
     outline: 1px solid ${theme.palette.primary.main};
     border: 1px solid ${theme.palette.primary.main};
@@ -309,21 +310,11 @@ export const CheckButton = ({ label, checked, onClick, ...props }) => {
 //   </div>
 // );
 
-export const LinkBarRow = ({ title, buttonLabel, ...props }) => {
+export const LinkBarRow = ({ left, right }) => {
   return (
     <BarRow container justify="space-between">
-      <BarTitle>
-        <Typography color="inherit">
-          <b>{title}</b>
-        </Typography>
-      </BarTitle>
-      <Grid>
-        <BarAction {...props}>
-          <Typography color="inherit">
-            <b>{buttonLabel}</b>
-          </Typography>
-        </BarAction>
-      </Grid>
+      <Grid item>{left}</Grid>
+      <Grid item>{right}</Grid>
     </BarRow>
   )
 }

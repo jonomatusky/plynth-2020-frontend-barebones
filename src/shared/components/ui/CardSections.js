@@ -7,7 +7,7 @@ import theme from '../../../theme'
 
 export const PieceBox = styled(Grid)`
   border: 1px solid ${theme.palette.secondary.main};
-  background: ${theme.palette.background.paper};
+  background: ${theme.palette.background.card};
 `
 
 export const Bar = styled(Grid)`

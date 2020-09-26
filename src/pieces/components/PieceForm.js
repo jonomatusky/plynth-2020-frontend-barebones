@@ -1,22 +1,19 @@
 import React from 'react'
 import { Grid, Box } from '@material-ui/core'
-import { Formik, Form, FieldArray } from 'formik'
+import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
-
-import {
-  TextField,
-  TitleField,
-  FieldSet,
-  TextArea,
-  Image,
-  ImageBox,
-  CheckButton,
-  LinkBarRow,
-} from '../../shared/components/forms/FormElements'
 
 import { useApiClient } from '../../shared/hooks/api-hook'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import ActionButton from '../../shared/components/ui/ActionButton'
+import {
+  TitleField,
+  TextArea,
+  Image,
+  ImageBox,
+  CheckButton,
+} from '../../shared/components/forms/FormElements'
+import LinksList from '../../shared/components/forms/LinksList'
 
 const ASSET_URL = process.env.REACT_APP_ASSET_URL
 
@@ -41,9 +38,11 @@ const PieceForm = props => {
 
     formData.images = [imageFilepath]
 
+    console.log(formData)
+
     try {
       const pieceData = { piece: formData }
-      let response = await sendRequest(url, method, JSON.stringify(pieceData))
+      let response = await sendRequest(url, method, pieceData)
       props.onSubmit(response)
     } catch (err) {}
   }
@@ -66,111 +65,52 @@ const PieceForm = props => {
   return (
     <>
       <ErrorBar open={!!error} error={error} handleClose={clearError} />
-      <Grid container justify="center">
-        <Grid item xs={11}>
-          <Formik
-            enableReinitialize="true"
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={handleSubmit}
-          >
-            {({ values, isValid, setFieldValue }) => (
-              <Form>
-                <Grid container direction="column" spacing={1}>
-                  <Box height="1rem"></Box>
+      <Formik
+        enableReinitialize="true"
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        {({ values, isValid, setFieldValue }) => (
+          <Form>
+            <Grid container direction="column" spacing={1}>
+              <Grid item>
+                <Grid container justify="center">
                   <Grid item>
-                    <Grid container justify="center">
-                      <Grid item>
-                        <ImageBox>
-                          <Image
-                            src={`${ASSET_URL}/${imageFilepath}`}
-                            alt="Preview"
-                          />
-                        </ImageBox>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item>
-                    <TitleField name="title" label="Title" />
-                  </Grid>
-                  <Grid item>
-                    <TextArea name="description" label="Description" />
-                  </Grid>
-                  <Grid item>
-                    <CheckButton
-                      onClick={() =>
-                        setFieldValue('isDirect', !values.isDirect)
-                      }
-                      name="isDirect"
-                      label="Skip this page and take users directly to your profile?"
-                      checked={values.isDirect}
-                    />
-                  </Grid>
-                  <FieldArray name="links">
-                    {({ insert, remove, push }) => (
-                      <React.Fragment>
-                        <Grid item>
-                          {(values.links || []).map((link, index) => (
-                            <FieldSet container direction="column" key={index}>
-                              <LinkBarRow
-                                title="Link"
-                                buttonLabel="Remove X"
-                                onClick={() => remove(index)}
-                              />
-                              <Grid container justify="center">
-                                <Grid item xs={11}>
-                                  <Grid
-                                    container
-                                    direction="column"
-                                    spacing={1}
-                                  >
-                                    <Box height="1rem" />
-                                    <Grid item>
-                                      <TextField
-                                        label="URL"
-                                        name={`links.${index}.url`}
-                                        type="url"
-                                      />
-                                    </Grid>
-                                    <Grid item>
-                                      <TextField
-                                        name={`links.${index}.name`}
-                                        label="Link Text"
-                                        type="text"
-                                      />
-                                    </Grid>
-                                    <Box height="1rem" />
-                                  </Grid>
-                                </Grid>
-                              </Grid>
-                            </FieldSet>
-                          ))}
-                          <ActionButton
-                            type="button"
-                            onClick={() => push({ name: '', url: '' })}
-                            label="+ Add A Link"
-                            variant="text"
-                            color="secondary"
-                            loading={isLoading}
-                          />
-                        </Grid>
-                      </React.Fragment>
-                    )}
-                  </FieldArray>
-                  <Box height="1rem"></Box>
-                  <Grid item>
-                    <ActionButton
-                      type="submit"
-                      label="Save"
-                      disabled={!isValid}
-                    />
+                    <ImageBox>
+                      <Image
+                        src={`${ASSET_URL}/${imageFilepath}`}
+                        alt="Preview"
+                      />
+                    </ImageBox>
                   </Grid>
                 </Grid>
-              </Form>
-            )}
-          </Formik>
-        </Grid>
-      </Grid>
+              </Grid>
+              <Grid item>
+                <TitleField name="title" label="Title" />
+              </Grid>
+              <Grid item>
+                <CheckButton
+                  onClick={() => setFieldValue('isDirect', !values.isDirect)}
+                  name="isDirect"
+                  label="Skip this page and take users directly to your profile?"
+                  checked={values.isDirect}
+                />
+              </Grid>
+              <Grid item>
+                <TextArea name="description" label="Description" />
+              </Grid>
+              <Grid item>
+                <LinksList links={values.links} />
+              </Grid>
+              <Box height="1rem"></Box>
+              <Grid item>
+                <ActionButton type="submit" label="Save" loading={isLoading} />
+              </Grid>
+            </Grid>
+          </Form>
+        )}
+      </Formik>
     </>
   )
 }
