@@ -1,23 +1,19 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Grid, Box } from '@material-ui/core'
-import { Formik, Form, FieldArray } from 'formik'
+import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
 import { AuthContext } from '../../shared/context/auth-context'
 import { useApiClient } from '../../shared/hooks/api-hook'
 
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
-import ActionButton from '../../shared/components/ui/ActionButton'
 import Background from '../../shared/layouts/Background'
 import FormLayout from '../../shared/layouts/FormLayout'
-import {
-  TextField,
-  FieldSet,
-  LinkBarRow,
-  TextArea,
-} from '../../shared/components/forms/FormElements'
+import { TextField, TextArea } from '../../shared/components/forms/FormElements'
 import AvatarInput from '../components/AvatarInput'
+import LinkList from '../../shared/components/forms/LinkList'
+import ActionButton from '../../shared/components/ui/ActionButton'
 
 const UpdateProfile = props => {
   const auth = useContext(AuthContext)
@@ -27,11 +23,7 @@ const UpdateProfile = props => {
   const handleSubmit = async values => {
     try {
       const userData = { user: values }
-      const response = await sendRequest(
-        `/users/me`,
-        'PATCH',
-        JSON.stringify(userData)
-      )
+      const response = await sendRequest(`/users/me`, 'PATCH', userData)
       auth.updateUser(response.user)
       props.onSubmit(values)
     } catch (err) {}
@@ -111,51 +103,9 @@ const UpdateProfile = props => {
                 <Grid item>
                   <TextArea name="bio" label="Bio" />
                 </Grid>
-                <FieldArray name="links">
-                  {({ insert, remove, push }) => (
-                    <React.Fragment>
-                      <Grid item>
-                        {(values.links || []).map((link, index) => (
-                          <FieldSet container direction="column" key={index}>
-                            <LinkBarRow
-                              title="Link"
-                              buttonLabel="Remove X"
-                              onClick={() => remove(index)}
-                            />
-                            <Grid container justify="center">
-                              <Grid item xs={11}>
-                                <Grid container direction="column" spacing={1}>
-                                  <Box height="1rem" />
-                                  <Grid item>
-                                    <TextField
-                                      label="URL"
-                                      name={`links.${index}.url`}
-                                      type="url"
-                                    />
-                                  </Grid>
-                                  <Grid item>
-                                    <TextField
-                                      name={`links.${index}.name`}
-                                      label="Link Text"
-                                      type="text"
-                                    />
-                                  </Grid>
-                                  <Box height="1rem" />
-                                </Grid>
-                              </Grid>
-                            </Grid>
-                          </FieldSet>
-                        ))}
-                        <ActionButton
-                          type="button"
-                          onClick={() => push({ name: '', url: '' })}
-                          label="+ Add A Link"
-                          variant="text"
-                        />
-                      </Grid>
-                    </React.Fragment>
-                  )}
-                </FieldArray>
+                <Grid item>
+                  <LinkList links={values.links} />
+                </Grid>
                 <Grid item>
                   <ActionButton
                     type="submit"
