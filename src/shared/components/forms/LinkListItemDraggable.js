@@ -51,13 +51,13 @@ const LinksListItem = ({ link, index, remove }) => {
   return (
     <Draggable draggableId={link.id} index={index}>
       {provided => (
-        <DragItem
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-        >
+        <DragItem ref={provided.innerRef} {...provided.draggableProps}>
           <Grid container direction="column" key={index}>
-            <BarRow container justify="space-between">
+            <BarRow
+              container
+              justify="space-between"
+              {...provided.dragHandleProps}
+            >
               <Grid item>
                 <MoveText />
               </Grid>

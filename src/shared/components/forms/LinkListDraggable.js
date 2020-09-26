@@ -2,7 +2,7 @@ import React from 'react'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import { FieldArray } from 'formik'
 
-import LinkListItem from './LinksListItem'
+import LinkListItem from './LinkListItemDraggable'
 import ActionButton from '../ui/ActionButton'
 
 const LinksList = ({ links }) => {
