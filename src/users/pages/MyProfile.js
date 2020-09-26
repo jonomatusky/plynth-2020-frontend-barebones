@@ -129,7 +129,6 @@ const MyProfile = props => {
                         edit
                       </UnstyledLink>
                     </Typography>
-
                     <Typography variant="body2"></Typography>
                   </Box>
                 </Grid>
@@ -139,21 +138,19 @@ const MyProfile = props => {
                   <DescriptionText>{user.bio}</DescriptionText>
                 </DescriptionBox>
               </CardRow>
-              {user.links &&
-                user.links.length > 0 &&
-                user.links.map(link => {
-                  return (
-                    <LinkRow container key={link._id} justify="center">
-                      <Grid item xs={11}>
-                        <ActionButton
-                          target="_blank"
-                          href={link.url}
-                          label={link.name}
-                        />
-                      </Grid>
-                    </LinkRow>
-                  )
-                })}
+              {(user.links || []).map(link => {
+                return (
+                  <LinkRow container key={link._id} justify="center">
+                    <Grid item xs={11}>
+                      <ActionButton
+                        target="_blank"
+                        href={link.url}
+                        label={link.name}
+                      />
+                    </Grid>
+                  </LinkRow>
+                )
+              })}
               <Box height="4vh"></Box>
               <BottomRow container justify="center">
                 <Grid>
