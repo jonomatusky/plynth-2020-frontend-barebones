@@ -2,25 +2,11 @@ import React, { useState, useRef } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import { Grid, Fab, Typography, Link } from '@material-ui/core'
 
+import Background from '../../shared/layouts/Background'
 import ScanModal from './ScanModal'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 import plynthLogo from '../../images/plynth-logo-white.png'
-
-import theme from '../../theme'
 import styled from 'styled-components'
-
-const Background = styled.div`
-  background-image: linear-gradient(
-    0deg,
-    ${theme.palette.primary.main}70,
-    ${theme.palette.primary.main}00
-  );
-  position: fixed;
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
-  left: 0px;
-`
 
 const CenteredGrid = styled(Grid)`
   height: 100%;

@@ -145,18 +145,8 @@ export const useImageCropUpload = () => {
   const [isProcessing, setIsProcessing] = useState(false)
   const [uploadError, setUploadError] = useState(false)
 
-  const {
-    isSigning,
-    signError,
-    getSignedRequest,
-    clearSignError,
-  } = useSignedRequest()
-  const {
-    isResizing,
-    resizeError,
-    resizeImage,
-    clearImageError,
-  } = useImageResize()
+  const { getSignedRequest, clearSignError } = useSignedRequest()
+  const { resizeImage, clearImageError } = useImageResize()
 
   const uploadImage = useCallback(
     async (file, croppedAreaPixels) => {
