@@ -1,22 +1,17 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useApiClient } from '../../shared/hooks/api-hook'
 
-import { Container, Box } from '@material-ui/core'
+import { Container } from '@material-ui/core'
 
 import PageTitle from '../../shared/components/UIElements/PageTitle'
 import PieceList from '../components/PieceList'
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
-import { AuthContext } from '../../shared/context/auth-context'
-
-const { REACT_APP_BACKEND_URL } = process.env
 
 const title = 'My Collection'
 
 const MyCollection = () => {
   const [loadedPieces, setLoadedPieces] = useState()
-  const { isLoading, error, sendRequest, clearError } = useApiClient()
-  const auth = useContext(AuthContext)
-  let token = auth.token
+  const { isLoading, sendRequest } = useApiClient()
 
   useEffect(() => {
     const fetchPieces = async () => {
