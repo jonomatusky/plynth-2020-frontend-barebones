@@ -39,8 +39,6 @@ const PieceForm = props => {
 
     formData.images = [imageFilepath]
 
-    console.log(formData)
-
     try {
       const pieceData = { piece: formData }
       let response = await sendRequest(url, method, pieceData)

@@ -23,7 +23,6 @@ const EmailForm = props => {
 
         let response = await sendRequest(`/auth/email`, 'PATCH', request)
 
-        console.log('success!')
         props.onSubmit(values, response)
       } catch (err) {}
     }
@@ -37,9 +36,7 @@ const EmailForm = props => {
         setInitialValues({
           email,
         })
-      } catch (err) {
-        console.log(err)
-      }
+      } catch (err) {}
     }
     fetchEmail()
   }, [sendRequest])

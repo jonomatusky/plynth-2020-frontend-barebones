@@ -18,7 +18,6 @@ const EmailForm = props => {
 
         let response = await sendRequest(`/messages`, 'POST', request)
 
-        console.log('success!')
         resetForm({})
         props.onSubmit(values, response)
       } catch (err) {}

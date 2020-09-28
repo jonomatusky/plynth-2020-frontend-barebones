@@ -12,7 +12,6 @@ const NewPiece = () => {
 
   useEffect(() => {
     if (!sessionStorage.getItem('imageFilepath')) {
-      console.log('no image in session storage')
       history.push('/')
     } else {
       let imageFilepath = sessionStorage.getItem('imageFilepath')

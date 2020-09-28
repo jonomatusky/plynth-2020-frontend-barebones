@@ -44,6 +44,7 @@ const UserProfile = () => {
       try {
         const responseData = await sendRequest(`/users/${username}`)
         setUser(responseData.user)
+        console.log(responseData.user)
       } catch (err) {}
     }
     fetchUser()

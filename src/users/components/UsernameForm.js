@@ -25,7 +25,6 @@ const UsernameForm = props => {
 
         const response = await sendRequest(`/users/me`, 'PATCH', userData)
 
-        console.log('success!')
         auth.updateUser(response.user)
         props.onSubmit(values)
       } catch (err) {}

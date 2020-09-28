@@ -66,7 +66,6 @@ const UserSignup2 = ({ values }) => {
 
   const onImageInput = ({ avatar, setFieldValue }) => {
     setFieldValue('avatar', avatar)
-    console.log(avatar)
   }
 
   return (

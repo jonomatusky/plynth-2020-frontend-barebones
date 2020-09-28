@@ -103,7 +103,6 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
   }
 
   const handleMissingPiece = () => {
-    console.log(scanData)
     try {
       sendRequest(`/scans/${scanData.scan.id}`, 'PATCH', {
         correct: false,

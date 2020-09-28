@@ -146,7 +146,6 @@ export const UsernameField = ({ label, value, setFieldValue, ...props }) => {
   const showError = meta.touched && meta.error
 
   const handleChange = (name, value) => {
-    console.log(value)
     if (value) {
       setFieldValue(name, value.toLowerCase())
     }

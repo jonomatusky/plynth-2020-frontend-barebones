@@ -13,7 +13,6 @@ const ChangePassword = () => {
   const history = useHistory()
 
   const handleSubmit = () => {
-    console.log('submitted')
     history.push({
       pathname: '/admin/profile',
       state: { message: 'Password successfully updated.' },

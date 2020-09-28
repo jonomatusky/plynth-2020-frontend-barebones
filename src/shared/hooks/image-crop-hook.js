@@ -153,11 +153,7 @@ export const useImageCropUpload = () => {
       setIsProcessing(true)
       try {
         let image = await resizeImage(file, 600, croppedAreaPixels)
-        console.log(image)
         let { signedUrl, imageData } = await getSignedRequest(image)
-
-        console.log(imageData)
-        console.log(signedUrl)
 
         setIsProcessing(false)
 

@@ -18,11 +18,9 @@ const MyPieces = () => {
   const { isLoading, error, sendRequest, clearError } = useApiClient()
 
   useEffect(() => {
-    console.log('useEffect')
     const fetchPieces = async () => {
       try {
         const responseData = await sendRequest(`/users/me/pieces`)
-        console.log('setting pieces')
         setLoadedPieces(responseData.pieces)
       } catch (err) {}
     }

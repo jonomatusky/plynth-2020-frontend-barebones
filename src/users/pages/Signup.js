@@ -39,7 +39,6 @@
 //       auth.login(responseData.userId, responseData.token)
 //       history.push('/collection')
 //     } catch (err) {
-//       console.log(err)
 //     }
 //   }
 

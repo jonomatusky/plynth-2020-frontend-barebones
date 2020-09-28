@@ -43,9 +43,7 @@ const NewImage = () => {
         sessionStorage.setItem('imageExt', imageData.ext)
         history.push('/admin/create/piece')
       }
-    } catch (err) {
-      console.log(err)
-    }
+    } catch (err) {}
   }
 
   return (

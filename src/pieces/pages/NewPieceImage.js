@@ -48,9 +48,7 @@ const PieceImageCrop = () => {
     try {
       sessionStorage.setItem('imageFilepath', response.imageFilepath)
       history.push('/admin/create/piece')
-    } catch (err) {
-      console.log(err)
-    }
+    } catch (err) {}
   }
 
   useEffect(() => {

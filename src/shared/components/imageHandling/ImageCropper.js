@@ -71,9 +71,7 @@ const ImageCropper = props => {
       await sendRequest(signedUrl, 'PUT', image)
 
       props.onSubmit({ imageUrl, imageFilepath })
-    } catch (err) {
-      console.log(err)
-    }
+    } catch (err) {}
   }
 
   return (

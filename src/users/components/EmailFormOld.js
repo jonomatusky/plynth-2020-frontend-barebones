@@ -24,7 +24,6 @@ const SetPasswordForm = props => {
 
         await sendRequest(`/auth/email`, 'PATCH', request)
 
-        console.log('success!')
         props.onSubmit(values)
       } catch (err) {}
     }

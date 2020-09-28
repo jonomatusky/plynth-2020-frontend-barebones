@@ -65,7 +65,6 @@ const ImageUpload = props => {
       } catch (err) {
         setIsValid(false)
         fileIsValid = false
-        console.log(err.message)
       }
     } else {
       setIsValid(false)

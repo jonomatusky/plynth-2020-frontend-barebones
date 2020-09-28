@@ -153,7 +153,6 @@ export const useImageUpload = () => {
       setIsProcessing(true)
       try {
         let image = await resizeImage(file, 600, croppedAreaPixels)
-        console.log(image)
         let response = await getSignedRequest(image)
 
         setIsProcessing(false)

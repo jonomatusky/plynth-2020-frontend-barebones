@@ -24,8 +24,6 @@ export const useAuth = () => {
       avatarLink,
     } = user
 
-    console.log('username: ' + username)
-
     const tokenExpirationDate =
       expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60 * 24)
     setTokenExpirationDate(tokenExpirationDate)
@@ -64,8 +62,6 @@ export const useAuth = () => {
       avatar,
       avatarLink,
     } = user
-
-    console.log('username: ' + username)
 
     let storeData = JSON.parse(localStorage.getItem('userData'))
 

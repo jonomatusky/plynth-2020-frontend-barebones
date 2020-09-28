@@ -22,7 +22,6 @@ const MyCollection = () => {
     const fetchPieces = async () => {
       try {
         const responseData = await sendRequest(`/users/me/collection`)
-        console.log('setting pieces')
         setLoadedPieces(responseData.pieces)
       } catch (err) {}
     }
