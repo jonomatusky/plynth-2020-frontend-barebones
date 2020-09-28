@@ -7,23 +7,23 @@ import {
 } from 'react-router-dom'
 import { useAuth } from './shared/hooks/auth-hook'
 import { AuthContext } from './shared/context/auth-context'
+import { Box } from '@material-ui/core'
 
 import NewPieceImage from './pieces/pages/NewPieceImage'
 import NewPiece from './pieces/pages/NewPiece'
 import ViewPiece from './pieces/pages/ViewPiece'
 import MyPieces from './pieces/pages/MyPieces'
 import UpdatePiece from './pieces/pages/UpdatePiece'
-// import Scans from './scans/pages/Scans'
 import MyProfile from './users/pages/MyProfile'
 import UpdateProfile from './users/pages/UpdateProfile'
+import NewPickup from './scans/pages/NewPickup'
 import UserSignup1 from './signup/pages/UserSignup1'
 import UserSignup2 from './signup/pages/UserSignup2'
 import SignupSuccess from './signup/pages/SignupSuccess'
-// import SignUp from './users/pages/SignUp'
 import Login from './users/pages/Login'
 import LoggedOut from './scans/pages/LoggedOut'
 import BetaSignup from './users/pages/BetaSignup'
-import UserProfile from './users/pages/UserProfile'
+import ViewUser from './users/pages/ViewUser'
 import UpdateEmail from './users/pages/UpdateEmail'
 import ChangePassword from './users/pages/ChangePassword'
 import ChangeUsername from './users/pages/ChangeUsername'
@@ -47,6 +47,7 @@ const App = () => {
               <NavBar />
               <main>
                 <Component {...props} />
+                <Box height="5rem" />
               </main>
             </React.Fragment>
           ) : (
@@ -150,9 +151,7 @@ const App = () => {
       />
       <PrivateNoNavRoute component={ViewPiece} path="/admin/pieces/:pieceId" />
       <PrivateRoute component={MyPieces} path="/admin/pieces" exact />
-      <PrivateRoute component={LoggedOut} path="/admin/pickup" exact />
-      {/* <PrivateRoute component={Scans} path="/admin/pickups" exact /> */}
-      {/* <PrivateRoute component={MyCollection} path="/admin/collection" exact /> */}
+      <PrivateRoute component={NewPickup} path="/admin/pickup" exact />
       <PrivateNoNavRoute
         component={UpdateProfile}
         path="/admin/profile/edit"
@@ -182,11 +181,7 @@ const App = () => {
       <PrivateRoute component={Logout} path="/admin/logout" exact />
       <Redirect from="/admin" to="/" />
 
-      <PublicRoute
-        restricted={false}
-        component={UserProfile}
-        path="/:username"
-      />
+      <PublicRoute restricted={false} component={ViewUser} path="/:username" />
 
       <Redirect to="/" />
     </Switch>

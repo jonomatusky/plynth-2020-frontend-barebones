@@ -25,11 +25,12 @@ const PieceForm = props => {
 
   const imageFilepath =
     props.imageFilepath || (awsId && ext ? `${awsId}.${ext}` : null)
+
   const initialValues = {
-    title,
-    description,
-    links,
-    isDirect,
+    title: title || '',
+    description: description || '',
+    links: links || [],
+    isDirect: isDirect || false,
   }
 
   const handleSubmit = async formData => {
@@ -57,7 +58,9 @@ const PieceForm = props => {
         name: Yup.string()
           .max(32, 'Must be 32 characters or less')
           .required('Required'),
-        url: Yup.string().url('Must be a valid URL').required('Required'),
+        url: Yup.string()
+          .url(`Must be a valid URL. Include http:// or https://`)
+          .required('Required'),
       })
     ),
   })
@@ -78,10 +81,12 @@ const PieceForm = props => {
                 <Grid container justify="center">
                   <Grid item>
                     <ImageBox>
-                      <Image
-                        src={`${ASSET_URL}/${imageFilepath}`}
-                        alt="Preview"
-                      />
+                      {imageFilepath && (
+                        <Image
+                          src={`${ASSET_URL}/${imageFilepath}`}
+                          alt="Preview"
+                        />
+                      )}
                     </ImageBox>
                   </Grid>
                 </Grid>

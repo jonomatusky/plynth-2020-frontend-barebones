@@ -58,13 +58,13 @@ const UserProfile = () => {
   }
 
   return (
-    <React.Fragment>
+    <>
       <Background />
-      <Container maxWidth="sm">
+      <Container maxWidth="xs">
         {!user && !isLoading && error && <NotFound />}
         {user && !isLoading && (
           <Grid container justify="flex-start" direction="column">
-            <Box height="5vh"></Box>
+            <Box height="1.5rem"></Box>
             <PieceBox container direction="column">
               <BarRow onClick={handleClose} buttonLabel="Close X" />
               <ProfileTopRow
@@ -110,13 +110,13 @@ const UserProfile = () => {
                   </LinkRow>
                 )
               })}
-              <Box height="4vh"></Box>
+              <Box height="1rem"></Box>
             </PieceBox>
-            <Box height="10vh"></Box>
+            <Box height="1.5rem"></Box>
           </Grid>
         )}
       </Container>
-    </React.Fragment>
+    </>
   )
 }
 

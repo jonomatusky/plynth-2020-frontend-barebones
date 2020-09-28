@@ -31,7 +31,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
   const history = useHistory()
 
   const BottomBar = () => {
-    if (props.loggedOut) {
+    if (!auth.isLoggedIn) {
       return (
         <BottomRow container justify="center">
           <Grid item>
@@ -57,14 +57,14 @@ const PieceCard = ({ piece, onClose, ...props }) => {
         </BottomRow>
       )
     } else {
-      return null
+      return <div />
     }
   }
 
   return (
     <Grid container justify="center">
       <Grid item xs={11}>
-        <Box height="4vh"></Box>
+        <Box height="1rem"></Box>
         <PieceBox container direction="column">
           <BarRow onClick={onClose} buttonLabel="Close X" />
           <TopRow container>
@@ -126,10 +126,10 @@ const PieceCard = ({ piece, onClose, ...props }) => {
               </LinkRow>
             )
           })}
-          <Box height="4vh"></Box>
+          <Box height="1rem"></Box>
           <BottomBar />
         </PieceBox>
-        <Box height="4vh"></Box>
+        <Box height="1rem"></Box>
       </Grid>
     </Grid>
   )

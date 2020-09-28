@@ -77,7 +77,7 @@ const MyProfile = props => {
             onClose={handleClose}
           >
             <MenuItem component={Link} to={'/admin/profile/help'}>
-              Help
+              Support
             </MenuItem>
             <MenuItem component={Link} to={'/admin/profile/email/change'}>
               Email Preferences
@@ -151,7 +151,7 @@ const MyProfile = props => {
                   </LinkRow>
                 )
               })}
-              <Box height="4vh"></Box>
+              <Box height="1rem"></Box>
               <BottomRow container justify="center">
                 <Grid>
                   <Button
@@ -165,7 +165,7 @@ const MyProfile = props => {
               </BottomRow>
             </React.Fragment>
           </PieceBox>
-          <Box height="10vh"></Box>
+          <Box height="1rem"></Box>
         </Grid>
       </Container>
     </React.Fragment>

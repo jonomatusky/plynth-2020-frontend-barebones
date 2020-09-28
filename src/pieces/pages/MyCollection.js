@@ -35,7 +35,6 @@ const MyCollection = () => {
       <PageTitle title={title} />
       {isLoading && <LoadingSpinner asOverlay />}
       {!isLoading && loadedPieces && <PieceList items={loadedPieces} />}
-      <Box height="4rem"></Box>
     </Container>
   )
 }

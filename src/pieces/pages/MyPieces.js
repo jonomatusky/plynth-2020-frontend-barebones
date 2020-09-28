@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 import { useApiClient } from '../../shared/hooks/api-hook'
-import { Container, Grid, Box } from '@material-ui/core'
+import { Container, Grid } from '@material-ui/core'
 
 import Background from '../../shared/layouts/Background'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
@@ -51,7 +51,6 @@ const MyPieces = () => {
             </Grid>
           )}
         </Grid>
-        <Box height="5rem"></Box>
       </Container>
     </React.Fragment>
   )

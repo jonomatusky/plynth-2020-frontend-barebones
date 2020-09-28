@@ -62,7 +62,9 @@ const UserForm = props => {
         name: Yup.string()
           .max(32, 'Must be 32 characters or less')
           .required('Required'),
-        url: Yup.string().url('Must be a valid URL').required('Required'),
+        url: Yup.string()
+          .url(`Must be a valid URL. Include http:// or https://`)
+          .required('Required'),
       })
     ),
   })
@@ -92,7 +94,13 @@ const UserForm = props => {
                 <TextField name="displayName" label="Name" />
               </Grid>
               <Grid item>
-                <TextField name="username" label="Username" />
+                <TextField
+                  name="username"
+                  label={`Username (plynth.com/${
+                    values.username || 'username'
+                  })`}
+                  autoCapitalize="none"
+                />
               </Grid>
               <Grid item>
                 <TextArea name="bio" label="Bio" />
@@ -100,6 +108,7 @@ const UserForm = props => {
               <Grid item>
                 <LinksList links={values.links} />
               </Grid>
+              <Box height="1rem"></Box>
               <Grid item>
                 <ActionButton type="submit" label="Save" loading={isLoading} />
               </Grid>

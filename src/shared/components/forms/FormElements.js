@@ -123,7 +123,7 @@ export const TitleField = ({ label, ...props }) => {
   return (
     <StyledInput error={showError}>
       <Label htmlFor={props.id || props.name}>{label}</Label>
-      <TitleInput {...field} {...props} />
+      <TitleInput {...field} {...props} type="text" />
       {showError ? <ErrorMessage>Error: {meta.error}</ErrorMessage> : null}
     </StyledInput>
   )
@@ -136,6 +136,34 @@ export const TextArea = ({ label, ...props }) => {
     <StyledInput error={showError}>
       <Label htmlFor={props.id || props.name}>{label}</Label>
       <TextAreaInput {...field} {...props} />
+      {showError ? <ErrorMessage>Error: {meta.error}</ErrorMessage> : null}
+    </StyledInput>
+  )
+}
+
+export const UsernameField = ({ label, value, setFieldValue, ...props }) => {
+  const [field, meta] = useField(props)
+  const showError = meta.touched && meta.error
+
+  const handleChange = (name, value) => {
+    console.log(value)
+    if (value) {
+      setFieldValue(name, value.toLowerCase())
+    }
+  }
+
+  return (
+    <StyledInput error={showError}>
+      <Label htmlFor={props.id || props.name}>
+        Username (plynth.com/{value || 'username'})
+      </Label>
+      <TextInput
+        {...field}
+        {...props}
+        onChange={handleChange}
+        value={value}
+        name={props.name}
+      />
       {showError ? <ErrorMessage>Error: {meta.error}</ErrorMessage> : null}
     </StyledInput>
   )

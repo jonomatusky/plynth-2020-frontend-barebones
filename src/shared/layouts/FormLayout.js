@@ -13,11 +13,12 @@ const FormLayout = ({ children, title, message, bar, bottom }, ...props) => {
     <React.Fragment>
       <Container maxWidth="xs">
         <Grid container justify="flex-start" direction="column" spacing={2}>
-          <Box height="5vh"></Box>
-          {title && (
+          {title ? (
             <Grid item>
               <PageTitle title={title} />
             </Grid>
+          ) : (
+            <Box height="5vh"></Box>
           )}
           {message && (
             <Grid item>
@@ -48,7 +49,7 @@ const FormLayout = ({ children, title, message, bar, bottom }, ...props) => {
               </BottomRow>
             </PieceBox>
           </Grid>
-          <Box height="2rem"></Box>
+          <Box height="1rem"></Box>
         </Grid>
       </Container>
     </React.Fragment>

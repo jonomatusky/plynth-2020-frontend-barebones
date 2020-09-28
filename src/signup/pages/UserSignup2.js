@@ -1,23 +1,20 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Grid, Box } from '@material-ui/core'
-import { Formik, Form, FieldArray } from 'formik'
+import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
 import { AuthContext } from '../../shared/context/auth-context'
 import { useApiClient } from '../../shared/hooks/api-hook'
 
+import Background from '../../shared/layouts/Background'
 import FormLayout from '../../shared/layouts/FormLayout'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import ActionButton from '../../shared/components/ui/ActionButton'
 import AvatarInput from '../../users/components/AvatarInput'
 import { BarRow } from '../../shared/components/ui/CardSections'
-import {
-  TextField,
-  FieldSet,
-  LinkBarRow,
-  TextArea,
-} from '../../shared/components/forms/FormElements'
+import { TextField, TextArea } from '../../shared/components/forms/FormElements'
+import LinkList from '../../shared/components/forms/LinkList'
 
 const title = 'Add Your Info'
 
@@ -46,7 +43,9 @@ const UserSignup2 = ({ values }) => {
         name: Yup.string()
           .max(32, 'Must be 32 characters or less')
           .required('Required'),
-        url: Yup.string().url('Must be a valid URL').required('Required'),
+        url: Yup.string()
+          .url(`Must be a valid URL. Include http:// or https://`)
+          .required('Required'),
       })
     ),
   })
@@ -73,6 +72,8 @@ const UserSignup2 = ({ values }) => {
   return (
     <>
       <ErrorBar open={!!error} error={error} handleClose={clearError} />
+      <Background />
+
       <FormLayout
         title={title}
         bar={<BarRow onClick={handleCancel} buttonLabel={'Skip >'} />}
@@ -101,51 +102,9 @@ const UserSignup2 = ({ values }) => {
                 <Grid item>
                   <TextArea name="bio" label="Bio (Optional)" />
                 </Grid>
-                <FieldArray name="links">
-                  {({ insert, remove, push }) => (
-                    <React.Fragment>
-                      <Grid item>
-                        {(values.links || []).map((link, index) => (
-                          <FieldSet container direction="column" key={index}>
-                            <LinkBarRow
-                              title="Link"
-                              buttonLabel="Remove X"
-                              onClick={() => remove(index)}
-                            />
-                            <Grid container justify="center">
-                              <Grid item xs={11}>
-                                <Grid container direction="column" spacing={1}>
-                                  <Box height="1rem" />
-                                  <Grid item>
-                                    <TextField
-                                      label="URL"
-                                      name={`links.${index}.url`}
-                                      type="url"
-                                    />
-                                  </Grid>
-                                  <Grid item>
-                                    <TextField
-                                      name={`links.${index}.name`}
-                                      label="Link Text"
-                                      type="text"
-                                    />
-                                  </Grid>
-                                  <Box height="1rem" />
-                                </Grid>
-                              </Grid>
-                            </Grid>
-                          </FieldSet>
-                        ))}
-                        <ActionButton
-                          type="button"
-                          onClick={() => push({ name: '', url: '' })}
-                          label="+ Add A Link"
-                          variant="text"
-                        />
-                      </Grid>
-                    </React.Fragment>
-                  )}
-                </FieldArray>
+                <Grid item>
+                  <LinkList links={values.links} />
+                </Grid>
                 <Box height="4vh"></Box>
                 <Grid item>
                   <ActionButton

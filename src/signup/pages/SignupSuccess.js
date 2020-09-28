@@ -57,13 +57,13 @@ const SignUp = () => {
                 to="/admin/pieces"
               />
             </PieceBox>
-            <ActionButton
+            {/* <ActionButton
               variant="text"
               color="secondary"
               label="Skip"
               component={Link}
               to="/admin/profile"
-            />
+            /> */}
           </Grid>
         </Grid>
       </Container>

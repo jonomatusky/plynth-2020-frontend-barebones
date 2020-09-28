@@ -83,14 +83,20 @@ const UserSignup1 = ({ values }) => {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {() => (
+          {({ values }) => (
             <Form>
               <Grid container direction="column" spacing={1}>
                 <Grid item>
                   <TextField name="email" label="Email" type="email" />
                 </Grid>
                 <Grid item>
-                  <TextField name="username" label="Username" />
+                  <TextField
+                    name="username"
+                    label={`Username (plynth.com/${
+                      values.username || 'username'
+                    })`}
+                    autoCapitalize="none"
+                  />
                 </Grid>
                 <Box height="1rem"></Box>
                 <Grid item>

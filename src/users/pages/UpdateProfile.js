@@ -103,9 +103,11 @@ const UpdateProfile = props => {
                 <Grid item>
                   <TextArea name="bio" label="Bio" />
                 </Grid>
+                <Box height="1rem"></Box>
                 <Grid item>
                   <LinkList links={values.links} />
                 </Grid>
+                <Box height="1rem"></Box>
                 <Grid item>
                   <ActionButton
                     type="submit"

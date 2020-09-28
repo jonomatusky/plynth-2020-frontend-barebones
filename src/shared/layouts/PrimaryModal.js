@@ -1,20 +1,12 @@
 import React from 'react'
-import { Dialog, Container, Box } from '@material-ui/core'
+import { Dialog, Container } from '@material-ui/core'
 
 import theme from '../../theme'
 import styled from 'styled-components'
 
-const ModalBackground = styled(Box)`
-  background-image: linear-gradient(
-    0deg,
-    ${theme.palette.primary.main}70,
-    ${theme.palette.primary.main}00
-  );
-  position: fixed;
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
-  left: 0px;
+import Background from './Background'
+
+const ModalBackground = styled(Background)`
   z-index: 0;
 `
 
