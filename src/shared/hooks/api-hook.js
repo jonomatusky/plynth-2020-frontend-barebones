@@ -1,4 +1,4 @@
-import { useState, useCallback, useContext } from 'react'
+import { useState, useEffect, useCallback, useContext, useRef } from 'react'
 import { AuthContext } from '../context/auth-context'
 import axios from 'axios'
 
@@ -8,6 +8,8 @@ export const useApiClient = () => {
   const auth = useContext(AuthContext)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState()
+
+  let activeAxiosSources = useRef([])
 
   const sendRequest = useCallback(
     async (url, method = 'GET', data = null, headers = {}) => {
@@ -26,6 +28,7 @@ export const useApiClient = () => {
 
       const CancelToken = axios.CancelToken
       const source = CancelToken.source()
+      activeAxiosSources.current.push(source)
 
       try {
         const response = await axios.request({
@@ -37,11 +40,15 @@ export const useApiClient = () => {
           timeout: 10000,
         })
 
+        activeAxiosSources.current = activeAxiosSources.current.filter(
+          reqCtrl => reqCtrl.token !== source.token
+        )
+
         setIsLoading(false)
         return response.data
       } catch (err) {
         if (axios.isCancel(err)) {
-          console.log('Request canceled', err.message)
+          console.log('Request canceled: ', err.message)
           return
         } else if (err.response) {
           console.log(err.response)
@@ -64,6 +71,14 @@ export const useApiClient = () => {
   const clearError = () => {
     setError(null)
   }
+
+  useEffect(() => {
+    return () => {
+      activeAxiosSources.current.forEach(source =>
+        source.cancel('Operation canceled due to new request.')
+      )
+    }
+  }, [])
 
   return { isLoading, error, sendRequest, clearError }
 }
