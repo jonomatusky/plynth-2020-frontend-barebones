@@ -15,7 +15,7 @@ export const useApiClient = () => {
     async (url, method = 'GET', data = null, headers = {}) => {
       let message
 
-      if (url.indexOf('.') < 0) {
+      if (url.indexOf('http://') < 0 || url.indexOf('https://') < 0) {
         if (auth.token) {
           headers.Authorization = 'Bearer ' + auth.token
         }
