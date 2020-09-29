@@ -42,6 +42,7 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
   const { isLoading, error, sendRequest, clearError } = useApiClient()
   const [foundScreen, setFoundScreen] = useState(false)
   const [showCard, setShowCard] = useState(false)
+  const [scanToken, setScanToken] = useState(null)
   const [scanData, setScanData] = useState({
     found: false,
     piece: null,
@@ -81,6 +82,8 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
           imageFilepath: imageFilepath,
         })
         setScanData(scanResponse)
+        setScanToken(scanResponse.scanToken)
+        sessionStorage.setItem('scanToken', scanResponse.scanToken)
       } catch (err) {}
     }
 
@@ -104,9 +107,14 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
 
   const handleMissingPiece = () => {
     try {
-      sendRequest(`/scans/${scanData.scan.id}`, 'PATCH', {
-        correct: false,
-      })
+      sendRequest(
+        `/scans/`,
+        'PATCH',
+        {
+          correct: false,
+        },
+        { scanToken }
+      )
     } catch (err) {}
 
     setSubmittedMissingPiece(true)

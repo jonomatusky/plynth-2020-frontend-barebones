@@ -16,7 +16,6 @@ export const useApiClient = () => {
       let message
 
       if (url.indexOf('http://') < 0 && url.indexOf('https://') < 0) {
-        console.log('plynth request')
         if (auth.token) {
           headers.Authorization = 'Bearer ' + auth.token
         }

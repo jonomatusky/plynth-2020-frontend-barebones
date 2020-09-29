@@ -1,13 +1,12 @@
 import React, { useContext } from 'react'
 import { Link, useHistory } from 'react-router-dom'
-
 import { Grid, Box, Button, Avatar } from '@material-ui/core'
 
+import { AuthContext } from '../../shared/context/auth-context'
+import { useApiClient } from '../../shared/hooks/api-hook'
 import { BarRow } from '../../shared/components/ui/CardSections'
 import ActionButton from '../../shared/components/ui/ActionButton'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
-import { AuthContext } from '../../shared/context/auth-context'
-
 import {
   PieceBox,
   TopRow,
@@ -28,7 +27,74 @@ import {
 
 const PieceCard = ({ piece, onClose, ...props }) => {
   const auth = useContext(AuthContext)
+  const { sendRequest } = useApiClient()
   const history = useHistory()
+  let scanToken = sessionStorage.getItem('scanToken')
+
+  const LinkButton = ({ link }) => {
+    const handleClick = async () => {
+      console.log('clicked: ' + link.url)
+      try {
+        if (scanToken) {
+          await sendRequest('/scans', 'PATCH', {
+            click: { type: 'link', destination: link.url },
+            scanToken,
+          })
+        }
+      } catch (err) {}
+    }
+
+    return (
+      <ActionButton
+        onClick={handleClick}
+        target="_blank"
+        href={link.url}
+        label={link.name}
+      />
+    )
+  }
+
+  const OwnerSection = ({ owner }) => {
+    const handleClick = async () => {
+      console.log('clicked: owner profile')
+      try {
+        if (scanToken) {
+          await sendRequest('/scans', 'PATCH', {
+            click: { type: 'profile', destination: `/${owner.username}` },
+            scanToken,
+          })
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    }
+
+    return (
+      <UnstyledLink
+        to={`/${piece.owner.username}`}
+        target="_blank"
+        onClick={handleClick}
+      >
+        <CardRow container direction="row" wrap="nowrap" alignItems="center">
+          <Box padding="0.5rem 0.75rem">
+            {piece.owner.avatar ? (
+              <Avatar
+                alt={piece.owner.displayName}
+                src={piece.owner.avatarLink}
+              />
+            ) : (
+              <AccountCircleIcon />
+            )}
+          </Box>
+          <AvatarBox flexGrow={1} paddingRight="0.5rem">
+            <AvatarTypography variant="subtitle2">
+              <strong>{piece.owner.displayName}</strong>
+            </AvatarTypography>
+          </AvatarBox>
+        </CardRow>
+      </UnstyledLink>
+    )
+  }
 
   const BottomBar = () => {
     if (!auth.isLoggedIn) {
@@ -81,30 +147,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                 >
                   <PieceTitle variant="h5">{piece.title}</PieceTitle>
                 </Box>
-                <UnstyledLink to={`/${piece.owner.username}`}>
-                  <CardRow
-                    container
-                    direction="row"
-                    wrap="nowrap"
-                    alignItems="center"
-                  >
-                    <Box padding="0.5rem 0.75rem">
-                      {piece.owner.avatar ? (
-                        <Avatar
-                          alt={piece.owner.displayName}
-                          src={piece.owner.avatarLink}
-                        />
-                      ) : (
-                        <AccountCircleIcon />
-                      )}
-                    </Box>
-                    <AvatarBox flexGrow={1} paddingRight="0.5rem">
-                      <AvatarTypography variant="subtitle2">
-                        <strong>{piece.owner.displayName}</strong>
-                      </AvatarTypography>
-                    </AvatarBox>
-                  </CardRow>
-                </UnstyledLink>
+                <OwnerSection owner={piece.owner} />
               </TitleText>
             </TitleBox>
           </TopRow>
@@ -117,11 +160,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
             return (
               <LinkRow container key={link._id} justify="center">
                 <Grid item xs={11}>
-                  <ActionButton
-                    target="_blank"
-                    href={link.url}
-                    label={link.name}
-                  />
+                  <LinkButton link={link} />
                 </Grid>
               </LinkRow>
             )
