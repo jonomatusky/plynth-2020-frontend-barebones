@@ -30,6 +30,8 @@ const BetaSignup = () => {
   const history = useHistory()
   const [submitted, setSubmitted] = useState(false)
 
+  let scanToken = sessionStorage.getItem('scanToken')
+
   const handleClose = event => {
     history.push('/')
   }
@@ -39,6 +41,9 @@ const BetaSignup = () => {
       const userData = { user: values }
       await sendRequest(`/users/subscribe`, 'POST', userData)
       setSubmitted(true)
+      if (!!scanToken) {
+        await sendRequest(`/scans`, 'PATCH', { email: values.email, scanToken })
+      }
     } catch (err) {}
   }
 
@@ -50,7 +55,11 @@ const BetaSignup = () => {
 
   return (
     <>
-      <ErrorBar open={!!error} error={error} handleClose={clearError} />
+      <ErrorBar
+        open={!!error && !submitted}
+        error={error}
+        handleClose={clearError}
+      />
       <Background>
         <Container maxWidth="xs">
           <Grid container justify="flex-start" direction="column" spacing={2}>
@@ -59,8 +68,8 @@ const BetaSignup = () => {
               <Grid item>
                 <PageTitle title="Sign Up" />
                 <Typography>
-                  We're opening up our beta app in just a few more weeks. Sign
-                  up here to get notified when we launch.
+                  We're currently in beta and opening up the app soon. Enter
+                  your email address below to be the first to know.
                 </Typography>
               </Grid>
             ) : (
@@ -69,7 +78,7 @@ const BetaSignup = () => {
                   <PageTitle title="Thanks!" />
                   <Typography>
                     You're all signed up. We'll let you know as soon as the
-                    beta's available. In the meantime, check out our website for
+                    app's available. In the meantime, check out our website for
                     more info.
                   </Typography>
                 </Grid>

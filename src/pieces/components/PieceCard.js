@@ -101,7 +101,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
       return (
         <BottomRow container justify="center">
           <Grid item>
-            <Button component={Link} color="inherit" to="/signup">
+            <Button component={Link} color="inherit" to="/s/subscribe">
               Sign Up to Save to your Collection
             </Button>
           </Grid>
