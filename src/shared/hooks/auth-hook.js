@@ -22,6 +22,7 @@ export const useAuth = () => {
       completedSignup,
       avatar,
       avatarLink,
+      pieceLimit,
     } = user
 
     const tokenExpirationDate =
@@ -41,6 +42,7 @@ export const useAuth = () => {
           completedSignup,
           avatar,
           avatarLink,
+          pieceLimit,
         },
         token: token,
         expiration: tokenExpirationDate.toISOString(),
