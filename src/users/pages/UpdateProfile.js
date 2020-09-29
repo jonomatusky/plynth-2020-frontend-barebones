@@ -32,10 +32,9 @@ const UpdateProfile = props => {
 
   const user = auth.user
 
-  const { username, displayName, bio, links, avatar, avatarLink } = user
+  const { displayName, bio, links, avatar, avatarLink } = user
 
   const initialValues = {
-    username: username || '',
     displayName: displayName || '',
     bio: bio || '',
     avatar: avatar || null,
@@ -43,19 +42,6 @@ const UpdateProfile = props => {
   }
 
   const validationSchema = Yup.object({
-    username: Yup.string()
-      .min(6, 'Username must be at least 6 characters long')
-      .max(30, 'Username must be no longer than 30 characters')
-      .matches(
-        /^[a-z0-9_.]*$/,
-        'Username must only contain lowercase characters a-z, numbers, . and _'
-      )
-      .matches(
-        /^(?!.*?\.\.).*?$/,
-        'Username cannot contain two consecutive (.)'
-      )
-      .matches(/^((?!\.).*(?!\.))$/, 'Username cannot start or end with (.)')
-      .required('Required'),
     displayName: Yup.string()
       .max(30, 'Enter a name under 30 characters')
       .required('Required'),
@@ -96,9 +82,6 @@ const UpdateProfile = props => {
                 </Grid>
                 <Grid item>
                   <TextField name="displayName" label="Name" />
-                </Grid>
-                <Grid item>
-                  <TextField name="username" label="Username" />
                 </Grid>
                 <Grid item>
                   <TextArea name="bio" label="Bio" />
