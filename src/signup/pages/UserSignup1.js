@@ -95,7 +95,7 @@ const UserSignup1 = ({ values }) => {
                     label={`Username (plynth.com/${
                       values.username || 'username'
                     })`}
-                    autoCapitalize="none"
+                    autocapitalize="none"
                   />
                 </Grid>
                 <Box height="1rem"></Box>
