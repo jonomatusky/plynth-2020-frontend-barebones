@@ -11,6 +11,8 @@ const SignInForm = props => {
   const initialValues = {
     email: '',
     password: '',
+    passwordConfirmation: '',
+    signupKey: '',
   }
 
   const validationSchema = Yup.object({
@@ -22,6 +24,7 @@ const SignInForm = props => {
     passwordConfirmation: Yup.string()
       .min(5, 'Password must be at least 5 characters long')
       .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+    signupKey: Yup.string(),
   })
 
   return (
@@ -45,6 +48,9 @@ const SignInForm = props => {
               label="Confirm Password"
               type="password"
             />
+          </Grid>
+          <Grid item>
+            <TextField name="signupKey" label="Access Code" />
           </Grid>
           <Grid item>
             <ActionButton type="submit" label="Submit" />

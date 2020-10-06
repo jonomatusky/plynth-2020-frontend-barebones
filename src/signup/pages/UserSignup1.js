@@ -21,6 +21,7 @@ const initialValues = {
   username: '',
   password: '',
   passwordConfirmation: '',
+  signupKey: '',
 }
 
 const validationSchema = Yup.object({
@@ -44,6 +45,7 @@ const validationSchema = Yup.object({
     .min(5, 'Password must be at least 5 characters long')
     .oneOf([Yup.ref('password'), null], 'Passwords must match')
     .required('Required'),
+  signupKey: Yup.string().required('Required'),
 })
 
 const UserSignup1 = ({ values }) => {
@@ -53,8 +55,8 @@ const UserSignup1 = ({ values }) => {
 
   const handleSubmit = async values => {
     try {
-      let { email, username, password } = values
-      let userData = { user: { email, username, password } }
+      let { email, username, password, signupKey } = values
+      let userData = { user: { email, username, password, signupKey } }
       const response = await sendRequest(`/auth/signup`, 'POST', userData)
 
       auth.login(response.user, response.token)
@@ -95,7 +97,8 @@ const UserSignup1 = ({ values }) => {
                     label={`Username (plynth.com/${
                       values.username || 'username'
                     })`}
-                    autocapitalize="none"
+                    autoCorrect="off"
+                    autoCapitalize="none"
                   />
                 </Grid>
                 <Box height="1rem"></Box>
@@ -107,6 +110,15 @@ const UserSignup1 = ({ values }) => {
                     name="passwordConfirmation"
                     label="Confirm Password"
                     type="password"
+                  />
+                </Grid>
+                <Box height="1rem"></Box>
+                <Grid item>
+                  <TextField
+                    name="signupKey"
+                    label="Access Code"
+                    autoCorrect="off"
+                    autoCapitalize="none"
                   />
                 </Grid>
                 <Box height="1.5rem"></Box>

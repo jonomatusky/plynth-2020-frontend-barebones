@@ -111,7 +111,7 @@ export const TextField = ({ label, ...props }) => {
   return (
     <StyledInput error={showError}>
       <Label htmlFor={props.id || props.name}>{label}</Label>
-      <TextInput {...field} {...props} />
+      <TextInput type="text" {...field} {...props} />
       {showError ? <ErrorMessage>Error: {meta.error}</ErrorMessage> : null}
     </StyledInput>
   )
