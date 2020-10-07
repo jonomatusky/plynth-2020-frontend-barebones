@@ -15,6 +15,12 @@ const theme = createMuiTheme({
   },
   typography: {
     fontFamily: ['Degular', 'sans-serif'].join(','),
+    h5: {
+      lineHeight: '1.5rem',
+    },
+    h6: {
+      lineHeight: '1.25rem',
+    },
   },
   // overrides: {
   //   MuiBottomNavigation: {

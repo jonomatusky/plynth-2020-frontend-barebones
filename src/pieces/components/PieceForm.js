@@ -7,7 +7,7 @@ import { useApiClient } from '../../shared/hooks/api-hook'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import ActionButton from '../../shared/components/ui/ActionButton'
 import {
-  TitleField,
+  TextField,
   TextArea,
   Image,
   ImageBox,
@@ -90,7 +90,7 @@ const PieceForm = props => {
                 </Grid>
               </Grid>
               <Grid item>
-                <TitleField name="title" label="Title (Required)" />
+                <TextField name="title" label="Title (Required)" />
               </Grid>
               <Grid item>
                 <CheckButton

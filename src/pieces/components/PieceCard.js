@@ -33,7 +33,6 @@ const PieceCard = ({ piece, onClose, ...props }) => {
 
   const LinkButton = ({ link }) => {
     const handleClick = async () => {
-      console.log('clicked: ' + link.url)
       try {
         if (scanToken) {
           await sendRequest('/scans', 'PATCH', {

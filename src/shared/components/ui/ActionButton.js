@@ -18,6 +18,7 @@ const StyledButton = styled(Button)`
 
 const ButtonText = styled(Typography)`
   font-size: 1.2em;
+  letter-spacing: 1px;
 `
 
 const ActionButton = props => {

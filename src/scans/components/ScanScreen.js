@@ -61,7 +61,7 @@ const ScanScreen = props => {
           </Grid>
           <Grid item>
             <Typography variant="h6">
-              Take a photo to find your piece
+              Take a photo to access your content
             </Typography>
           </Grid>
         </CenteredGrid>

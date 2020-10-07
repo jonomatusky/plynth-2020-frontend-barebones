@@ -6,9 +6,10 @@ import styled from 'styled-components'
 import theme from '../../../theme'
 
 export const ImageBox = styled.div`
-  height: 250px;
-  width: 250px;
+  height: 200px;
+  width: 200px;
   text-align: center;
+  margin: 16px;
 `
 
 export const Image = styled.img`

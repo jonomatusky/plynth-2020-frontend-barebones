@@ -40,6 +40,9 @@ const useStyles = makeStyles(theme => ({
       color: theme.palette.secondary.main,
     },
   },
+  label: {
+    fontSize: '0.9rem',
+  },
 }))
 
 const MainHeader = props => {
@@ -90,28 +93,28 @@ const MainHeader = props => {
             }}
           >
             <BottomNavigationAction
-              label="Test"
+              label={<span className="bottomNavLabel">Test</span>}
               icon={<FlashOnIcon />}
               component={NavLink}
               to={'/admin/pickup'}
               activeClassName="Mui-selected"
-              classes={{ root: classes.navBarActionRoot }}
+              classes={{ root: classes.navBarActionRoot, label: classes.label }}
             />
             <BottomNavigationAction
-              label="My Pieces"
+              label={<span className="bottomNavLabel">My Pieces</span>}
               icon={<AlbumIcon />}
               component={NavLink}
               to={'/admin/pieces'}
               activeClassName="Mui-selected"
-              classes={{ root: classes.navBarActionRoot }}
+              classes={{ root: classes.navBarActionRoot, label: classes.label }}
             />
             <BottomNavigationAction
-              label="My Profile"
+              label={<span className="bottomNavLabel">My Profile</span>}
               icon={<PersonIcon />}
               component={NavLink}
               to={'/admin/profile'}
               activeClassName="Mui-selected"
-              classes={{ root: classes.navBarActionRoot }}
+              classes={{ root: classes.navBarActionRoot, label: classes.label }}
             />
           </BottomNavigation>
         </AppBar>
