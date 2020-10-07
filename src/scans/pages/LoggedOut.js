@@ -35,7 +35,11 @@ const LoggedOut = () => {
       <LogoBar>
         <Grid container direction="column" alignItems="center" spacing={0}>
           <Grid item>
-            <a href="https://site.plynth.com">
+            <a
+              href="https://site.plynth.com"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
               <Logo src={plynthLogo} alt="Plynth Logo" />
             </a>
           </Grid>
@@ -58,6 +62,7 @@ const LoggedOut = () => {
                 href="https://site.plynth.com"
                 color="inherit"
                 underline="always"
+                rel="noopener noreferrer"
                 target="_blank"
               >
                 Learn More
