@@ -21,10 +21,13 @@ const BetaSignup = () => {
   let scanToken = sessionStorage.getItem('scanToken')
 
   const handleClose = event => {
+    console.log('closing')
+    event.preventDefault()
     history.push('/')
   }
 
   const handleSubmit = async values => {
+    console.log('submitting')
     try {
       const userData = { user: values }
       await sendRequest(`/users/subscribe`, 'POST', userData)
@@ -80,6 +83,7 @@ const BetaSignup = () => {
             )}
             {!submitted && (
               <Grid item>
+                <BarRow buttonLabel="Cancel X" onClick={handleClose} />
                 <Formik
                   initialValues={{ email: '' }}
                   validationSchema={validationSchema}
@@ -87,7 +91,6 @@ const BetaSignup = () => {
                 >
                   <Form>
                     <PieceBox container direction="column">
-                      <BarRow buttonLabel="Cancel X" onClick={handleClose} />
                       <Box minHeight="20vh">
                         <Grid container justify="center" alignItems="center">
                           <Grid item xs={11}>
