@@ -107,14 +107,10 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
 
   const handleMissingPiece = () => {
     try {
-      sendRequest(
-        `/scans/`,
-        'PATCH',
-        {
-          correct: false,
-        },
-        { scanToken }
-      )
+      sendRequest(`/scans`, 'PATCH', {
+        correct: false,
+        scanToken,
+      })
     } catch (err) {}
 
     setSubmittedMissingPiece(true)
