@@ -3,7 +3,6 @@ import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import { useHistory } from 'react-router-dom'
 import { Container, Grid, Box, Typography, Button } from '@material-ui/core'
-import styled from 'styled-components'
 
 import theme from '../../theme'
 import { useApiClient } from '../../shared/hooks/api-hook'
@@ -13,17 +12,6 @@ import { TextField } from '../../shared/components/forms/FormElements'
 import ActionButton from '../../shared/components/ui/ActionButton'
 import PageTitle from '../../shared/components/ui/PageTitle'
 import Background from '../../shared/layouts/Background'
-
-const BottomButton = styled.div`
-  top: 'auto';
-  bottom: 0;
-  position: fixed;
-  display: flex;
-  justify-content: center;
-  padding: 0.5rem;
-  left: 0;
-  right: 0;
-`
 
 const BetaSignup = () => {
   const { isLoading, error, sendRequest, clearError } = useApiClient()
@@ -84,7 +72,7 @@ const BetaSignup = () => {
                 </Grid>
                 <Grid item>
                   <ActionButton
-                    href="http://www.plynth.com"
+                    href="http://site.plynth.com"
                     label="Learn more"
                   />
                 </Grid>
@@ -139,14 +127,14 @@ const BetaSignup = () => {
                 </Formik>
               </Grid>
             )}
+            <Grid item>
+              <Grid container justify="center">
+                <Button onClick={handleClose}>Return to Home Screen</Button>
+              </Grid>
+            </Grid>
             {/* <ActionBar secondaryAction={handleClose} secondaryLabel="Cancel" /> */}
           </Grid>
         </Container>
-        <BottomButton>
-          <Grid container justify="center">
-            <Button onClick={handleClose}>Return to Home Screen</Button>
-          </Grid>
-        </BottomButton>
       </Background>
     </>
   )
