@@ -41,13 +41,10 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const MyProfile = props => {
-  // const auth = useContext(AuthContext)
-  const { user } = useSelector(state => state.user)
+  const { user } = useSelector(state => state.auth)
   const classes = useStyles()
   const [message, setMessage] = useState((props.location.state || {}).message)
   const [anchorEl, setAnchorEl] = useState(null)
-
-  // let user = auth.user
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget)

@@ -1,11 +1,12 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { useHistory } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
 import { Grid, Box } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
-import { AuthContext } from '../../shared/context/auth-context'
 import { useApiClient } from '../../shared/hooks/api-hook'
+import { setUser } from '../../redux/authSlice'
 
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import Background from '../../shared/layouts/Background'
@@ -16,21 +17,20 @@ import LinkList from '../../shared/components/forms/LinkList'
 import ActionButton from '../../shared/components/ui/ActionButton'
 
 const UpdateProfile = props => {
-  const auth = useContext(AuthContext)
+  const dispatch = useDispatch()
   const history = useHistory()
+  const { user } = useSelector(state => state.auth)
   const { isLoading, error, sendRequest, clearError } = useApiClient()
 
   const handleSubmit = async values => {
     try {
       const userData = { user: values }
       const response = await sendRequest(`/users/me`, 'PATCH', userData)
-      auth.updateUser(response.user)
+      dispatch(setUser(response))
       props.onSubmit(values)
     } catch (err) {}
     history.push('/admin/profile')
   }
-
-  const user = auth.user
 
   const { displayName, bio, links, avatar, avatarLink } = user
 
@@ -68,7 +68,7 @@ const UpdateProfile = props => {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ values, isValid, setFieldValue }) => (
+          {({ values, setFieldValue }) => (
             <Form>
               <Grid container direction="column" spacing={1}>
                 <Box height="1rem"></Box>

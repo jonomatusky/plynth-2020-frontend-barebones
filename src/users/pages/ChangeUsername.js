@@ -1,16 +1,15 @@
-import React, { useContext } from 'react'
+import React from 'react'
+import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { Container } from '@material-ui/core'
 
-import { AuthContext } from '../../shared/context/auth-context'
 import FormLayout from '../../shared/layouts/FormLayout'
 import Background from '../../shared/layouts/Background'
 import UsernameForm from '../components/UsernameForm'
 
 // need to change loggedOut to auth instead of props
 const ChangeUsername = () => {
-  const auth = useContext(AuthContext)
-  const user = auth.user
+  const { user } = useSelector(state => state.auth)
   const history = useHistory()
 
   const handleSubmit = () => {

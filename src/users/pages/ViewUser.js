@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-
+import { useSelector } from 'react-redux'
 import { Container, Grid, Box, Avatar } from '@material-ui/core'
 import {
   PieceBox,
@@ -14,7 +14,6 @@ import {
 } from '../../shared/components/ui/CardSections'
 import { makeStyles } from '@material-ui/core/styles'
 
-import { AuthContext } from '../../shared/context/auth-context'
 import { useApiClient } from '../../shared/hooks/api-hook'
 
 import ActionButton from '../../shared/components/ui/ActionButton'
@@ -30,7 +29,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const UserProfile = () => {
-  const auth = useContext(AuthContext)
+  const { isLoggedIn } = useSelector(state => state.auth)
   const classes = useStyles()
 
   const { isLoading, error, sendRequest } = useApiClient()
@@ -51,7 +50,7 @@ const UserProfile = () => {
   }, [sendRequest, username])
 
   const handleClose = event => {
-    if (auth.user) {
+    if (isLoggedIn) {
       history.goBack()
     } else {
       history.push('/')

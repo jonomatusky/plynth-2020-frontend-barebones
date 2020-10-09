@@ -1,10 +1,8 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import { Container, Grid } from '@material-ui/core'
-
-import { AuthContext } from '../../shared/context/auth-context'
 
 import Background from '../../shared/layouts/Background'
 import MessageBar from '../../shared/components/notifications/MessageBar'
@@ -17,11 +15,11 @@ const title = 'My Pieces'
 
 const MyPieces = () => {
   const { pieces } = useSelector(state => state.pieces)
-  const auth = useContext(AuthContext)
+  const user = useSelector(state => state.user)
   const history = useHistory()
   const [message, setMessage] = useState(null)
 
-  let pieceLimit = (auth.user || {}).pieceLimit
+  let pieceLimit = (user || {}).pieceLimit
 
   const handleClick = () => {
     if (pieceLimit <= pieces.length) {

@@ -1,10 +1,10 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { useHistory } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
 import { Grid, Box } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
-import { AuthContext } from '../../shared/context/auth-context'
 import { useApiClient } from '../../shared/hooks/api-hook'
 
 import Background from '../../shared/layouts/Background'
@@ -19,11 +19,10 @@ import LinkList from '../../shared/components/forms/LinkList'
 const title = 'Add Your Info'
 
 const UserSignup2 = ({ values }) => {
-  const auth = useContext(AuthContext)
+  const dispatch = useDispatch()
+  const user = useSelector(state => state.user)
   const history = useHistory()
   const { isLoading, error, sendRequest, clearError } = useApiClient()
-
-  let user = auth.user
 
   const initialValues = {
     avatar: user.avatar || '',
@@ -53,9 +52,9 @@ const UserSignup2 = ({ values }) => {
   const handleSubmit = async values => {
     try {
       let userData = { user: values }
-      const response = await sendRequest(`/users/me`, 'PATCH', userData)
+      const { user } = await sendRequest(`/users/me`, 'PATCH', userData)
 
-      auth.updateUser(response.user)
+      dispatch.setUser({ user })
       history.push('/admin/get-started/success')
     } catch (err) {}
   }

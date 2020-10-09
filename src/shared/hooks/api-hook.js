@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback, useContext, useRef } from 'react'
-import { AuthContext } from '../context/auth-context'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { useSelector } from 'react-redux'
 import axios from 'axios'
 
 const { REACT_APP_BACKEND_URL } = process.env
 
 export const useApiClient = () => {
-  const auth = useContext(AuthContext)
+  const { token } = useSelector(state => state.auth)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState()
 
@@ -16,8 +16,8 @@ export const useApiClient = () => {
       let message
 
       if (url.indexOf('http://') < 0 && url.indexOf('https://') < 0) {
-        if (auth.token) {
-          headers.Authorization = 'Bearer ' + auth.token
+        if (token) {
+          headers.Authorization = 'Bearer ' + token
         }
         url = REACT_APP_BACKEND_URL.concat(url)
       } else if (url.search('amazonaws') !== -1) {
@@ -65,7 +65,7 @@ export const useApiClient = () => {
         throw err
       }
     },
-    [auth.token]
+    [token]
   )
 
   const clearError = () => {

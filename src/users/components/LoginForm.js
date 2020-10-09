@@ -1,30 +1,36 @@
-import React, { useContext } from 'react'
+import React from 'react'
+import { useHistory } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import { Grid, Box } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
+import { useApiClient } from '../../shared/hooks/api-hook'
+import { login } from '../../redux/authSlice'
 import { TextField } from '../../shared/components/forms/FormElements'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
-import { useApiClient } from '../../shared/hooks/api-hook'
 
-import { useHistory } from 'react-router-dom'
-import { AuthContext } from '../../shared/context/auth-context'
+// import { AuthContext } from '../../shared/context/auth-context'
 
 import ActionButton from '../../shared/components/ui/ActionButton'
 
 const SignInForm = props => {
-  const auth = useContext(AuthContext)
+  // const auth = useContext(AuthContext)
+  const dispatch = useDispatch()
   const history = useHistory()
   const { isLoading, error, sendRequest, clearError } = useApiClient()
 
   const handleSubmit = async values => {
     if (!isLoading) {
       try {
-        const response = await sendRequest('/auth/login', 'POST', {
+        const { user, token } = await sendRequest('/auth/login', 'POST', {
           user: values,
         })
 
-        auth.login(response.user.id, response.token)
+        console.log(user)
+        console.log(token)
+
+        dispatch(login({ user, token }))
         history.push('/admin/pieces')
       } catch (err) {}
     }

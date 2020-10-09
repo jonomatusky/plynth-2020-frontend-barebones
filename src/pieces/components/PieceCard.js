@@ -1,8 +1,9 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { Link, useHistory } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import { Grid, Box, Button, Avatar } from '@material-ui/core'
 
-import { AuthContext } from '../../shared/context/auth-context'
+// import { AuthContext } from '../../shared/context/auth-context'
 import { useApiClient } from '../../shared/hooks/api-hook'
 import { BarRow } from '../../shared/components/ui/CardSections'
 import ActionButton from '../../shared/components/ui/ActionButton'
@@ -26,7 +27,8 @@ import {
 } from '../../shared/components/ui/CardSections'
 
 const PieceCard = ({ piece, onClose, ...props }) => {
-  const auth = useContext(AuthContext)
+  // const auth = useContext(AuthContext)
+  const { user } = useSelector(state => state.auth)
   const { sendRequest } = useApiClient()
   const history = useHistory()
   let scanToken = sessionStorage.getItem('scanToken')
@@ -96,7 +98,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
   }
 
   const BottomBar = () => {
-    if (!auth.isLoggedIn) {
+    if (!user) {
       return (
         <BottomRow container justify="center">
           <Grid item>
@@ -111,7 +113,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
           </Grid>
         </BottomRow>
       )
-    } else if (piece.owner.id === auth.userId) {
+    } else if (piece.owner.id === user.id) {
       return (
         <BottomRow container justify="center">
           <Grid item>

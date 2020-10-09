@@ -1,11 +1,13 @@
-import { useContext, useEffect } from 'react'
-import { AuthContext } from '../../shared/context/auth-context'
+import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
+
+import { logout } from '../../redux/authSlice'
 
 const Logout = () => {
-  const auth = useContext(AuthContext)
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    auth.logout()
+    dispatch(logout())
   })
 
   return null

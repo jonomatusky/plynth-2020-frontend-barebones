@@ -5,14 +5,13 @@ import {
   Redirect,
   Switch,
 } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-
+import { useDispatch } from 'react-redux'
+import jwt from 'jsonwebtoken'
 import { Box } from '@material-ui/core'
 
-import { useAuth } from './shared/hooks/auth-hook'
-import { AuthContext } from './shared/context/auth-context'
+// import { useAuth } from './shared/hooks/auth-hook'
 
-import { setUser } from './redux/userSlice'
+import { login, logout } from './redux/authSlice'
 import { setPieces } from './redux/piecesSlice'
 import { useApiClient } from './shared/hooks/api-hook'
 
@@ -40,8 +39,7 @@ import Logout from './users/pages/Logout'
 import NavBar from './shared/components/navigation/NavBar'
 
 const App = () => {
-  const { token, isLoading, login, logout } = useAuth()
-  const pieces = useSelector(state => state.pieces)
+  const token = localStorage.getItem('userToken')
   const { sendRequest } = useApiClient()
   const dispatch = useDispatch()
 
@@ -49,16 +47,18 @@ const App = () => {
 
   useEffect(() => {
     const getUser = async () => {
-      if (!!token) {
-        try {
-          const response = await sendRequest('/users/me', 'GET', null, {
+      try {
+        const { exp } = jwt.decode(token)
+
+        if (!!token && exp * 1000 > new Date()) {
+          const { user } = await sendRequest('/users/me', 'GET', null, {
             Authorization: 'Bearer ' + token,
           })
-          dispatch(setUser({ user: response.user }))
-        } catch (err) {}
-      } else if (!token) {
-        dispatch(setUser({ user: null }))
-      }
+          dispatch(login({ user, token }))
+        } else {
+          dispatch(logout())
+        }
+      } catch (err) {}
     }
     const getPieces = async () => {
       if (!!token) {
@@ -69,17 +69,15 @@ const App = () => {
           dispatch(setPieces({ pieces: response.pieces }))
         } catch (err) {}
       } else if (!token) {
-        dispatch(setUser({ user: null }))
+        dispatch(setPieces({ pieces: null }))
       }
     }
     getUser()
     getPieces()
   }, [token, dispatch, sendRequest])
 
-  console.log(pieces)
-
   const PrivateRoute = ({ component: Component, ...rest }) => {
-    return !isLoading ? (
+    return (
       <Route
         {...rest}
         render={props =>
@@ -96,13 +94,11 @@ const App = () => {
           )
         }
       />
-    ) : (
-      <div></div>
     )
   }
 
   const PrivateNoNavRoute = ({ component: Component, ...rest }) => {
-    return !isLoading ? (
+    return (
       <Route
         {...rest}
         render={props =>
@@ -117,13 +113,11 @@ const App = () => {
           )
         }
       />
-    ) : (
-      <div></div>
     )
   }
 
   const PublicRoute = ({ component: Component, restricted, ...rest }) => {
-    return !isLoading ? (
+    return (
       <Route
         {...rest}
         render={props =>
@@ -136,8 +130,6 @@ const App = () => {
           )
         }
       />
-    ) : (
-      <div></div>
     )
   }
 
@@ -228,18 +220,7 @@ const App = () => {
     </Switch>
   )
 
-  return (
-    <AuthContext.Provider
-      value={{
-        isLoggedIn: !!token,
-        token: token,
-        login: login,
-        logout: logout,
-      }}
-    >
-      <Router>{routes}</Router>
-    </AuthContext.Provider>
-  )
+  return <Router>{routes}</Router>
 }
 
 export default App

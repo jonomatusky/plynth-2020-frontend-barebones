@@ -1,10 +1,11 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { useHistory } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import { Grid, Box } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
-import { AuthContext } from '../../shared/context/auth-context'
+import { login } from '../../redux/authSlice'
 import { useApiClient } from '../../shared/hooks/api-hook'
 
 import Background from '../../shared/layouts/Background'
@@ -49,7 +50,7 @@ const validationSchema = Yup.object({
 })
 
 const UserSignup1 = ({ values }) => {
-  const auth = useContext(AuthContext)
+  const dispatch = useDispatch()
   const history = useHistory()
   const { isLoading, error, sendRequest, clearError } = useApiClient()
 
@@ -57,9 +58,13 @@ const UserSignup1 = ({ values }) => {
     try {
       let { email, username, password, signupKey } = values
       let userData = { user: { email, username, password, signupKey } }
-      const response = await sendRequest(`/auth/signup`, 'POST', userData)
+      const { user, token } = await sendRequest(
+        `/auth/signup`,
+        'POST',
+        userData
+      )
 
-      auth.login(response.user, response.token)
+      dispatch(login({ user, token }))
       history.push('/admin/get-started/profile')
     } catch (err) {}
   }

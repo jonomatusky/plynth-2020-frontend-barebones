@@ -1,16 +1,17 @@
-import React, { useContext } from 'react'
+import React from 'react'
+import { useDispatch } from 'react-redux'
 import { Grid } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
+import { setUser } from '../../redux/authSlice'
 import { useApiClient } from '../../shared/hooks/api-hook'
-import { AuthContext } from '../../shared/context/auth-context'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import { TextField } from '../../shared/components/forms/FormElements'
 import ActionButton from '../../shared/components/ui/ActionButton'
 
 const UsernameForm = props => {
-  const auth = useContext(AuthContext)
+  const dispatch = useDispatch()
 
   const { isLoading, error, sendRequest, clearError } = useApiClient()
 
@@ -23,9 +24,9 @@ const UsernameForm = props => {
       try {
         const userData = { user: values }
 
-        const response = await sendRequest(`/users/me`, 'PATCH', userData)
+        const { user } = await sendRequest(`/users/me`, 'PATCH', userData)
 
-        auth.updateUser(response.user)
+        dispatch(setUser({ user }))
         props.onSubmit(values)
       } catch (err) {}
     }

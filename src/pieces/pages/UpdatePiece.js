@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import { Button } from '@material-ui/core'
 
+import { deletePiece } from '../../redux/piecesSlice'
 import { useApiClient } from '../../shared/hooks/api-hook'
 import Background from '../../shared/layouts/Background'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
@@ -12,6 +14,7 @@ import { BarRow } from '../../shared/components/ui/CardSections'
 import FormLayout from '../../shared/layouts/FormLayout'
 
 const UpdatePiece = props => {
+  const dispatch = useDispatch()
   const { isLoading, error, sendRequest, clearError } = useApiClient()
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
   const [piece, setPiece] = useState()
@@ -40,6 +43,7 @@ const UpdatePiece = props => {
 
   const handleDelete = async () => {
     await sendRequest(`/pieces/${pieceId}`, 'DELETE')
+    dispatch(deletePiece({ piece }))
     history.push(`/admin/pieces/`)
   }
 
