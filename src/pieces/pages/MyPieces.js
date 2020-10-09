@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
-import { useApiClient } from '../../shared/hooks/api-hook'
 import { Container, Grid } from '@material-ui/core'
 
 import { AuthContext } from '../../shared/context/auth-context'
+
 import Background from '../../shared/layouts/Background'
-import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import MessageBar from '../../shared/components/notifications/MessageBar'
 import PageTitle from '../../shared/components/ui/PageTitle'
 import PieceList from '../components/PieceList'
@@ -16,27 +16,15 @@ import ActionButton from '../../shared/components/ui/ActionButton'
 const title = 'My Pieces'
 
 const MyPieces = () => {
+  const { pieces } = useSelector(state => state.pieces)
   const auth = useContext(AuthContext)
   const history = useHistory()
-  const [loadedPieces, setLoadedPieces] = useState()
   const [message, setMessage] = useState(null)
-  const { isLoading, error, sendRequest, clearError } = useApiClient()
 
   let pieceLimit = (auth.user || {}).pieceLimit
 
-  useEffect(() => {
-    const fetchPieces = async () => {
-      try {
-        const responseData = await sendRequest(`/users/me/pieces`)
-        setLoadedPieces(responseData.pieces)
-      } catch (err) {}
-    }
-
-    fetchPieces()
-  }, [sendRequest])
-
   const handleClick = () => {
-    if (pieceLimit <= loadedPieces.length) {
+    if (pieceLimit <= pieces.length) {
       setMessage(
         `Sorry, looks like you've reached your piece limit! Please remove a piece or contact an admin to add another piece.`
       )
@@ -47,7 +35,6 @@ const MyPieces = () => {
 
   return (
     <React.Fragment>
-      <ErrorBar open={!!error} error={error} handleClose={clearError} />
       <MessageBar
         open={!!message}
         message={message}
@@ -63,10 +50,10 @@ const MyPieces = () => {
               label="Create New Piece +"
             ></ActionButton>
           </Grid>
-          {isLoading && <LoadingSpinner asOverlay />}
-          {!isLoading && loadedPieces && (
+          {!pieces && <LoadingSpinner asOverlay />}
+          {pieces && (
             <Grid item>
-              <PieceList items={loadedPieces} />
+              <PieceList items={pieces} />
             </Grid>
           )}
         </Grid>

@@ -111,7 +111,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
           </Grid>
         </BottomRow>
       )
-    } else if (piece.owner.id === auth.user.id) {
+    } else if (piece.owner.id === auth.userId) {
       return (
         <BottomRow container justify="center">
           <Grid item>

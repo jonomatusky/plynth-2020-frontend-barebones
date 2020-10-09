@@ -1,13 +1,20 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   BrowserRouter as Router,
   Route,
   Redirect,
   Switch,
 } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+
+import { Box } from '@material-ui/core'
+
 import { useAuth } from './shared/hooks/auth-hook'
 import { AuthContext } from './shared/context/auth-context'
-import { Box } from '@material-ui/core'
+
+import { setUser } from './redux/userSlice'
+import { setPieces } from './redux/piecesSlice'
+import { useApiClient } from './shared/hooks/api-hook'
 
 import NewPieceImage from './pieces/pages/NewPieceImage'
 import NewPiece from './pieces/pages/NewPiece'
@@ -33,9 +40,43 @@ import Logout from './users/pages/Logout'
 import NavBar from './shared/components/navigation/NavBar'
 
 const App = () => {
-  const { token, isLoading, login, logout, user, updateUser } = useAuth()
+  const { token, isLoading, login, logout } = useAuth()
+  const pieces = useSelector(state => state.pieces)
+  const { sendRequest } = useApiClient()
+  const dispatch = useDispatch()
 
   let routes
+
+  useEffect(() => {
+    const getUser = async () => {
+      if (!!token) {
+        try {
+          const response = await sendRequest('/users/me', 'GET', null, {
+            Authorization: 'Bearer ' + token,
+          })
+          dispatch(setUser({ user: response.user }))
+        } catch (err) {}
+      } else if (!token) {
+        dispatch(setUser({ user: null }))
+      }
+    }
+    const getPieces = async () => {
+      if (!!token) {
+        try {
+          const response = await sendRequest(`/users/me/pieces`, 'GET', null, {
+            Authorization: 'Bearer ' + token,
+          })
+          dispatch(setPieces({ pieces: response.pieces }))
+        } catch (err) {}
+      } else if (!token) {
+        dispatch(setUser({ user: null }))
+      }
+    }
+    getUser()
+    getPieces()
+  }, [token, dispatch, sendRequest])
+
+  console.log(pieces)
 
   const PrivateRoute = ({ component: Component, ...rest }) => {
     return !isLoading ? (
@@ -192,10 +233,8 @@ const App = () => {
       value={{
         isLoggedIn: !!token,
         token: token,
-        user: user,
         login: login,
         logout: logout,
-        updateUser: updateUser,
       }}
     >
       <Router>{routes}</Router>

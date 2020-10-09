@@ -24,7 +24,7 @@ const SignInForm = props => {
           user: values,
         })
 
-        auth.login(response.user, response.token)
+        auth.login(response.user.id, response.token)
         history.push('/admin/pieces')
       } catch (err) {}
     }

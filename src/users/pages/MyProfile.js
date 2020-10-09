@@ -1,6 +1,6 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { AuthContext } from '../../shared/context/auth-context'
+import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 
 import {
@@ -41,12 +41,13 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const MyProfile = props => {
-  const auth = useContext(AuthContext)
+  // const auth = useContext(AuthContext)
+  const { user } = useSelector(state => state.user)
   const classes = useStyles()
   const [message, setMessage] = useState((props.location.state || {}).message)
   const [anchorEl, setAnchorEl] = useState(null)
 
-  let user = auth.user
+  // let user = auth.user
 
   const handleClick = event => {
     setAnchorEl(event.currentTarget)
@@ -91,80 +92,83 @@ const MyProfile = props => {
           </Menu>
         </PageTitle>
         <Grid container justify="flex-start" direction="column">
-          <PieceBox container direction="column">
-            <React.Fragment>
-              <ProfileTopRow
-                container
-                alignContent="center"
-                alignItems="center"
-                justify="center"
-              >
-                <Grid item xs={5}>
-                  <Grid container justify="center">
-                    <Grid item>
-                      {user.avatarLink && (
-                        <Avatar
-                          src={user.avatarLink}
-                          alt="Preview"
-                          className={classes.large}
-                        />
-                      )}
+          {!!user && (
+            <PieceBox container direction="column">
+              <React.Fragment>
+                <ProfileTopRow
+                  container
+                  alignContent="center"
+                  alignItems="center"
+                  justify="center"
+                >
+                  <Grid item xs={5}>
+                    <Grid container justify="center">
+                      <Grid item>
+                        {user.avatarLink && (
+                          <Avatar
+                            src={user.avatarLink}
+                            alt="Preview"
+                            className={classes.large}
+                          />
+                        )}
+                      </Grid>
                     </Grid>
                   </Grid>
-                </Grid>
-                <Grid item xs={7}>
-                  <Box textAlign="left" padding={1} overflow="hidden">
-                    <PieceTitle variant="h5">{user.displayName}</PieceTitle>
-                    <Typography variant="body2">
-                      <UnstyledLink
-                        to={`/${user.username}`}
-                      >{`plynth.com/${user.username}`}</UnstyledLink>
-                    </Typography>
-                    <Typography variant="body2">
-                      {`@${user.username} `}
-                      <UnstyledLink
-                        textDecoration="underline"
-                        to={`/admin/profile/username/change`}
-                      >
-                        edit
-                      </UnstyledLink>
-                    </Typography>
-                    <Typography variant="body2"></Typography>
-                  </Box>
-                </Grid>
-              </ProfileTopRow>
-              <CardRow container justify="center">
-                <DescriptionBox item xs={11}>
-                  <DescriptionText>{user.bio}</DescriptionText>
-                </DescriptionBox>
-              </CardRow>
-              {(user.links || []).map(link => {
-                return (
-                  <LinkRow container key={link._id} justify="center">
-                    <Grid item xs={11}>
-                      <ActionButton
-                        target="_blank"
-                        href={link.url}
-                        label={link.name}
-                      />
-                    </Grid>
-                  </LinkRow>
-                )
-              })}
-              <Box height="1rem"></Box>
-              <BottomRow container justify="center">
-                <Grid>
-                  <Button
-                    color="inherit"
-                    component={Link}
-                    to="/admin/profile/edit"
-                  >
-                    Edit My Profile
-                  </Button>
-                </Grid>
-              </BottomRow>
-            </React.Fragment>
-          </PieceBox>
+                  <Grid item xs={7}>
+                    <Box textAlign="left" padding={1} overflow="hidden">
+                      <PieceTitle variant="h5">{user.displayName}</PieceTitle>
+                      <Typography variant="body2">
+                        <UnstyledLink
+                          to={`/${user.username}`}
+                        >{`plynth.com/${user.username}`}</UnstyledLink>
+                      </Typography>
+                      <Typography variant="body2">
+                        {`@${user.username} `}
+                        <UnstyledLink
+                          textDecoration="underline"
+                          to={`/admin/profile/username/change`}
+                        >
+                          edit
+                        </UnstyledLink>
+                      </Typography>
+                      <Typography variant="body2"></Typography>
+                    </Box>
+                  </Grid>
+                </ProfileTopRow>
+                <CardRow container justify="center">
+                  <DescriptionBox item xs={11}>
+                    <DescriptionText>{user.bio}</DescriptionText>
+                  </DescriptionBox>
+                </CardRow>
+                {(user.links || []).map(link => {
+                  return (
+                    <LinkRow container key={link._id} justify="center">
+                      <Grid item xs={11}>
+                        <ActionButton
+                          target="_blank"
+                          href={link.url}
+                          label={link.name}
+                        />
+                      </Grid>
+                    </LinkRow>
+                  )
+                })}
+                <Box height="1rem"></Box>
+                <BottomRow container justify="center">
+                  <Grid>
+                    <Button
+                      color="inherit"
+                      component={Link}
+                      to="/admin/profile/edit"
+                    >
+                      Edit My Profile
+                    </Button>
+                  </Grid>
+                </BottomRow>
+              </React.Fragment>
+            </PieceBox>
+          )}
+
           <Box height="1rem"></Box>
         </Grid>
       </Container>

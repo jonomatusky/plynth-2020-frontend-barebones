@@ -1,20 +1,25 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './App'
 import * as serviceWorker from './serviceWorker'
+import { Provider } from 'react-redux'
 
 import { StylesProvider, ThemeProvider } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
+
+import App from './App'
+import store from './redux/store'
 import theme from './theme'
 
 ReactDOM.render(
   <React.StrictMode>
-    <StylesProvider injectFirst>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <App />
-      </ThemeProvider>
-    </StylesProvider>
+    <Provider store={store}>
+      <StylesProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <App />
+        </ThemeProvider>
+      </StylesProvider>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 )
