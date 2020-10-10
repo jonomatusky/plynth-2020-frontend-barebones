@@ -65,11 +65,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
     }
 
     return (
-      <UnstyledLink
-        to={`/${piece.owner.username}`}
-        target="_blank"
-        onClick={handleClick}
-      >
+      <UnstyledLink to={`/${piece.owner.username}`} onClick={handleClick}>
         <CardRow container direction="row" wrap="nowrap" alignItems="center">
           <Box padding="0.5rem 0.75rem">
             {piece.owner.avatar ? (

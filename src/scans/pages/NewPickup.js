@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
-import { Grid, Box, Typography, Button } from '@material-ui/core'
+import { Container, Grid, Box, Typography, Button } from '@material-ui/core'
 
 import { setScan, clearScan } from '../../redux/scanSlice'
 import { useApiClient } from '../../shared/hooks/api-hook'
 import { useImageUpload } from '../../shared/hooks/image-hook'
 
+import Background from '../../shared/layouts/Background'
 import PieceCard from '../../pieces/components/PieceCard'
 import ActionBar from '../../shared/components/navigation/ActionBar'
 import FoundModal from '../../shared/components/notifications/FoundModal'
@@ -157,15 +158,25 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
       )
     } else if (showCard) {
       return (
-        <Grid container direction="column" justify="center" alignItems="center">
-          <Box minHeight="2vh"></Box>
-          <PieceCard
-            piece={piece}
-            onClose={handleClose}
-            loggedOut={props.loggedOut}
-          />
-          <Box minHeight="2vh"></Box>
-        </Grid>
+        <>
+          <Background />
+          <Container maxWidth="xs" disableGutters>
+            <Grid
+              container
+              direction="column"
+              justify="center"
+              alignItems="center"
+            >
+              <Box minHeight="2vh"></Box>
+              <PieceCard
+                piece={piece}
+                onClose={handleClose}
+                loggedOut={props.loggedOut}
+              />
+              <Box minHeight="2vh"></Box>
+            </Grid>
+          </Container>
+        </>
       )
     } else if (scan && !piece) {
       return (

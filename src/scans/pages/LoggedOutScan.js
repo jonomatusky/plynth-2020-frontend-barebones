@@ -27,7 +27,7 @@ const LogoBar = styled.div`
   right: 0;
 `
 
-const LoggedOut = () => {
+const LoggedOutScan = () => {
   return (
     <React.Fragment>
       <Background />
@@ -75,4 +75,4 @@ const LoggedOut = () => {
   )
 }
 
-export default LoggedOut
+export default LoggedOutScan

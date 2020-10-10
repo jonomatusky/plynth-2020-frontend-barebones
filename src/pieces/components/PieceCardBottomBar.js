@@ -14,12 +14,7 @@ const BottomBar = ({ piece }) => {
     return (
       <BottomRow container justify="center">
         <Grid item>
-          <Button
-            component={Link}
-            color="inherit"
-            to="/s/subscribe"
-            target="_blank"
-          >
+          <Button component={Link} color="inherit" to="/s/subscribe">
             Sign Up to Save This Page
           </Button>
         </Grid>

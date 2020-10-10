@@ -27,7 +27,8 @@ import UserSignup1 from './signup/pages/UserSignup1'
 import UserSignup2 from './signup/pages/UserSignup2'
 import SignupSuccess from './signup/pages/SignupSuccess'
 import Login from './users/pages/Login'
-import LoggedOut from './scans/pages/LoggedOut'
+import LoggedOutScan from './scans/pages/LoggedOutScan'
+import LoggedInScan from './scans/pages/LoggedInScan'
 import BetaSignup from './users/pages/BetaSignup'
 import ViewUser from './users/pages/ViewUser'
 import UpdateEmail from './users/pages/UpdateEmail'
@@ -144,7 +145,7 @@ const App = () => {
         exact
       />
 
-      <PublicRoute restricted={true} component={LoggedOut} path="/" exact />
+      <PublicRoute restricted={true} component={LoggedOutScan} path="/" exact />
 
       <PublicRoute
         restricted={true}
@@ -188,7 +189,7 @@ const App = () => {
       />
       <PrivateNoNavRoute component={ViewPiece} path="/admin/pieces/:pieceId" />
       <PrivateRoute component={MyPieces} path="/admin/pieces" exact />
-      <PrivateRoute component={LoggedOut} path="/admin/pickup" exact />
+      <PrivateRoute component={LoggedInScan} path="/admin/pickup" exact />
       <PrivateRoute component={NewPickup} path="/admin/pickup/new" exact />
       <PrivateNoNavRoute
         component={UpdateProfile}
