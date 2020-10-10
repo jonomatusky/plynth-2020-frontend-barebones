@@ -136,12 +136,14 @@ const App = () => {
   routes = (
     <Switch>
       <PublicRoute restricted={true} component={Login} path="/s/login" exact />
+
       <PublicRoute
         restricted={true}
         component={BetaSignup}
         path="/s/subscribe"
         exact
       />
+
       <PublicRoute restricted={true} component={LoggedOut} path="/" exact />
 
       <PublicRoute
@@ -150,6 +152,8 @@ const App = () => {
         path="/signup"
         exact
       />
+
+      <PublicRoute component={NewPickup} path="/pickup" exact />
 
       <PrivateNoNavRoute
         component={UserSignup2}
@@ -184,7 +188,8 @@ const App = () => {
       />
       <PrivateNoNavRoute component={ViewPiece} path="/admin/pieces/:pieceId" />
       <PrivateRoute component={MyPieces} path="/admin/pieces" exact />
-      <PrivateRoute component={NewPickup} path="/admin/pickup" exact />
+      <PrivateRoute component={LoggedOut} path="/admin/pickup" exact />
+      <PrivateRoute component={NewPickup} path="/admin/pickup/new" exact />
       <PrivateNoNavRoute
         component={UpdateProfile}
         path="/admin/profile/edit"

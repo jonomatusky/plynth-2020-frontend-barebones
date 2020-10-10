@@ -14,16 +14,16 @@ const loadImgAsync = imgSrc => {
   })
 }
 
-const readFileAsync = file => {
-  return new Promise((resolve, reject) => {
-    let reader = new FileReader()
-    reader.onload = () => {
-      resolve(reader.result)
-    }
-    reader.onerror = reject
-    reader.readAsDataURL(file)
-  })
-}
+// const readFileAsync = file => {
+//   return new Promise((resolve, reject) => {
+//     let reader = new FileReader()
+//     reader.onload = () => {
+//       resolve(reader.result)
+//     }
+//     reader.onerror = reject
+//     reader.readAsDataURL(file)
+//   })
+// }
 
 const imgToBlobAsync = (img, canvas, croppedAreaPixels) => {
   return new Promise((resolve, reject) => {
@@ -56,11 +56,11 @@ export const useImageResize = () => {
   const [resizeError, setResizeError] = useState()
 
   const resizeImage = useCallback(
-    async (file, maxDimension, croppedAreaPixels) => {
+    async (imgUrl, maxDimension, croppedAreaPixels) => {
       setIsResizing(true)
       try {
-        const imgSrc = await readFileAsync(file)
-        const image = await loadImgAsync(imgSrc)
+        // const imgSrc = await readFileAsync(file)
+        const image = await loadImgAsync(imgUrl)
 
         const canvas = document.createElement('canvas')
 
@@ -149,10 +149,10 @@ export const useImageUpload = () => {
   const { resizeImage, clearImageError } = useImageResize()
 
   const uploadImage = useCallback(
-    async (file, croppedAreaPixels) => {
+    async (imageUrl, croppedAreaPixels) => {
       setIsProcessing(true)
       try {
-        let image = await resizeImage(file, 600, croppedAreaPixels)
+        let image = await resizeImage(imageUrl, 600, croppedAreaPixels)
         let response = await getSignedRequest(image)
 
         setIsProcessing(false)

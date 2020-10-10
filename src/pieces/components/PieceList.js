@@ -14,7 +14,7 @@ const PieceList = props => {
   return (
     <Grid container spacing={2}>
       {props.items.map(piece => (
-        <PieceItem key={piece.id} piece={piece} setPieces={props.setPieces} />
+        <PieceItem key={piece.id} piece={piece} />
       ))}
     </Grid>
   )

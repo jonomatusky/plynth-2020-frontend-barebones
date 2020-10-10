@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { useHistory } from 'react-router-dom'
 import {
   Grid,
   Card,
@@ -8,7 +9,6 @@ import {
   Typography,
   Paper,
 } from '@material-ui/core'
-import PieceModal from '../pages/PieceModal'
 import { makeStyles } from '@material-ui/core/styles'
 import styled from 'styled-components'
 import theme from '../../theme'
@@ -40,32 +40,19 @@ const StyledPaper = styled(Paper)`
 `
 
 const PieceItem = ({ piece, ...props }) => {
-  const [open, setOpen] = useState(false)
+  const history = useHistory()
   const classes = useStyles()
 
-  const handleClickOpen = () => {
-    setOpen(true)
-    if (props.setPieces) {
-      props.setPieces(p => p.concat(props.id))
-    }
-  }
-
-  const handleClose = value => {
-    setOpen(false)
+  const handleClick = () => {
+    history.push(`/admin/pieces/${piece.id}`)
   }
 
   return (
     <React.Fragment>
-      <PieceModal
-        open={open}
-        onClose={handleClose}
-        piece={piece}
-        key={props.key}
-      />
       <Grid item xs={12}>
         <Card>
           <StyledPaper>
-            <CardActionArea onClick={handleClickOpen}>
+            <CardActionArea onClick={handleClick}>
               <Grid container wrap={'nowrap'}>
                 <Grid item>
                   <div className={classes.image}>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 import { useApiClient } from '../../shared/hooks/api-hook'
 import { Container } from '@material-ui/core'
@@ -10,14 +11,21 @@ import PieceCard from '../components/PieceCard'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
 
 const ViewPiece = props => {
+  const history = useHistory()
   const { isLoading, error, sendRequest, clearError } = useApiClient()
-  const [piece, setPiece] = useState((props.location.data || {}).piece)
+  const { pieces } = useSelector(state => state.pieces)
   const pieceId = useParams().pieceId
 
-  const history = useHistory()
+  const [piece, setPiece] = useState(() => {
+    if (pieces && pieces.length > 0) {
+      return pieces.find(piece => piece.id === pieceId)
+    } else {
+      return null
+    }
+  })
 
   useEffect(() => {
-    if (!piece || piece.id !== pieceId) {
+    if (!piece) {
       const fetchPieces = async () => {
         try {
           const responseData = await sendRequest(`/pieces/${pieceId}`)

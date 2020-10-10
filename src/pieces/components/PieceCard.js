@@ -1,9 +1,6 @@
 import React from 'react'
-import { Link, useHistory } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import { Grid, Box, Button, Avatar } from '@material-ui/core'
+import { Grid, Box, Avatar } from '@material-ui/core'
 
-// import { AuthContext } from '../../shared/context/auth-context'
 import { useApiClient } from '../../shared/hooks/api-hook'
 import { BarRow } from '../../shared/components/ui/CardSections'
 import ActionButton from '../../shared/components/ui/ActionButton'
@@ -23,14 +20,11 @@ import {
   DescriptionBox,
   DescriptionText,
   LinkRow,
-  BottomRow,
 } from '../../shared/components/ui/CardSections'
+import BottomBar from './PieceCardBottomBar'
 
 const PieceCard = ({ piece, onClose, ...props }) => {
-  // const auth = useContext(AuthContext)
-  const { user } = useSelector(state => state.auth)
   const { sendRequest } = useApiClient()
-  const history = useHistory()
   let scanToken = sessionStorage.getItem('scanToken')
 
   const LinkButton = ({ link }) => {
@@ -97,42 +91,6 @@ const PieceCard = ({ piece, onClose, ...props }) => {
     )
   }
 
-  const BottomBar = () => {
-    if (!user) {
-      return (
-        <BottomRow container justify="center">
-          <Grid item>
-            <Button
-              component={Link}
-              color="inherit"
-              to="/s/subscribe"
-              target="_blank"
-            >
-              Sign Up to Save This Page
-            </Button>
-          </Grid>
-        </BottomRow>
-      )
-    } else if (piece.owner.id === user.id) {
-      return (
-        <BottomRow container justify="center">
-          <Grid item>
-            <Button
-              color="inherit"
-              onClick={() => {
-                history.push(`/admin/pieces/${piece.id}/edit`)
-              }}
-            >
-              Edit Your Piece
-            </Button>
-          </Grid>
-        </BottomRow>
-      )
-    } else {
-      return <div />
-    }
-  }
-
   return (
     <Grid container justify="center">
       <Grid item xs={11}>
@@ -172,7 +130,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
             )
           })}
           <Box height="1rem"></Box>
-          <BottomBar />
+          <BottomBar piece={piece} />
         </PieceBox>
         <Box height="1rem"></Box>
       </Grid>

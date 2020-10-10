@@ -1,8 +1,10 @@
-import React, { useState, useRef } from 'react'
+import React, { useRef } from 'react'
+import { useHistory } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import { Grid, Fab, Typography } from '@material-ui/core'
 
+import { setImageUrl } from '../../redux/scanSlice'
 import Background from '../../shared/layouts/Background'
-import ScanModal from '../pages/ScanModal'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 import styled from 'styled-components'
 
@@ -11,9 +13,8 @@ const CenteredGrid = styled(Grid)`
 `
 
 const ScanScreen = props => {
-  const [scanModalIsActive, setScanModalIsActive] = useState(false)
-  const [file, setFile] = useState(null)
-
+  const history = useHistory()
+  const dispatch = useDispatch()
   const filePickerRef = useRef()
 
   const filePickerHandler = event => {
@@ -22,21 +23,17 @@ const ScanScreen = props => {
   }
 
   const pickHandler = async event => {
-    if (event.target.files && event.target.files.length === 1) {
-      setFile(event.target.files[0])
-      setScanModalIsActive(true)
+    const { files } = event.target
+    if ((files || []).length === 1) {
+      const imageUrl = window.URL.createObjectURL(files[0])
+      dispatch(setImageUrl(imageUrl))
+      history.push('/pickup/new')
     }
     filePickerRef.current.value = ''
   }
 
   return (
     <>
-      <ScanModal
-        isOpen={scanModalIsActive}
-        setIsOpen={setScanModalIsActive}
-        file={file}
-        loggedOut={true}
-      />
       <input
         id="image"
         ref={filePickerRef}
