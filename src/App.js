@@ -118,6 +118,14 @@ const App = () => {
         exact
       />
 
+      <PublicRoute
+        path="/get-on-plynth"
+        component={() => {
+          window.location.href = 'https://site.plynth.com/get-on-plynth'
+          return null
+        }}
+      />
+
       <PrivateNoNavRoute
         component={UserSignup2}
         path="/admin/get-started/profile"
