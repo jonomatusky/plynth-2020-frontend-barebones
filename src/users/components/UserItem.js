@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { useHistory } from 'react-router-dom'
-import { Link } from 'react-router-dom'
 import {
   Grid,
   Card,
@@ -8,11 +7,8 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  Button,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-
-const { REACT_APP_ASSET_URL } = process.env
 
 const useStyles = makeStyles(() => ({
   card: {},
@@ -35,12 +31,11 @@ const useStyles = makeStyles(() => ({
 }))
 
 const UserItem = ({ user, ...props }) => {
-  const [open, setOpen] = useState(false)
   const classes = useStyles()
   const history = useHistory()
 
   const handleClick = () => {
-    history.push(`/users/${user.username}`)
+    history.push(`/admin/users/${user.username}`)
   }
 
   return (
@@ -50,11 +45,13 @@ const UserItem = ({ user, ...props }) => {
           <Grid container wrap={'nowrap'}>
             <Grid item>
               <div className={classes.image}>
-                <CardMedia
-                  image={user.avatarLink}
-                  title={user.displayName}
-                  className={classes.cover}
-                />
+                {user.avatar && (
+                  <CardMedia
+                    image={user.avatarLink}
+                    title={user.displayName}
+                    className={classes.cover}
+                  />
+                )}
               </div>
             </Grid>
             <Grid item>
@@ -63,6 +60,9 @@ const UserItem = ({ user, ...props }) => {
                   <Typography component="h6" variant="h6">
                     {user.displayName}
                   </Typography>
+                  {/* <Typography variant="subtitle1" color="textSecondary">
+                    {`by ${user.creatorDemo || 'Anonymous'}`}
+                  </Typography> */}
                 </CardContent>
               </div>
             </Grid>

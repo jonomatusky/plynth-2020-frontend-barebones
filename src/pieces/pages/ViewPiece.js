@@ -14,6 +14,7 @@ const ViewPiece = props => {
   const history = useHistory()
   const { isLoading, error, sendRequest, clearError } = useApiClient()
   const { pieces } = useSelector(state => state.pieces)
+  const { isLoggedIn } = useSelector(state => state.auth)
   const pieceId = useParams().pieceId
 
   const [piece, setPiece] = useState(() => {
@@ -23,6 +24,14 @@ const ViewPiece = props => {
       return null
     }
   })
+
+  const handleClose = () => {
+    if (isLoggedIn) {
+      history.goBack()
+    } else {
+      history.push('/')
+    }
+  }
 
   useEffect(() => {
     if (!piece) {
@@ -43,12 +52,7 @@ const ViewPiece = props => {
       <Container maxWidth="xs" disableGutters>
         {isLoading && !piece && <LoadingSpinner asOverlay />}
         {!isLoading && piece && (
-          <PieceCard
-            piece={piece}
-            onClose={() => {
-              history.push('/admin/pieces')
-            }}
-          />
+          <PieceCard piece={piece} onClose={handleClose} />
         )}
       </Container>
     </React.Fragment>

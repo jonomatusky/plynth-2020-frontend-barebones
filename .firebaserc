@@ -1,6 +1,7 @@
 {
   "projects": {
     "default": "plynth-2020",
-    "staging": "plynth-2020-staging"
+    "staging": "plynth-2020-staging",
+    "admin": "plynth-admin"
   }
 }

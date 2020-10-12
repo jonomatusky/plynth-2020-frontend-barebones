@@ -11,12 +11,13 @@ import { Box } from '@material-ui/core'
 
 import { login, logout } from './redux/authSlice'
 import { setPieces } from './redux/piecesSlice'
+import { setUsers } from './redux/usersSlice'
 import { useApiClient } from './shared/hooks/api-hook'
 
 import NewPieceImage from './pieces/pages/NewPieceImage'
 import NewPiece from './pieces/pages/NewPiece'
 import ViewPiece from './pieces/pages/ViewPiece'
-import MyPieces from './pieces/pages/MyPieces'
+import MyPieces from './pieces/pages/AllPieces'
 import UpdatePiece from './pieces/pages/UpdatePiece'
 import MyProfile from './users/pages/MyProfile'
 import UpdateProfile from './users/pages/UpdateProfile'
@@ -25,10 +26,13 @@ import UserSignup1 from './signup/pages/UserSignup1'
 import UserSignup2 from './signup/pages/UserSignup2'
 import SignupSuccess from './signup/pages/SignupSuccess'
 import Login from './users/pages/Login'
+import ViewScans from './scans/pages/ViewScans'
 import LoggedOutScan from './scans/pages/LoggedOutScan'
 import LoggedInScan from './scans/pages/LoggedInScan'
 import BetaSignup from './users/pages/BetaSignup'
 import ViewUser from './users/pages/ViewUser'
+import AdminViewUsers from './users/pages/AdminViewUsers'
+import AdminViewUser from './users/pages/AdminViewUser'
 import UpdateEmail from './users/pages/UpdateEmail'
 import ChangePassword from './users/pages/ChangePassword'
 import ChangeUsername from './users/pages/ChangeUsername'
@@ -45,7 +49,7 @@ const App = () => {
   let routes
 
   useEffect(() => {
-    const getUser = async () => {
+    const getUserAndPieces = async () => {
       try {
         const { exp } = jwt.decode(token)
 
@@ -54,25 +58,24 @@ const App = () => {
             Authorization: 'Bearer ' + token,
           })
           dispatch(login({ user, token }))
+
+          const { pieces } = await sendRequest(`/pieces`, 'GET', null, {
+            Authorization: 'Bearer ' + token,
+          })
+          dispatch(setPieces({ pieces }))
+
+          const { users } = await sendRequest(`/users`, 'GET', null, {
+            Authorization: 'Bearer ' + token,
+          })
+          dispatch(setUsers({ users }))
         } else {
           dispatch(logout())
+          dispatch(setPieces({ pieces: null }))
+          dispatch(setUsers({ users: null }))
         }
       } catch (err) {}
     }
-    const getPieces = async () => {
-      if (!!token) {
-        try {
-          const response = await sendRequest(`/users/me/pieces`, 'GET', null, {
-            Authorization: 'Bearer ' + token,
-          })
-          dispatch(setPieces({ pieces: response.pieces }))
-        } catch (err) {}
-      } else if (!token) {
-        dispatch(setPieces({ pieces: null }))
-      }
-    }
-    getUser()
-    getPieces()
+    getUserAndPieces()
   }, [token, dispatch, sendRequest])
 
   const PrivateRoute = ({ component: Component, ...rest }) => {
@@ -192,6 +195,7 @@ const App = () => {
       />
       <PrivateNoNavRoute component={ViewPiece} path="/admin/pieces/:pieceId" />
       <PrivateRoute component={MyPieces} path="/admin/pieces" exact />
+      <PrivateRoute component={ViewScans} path="/admin/pickups" exact />
       <PrivateRoute component={LoggedInScan} path="/admin/pickup" exact />
       <PrivateNoNavRoute
         component={UpdateProfile}
@@ -220,6 +224,18 @@ const App = () => {
         exact
       />
       <PrivateRoute component={Logout} path="/admin/logout" exact />
+
+      <PrivateRoute component={AdminViewUsers} path="/admin/users" exact />
+      <PrivateNoNavRoute
+        component={AdminViewUser}
+        path="/admin/users/:username"
+        exact
+      />
+      <PrivateNoNavRoute
+        component={UpdatePiece}
+        path="/admin/users/:username/edit"
+      />
+
       <Redirect from="/admin" to="/" />
 
       <PublicRoute restricted={false} component={ViewUser} path="/:username" />

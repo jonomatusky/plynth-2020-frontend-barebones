@@ -58,7 +58,7 @@ const MainHeader = props => {
                 color="inherit"
                 component={NavLink}
                 activeClassName="Mui-selected"
-                to={'/admin/pickup'}
+                to={'/admin/pickups'}
               >
                 Test
               </Button>
@@ -93,12 +93,12 @@ const MainHeader = props => {
             }}
           >
             <BottomNavigationAction
-              label={<span className="bottomNavLabel">Test</span>}
+              label="Scans"
               icon={<FlashOnIcon />}
               component={NavLink}
-              to={'/admin/pickup'}
+              to={'/admin/pickups'}
               activeClassName="Mui-selected"
-              classes={{ root: classes.navBarActionRoot, label: classes.label }}
+              classes={{ root: classes.navBarActionRoot }}
             />
             <BottomNavigationAction
               label={<span className="bottomNavLabel">My Pieces</span>}
@@ -109,10 +109,10 @@ const MainHeader = props => {
               classes={{ root: classes.navBarActionRoot, label: classes.label }}
             />
             <BottomNavigationAction
-              label={<span className="bottomNavLabel">My Profile</span>}
+              label={<span className="bottomNavLabel">Users</span>}
               icon={<PersonIcon />}
               component={NavLink}
-              to={'/admin/profile'}
+              to={'/admin/users'}
               activeClassName="Mui-selected"
               classes={{ root: classes.navBarActionRoot, label: classes.label }}
             />
