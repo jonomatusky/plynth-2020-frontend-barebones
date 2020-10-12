@@ -5,14 +5,12 @@ import * as Yup from 'yup'
 
 import { useApiClient } from '../../shared/hooks/api-hook'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
-
 import { TextField } from '../../shared/components/forms/FormElements'
-
 import ActionButton from '../../shared/components/ui/ActionButton'
 
 const EmailForm = props => {
   const [initialValues, setInitialValues] = useState({
-    email: '',
+    email: (props.user || {}).email,
   })
   const { isLoading, error, sendRequest, clearError } = useApiClient()
 

@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 let initialState = {
   pieces: null,
+  newPieceImage: null,
 }
 
 const isMatch = piece => {
@@ -39,9 +40,17 @@ const piecesSlice = createSlice({
         ]
       }
     },
+    setNewPieceImage(state, action) {
+      state.newPieceImage = action.payload
+    },
   },
 })
 
-export const { setPieces, setPiece, deletePiece } = piecesSlice.actions
+export const {
+  setPieces,
+  setPiece,
+  deletePiece,
+  setNewPieceImage,
+} = piecesSlice.actions
 
 export default piecesSlice.reducer

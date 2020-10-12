@@ -2,7 +2,6 @@ import React from 'react'
 import { Link as RouterLink } from 'react-router-dom'
 import { Grid, Typography, Link } from '@material-ui/core'
 
-import Background from '../../shared/layouts/Background'
 import ScanScreen from '../components/ScanScreen'
 import plynthLogo from '../../images/plynth-logo-white.png'
 import styled from 'styled-components'
@@ -30,7 +29,6 @@ const LogoBar = styled.div`
 const LoggedOutScan = () => {
   return (
     <React.Fragment>
-      <Background />
       <ScanScreen />
       <LogoBar>
         <Grid container direction="column" alignItems="center" spacing={0}>

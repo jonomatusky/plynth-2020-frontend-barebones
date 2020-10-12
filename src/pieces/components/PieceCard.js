@@ -1,7 +1,9 @@
 import React from 'react'
+import { useLocation } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import { Grid, Box, Avatar } from '@material-ui/core'
 
-import { useApiClient } from '../../shared/hooks/api-hook'
+import { useLogClient } from '../../shared/hooks/log-hook'
 import { BarRow } from '../../shared/components/ui/CardSections'
 import ActionButton from '../../shared/components/ui/ActionButton'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
@@ -24,14 +26,15 @@ import {
 import BottomBar from './PieceCardBottomBar'
 
 const PieceCard = ({ piece, onClose, ...props }) => {
-  const { sendRequest } = useApiClient()
-  let scanToken = sessionStorage.getItem('scanToken')
+  const location = useLocation()
+  const { sendLog } = useLogClient()
+  let { scanToken } = useSelector(state => state.scan)
 
   const LinkButton = ({ link }) => {
     const handleClick = async () => {
       try {
         if (scanToken) {
-          await sendRequest('/scans', 'PATCH', {
+          await sendLog('/scans', {
             click: { type: 'link', destination: link.url },
             scanToken,
           })
@@ -54,7 +57,8 @@ const PieceCard = ({ piece, onClose, ...props }) => {
       console.log('clicked: owner profile')
       try {
         if (scanToken) {
-          await sendRequest('/scans', 'PATCH', {
+          console.log('there is a scan token')
+          await sendLog('/scans', {
             click: { type: 'profile', destination: `/${owner.username}` },
             scanToken,
           })
@@ -65,7 +69,13 @@ const PieceCard = ({ piece, onClose, ...props }) => {
     }
 
     return (
-      <UnstyledLink to={`/${piece.owner.username}`} onClick={handleClick}>
+      <UnstyledLink
+        to={{
+          pathname: `/${piece.owner.username}`,
+          state: { referrer: location.pathname },
+        }}
+        onClick={handleClick}
+      >
         <CardRow container direction="row" wrap="nowrap" alignItems="center">
           <Box padding="0.5rem 0.75rem">
             {piece.owner.avatar ? (

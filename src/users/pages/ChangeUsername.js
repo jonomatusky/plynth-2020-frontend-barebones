@@ -3,8 +3,8 @@ import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { Container } from '@material-ui/core'
 
-import FormLayout from '../../shared/layouts/FormLayout'
 import Background from '../../shared/layouts/Background'
+import FormLayout from '../../shared/layouts/FormLayout'
 import UsernameForm from '../components/UsernameForm'
 
 // need to change loggedOut to auth instead of props

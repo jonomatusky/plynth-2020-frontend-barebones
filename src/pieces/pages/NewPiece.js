@@ -1,36 +1,34 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 import Background from '../../shared/layouts/Background'
 import FormLayout from '../../shared/layouts/FormLayout'
 import PieceForm from '../components/PieceForm'
 
 const NewPiece = () => {
-  const [imageFilepath, setImageFilepath] = useState(null)
-
+  const { newPieceImage } = useSelector(state => state.pieces)
   const history = useHistory()
 
   useEffect(() => {
-    if (!sessionStorage.getItem('imageFilepath')) {
+    if (!newPieceImage) {
       history.push('/')
-    } else {
-      let imageFilepath = sessionStorage.getItem('imageFilepath')
-      setImageFilepath(imageFilepath)
-      sessionStorage.removeItem('imageFilepath')
     }
-  }, [history])
+  }, [history, newPieceImage])
 
   const handleSubmit = async response => {
     history.push(`/admin/pieces/${response.piece.id}`)
   }
 
   return (
-    <React.Fragment>
-      <Background />
-      <FormLayout>
-        <PieceForm onSubmit={handleSubmit} imageFilepath={imageFilepath} />
-      </FormLayout>
-    </React.Fragment>
+    newPieceImage && (
+      <>
+        <Background />
+        <FormLayout>
+          <PieceForm onSubmit={handleSubmit} imageFilepath={newPieceImage} />
+        </FormLayout>
+      </>
+    )
   )
 }
 

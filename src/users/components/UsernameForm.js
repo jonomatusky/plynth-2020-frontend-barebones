@@ -15,8 +15,6 @@ const UsernameForm = props => {
 
   const { isLoading, error, sendRequest, clearError } = useApiClient()
 
-  const { username } = props.user
-
   const handleSubmit = async (values, { resetForm }) => {
     delete values.passwordConfirmation
 
@@ -33,7 +31,7 @@ const UsernameForm = props => {
   }
 
   const initialValues = {
-    username: username || '',
+    username: (props.user || {}).username,
   }
 
   const validationSchema = Yup.object({

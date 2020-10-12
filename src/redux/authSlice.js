@@ -3,7 +3,8 @@ import { createSlice } from '@reduxjs/toolkit'
 let initialState = {
   user: null,
   token: null,
-  isLoggedIn: true,
+  isLoggedIn: false,
+  scanRoute: '/',
 }
 
 const authSlice = createSlice({
@@ -21,6 +22,7 @@ const authSlice = createSlice({
         state.token = token
         state.user = user
         state.isLoggedIn = true
+        state.scanRoute = '/admin/pickup'
         localStorage.setItem('userToken', token)
       } catch (err) {}
     },

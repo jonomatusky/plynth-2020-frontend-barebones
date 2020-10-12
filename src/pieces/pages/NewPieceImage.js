@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { useHistory } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import { Container, Grid, Fab, Typography, Button } from '@material-ui/core'
 import styled from 'styled-components'
 
-import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
+import { setNewPieceImage } from '../../redux/piecesSlice'
 import ImageCropper from '../../shared/components/imageHandling/ImageCropper'
 import AddAPhotoIcon from '@material-ui/icons/AddAPhoto'
 
@@ -21,12 +22,11 @@ const CenteredGrid = styled(Grid)`
 
 const PieceImageCrop = () => {
   const history = useHistory()
-  const [file, setFile] = useState(null)
+  const dispatch = useDispatch()
   const [imageSrc, setImageSrc] = useState(null)
-  const [isUploading, setIsUploading] = useState(false)
 
   const setUploadMode = () => {
-    setFile(null)
+    setImageSrc(null)
   }
 
   const filePickerRef = useRef()
@@ -37,32 +37,20 @@ const PieceImageCrop = () => {
   }
 
   const pickHandler = async event => {
-    setIsUploading(true)
-    if (event.target.files && event.target.files.length === 1) {
-      setFile(event.target.files[0])
+    const { files } = event.target
+    if (files.length === 1) {
+      const imageUrl = window.URL.createObjectURL(files[0])
+      setImageSrc(imageUrl)
     }
     filePickerRef.current.value = ''
   }
 
   const submitHandler = async response => {
     try {
-      sessionStorage.setItem('imageFilepath', response.imageFilepath)
+      dispatch(setNewPieceImage(response.imageFilepath))
       history.push('/admin/create/piece')
     } catch (err) {}
   }
-
-  useEffect(() => {
-    if (!file) {
-      setImageSrc(null)
-    } else {
-      const fileReader = new FileReader()
-      fileReader.onload = () => {
-        setImageSrc(fileReader.result)
-      }
-      fileReader.readAsDataURL(file)
-    }
-    setIsUploading(false)
-  }, [file])
 
   return (
     <>
@@ -74,8 +62,7 @@ const PieceImageCrop = () => {
         accept=".jpg, .png, .jpeg"
         onChange={pickHandler}
       />
-      {isUploading && <LoadingSpinner asOverlay />}
-      {!isUploading && !file && (
+      {!imageSrc && (
         <Container maxWidth="sm" disableGutters>
           <CenterScreen>
             <CenteredGrid
@@ -114,11 +101,10 @@ const PieceImageCrop = () => {
           </CenterScreen>
         </Container>
       )}
-      {!isUploading && file && (
+      {imageSrc && (
         <>
           <ImageCropper
             imageSrc={imageSrc}
-            file={file}
             onCancel={setUploadMode}
             onSubmit={submitHandler}
           />

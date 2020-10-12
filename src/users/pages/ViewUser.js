@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const UserProfile = () => {
+const UserProfile = props => {
   const { isLoggedIn } = useSelector(state => state.auth)
   const classes = useStyles()
 
@@ -50,7 +50,11 @@ const UserProfile = () => {
   }, [sendRequest, username])
 
   const handleClose = event => {
-    if (isLoggedIn) {
+    const { referrer } = props.location.state || {}
+    console.log(referrer)
+    if (!!referrer) {
+      history.push(referrer)
+    } else if (isLoggedIn) {
       history.goBack()
     } else {
       history.push('/')

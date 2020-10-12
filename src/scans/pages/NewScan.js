@@ -4,7 +4,12 @@ import { useHistory } from 'react-router-dom'
 
 import { Container, Grid, Box, Typography, Button } from '@material-ui/core'
 
-import { setScan, clearScan } from '../../redux/scanSlice'
+import {
+  setScan,
+  setScanStage,
+  startScanning,
+  clearScan,
+} from '../../redux/scanSlice'
 import { useApiClient } from '../../shared/hooks/api-hook'
 import { useImageUpload } from '../../shared/hooks/image-hook'
 
@@ -22,80 +27,90 @@ const LoadingImage = styled.img`
   width: 50px;
 `
 
-const MessageScreen = styled(Box)`
-  position: fixed;
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
-  left: 0px;
-`
-
 const CenteredGrid = styled(Grid)`
   height: 100%;
 `
 
-const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
-  const { imageUrl, scan, piece, found, scanToken } = useSelector(
+const NewPickup = ({ isOpen, setIsOpen, ...props }) => {
+  const { imageUrl, foundPiece, scanToken, scanStage } = useSelector(
     state => state.scan
   )
-  const {
-    isProcessing,
-    uploadError,
-    uploadImage,
-    clearUploadError,
-  } = useImageUpload()
-  const { isLoading, error, sendRequest, clearError } = useApiClient()
-  const [foundScreen, setFoundScreen] = useState(false)
-  const [showCard, setShowCard] = useState(false)
+  const { scanRoute } = useSelector(state => state.auth)
+  const { uploadError, uploadImage, clearUploadError } = useImageUpload()
+  const { error, sendRequest, clearError } = useApiClient()
+  const [showFoundScreen, setShowFoundScreen] = useState(false)
   const [submittedMissingPiece, setSubmittedMissingPiece] = useState(false)
   const history = useHistory()
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (found) {
-      setFoundScreen(true)
+    if (uploadError || error) {
+      dispatch(setScanStage('ERROR'))
+    }
+  })
+
+  useEffect(() => {
+    console.log(`it's ready`)
+    if (scanStage === 'READY') {
+      console.log('pushing')
+      console.log(scanRoute)
+      history.push(scanRoute)
+    }
+  }, [scanStage, history, scanRoute])
+
+  // start the scan when the page loads, if the piece image is set
+  useEffect(() => {
+    const startScan = async () => {
+      try {
+        if (imageUrl) {
+          dispatch(startScanning())
+          let request = imageUrl
+          let { signedUrl, imageFilepath, image } = await uploadImage(request)
+          await sendRequest(signedUrl, 'PUT', image)
+          let { scan, scanToken } = await sendRequest(`/scans`, 'POST', {
+            imageFilepath: imageFilepath,
+          })
+          dispatch(setScan({ scan, scanToken }))
+        } else {
+          dispatch(clearScan())
+        }
+      } catch (err) {}
+    }
+
+    if (scanStage === 'SET') {
+      startScan()
+    }
+  }, [
+    imageUrl,
+    uploadImage,
+    sendRequest,
+    dispatch,
+    history,
+    scanStage,
+    scanRoute,
+  ])
+
+  // if the scan is in progress ('GOING') and the piece is found, set the found screen and piece card
+  useEffect(() => {
+    if (foundPiece && scanStage === 'FOUND') {
+      setShowFoundScreen(true)
       const timer2 = setTimeout(() => {
-        setFoundScreen(false)
+        setShowFoundScreen(false)
       }, 500)
       const timer1 = setTimeout(() => {
-        setShowCard(true)
-        if (piece.isDirect) {
-          history.push(`/${piece.owner.username}`)
-        }
+        setShowFoundScreen(false)
+        dispatch(setScanStage('COMPLETE'))
       }, 300)
       return () => {
         clearTimeout(timer1)
         clearTimeout(timer2)
       }
     }
-  }, [piece, found, history])
+  }, [foundPiece, history, dispatch, scanStage])
 
-  useEffect(() => {
-    const startScan = async () => {
-      let response
-
-      try {
-        response = await uploadImage(imageUrl)
-        let { signedUrl, imageFilepath, image } = response
-        await sendRequest(signedUrl, 'PUT', image)
-        let { scan, scanToken } = await sendRequest(`/scans`, 'POST', {
-          imageFilepath: imageFilepath,
-        })
-        dispatch(setScan({ scan, scanToken }))
-      } catch (err) {}
-    }
-
-    if (!!imageUrl) {
-      startScan()
-    } else {
-      history.goBack()
-    }
-  }, [imageUrl, uploadImage, sendRequest, dispatch, history])
-
+  // on close, reset all variables
   const handleClose = () => {
-    setShowCard(false)
     dispatch(clearScan())
-    setSubmittedMissingPiece(false)
     clearError()
     clearUploadError()
   }
@@ -112,9 +127,9 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
   }
 
   const Content = () => {
-    if (error || uploadError) {
+    if (scanStage === 'ERROR') {
       return (
-        <MessageScreen>
+        <Background>
           <CenteredGrid
             container
             direction="column"
@@ -133,11 +148,11 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
               <Button onClick={handleClose}>Close</Button>
             </Grid>
           </CenteredGrid>
-        </MessageScreen>
+        </Background>
       )
-    } else if (isLoading || isProcessing) {
+    } else if (scanStage === 'GOING') {
       return (
-        <MessageScreen>
+        <Background>
           <CenteredGrid
             container
             direction="column"
@@ -154,9 +169,15 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
               <Button onClick={handleClose}>Cancel</Button>
             </Grid>
           </CenteredGrid>
-        </MessageScreen>
+        </Background>
       )
-    } else if (showCard) {
+    } else if (scanStage === 'COMPLETE') {
+      if ((foundPiece || {}).isDirect) {
+        history.push({
+          pathname: `/${foundPiece.owner.username}`,
+          state: { referrer: scanRoute },
+        })
+      }
       return (
         <>
           <Background />
@@ -169,7 +190,7 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
             >
               <Box minHeight="2vh"></Box>
               <PieceCard
-                piece={piece}
+                piece={foundPiece}
                 onClose={handleClose}
                 loggedOut={props.loggedOut}
               />
@@ -178,9 +199,9 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
           </Container>
         </>
       )
-    } else if (scan && !piece) {
+    } else if (scanStage === 'NO_MATCH') {
       return (
-        <MessageScreen>
+        <Background>
           <CenteredGrid
             container
             direction="column"
@@ -213,19 +234,19 @@ const ScanModal = ({ isOpen, setIsOpen, ...props }) => {
               secondaryLabel={!submittedMissingPiece && 'Report Error'}
             />
           </CenteredGrid>
-        </MessageScreen>
+        </Background>
       )
     } else {
-      return <div></div>
+      return <Background />
     }
   }
 
   return (
     <React.Fragment>
-      <FoundModal fullscreen open={foundScreen} message="FOUND!" />
+      <FoundModal fullscreen open={showFoundScreen} message="FOUND!" />
       <Content />
     </React.Fragment>
   )
 }
 
-export default ScanModal
+export default NewPickup

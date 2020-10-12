@@ -1,20 +1,23 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Container, Grid, Box, Typography } from '@material-ui/core'
 
+import { setUser } from '../../redux/authSlice'
 import PageTitle from '../../shared/components/ui/PageTitle'
 import Background from '../../shared/layouts/Background'
 import EmailForm from '../components/EmailForm'
-
 import { PieceBox, BarRow } from '../../shared/components/ui/CardSections'
 
 // need to change loggedOut to auth instead of props
 const UpdateEmail = () => {
   const { user } = useSelector(state => state.auth)
+  const dispatch = useDispatch()
+
   const history = useHistory()
 
-  const handleSubmit = () => {
+  const handleSubmit = response => {
+    dispatch(setUser({ user: response.user }))
     history.push({
       pathname: '/admin/profile',
       state: { message: 'Email successfully updated.' },

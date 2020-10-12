@@ -66,7 +66,7 @@ const ImageCropper = props => {
 
   const submitHandler = async event => {
     try {
-      let response = await uploadImage(props.file, croppedAreaPixels)
+      let response = await uploadImage(props.imageSrc, croppedAreaPixels)
       const { signedUrl, imageUrl, imageFilepath, image } = response
       await sendRequest(signedUrl, 'PUT', image)
 

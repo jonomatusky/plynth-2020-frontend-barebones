@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import {
   Dialog,
   DialogTitle,
@@ -27,9 +27,6 @@ const PieceImageCrop = props => {
   const [uploadError, setUploadError] = useState()
   const [imageSrc, setImageSrc] = useState(null)
   const [imageUrl, setImageUrl] = useState(props.imageUrl)
-  const [isLoading, setIsLoading] = useState(false)
-
-  const [file, setFile] = useState(null)
 
   const filePickerRef = useRef()
 
@@ -39,7 +36,7 @@ const PieceImageCrop = props => {
 
   const closeDialog = () => {
     setDialogIsOpen(false)
-    setFile(null)
+    setImageSrc(null)
   }
 
   const filePickerHandler = event => {
@@ -48,11 +45,10 @@ const PieceImageCrop = props => {
   }
 
   const pickHandler = async event => {
-    setIsLoading(true)
-    let pickedFile
-    if (event.target.files && event.target.files.length === 1) {
-      pickedFile = event.target.files[0]
-      setFile(pickedFile)
+    const { files } = event.target
+    if (files.length === 1) {
+      const imageSrc = window.URL.createObjectURL(files[0])
+      setImageSrc(imageSrc)
     } else {
       setUploadError(
         'There was an error uploading your file. Please try again.'
@@ -61,29 +57,11 @@ const PieceImageCrop = props => {
     filePickerRef.current.value = ''
   }
 
-  useEffect(() => {
-    if (!file) {
-      setImageSrc(null)
-    } else {
-      const fileReader = new FileReader()
-      fileReader.onload = () => {
-        setImageSrc(fileReader.result)
-      }
-      fileReader.readAsDataURL(file)
-    }
-    setIsLoading(false)
-  }, [file])
-
   const submitHandler = async ({ imageUrl, imageFilepath }) => {
     setImageUrl(imageUrl)
     props.onInput(imageFilepath)
+    closeDialog()
   }
-
-  useEffect(() => {
-    if (imageUrl) {
-      closeDialog()
-    }
-  }, [imageUrl])
 
   return (
     <>
@@ -110,7 +88,6 @@ const PieceImageCrop = props => {
         <ImageCropper
           round
           imageSrc={imageSrc}
-          file={file}
           onCancel={closeDialog}
           onSubmit={submitHandler}
         />
@@ -131,7 +108,6 @@ const PieceImageCrop = props => {
             fullWidth={false}
             onClick={filePickerHandler}
             label="Upload"
-            loading={isLoading}
           />
         </DialogActions>
       </Dialog>

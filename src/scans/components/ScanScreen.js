@@ -27,7 +27,7 @@ const ScanScreen = props => {
     if ((files || []).length === 1) {
       const imageUrl = window.URL.createObjectURL(files[0])
       dispatch(setImageUrl(imageUrl))
-      history.push('/pickup/new')
+      history.push('/pickup')
     }
     filePickerRef.current.value = ''
   }

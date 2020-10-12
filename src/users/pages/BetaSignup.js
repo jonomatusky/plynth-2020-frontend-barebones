@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import { useHistory } from 'react-router-dom'
@@ -6,6 +7,7 @@ import { Container, Grid, Box, Typography, Button } from '@material-ui/core'
 
 import theme from '../../theme'
 import { useApiClient } from '../../shared/hooks/api-hook'
+import { useLogClient } from '../../shared/hooks/log-hook'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import { PieceBox, BarRow } from '../../shared/components/ui/CardSections'
 import { TextField } from '../../shared/components/forms/FormElements'
@@ -14,16 +16,16 @@ import PageTitle from '../../shared/components/ui/PageTitle'
 import Background from '../../shared/layouts/Background'
 
 const BetaSignup = () => {
+  const scanToken = useSelector(state => state.scan)
   const { isLoading, error, sendRequest, clearError } = useApiClient()
+  const { sendLog } = useLogClient()
   const history = useHistory()
   const [submitted, setSubmitted] = useState(false)
-
-  let scanToken = sessionStorage.getItem('scanToken')
 
   const handleClose = event => {
     console.log('closing')
     event.preventDefault()
-    history.push('/')
+    history.goBack()
   }
 
   const handleSubmit = async values => {
@@ -33,7 +35,7 @@ const BetaSignup = () => {
       await sendRequest(`/users/subscribe`, 'POST', userData)
       setSubmitted(true)
       if (!!scanToken) {
-        await sendRequest(`/scans`, 'PATCH', { email: values.email, scanToken })
+        await sendLog(`/scans`, { email: values.email, scanToken })
       }
     } catch (err) {}
   }
@@ -132,10 +134,9 @@ const BetaSignup = () => {
             )}
             <Grid item>
               <Grid container justify="center">
-                <Button onClick={handleClose}>Return to Home Screen</Button>
+                <Button onClick={handleClose}>Back</Button>
               </Grid>
             </Grid>
-            {/* <ActionBar secondaryAction={handleClose} secondaryLabel="Cancel" /> */}
           </Grid>
         </Container>
       </Background>

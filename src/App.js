@@ -9,8 +9,6 @@ import { useDispatch } from 'react-redux'
 import jwt from 'jsonwebtoken'
 import { Box } from '@material-ui/core'
 
-// import { useAuth } from './shared/hooks/auth-hook'
-
 import { login, logout } from './redux/authSlice'
 import { setPieces } from './redux/piecesSlice'
 import { useApiClient } from './shared/hooks/api-hook'
@@ -22,7 +20,7 @@ import MyPieces from './pieces/pages/MyPieces'
 import UpdatePiece from './pieces/pages/UpdatePiece'
 import MyProfile from './users/pages/MyProfile'
 import UpdateProfile from './users/pages/UpdateProfile'
-import NewPickup from './scans/pages/NewPickup'
+import NewPickup from './scans/pages/NewScan'
 import UserSignup1 from './signup/pages/UserSignup1'
 import UserSignup2 from './signup/pages/UserSignup2'
 import SignupSuccess from './signup/pages/SignupSuccess'
@@ -154,7 +152,12 @@ const App = () => {
         exact
       />
 
-      <PublicRoute component={NewPickup} path="/pickup" exact />
+      <PublicRoute
+        restricted={false}
+        component={NewPickup}
+        path="/pickup"
+        exact
+      />
 
       <PrivateNoNavRoute
         component={UserSignup2}
@@ -190,7 +193,6 @@ const App = () => {
       <PrivateNoNavRoute component={ViewPiece} path="/admin/pieces/:pieceId" />
       <PrivateRoute component={MyPieces} path="/admin/pieces" exact />
       <PrivateRoute component={LoggedInScan} path="/admin/pickup" exact />
-      <PrivateRoute component={NewPickup} path="/admin/pickup/new" exact />
       <PrivateNoNavRoute
         component={UpdateProfile}
         path="/admin/profile/edit"
