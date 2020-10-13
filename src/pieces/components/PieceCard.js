@@ -1,5 +1,4 @@
 import React from 'react'
-import { useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { Grid, Box, Avatar } from '@material-ui/core'
 
@@ -26,7 +25,6 @@ import {
 import BottomBar from './PieceCardBottomBar'
 
 const PieceCard = ({ piece, onClose, ...props }) => {
-  const location = useLocation()
   const { sendLog } = useLogClient()
   let { scanToken } = useSelector(state => state.scan)
 
@@ -69,13 +67,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
     }
 
     return (
-      <UnstyledLink
-        to={{
-          pathname: `/${piece.owner.username}`,
-          state: { referrer: location.pathname },
-        }}
-        onClick={handleClick}
-      >
+      <UnstyledLink to={`/${piece.owner.username}`} onClick={handleClick}>
         <CardRow container direction="row" wrap="nowrap" alignItems="center">
           <Box padding="0.5rem 0.75rem">
             {piece.owner.avatar ? (
@@ -102,7 +94,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
       <Grid item xs={11}>
         <Box height="1rem"></Box>
         <PieceBox container direction="column">
-          <BarRow onClick={onClose} buttonLabel="Close X" />
+          <BarRow buttonLabel="Close X" />
           <TopRow container>
             <ImageBox item xs={6}>
               <PieceImage src={piece.imageUrl} alt="Preview" />

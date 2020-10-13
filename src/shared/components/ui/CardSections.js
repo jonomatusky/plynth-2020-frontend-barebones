@@ -1,6 +1,7 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-import { Grid, Box, Typography } from '@material-ui/core'
+import { Link, useHistory, useLocation } from 'react-router-dom'
+import { useLastLocation } from 'react-router-last-location'
+import { Grid, Box, Button, Typography } from '@material-ui/core'
 
 import styled from 'styled-components'
 import theme from '../../../theme'
@@ -20,10 +21,13 @@ export const BarTitle = styled(Grid)`
   padding-left: 0.5rem;
 `
 
-export const BarAction = styled.button`
+export const BarAction = styled(Button)`
   background: none;
   border: none;
+  padding: 0.1rem;
   padding-right: 0.5rem;
+  text-transform: none;
+  color: ${theme.palette.background.paper};
 `
 
 export const TopRow = styled(Grid)`
@@ -76,6 +80,24 @@ export const BottomRow = styled(Grid)`
 `
 
 export const BarRow = ({ title, buttonLabel, ...props }) => {
+  const lastLocation = useLastLocation()
+  const history = useHistory()
+  const location = useLocation()
+
+  const handleClose = event => {
+    event.preventDefault()
+
+    const { referrer } = location.state || {}
+
+    if (!!referrer) {
+      history.push(referrer)
+    } else if (!lastLocation) {
+      history.push('/')
+    } else {
+      history.goBack()
+    }
+  }
+
   return (
     <Bar container justify="center">
       <Grid container justify="space-between">
@@ -83,7 +105,7 @@ export const BarRow = ({ title, buttonLabel, ...props }) => {
           <Typography color="inherit">{title}</Typography>
         </BarTitle>
         <Grid>
-          <BarAction {...props}>
+          <BarAction onClick={handleClose} {...props}>
             <Typography color="inherit">{buttonLabel}</Typography>
           </BarAction>
         </Grid>

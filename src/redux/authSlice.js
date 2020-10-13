@@ -5,6 +5,7 @@ let initialState = {
   token: null,
   isLoggedIn: false,
   scanRoute: '/',
+  locationHistory: [],
 }
 
 const authSlice = createSlice({
@@ -32,9 +33,12 @@ const authSlice = createSlice({
       state.isLoggedIn = false
       localStorage.removeItem('userToken')
     },
+    pushLocation(state, action) {
+      state.locationHistory = state.locationHistory.concat(action.payload)
+    },
   },
 })
 
-export const { setUser, login, logout } = authSlice.actions
+export const { setUser, login, logout, pushLocation } = authSlice.actions
 
 export default authSlice.reducer

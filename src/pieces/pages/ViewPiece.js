@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import { useApiClient } from '../../shared/hooks/api-hook'
@@ -11,10 +11,8 @@ import PieceCard from '../components/PieceCard'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
 
 const ViewPiece = props => {
-  const history = useHistory()
   const { isLoading, error, sendRequest, clearError } = useApiClient()
   const { pieces } = useSelector(state => state.pieces)
-  const { isLoggedIn } = useSelector(state => state.auth)
   const pieceId = useParams().pieceId
 
   const [piece, setPiece] = useState(() => {
@@ -24,14 +22,6 @@ const ViewPiece = props => {
       return null
     }
   })
-
-  const handleClose = () => {
-    if (isLoggedIn) {
-      history.goBack()
-    } else {
-      history.push('/')
-    }
-  }
 
   useEffect(() => {
     if (!piece) {
@@ -51,9 +41,7 @@ const ViewPiece = props => {
       <Background />
       <Container maxWidth="xs" disableGutters>
         {isLoading && !piece && <LoadingSpinner asOverlay />}
-        {!isLoading && piece && (
-          <PieceCard piece={piece} onClose={handleClose} />
-        )}
+        {!isLoading && piece && <PieceCard piece={piece} />}
       </Container>
     </React.Fragment>
   )

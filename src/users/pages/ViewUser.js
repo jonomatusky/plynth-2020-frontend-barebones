@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 import { Container, Grid, Box, Avatar } from '@material-ui/core'
 import {
   PieceBox,
@@ -29,14 +28,11 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const UserProfile = props => {
-  const { isLoggedIn } = useSelector(state => state.auth)
   const classes = useStyles()
 
   const { isLoading, error, sendRequest } = useApiClient()
   const [user, setUser] = useState()
   const username = useParams().username
-
-  const history = useHistory()
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -49,18 +45,6 @@ const UserProfile = props => {
     fetchUser()
   }, [sendRequest, username])
 
-  const handleClose = event => {
-    const { referrer } = props.location.state || {}
-    console.log(referrer)
-    if (!!referrer) {
-      history.push(referrer)
-    } else if (isLoggedIn) {
-      history.goBack()
-    } else {
-      history.push('/')
-    }
-  }
-
   return (
     <>
       <Background />
@@ -70,7 +54,7 @@ const UserProfile = props => {
           <Grid container justify="flex-start" direction="column">
             <Box height="1.5rem"></Box>
             <PieceBox container direction="column">
-              <BarRow onClick={handleClose} buttonLabel="Close X" />
+              <BarRow buttonLabel="Close X" />
               <ProfileTopRow
                 container
                 alignContent="center"
