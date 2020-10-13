@@ -99,14 +99,22 @@ const NewPickup = ({ isOpen, setIsOpen, ...props }) => {
       }, 500)
       const timer1 = setTimeout(() => {
         setShowFoundScreen(false)
-        dispatch(setScanStage('COMPLETE'))
+        if ((foundPiece || {}).isDirect) {
+          history.push({
+            pathname: `/${foundPiece.owner.username}`,
+            state: { referrer: scanRoute },
+          })
+          dispatch(setScanStage('READY'))
+        } else {
+          dispatch(setScanStage('COMPLETE'))
+        }
       }, 300)
       return () => {
         clearTimeout(timer1)
         clearTimeout(timer2)
       }
     }
-  }, [foundPiece, history, dispatch, scanStage])
+  }, [foundPiece, history, dispatch, scanStage, scanRoute])
 
   // on close, reset all variables
   const handleClose = () => {
@@ -172,12 +180,6 @@ const NewPickup = ({ isOpen, setIsOpen, ...props }) => {
         </Background>
       )
     } else if (scanStage === 'COMPLETE') {
-      if ((foundPiece || {}).isDirect) {
-        history.push({
-          pathname: `/${foundPiece.owner.username}`,
-          state: { referrer: scanRoute },
-        })
-      }
       return (
         <>
           <Background />

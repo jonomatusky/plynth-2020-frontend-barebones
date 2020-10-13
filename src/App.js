@@ -8,6 +8,7 @@ import {
 import { useDispatch } from 'react-redux'
 import jwt from 'jsonwebtoken'
 import { Box } from '@material-ui/core'
+import { LastLocationProvider } from 'react-router-last-location'
 
 import { login, logout } from './redux/authSlice'
 import { setPieces } from './redux/piecesSlice'
@@ -228,7 +229,11 @@ const App = () => {
     </Switch>
   )
 
-  return <Router>{routes}</Router>
+  return (
+    <Router>
+      <LastLocationProvider>{routes}</LastLocationProvider>
+    </Router>
+  )
 }
 
 export default App
