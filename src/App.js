@@ -28,6 +28,7 @@ import UserSignup2 from './signup/pages/UserSignup2'
 import SignupSuccess from './signup/pages/SignupSuccess'
 import Login from './users/pages/Login'
 import ViewScans from './scans/pages/ViewScans'
+import ViewScan from './scans/pages/ViewScan'
 import LoggedOutScan from './scans/pages/LoggedOutScan'
 import LoggedInScan from './scans/pages/LoggedInScan'
 import BetaSignup from './users/pages/BetaSignup'
@@ -226,6 +227,11 @@ const App = () => {
       />
       <PrivateRoute component={Logout} path="/admin/logout" exact />
 
+      <PrivateNoNavRoute
+        component={ViewScan}
+        path="/admin/pickups/:scanId"
+        exact
+      />
       <PrivateRoute component={AdminViewUsers} path="/admin/users" exact />
       <PrivateNoNavRoute
         component={AdminViewUser}
@@ -235,6 +241,7 @@ const App = () => {
       <PrivateNoNavRoute
         component={UpdatePiece}
         path="/admin/users/:username/edit"
+        exact
       />
 
       <Redirect from="/admin" to="/" />

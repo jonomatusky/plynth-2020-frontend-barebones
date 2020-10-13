@@ -101,7 +101,7 @@ const MainHeader = props => {
               classes={{ root: classes.navBarActionRoot }}
             />
             <BottomNavigationAction
-              label={<span className="bottomNavLabel">My Pieces</span>}
+              label={<span className="bottomNavLabel">Pieces</span>}
               icon={<AlbumIcon />}
               component={NavLink}
               to={'/admin/pieces'}

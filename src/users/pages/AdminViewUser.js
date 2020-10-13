@@ -11,6 +11,7 @@ import {
   MenuItem,
   Avatar,
   Typography,
+  Link as MuiLink,
 } from '@material-ui/core'
 
 import Background from '../../shared/layouts/Background'
@@ -22,14 +23,12 @@ import {
   PieceTitle,
   DescriptionBox,
   DescriptionText,
-  LinkRow,
   BottomRow,
   UnstyledLink,
   BarRow,
 } from '../../shared/components/ui/CardSections'
 import SettingsIcon from '@material-ui/icons/Settings'
 import MessageBar from '../../shared/components/notifications/MessageBar'
-import ActionButton from '../../shared/components/ui/ActionButton'
 import PieceList from '../../pieces/components/PieceList'
 
 const title = 'User Profile'
@@ -69,7 +68,6 @@ const MyProfile = props => {
 
   const handleClosePage = event => {
     const { referrer } = props.location.state || {}
-    console.log(referrer)
     if (!!referrer) {
       history.push(referrer)
     } else {
@@ -137,33 +135,24 @@ const MyProfile = props => {
                     <Box textAlign="left" padding={1} overflow="hidden">
                       <PieceTitle variant="h5">{user.displayName}</PieceTitle>
                       <Typography variant="body2">
-                        <UnstyledLink
-                          to={`/${user.username}`}
-                        >{`plynth.com/${user.username}`}</UnstyledLink>
+                        <MuiLink
+                          href={`mailto:${user.email}`}
+                          target="_blank"
+                          rel="noopener"
+                          color="inherit"
+                        >
+                          {user.email}
+                        </MuiLink>
                       </Typography>
                       <Typography variant="body2">
-                        {`@${user.username} `}
                         <UnstyledLink
-                          textDecoration="underline"
-                          to={`/admin/profile/username/change`}
-                        >
-                          edit
-                        </UnstyledLink>
+                          to={`/${user.username}`}
+                        >{`@${user.username} `}</UnstyledLink>
                       </Typography>
                       <Typography variant="body2"></Typography>
                     </Box>
                   </Grid>
                 </ProfileTopRow>
-                {user.bio && (
-                  <>
-                    <CardRow container justify="center">
-                      <DescriptionBox item xs={11}>
-                        <DescriptionText>{user.bio}</DescriptionText>
-                      </DescriptionBox>
-                    </CardRow>
-                    <Box height="1rem"></Box>
-                  </>
-                )}
                 <BottomRow container justify="center">
                   <Grid>
                     <Button
@@ -171,26 +160,26 @@ const MyProfile = props => {
                       component={Link}
                       to={`/admin/${user.username}/edit`}
                     >
-                      Edit User
+                      Remove User
                     </Button>
                   </Grid>
                 </BottomRow>
+                {pieces && user && (
+                  <>
+                    <CardRow container justify="center">
+                      <DescriptionBox item xs={11}>
+                        <PieceList
+                          items={pieces.filter(
+                            piece => piece.owner.username === user.username
+                          )}
+                        />
+                      </DescriptionBox>
+                    </CardRow>
+                    <Box height="1rem"></Box>
+                  </>
+                )}
               </React.Fragment>
             </PieceBox>
-            <Box height="1rem"></Box>
-            <Grid item>
-              <Typography variant="h5">User Pieces</Typography>
-            </Grid>
-            <Box height="1rem"></Box>
-            <Grid item>
-              {pieces && user && (
-                <PieceList
-                  items={pieces.filter(
-                    piece => piece.owner.username === user.username
-                  )}
-                />
-              )}
-            </Grid>
             <Box height="1rem"></Box>
           </Grid>
         )}
