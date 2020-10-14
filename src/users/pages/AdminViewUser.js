@@ -22,7 +22,6 @@ import {
   CardRow,
   PieceTitle,
   DescriptionBox,
-  DescriptionText,
   BottomRow,
   UnstyledLink,
   BarRow,
@@ -158,7 +157,7 @@ const MyProfile = props => {
                     <Button
                       color="inherit"
                       component={Link}
-                      to={`/admin/${user.username}/edit`}
+                      to={`/admin/users/${user.username}/remove`}
                     >
                       Remove User
                     </Button>

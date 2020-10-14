@@ -6,7 +6,7 @@ const UserList = props => {
   if (props.items.length === 0) {
     return (
       <div>
-        <h2>No users found. Create a new one?</h2>
+        <h2>No users found.</h2>
       </div>
     )
   }

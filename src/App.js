@@ -17,9 +17,9 @@ import { useApiClient } from './shared/hooks/api-hook'
 
 import NewPieceImage from './pieces/pages/NewPieceImage'
 import NewPiece from './pieces/pages/NewPiece'
-import ViewPiece from './pieces/pages/ViewPiece'
-import MyPieces from './pieces/pages/AllPieces'
-import UpdatePiece from './pieces/pages/UpdatePiece'
+import AdminViewPiece from './pieces/pages/AdminViewPiece'
+import MyPieces from './pieces/pages/AdminViewPieces'
+import AdminUpdatePiece from './pieces/pages/AdminUpdatePiece'
 import MyProfile from './users/pages/MyProfile'
 import UpdateProfile from './users/pages/UpdateProfile'
 import NewPickup from './scans/pages/NewScan'
@@ -38,6 +38,7 @@ import AdminViewUser from './users/pages/AdminViewUser'
 import UpdateEmail from './users/pages/UpdateEmail'
 import ChangePassword from './users/pages/ChangePassword'
 import ChangeUsername from './users/pages/ChangeUsername'
+import RemoveUser from './users/pages/AdminRemoveUser'
 import ContactSupport from './users/pages/ContactSupport'
 import Logout from './users/pages/Logout'
 
@@ -192,10 +193,13 @@ const App = () => {
         exact
       />
       <PrivateNoNavRoute
-        component={UpdatePiece}
+        component={AdminUpdatePiece}
         path="/admin/pieces/:pieceId/edit"
       />
-      <PrivateNoNavRoute component={ViewPiece} path="/admin/pieces/:pieceId" />
+      <PrivateNoNavRoute
+        component={AdminViewPiece}
+        path="/admin/pieces/:pieceId"
+      />
       <PrivateRoute component={MyPieces} path="/admin/pieces" exact />
       <PrivateRoute component={ViewScans} path="/admin/pickups" exact />
       <PrivateRoute component={LoggedInScan} path="/admin/pickup" exact />
@@ -239,8 +243,8 @@ const App = () => {
         exact
       />
       <PrivateNoNavRoute
-        component={UpdatePiece}
-        path="/admin/users/:username/edit"
+        component={RemoveUser}
+        path="/admin/users/:username/remove"
         exact
       />
 

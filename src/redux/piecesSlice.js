@@ -1,8 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 let initialState = {
-  pieces: null,
+  pieces: [],
   newPieceImage: null,
+  currentPiece: null,
+  loaded: false,
 }
 
 const isMatch = piece => {
@@ -16,6 +18,7 @@ const piecesSlice = createSlice({
     setPieces(state, action) {
       const { pieces } = action.payload
       state.pieces = pieces
+      state.loaded = true
     },
     setPiece(state, action) {
       const { piece } = action.payload
@@ -28,6 +31,12 @@ const piecesSlice = createSlice({
         ]
       }
       state.pieces = [piece, ...state.pieces]
+    },
+    setCurrentPiece(state, action) {
+      const pieceId = action.payload
+      if (state.pieces) {
+        state.currentPiece = state.pieces.find(piece => piece.id === pieceId)
+      }
     },
     deletePiece(state, action) {
       const { piece } = action.payload
