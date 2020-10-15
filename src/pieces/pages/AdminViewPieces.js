@@ -4,18 +4,29 @@ import { useSelector } from 'react-redux'
 
 import { Container, Grid } from '@material-ui/core'
 
-import Background from '../../shared/layouts/Background'
 import MessageBar from '../../shared/components/notifications/MessageBar'
 import PageTitle from '../../shared/components/ui/PageTitle'
 import PieceList from '../components/PieceList'
 import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
 import ActionButton from '../../shared/components/ui/ActionButton'
+import FilterButtons from '../../shared/components/ui/FilterButtons'
+import { setFilter, getPiecesByFilter } from '../../redux/piecesSlice'
 
 const title = 'My Pieces'
 
+const filterButtons = [
+  {
+    label: 'Active',
+    filterLabel: 'ACTIVE',
+  },
+  { label: 'All', filterLabel: 'ALL' },
+  { label: 'Removed', filterLabel: 'REMOVED' },
+]
+
 const MyPieces = () => {
-  const { pieces } = useSelector(state => state.pieces)
+  const pieces = useSelector(getPiecesByFilter)
   const user = useSelector(state => state.user)
+  const { filter } = useSelector(state => state.pieces)
   const history = useHistory()
   const [message, setMessage] = useState(null)
 
@@ -38,7 +49,6 @@ const MyPieces = () => {
         message={message}
         handleClose={() => setMessage(null)}
       />
-      <Background />
       <Container maxWidth="sm">
         <PageTitle title={title} />
         <Grid container direction="column" alignItems="stretch" spacing={2}>
@@ -47,6 +57,13 @@ const MyPieces = () => {
               onClick={handleClick}
               label="Create New Piece +"
             ></ActionButton>
+          </Grid>
+          <Grid item>
+            <FilterButtons
+              items={filterButtons}
+              currentFilter={filter}
+              filterFunction={setFilter}
+            />
           </Grid>
           {!pieces && <LoadingSpinner asOverlay />}
           {pieces && (

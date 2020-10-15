@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Link, useParams, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
@@ -7,8 +7,6 @@ import {
   Grid,
   Box,
   Button,
-  Menu,
-  MenuItem,
   Avatar,
   Typography,
   Link as MuiLink,
@@ -26,9 +24,10 @@ import {
   UnstyledLink,
   BarRow,
 } from '../../shared/components/ui/CardSections'
-import SettingsIcon from '@material-ui/icons/Settings'
 import MessageBar from '../../shared/components/notifications/MessageBar'
 import PieceList from '../../pieces/components/PieceList'
+import { selectUser } from '../../redux/usersSlice'
+import { selectPiecesByUser } from '../../redux/piecesSlice'
 
 const title = 'User Profile'
 
@@ -39,31 +38,16 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const MyProfile = props => {
-  const { users } = useSelector(state => state.users)
-  const { pieces } = useSelector(state => state.pieces)
-  const { username } = useParams()
+const AdminViewUser = props => {
   const history = useHistory()
-  const [user, setUser] = useState()
+  const { username } = useParams()
+  const user = useSelector(state => selectUser(state, username))
+  console.log(user)
+  const pieces = useSelector(state => selectPiecesByUser(state, username))
+  console.log(pieces)
 
   const classes = useStyles()
   const [message, setMessage] = useState((props.location.state || {}).message)
-  const [anchorEl, setAnchorEl] = useState(null)
-
-  useEffect(() => {
-    if (users && username) {
-      const currentUser = (users || []).find(user => user.username === username)
-      setUser(currentUser)
-    }
-  }, [username, users])
-
-  const handleClick = event => {
-    setAnchorEl(event.currentTarget)
-  }
-
-  const handleClose = () => {
-    setAnchorEl(null)
-  }
 
   const handleClosePage = event => {
     const { referrer } = props.location.state || {}
@@ -83,30 +67,8 @@ const MyProfile = props => {
       />
       <Background />
       <Container maxWidth="xs">
-        <PageTitle title={title}>
-          <Button onClick={handleClick} endIcon={<SettingsIcon />}>
-            Settings
-          </Button>
-          <Menu
-            id="simple-menu"
-            anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-          >
-            <MenuItem component={Link} to={'/admin/profile/email/change'}>
-              Email Preferences
-            </MenuItem>
-            <MenuItem component={Link} to={'/admin/profile/password/change'}>
-              Reset Password
-            </MenuItem>
-            <MenuItem component={Link} to={'/admin/logout'}>
-              Logout
-            </MenuItem>
-          </Menu>
-        </PageTitle>
-
-        {!!user && (
+        <PageTitle title={title} />
+        {user && pieces && (
           <Grid container justify="flex-start" direction="column">
             <PieceBox container direction="column">
               <BarRow onClick={handleClosePage} buttonLabel="Close X" />
@@ -131,7 +93,7 @@ const MyProfile = props => {
                     </Grid>
                   </Grid>
                   <Grid item xs={7}>
-                    <Box textAlign="left" padding={1} overflow="hidden">
+                    <Box textAlign="left" overflow="hidden">
                       <PieceTitle variant="h5">{user.displayName}</PieceTitle>
                       <Typography variant="body2">
                         <MuiLink
@@ -148,7 +110,10 @@ const MyProfile = props => {
                           to={`/${user.username}`}
                         >{`@${user.username} `}</UnstyledLink>
                       </Typography>
-                      <Typography variant="body2"></Typography>
+                      <Typography variant="body2">Tier: {user.tier}</Typography>
+                      <Typography variant="body2">
+                        Pieces: {pieces.length}/{user.pieceLimit}
+                      </Typography>
                     </Box>
                   </Grid>
                 </ProfileTopRow>
@@ -157,26 +122,20 @@ const MyProfile = props => {
                     <Button
                       color="inherit"
                       component={Link}
-                      to={`/admin/users/${user.username}/remove`}
+                      to={`/admin/users/${user.username}/edit`}
                     >
-                      Remove User
+                      Edit User
                     </Button>
                   </Grid>
                 </BottomRow>
-                {pieces && user && (
-                  <>
-                    <CardRow container justify="center">
-                      <DescriptionBox item xs={11}>
-                        <PieceList
-                          items={pieces.filter(
-                            piece => piece.owner.username === user.username
-                          )}
-                        />
-                      </DescriptionBox>
-                    </CardRow>
-                    <Box height="1rem"></Box>
-                  </>
-                )}
+                <>
+                  <CardRow container justify="center">
+                    <DescriptionBox item xs={11}>
+                      <PieceList items={pieces} />
+                    </DescriptionBox>
+                  </CardRow>
+                  <Box height="1rem"></Box>
+                </>
               </React.Fragment>
             </PieceBox>
             <Box height="1rem"></Box>
@@ -187,4 +146,4 @@ const MyProfile = props => {
   )
 }
 
-export default MyProfile
+export default AdminViewUser

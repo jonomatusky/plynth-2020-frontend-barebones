@@ -5,6 +5,7 @@ let initialState = {
   newPieceImage: null,
   currentPiece: null,
   loaded: false,
+  filter: 'ACTIVE',
 }
 
 const isMatch = piece => {
@@ -42,15 +43,21 @@ const piecesSlice = createSlice({
       const { piece } = action.payload
       const matchingIndex = state.pieces.findIndex(isMatch(piece))
 
+      const removedPiece = { ...piece, isRemoved: true }
+
       if (matchingIndex >= 0) {
         state.pieces = [
           ...state.pieces.slice(0, matchingIndex),
           ...state.pieces.slice(matchingIndex + 1),
         ]
       }
+      state.pieces = [removedPiece, ...state.pieces]
     },
     setNewPieceImage(state, action) {
       state.newPieceImage = action.payload
+    },
+    setFilter(state, action) {
+      state.filter = action.payload
     },
   },
 })
@@ -60,6 +67,21 @@ export const {
   setPiece,
   deletePiece,
   setNewPieceImage,
+  setFilter,
 } = piecesSlice.actions
 
 export default piecesSlice.reducer
+
+export const selectPiecesByUser = (state, username) => {
+  return state.pieces.pieces.filter(piece => piece.owner.username === username)
+}
+
+export const getPiecesByFilter = state => {
+  if (state.pieces.filter === 'REMOVED') {
+    return state.pieces.pieces.filter(piece => piece.isRemoved)
+  } else if (state.pieces.filter === 'ACTIVE') {
+    return state.pieces.pieces.filter(piece => !piece.isRemoved)
+  } else {
+    return state.pieces.pieces
+  }
+}

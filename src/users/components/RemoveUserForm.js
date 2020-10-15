@@ -22,9 +22,9 @@ const UsernameForm = props => {
       try {
         if (username === values.username) {
           await sendRequest(`/users/${username}`, 'DELETE')
+          dispatch(deleteUser(username))
         }
 
-        dispatch(deleteUser(username))
         props.onSubmit(values)
       } catch (err) {}
     }
@@ -56,7 +56,11 @@ const UsernameForm = props => {
             <Grid item>
               <TextField
                 name="username"
-                label={`Type ${username} to confirm`}
+                label={
+                  <>
+                    Type <strong>{username}</strong> to confirm
+                  </>
+                }
               />
             </Grid>
             <Grid item>

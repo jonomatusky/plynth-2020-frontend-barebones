@@ -56,12 +56,15 @@ const UserItem = ({ user, ...props }) => {
             </Grid>
             <Grid item>
               <div className={classes.details}>
-                <CardContent p={0.5}>
+                <CardContent>
                   <Typography component="h6" variant="h6">
                     {user.displayName}
                   </Typography>
-                  <Typography variant="subtitle1" color="textSecondary">
-                    {`Pieces: ${user.pieceCount}`}
+                  <Typography color="textSecondary">
+                    Tier: {user.tier}
+                  </Typography>
+                  <Typography color="textSecondary">
+                    Pieces: {user.pieceCount}/{user.pieceLimit}
                   </Typography>
                 </CardContent>
               </div>

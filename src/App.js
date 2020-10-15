@@ -15,32 +15,22 @@ import { setPieces } from './redux/piecesSlice'
 import { setUsers } from './redux/usersSlice'
 import { useApiClient } from './shared/hooks/api-hook'
 
+import Login from './users/pages/Login'
+import Logout from './users/pages/Logout'
+import ViewUser from './users/pages/ViewUser'
+
 import NewPieceImage from './pieces/pages/NewPieceImage'
 import NewPiece from './pieces/pages/NewPiece'
+
+import AdminViewPieces from './pieces/pages/AdminViewPieces'
 import AdminViewPiece from './pieces/pages/AdminViewPiece'
-import MyPieces from './pieces/pages/AdminViewPieces'
 import AdminUpdatePiece from './pieces/pages/AdminUpdatePiece'
-import MyProfile from './users/pages/MyProfile'
-import UpdateProfile from './users/pages/UpdateProfile'
-import NewPickup from './scans/pages/NewScan'
-import UserSignup1 from './signup/pages/UserSignup1'
-import UserSignup2 from './signup/pages/UserSignup2'
-import SignupSuccess from './signup/pages/SignupSuccess'
-import Login from './users/pages/Login'
-import ViewScans from './scans/pages/ViewScans'
-import ViewScan from './scans/pages/ViewScan'
-import LoggedOutScan from './scans/pages/LoggedOutScan'
-import LoggedInScan from './scans/pages/LoggedInScan'
-import BetaSignup from './users/pages/BetaSignup'
-import ViewUser from './users/pages/ViewUser'
 import AdminViewUsers from './users/pages/AdminViewUsers'
 import AdminViewUser from './users/pages/AdminViewUser'
-import UpdateEmail from './users/pages/UpdateEmail'
-import ChangePassword from './users/pages/ChangePassword'
-import ChangeUsername from './users/pages/ChangeUsername'
-import RemoveUser from './users/pages/AdminRemoveUser'
-import ContactSupport from './users/pages/ContactSupport'
-import Logout from './users/pages/Logout'
+import AdminUpdateUser from './users/pages/AdminUpdateUser'
+import AdminRemoveUser from './users/pages/AdminRemoveUser'
+import AdminViewScans from './scans/pages/AdminViewScans'
+import AdminViewScan from './scans/pages/AdminViewScan'
 
 import NavBar from './shared/components/navigation/NavBar'
 
@@ -140,47 +130,8 @@ const App = () => {
 
   routes = (
     <Switch>
-      <PublicRoute restricted={true} component={Login} path="/s/login" exact />
-
-      <PublicRoute
-        restricted={true}
-        component={BetaSignup}
-        path="/s/subscribe"
-        exact
-      />
-
-      <PublicRoute restricted={true} component={LoggedOutScan} path="/" exact />
-
-      <PublicRoute
-        restricted={true}
-        component={UserSignup1}
-        path="/signup"
-        exact
-      />
-
-      <PublicRoute
-        restricted={false}
-        component={NewPickup}
-        path="/pickup"
-        exact
-      />
-
-      <PrivateNoNavRoute
-        component={UserSignup2}
-        path="/admin/get-started/profile"
-        exact
-      />
-      <PrivateNoNavRoute
-        component={SignupSuccess}
-        path="/admin/get-started/success"
-        exact
-      />
-
-      <PrivateNoNavRoute
-        component={UpdateProfile}
-        path="/admin/profile/edit"
-        exact
-      />
+      <PublicRoute restricted={true} component={Login} path="/" exact />
+      <PrivateRoute component={Logout} path="/admin/logout" exact />
 
       <PrivateNoNavRoute
         component={NewPieceImage}
@@ -192,47 +143,21 @@ const App = () => {
         path="/admin/create/piece"
         exact
       />
-      <PrivateNoNavRoute
-        component={AdminUpdatePiece}
-        path="/admin/pieces/:pieceId/edit"
-      />
+
+      <PrivateRoute component={AdminViewPieces} path="/admin/pieces" exact />
       <PrivateNoNavRoute
         component={AdminViewPiece}
         path="/admin/pieces/:pieceId"
+        exact
       />
-      <PrivateRoute component={MyPieces} path="/admin/pieces" exact />
-      <PrivateRoute component={ViewScans} path="/admin/pickups" exact />
-      <PrivateRoute component={LoggedInScan} path="/admin/pickup" exact />
       <PrivateNoNavRoute
-        component={UpdateProfile}
-        path="/admin/profile/edit"
+        component={AdminUpdatePiece}
+        path="/admin/pieces/:pieceId/edit"
         exact
       />
-      <PrivateRoute component={MyProfile} path="/admin/profile" exact />
-      <PrivateRoute
-        component={UpdateEmail}
-        path="/admin/profile/email/change"
-        exact
-      />
-      <PrivateRoute
-        component={ChangePassword}
-        path="/admin/profile/password/change"
-        exact
-      />
-      <PrivateRoute
-        component={ChangeUsername}
-        path="/admin/profile/username/change"
-        exact
-      />
-      <PrivateRoute
-        component={ContactSupport}
-        path="/admin/profile/help"
-        exact
-      />
-      <PrivateRoute component={Logout} path="/admin/logout" exact />
-
+      <PrivateRoute component={AdminViewScans} path="/admin/pickups" exact />
       <PrivateNoNavRoute
-        component={ViewScan}
+        component={AdminViewScan}
         path="/admin/pickups/:scanId"
         exact
       />
@@ -243,8 +168,13 @@ const App = () => {
         exact
       />
       <PrivateNoNavRoute
-        component={RemoveUser}
+        component={AdminRemoveUser}
         path="/admin/users/:username/remove"
+        exact
+      />
+      <PrivateNoNavRoute
+        component={AdminUpdateUser}
+        path="/admin/users/:username/edit"
         exact
       />
 

@@ -23,12 +23,13 @@ const RemoveUser = () => {
       <Background />
       <Container maxWidth="xs">
         <FormLayout
-          title="Change Username"
+          title="Delete User"
           message={
             <>
               Are you sure you want to delete this user? Their pieces will be
               archived and reassigned to USER_REMOVED. This action cannot be
-              undone (easily).
+              undone.
+              <br />
               <br />
               If you're sure you want to delete this user, please type their
               username, {username}, to confirm.
