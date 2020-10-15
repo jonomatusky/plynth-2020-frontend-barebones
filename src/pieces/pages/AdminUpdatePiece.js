@@ -24,7 +24,7 @@ const UpdatePiece = props => {
   )
 
   const handleSubmit = async response => {
-    history.push(`/admin/pieces/${response.piece.id}`)
+    history.goBack()
   }
 
   const handleDelete = async () => {

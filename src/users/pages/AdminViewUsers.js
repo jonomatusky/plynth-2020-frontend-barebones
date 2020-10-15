@@ -28,6 +28,7 @@ const ViewUsers = () => {
     },
     { label: 'All', filterLabel: 'ALL' },
     { label: 'Dummy', filterLabel: 'DUMMY' },
+    { label: 'Admin', filterLabel: 'ADMIN' },
   ]
 
   const items = users.map(user => {

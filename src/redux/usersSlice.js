@@ -59,6 +59,8 @@ export const getUsersByFilter = state => {
     return state.users.users.filter(user => user.isDummy)
   } else if (state.users.filter === 'ACTIVE') {
     return state.users.users.filter(user => !user.isDummy)
+  } else if (state.users.filter === 'ADMIN') {
+    return state.users.users.filter(user => user.admin)
   } else {
     return state.users.users
   }
