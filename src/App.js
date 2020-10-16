@@ -50,7 +50,7 @@ const App = () => {
     }
 
     const getPieces = async token => {
-      const response = await sendRequest(`/users/me/pieces`, 'GET', null, {
+      const response = await sendRequest(`/pieces`, 'GET', null, {
         Authorization: 'Bearer ' + token,
       })
       dispatch(setPieces({ pieces: response.pieces }))

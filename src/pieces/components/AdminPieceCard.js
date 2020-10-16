@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { Grid, Box, Avatar } from '@material-ui/core'
+import { Grid, Box, Avatar, Typography } from '@material-ui/core'
 
 import { useLogClient } from '../../shared/hooks/log-hook'
 import { BarRow } from '../../shared/components/ui/CardSections'
@@ -113,6 +113,30 @@ const PieceCard = ({ piece, onClose, ...props }) => {
               </TitleText>
             </TitleBox>
           </TopRow>
+          <CardRow container justify="center">
+            <Grid item xs={11}>
+              <Grid container justify="space-between">
+                <Grid item>
+                  <Typography variant="subtitle1">
+                    Pickups: {props.scanCount}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="subtitle1">
+                    Clickups: {props.clickCount}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <Typography variant="subtitle1">
+                    Click Rate:{' '}
+                    {Math.round((props.clickCount / props.scanCount) * 100) ||
+                      0}
+                    %
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          </CardRow>
           <CardRow container justify="center">
             <DescriptionBox item xs={11}>
               <DescriptionText>{piece.description}</DescriptionText>
