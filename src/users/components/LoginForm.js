@@ -27,9 +27,6 @@ const SignInForm = props => {
           user: values,
         })
 
-        console.log(user)
-        console.log(token)
-
         dispatch(login({ user, token }))
         history.push('/admin/pieces')
       } catch (err) {}

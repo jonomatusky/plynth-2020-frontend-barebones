@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { Link, useHistory } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 
 import {
@@ -26,6 +26,7 @@ import {
 } from '../../shared/components/ui/CardSections'
 import SettingsIcon from '@material-ui/icons/Settings'
 
+import { logout } from '../../redux/authSlice'
 import MessageBar from '../../shared/components/notifications/MessageBar'
 import ActionButton from '../../shared/components/ui/ActionButton'
 import Background from '../../shared/layouts/Background'
@@ -41,6 +42,8 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const MyProfile = props => {
+  const history = useHistory()
+  const dispatch = useDispatch()
   const { user } = useSelector(state => state.auth)
   const classes = useStyles()
   const [message, setMessage] = useState((props.location.state || {}).message)
@@ -52,6 +55,11 @@ const MyProfile = props => {
 
   const handleClose = () => {
     setAnchorEl(null)
+  }
+
+  const handleLogout = () => {
+    dispatch(logout())
+    history.push('/s/login')
   }
 
   return (
@@ -83,9 +91,10 @@ const MyProfile = props => {
             <MenuItem component={Link} to={'/admin/profile/password/change'}>
               Change Password
             </MenuItem>
-            <MenuItem component={Link} to={'/admin/logout'}>
-              Logout
+            <MenuItem component={Link} to={'/s/recover'}>
+              Forgot Password
             </MenuItem>
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
           </Menu>
         </PageTitle>
         <Grid container justify="flex-start" direction="column">

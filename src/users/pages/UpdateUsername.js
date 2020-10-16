@@ -5,7 +5,7 @@ import { Container } from '@material-ui/core'
 
 import Background from '../../shared/layouts/Background'
 import FormLayout from '../../shared/layouts/FormLayout'
-import UsernameForm from '../components/UsernameForm'
+import UsernameForm from '../components/UpdateUsernameForm'
 
 // need to change loggedOut to auth instead of props
 const ChangeUsername = () => {

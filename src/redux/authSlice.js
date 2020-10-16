@@ -28,10 +28,10 @@ const authSlice = createSlice({
       } catch (err) {}
     },
     logout(state, action) {
+      localStorage.removeItem('userToken')
       state.token = null
       state.user = null
       state.isLoggedIn = false
-      localStorage.removeItem('userToken')
     },
     pushLocation(state, action) {
       state.locationHistory = state.locationHistory.concat(action.payload)

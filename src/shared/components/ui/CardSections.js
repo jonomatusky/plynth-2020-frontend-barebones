@@ -79,7 +79,7 @@ export const BottomRow = styled(Grid)`
   color: ${theme.palette.secondary.main};
 `
 
-export const BarRow = ({ title, buttonLabel, ...props }) => {
+export const BarRow = ({ title, buttonLabel, onClose, ...props }) => {
   const lastLocation = useLastLocation()
   const history = useHistory()
   const location = useLocation()
@@ -89,7 +89,9 @@ export const BarRow = ({ title, buttonLabel, ...props }) => {
 
     const { referrer } = location.state || {}
 
-    if (!!referrer) {
+    if (!!onClose) {
+      onClose()
+    } else if (!!referrer) {
       history.push(referrer)
     } else if (!lastLocation) {
       history.push('/')

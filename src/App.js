@@ -42,33 +42,37 @@ const App = () => {
   let routes
 
   useEffect(() => {
-    const getUserAndPieces = async () => {
-      try {
-        const { exp } = jwt.decode(token)
-
-        if (!!token && exp * 1000 > new Date()) {
-          const { user } = await sendRequest('/users/me', 'GET', null, {
-            Authorization: 'Bearer ' + token,
-          })
-          dispatch(login({ user, token }))
-
-          const { pieces } = await sendRequest(`/pieces`, 'GET', null, {
-            Authorization: 'Bearer ' + token,
-          })
-          dispatch(setPieces({ pieces }))
-
-          const { users } = await sendRequest(`/users`, 'GET', null, {
-            Authorization: 'Bearer ' + token,
-          })
-          dispatch(setUsers({ users }))
-        } else {
-          dispatch(logout())
-          dispatch(setPieces({ pieces: null }))
-          dispatch(setUsers({ users: null }))
-        }
-      } catch (err) {}
+    const getUser = async token => {
+      const { user } = await sendRequest('/users/me', 'GET', null, {
+        Authorization: 'Bearer ' + token,
+      })
+      dispatch(login({ user, token }))
     }
-    getUserAndPieces()
+
+    const getPieces = async token => {
+      const response = await sendRequest(`/users/me/pieces`, 'GET', null, {
+        Authorization: 'Bearer ' + token,
+      })
+      dispatch(setPieces({ pieces: response.pieces }))
+    }
+
+    const getUsers = async token => {
+      const { users } = await sendRequest(`/users`, 'GET', null, {
+        Authorization: 'Bearer ' + token,
+      })
+      dispatch(setUsers({ users }))
+    }
+
+    if (!!token && jwt.decode(token).exp * 1000 > new Date()) {
+      try {
+        getUser(token)
+        getPieces(token)
+        getUsers(token)
+      } catch (err) {}
+    } else {
+      dispatch(logout())
+      dispatch(setPieces({ pieces: [] }))
+    }
   }, [token, dispatch, sendRequest])
 
   const PrivateRoute = ({ component: Component, ...rest }) => {

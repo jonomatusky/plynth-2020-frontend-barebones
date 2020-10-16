@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Grid } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
@@ -8,10 +8,11 @@ import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import { TextField } from '../../shared/components/forms/FormElements'
 import ActionButton from '../../shared/components/ui/ActionButton'
 
-const EmailForm = props => {
-  const [initialValues, setInitialValues] = useState({
-    email: (props.user || {}).email,
-  })
+const EmailForm = ({ email, onSubmit }) => {
+  const initialValues = {
+    email,
+  }
+
   const { isLoading, error, sendRequest, clearError } = useApiClient()
 
   const handleSubmit = async (values, { resetForm }) => {
@@ -21,23 +22,10 @@ const EmailForm = props => {
 
         let response = await sendRequest(`/auth/email`, 'PATCH', request)
 
-        props.onSubmit(values, response)
+        onSubmit(values, response)
       } catch (err) {}
     }
   }
-
-  useEffect(() => {
-    const fetchEmail = async () => {
-      try {
-        const responseData = await sendRequest(`/users/me`)
-        const { email } = responseData.user
-        setInitialValues({
-          email,
-        })
-      } catch (err) {}
-    }
-    fetchEmail()
-  }, [sendRequest])
 
   const validationSchema = Yup.object({
     email: Yup.string()

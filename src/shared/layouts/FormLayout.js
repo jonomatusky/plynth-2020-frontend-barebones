@@ -1,13 +1,25 @@
 import React from 'react'
-import { useHistory } from 'react-router-dom'
 
 import { Container, Grid, Box, Typography } from '@material-ui/core'
 import { PieceBox, BarRow, BottomRow } from '../components/ui/CardSections'
 
 import PageTitle from '../components/ui/PageTitle'
 
-const FormLayout = ({ children, title, message, bar, bottom }, ...props) => {
-  const history = useHistory()
+const FormLayout = ({
+  children,
+  title,
+  message,
+  bar,
+  bottom,
+  below,
+  onClose,
+  ...props
+}) => {
+  const handleClose = event => {
+    if (!!onClose) {
+      onClose()
+    }
+  }
 
   return (
     <React.Fragment>
@@ -27,14 +39,7 @@ const FormLayout = ({ children, title, message, bar, bottom }, ...props) => {
           )}
           <Grid item>
             <PieceBox container direction="column">
-              {bar || (
-                <BarRow
-                  buttonLabel="Cancel X"
-                  onClick={() => {
-                    history.goBack()
-                  }}
-                />
-              )}
+              {bar || <BarRow buttonLabel="Cancel X" onClose={handleClose} />}
               <Grid item>
                 <Grid container justify="center">
                   <Grid item xs={11}>
@@ -48,6 +53,11 @@ const FormLayout = ({ children, title, message, bar, bottom }, ...props) => {
                 {bottom}
               </BottomRow>
             </PieceBox>
+          </Grid>
+          <Grid item>
+            <Grid container justify="center">
+              <Grid item>{below}</Grid>
+            </Grid>
           </Grid>
           <Box height="1rem"></Box>
         </Grid>
