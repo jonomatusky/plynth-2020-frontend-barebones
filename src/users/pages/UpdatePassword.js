@@ -1,12 +1,10 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
-import { Container } from '@material-ui/core'
 
 import Background from '../../shared/layouts/Background'
 import FormLayout from '../../shared/layouts/FormLayout'
-import SetPasswordForm from '../components/SetPasswordForm'
+import SetPasswordForm from '../components/UpdatePasswordForm'
 
-// need to change loggedOut to auth instead of props
 const ChangePassword = () => {
   const history = useHistory()
 
@@ -20,11 +18,9 @@ const ChangePassword = () => {
   return (
     <React.Fragment>
       <Background />
-      <Container maxWidth="xs">
-        <FormLayout title="Change Username">
-          <SetPasswordForm onSubmit={handleSubmit} />
-        </FormLayout>
-      </Container>
+      <FormLayout title="Change Password">
+        <SetPasswordForm onSubmit={handleSubmit} />
+      </FormLayout>
     </React.Fragment>
   )
 }

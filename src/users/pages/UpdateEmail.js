@@ -6,12 +6,13 @@ import { Container, Grid, Box, Typography } from '@material-ui/core'
 import { setUser } from '../../redux/authSlice'
 import PageTitle from '../../shared/components/ui/PageTitle'
 import Background from '../../shared/layouts/Background'
-import EmailForm from '../components/EmailForm'
+import EmailForm from '../components/UpdateEmailForm'
 import { PieceBox, BarRow } from '../../shared/components/ui/CardSections'
 
 // need to change loggedOut to auth instead of props
 const UpdateEmail = () => {
   const { user } = useSelector(state => state.auth)
+  const { email } = user || {}
   const dispatch = useDispatch()
 
   const history = useHistory()
@@ -46,7 +47,7 @@ const UpdateEmail = () => {
               <Grid container justify="center" alignItems="center">
                 <Grid item xs={11}>
                   <Box height="1rem"></Box>
-                  <EmailForm user={user} onSubmit={handleSubmit} />
+                  <EmailForm email={email} onSubmit={handleSubmit} />
                   <Box height="1.5rem"></Box>
                 </Grid>
               </Grid>

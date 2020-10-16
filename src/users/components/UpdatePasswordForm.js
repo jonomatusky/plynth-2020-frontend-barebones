@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Grid } from '@material-ui/core'
+import { Grid, Box } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
@@ -14,16 +14,18 @@ const SetPasswordForm = props => {
   const { isLoading, error, sendRequest, clearError } = useApiClient()
 
   const handleSubmit = async (values, { resetForm }) => {
-    delete values.passwordConfirmation
+    let { passwordConfirmation, ...passwords } = values
 
     if (!isLoading) {
       try {
-        const passwordData = { password: values }
+        const body = { passwords }
 
-        await sendRequest(`/auth/password`, 'PATCH', passwordData)
-
+        await sendRequest(`/auth/password`, 'PATCH', body)
+        resetForm()
         props.onSubmit(values)
-      } catch (err) {}
+      } catch (err) {
+        resetForm()
+      }
     }
   }
 
@@ -34,15 +36,13 @@ const SetPasswordForm = props => {
   }
 
   const validationSchema = Yup.object({
-    password: Yup.string(),
-    newPassword: Yup.string().min(
-      5,
-      'Password must be at least 5 characters long'
-    ),
-    passwordConfirmation: Yup.string().oneOf(
-      [Yup.ref('newPassword'), null],
-      'Passwords must match'
-    ),
+    password: Yup.string().required('Required'),
+    newPassword: Yup.string()
+      .min(5, 'Password must be at least 5 characters long')
+      .required('Required'),
+    passwordConfirmation: Yup.string()
+      .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
+      .required('Required'),
   })
 
   return (
@@ -82,6 +82,7 @@ const SetPasswordForm = props => {
                 type="password"
               />
             </Grid>
+            <Box height="1rem" />
             <Grid item>
               <ActionButton type="submit" label="Submit" loading={isLoading} />
             </Grid>

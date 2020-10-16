@@ -31,8 +31,10 @@ import LoggedInScan from './scans/pages/LoggedInScan'
 import BetaSignup from './users/pages/BetaSignup'
 import ViewUser from './users/pages/ViewUser'
 import UpdateEmail from './users/pages/UpdateEmail'
-import ChangePassword from './users/pages/ChangePassword'
-import ChangeUsername from './users/pages/ChangeUsername'
+import UpdatePassword from './users/pages/UpdatePassword'
+import UpdateUsername from './users/pages/UpdateUsername'
+import RecoverPassword from './users/pages/RecoverPassword'
+import ResetPassword from './users/pages/ResetPassword'
 import ContactSupport from './users/pages/ContactSupport'
 import Logout from './users/pages/Logout'
 
@@ -46,34 +48,29 @@ const App = () => {
   let routes
 
   useEffect(() => {
-    const getUser = async () => {
-      try {
-        const { exp } = jwt.decode(token)
+    const getUser = async token => {
+      const { user } = await sendRequest('/users/me', 'GET', null, {
+        Authorization: 'Bearer ' + token,
+      })
+      dispatch(login({ user, token }))
+    }
 
-        if (!!token && exp * 1000 > new Date()) {
-          const { user } = await sendRequest('/users/me', 'GET', null, {
-            Authorization: 'Bearer ' + token,
-          })
-          dispatch(login({ user, token }))
-        } else {
-          dispatch(logout())
-        }
+    const getPieces = async token => {
+      const response = await sendRequest(`/users/me/pieces`, 'GET', null, {
+        Authorization: 'Bearer ' + token,
+      })
+      dispatch(setPieces({ pieces: response.pieces }))
+    }
+
+    if (!!token && jwt.decode(token).exp * 1000 > new Date()) {
+      try {
+        getUser(token)
+        getPieces(token)
       } catch (err) {}
+    } else {
+      dispatch(logout())
+      dispatch(setPieces({ pieces: [] }))
     }
-    const getPieces = async () => {
-      if (!!token) {
-        try {
-          const response = await sendRequest(`/users/me/pieces`, 'GET', null, {
-            Authorization: 'Bearer ' + token,
-          })
-          dispatch(setPieces({ pieces: response.pieces }))
-        } catch (err) {}
-      } else if (!token) {
-        dispatch(setPieces({ pieces: null }))
-      }
-    }
-    getUser()
-    getPieces()
   }, [token, dispatch, sendRequest])
 
   const PrivateRoute = ({ component: Component, ...rest }) => {
@@ -141,6 +138,20 @@ const App = () => {
         restricted={true}
         component={BetaSignup}
         path="/s/subscribe"
+        exact
+      />
+
+      <PublicRoute
+        restricted={false}
+        component={RecoverPassword}
+        path="/s/recover"
+        exact
+      />
+
+      <PublicRoute
+        restricted={false}
+        component={ResetPassword}
+        path="/s/reset/:userId/:token"
         exact
       />
 
@@ -214,12 +225,12 @@ const App = () => {
         exact
       />
       <PrivateRoute
-        component={ChangePassword}
+        component={UpdatePassword}
         path="/admin/profile/password/change"
         exact
       />
       <PrivateRoute
-        component={ChangeUsername}
+        component={UpdateUsername}
         path="/admin/profile/username/change"
         exact
       />
