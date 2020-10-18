@@ -10,6 +10,7 @@ import jwt from 'jsonwebtoken'
 import { Box } from '@material-ui/core'
 import { LastLocationProvider } from 'react-router-last-location'
 
+import firebase from './firebase'
 import { login, logout } from './redux/authSlice'
 import { setPieces } from './redux/piecesSlice'
 import { useApiClient } from './shared/hooks/api-hook'
@@ -37,6 +38,8 @@ import ContactSupport from './users/pages/ContactSupport'
 import Logout from './users/pages/Logout'
 
 import NavBar from './shared/components/navigation/NavBar'
+
+firebase.analytics()
 
 const App = () => {
   const token = localStorage.getItem('userToken')
