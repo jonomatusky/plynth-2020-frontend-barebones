@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux'
 import { Container, Grid, Button } from '@material-ui/core'
 
 import { useApiClient } from '../../shared/hooks/api-hook'
-import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import Background from '../../shared/layouts/Background'
 import PageTitle from '../../shared/components/ui/PageTitle'
 import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
@@ -15,7 +14,7 @@ const ViewPiece = props => {
   const history = useHistory()
   const pieceId = useParams().pieceId
   const { user } = useSelector(state => state.auth)
-  const { error, sendRequest, clearError } = useApiClient()
+  const { sendRequest } = useApiClient()
 
   const piece = useSelector(state =>
     (state.pieces.pieces || []).find(piece => piece.id === pieceId)

@@ -71,7 +71,11 @@ const AdminViewUser = props => {
         {user && pieces && (
           <Grid container justify="flex-start" direction="column">
             <PieceBox container direction="column">
-              <BarRow onClick={handleClosePage} buttonLabel="Close X" />
+              <BarRow
+                onClick={handleClosePage}
+                buttonLabel="Close X"
+                title={user.admin && 'Admin'}
+              />
               <React.Fragment>
                 <ProfileTopRow
                   container
@@ -110,7 +114,12 @@ const AdminViewUser = props => {
                           to={`/${user.username}`}
                         >{`@${user.username} `}</UnstyledLink>
                       </Typography>
-                      <Typography variant="body2">Tier: {user.tier}</Typography>
+                      <Typography
+                        variant="body2"
+                        style={{ textTransform: 'capitalize' }}
+                      >
+                        Tier: {user.tier}
+                      </Typography>
                       <Typography variant="body2">
                         Pieces: {pieces.length}/{user.pieceLimit}
                       </Typography>

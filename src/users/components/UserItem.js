@@ -61,7 +61,10 @@ const UserItem = ({ user, ...props }) => {
                     {user.displayName}
                   </Typography>
                   <Typography color="textSecondary">
-                    Tier: {user.tier}
+                    Last Active:{' '}
+                    {user.lastActiveAt
+                      ? new Date(user.lastActiveAt).toLocaleDateString()
+                      : 'N/A'}
                   </Typography>
                   <Typography color="textSecondary">
                     Pieces: {user.pieceCount}/{user.pieceLimit}
