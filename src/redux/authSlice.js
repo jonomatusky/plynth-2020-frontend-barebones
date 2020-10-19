@@ -25,13 +25,23 @@ export const login = createAsyncThunk(
   }
 )
 
-export const loginFromToken = createAsyncThunk(
-  'auth/loginFromToken',
-  async ({ token }) => {
-    if (!!token) {
-      const { user } = await client.request({ url: '/users/me', token })
-      return { user, token }
-    }
+export const authWithToken = createAsyncThunk(
+  'auth/authWithToken',
+  async () => {
+    const { user } = await client.request({ url: '/users/me' })
+    return user
+  }
+)
+
+export const updateUser = createAsyncThunk(
+  'auth/updateUser',
+  async userData => {
+    const { user } = await client.request({
+      url: `/users/me`,
+      method: 'PATCH',
+      data: { user: userData },
+    })
+    return user
   }
 )
 
@@ -78,30 +88,28 @@ const authSlice = createSlice({
       state.token = token
       state.user = user
       state.scanRoute = '/admin/pickup'
-      localStorage.setItem('__USER_TOKEN', token)
     },
     [login.rejected]: (state, action) => {
       state.status = 'failed'
       state.error = action.error.message
       console.log(action.error.message)
     },
-    [loginFromToken.pending]: (state, action) => {
+    [authWithToken.pending]: (state, action) => {
       state.status = 'loading'
     },
-    [login.fulfilled]: (state, action) => {
+    [authWithToken.fulfilled]: (state, action) => {
       state.status = 'succeeded'
 
-      const { user, token } = action.payload
-
-      state.token = token
-      state.user = user
+      state.user = action.payload
       state.scanRoute = '/admin/pickup'
-      localStorage.setItem('__USER_TOKEN', token)
     },
-    [login.rejected]: (state, action) => {
+    [authWithToken.rejected]: (state, action) => {
       state.status = 'failed'
       state.error = action.error.message
       console.log(action.error.message)
+    },
+    [updateUser.fulfilled]: (state, action) => {
+      state.user = action.payload
     },
   },
 })

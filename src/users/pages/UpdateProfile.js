@@ -1,12 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { Grid, Box } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
-import { useApiClient } from '../../shared/hooks/api-hook'
-import { setUser } from '../../redux/authSlice'
+import { updateUser } from '../../redux/authSlice'
 
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import Background from '../../shared/layouts/Background'
@@ -20,15 +19,17 @@ const UpdateProfile = props => {
   const dispatch = useDispatch()
   const history = useHistory()
   const { user } = useSelector(state => state.auth)
-  const { isLoading, error, sendRequest, clearError } = useApiClient()
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState()
 
   const handleSubmit = async values => {
+    setIsLoading(true)
     try {
-      const userData = { user: values }
-      const response = await sendRequest(`/users/me`, 'PATCH', userData)
-      dispatch(setUser(response))
+      dispatch(updateUser(values))
       props.onSubmit(values)
-    } catch (err) {}
+    } catch (err) {
+      setError(err.message)
+    }
     history.push('/admin/profile')
   }
 
@@ -61,7 +62,11 @@ const UpdateProfile = props => {
     <>
       <Background />
       <FormLayout>
-        <ErrorBar open={!!error} error={error} handleClose={clearError} />
+        <ErrorBar
+          open={!!error}
+          error={error}
+          handleClose={() => setError(false)}
+        />
         <Formik
           enableReinitialize="true"
           initialValues={initialValues}

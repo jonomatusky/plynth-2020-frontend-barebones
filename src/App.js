@@ -6,13 +6,12 @@ import {
   Switch,
 } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import jwt from 'jsonwebtoken'
 import { Box } from '@material-ui/core'
 import { LastLocationProvider } from 'react-router-last-location'
 
-import { login, logout } from './redux/authSlice'
-import { setPieces } from './redux/piecesSlice'
-import { useApiClient } from './shared/hooks/api-hook'
+import { authWithToken, logout } from './redux/authSlice'
+import { fetchPieces } from './redux/piecesSlice'
+import jwt from 'jsonwebtoken'
 
 import NewPieceImage from './pieces/pages/NewPieceImage'
 import NewPiece from './pieces/pages/NewPiece'
@@ -41,14 +40,23 @@ import Logout from './users/pages/Logout'
 import NavBar from './shared/components/navigation/NavBar'
 
 const App = () => {
-  const { sendRequest } = useApiClient()
   const { token } = useSelector(state => state.auth)
   const dispatch = useDispatch()
 
   let routes
 
   useEffect(() => {
-    dispatch(login({ token }))
+    dispatch(authWithToken())
+    dispatch(fetchPieces())
+  }, [dispatch])
+
+  useEffect(() => {
+    if (!!token) {
+      const { exp } = jwt.decode(token) || {}
+      if (exp * 1000 > new Date()) {
+        dispatch(logout)
+      }
+    }
   }, [dispatch, token])
 
   const PrivateRoute = ({ component: Component, ...rest }) => {
