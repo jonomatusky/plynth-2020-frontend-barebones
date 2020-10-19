@@ -15,7 +15,7 @@ import AvatarInput from '../components/AvatarInput'
 import LinkList from '../../shared/components/forms/LinkList'
 import ActionButton from '../../shared/components/ui/ActionButton'
 
-const UpdateProfile = props => {
+const UpdateProfile = () => {
   const dispatch = useDispatch()
   const history = useHistory()
   const { user } = useSelector(state => state.auth)
@@ -24,16 +24,16 @@ const UpdateProfile = props => {
 
   const handleSubmit = async values => {
     setIsLoading(true)
+    console.log(isLoading)
     try {
-      dispatch(updateUser(values))
-      props.onSubmit(values)
+      await dispatch(updateUser(values))
     } catch (err) {
       setError(err.message)
     }
     history.push('/admin/profile')
   }
 
-  const { displayName, bio, links, avatar, avatarLink } = user
+  const { displayName, bio, links, avatar, avatarLink } = user || {}
 
   const initialValues = {
     displayName: displayName || '',
