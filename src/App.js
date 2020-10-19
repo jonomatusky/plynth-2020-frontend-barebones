@@ -5,7 +5,7 @@ import {
   Redirect,
   Switch,
 } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import jwt from 'jsonwebtoken'
 import { Box } from '@material-ui/core'
 import { LastLocationProvider } from 'react-router-last-location'
@@ -41,37 +41,15 @@ import Logout from './users/pages/Logout'
 import NavBar from './shared/components/navigation/NavBar'
 
 const App = () => {
-  const token = localStorage.getItem('userToken')
   const { sendRequest } = useApiClient()
+  const { token } = useSelector(state => state.auth)
   const dispatch = useDispatch()
 
   let routes
 
   useEffect(() => {
-    const getUser = async token => {
-      const { user } = await sendRequest('/users/me', 'GET', null, {
-        Authorization: 'Bearer ' + token,
-      })
-      dispatch(login({ user, token }))
-    }
-
-    const getPieces = async token => {
-      const response = await sendRequest(`/users/me/pieces`, 'GET', null, {
-        Authorization: 'Bearer ' + token,
-      })
-      dispatch(setPieces({ pieces: response.pieces }))
-    }
-
-    if (!!token && jwt.decode(token).exp * 1000 > new Date()) {
-      try {
-        getUser(token)
-        getPieces(token)
-      } catch (err) {}
-    } else {
-      dispatch(logout())
-      dispatch(setPieces({ pieces: [] }))
-    }
-  }, [token, dispatch, sendRequest])
+    dispatch(login({ token }))
+  }, [dispatch, token])
 
   const PrivateRoute = ({ component: Component, ...rest }) => {
     return (

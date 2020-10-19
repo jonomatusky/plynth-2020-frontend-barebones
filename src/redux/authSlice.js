@@ -1,12 +1,39 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import * as client from '../shared/util/client'
 
 let initialState = {
   user: null,
-  token: null,
-  isLoggedIn: false,
+  token: localStorage.getItem('__USER_TOKEN'),
+  status: 'idle',
+  error: null,
   scanRoute: '/',
   locationHistory: [],
 }
+
+export const login = createAsyncThunk(
+  'auth/login',
+  async ({ email, password }) => {
+    const { user, token } = await client.request({
+      url: '/auth/login',
+      method: 'POST',
+      data: {
+        user: { email, password },
+      },
+    })
+
+    return { user, token }
+  }
+)
+
+export const loginFromToken = createAsyncThunk(
+  'auth/loginFromToken',
+  async ({ token }) => {
+    if (!!token) {
+      const { user } = await client.request({ url: '/users/me', token })
+      return { user, token }
+    }
+  }
+)
 
 const authSlice = createSlice({
   name: 'auth',
@@ -24,21 +51,61 @@ const authSlice = createSlice({
         state.user = user
         state.isLoggedIn = true
         state.scanRoute = '/admin/pickup'
-        localStorage.setItem('userToken', token)
       } catch (err) {}
     },
     logout(state, action) {
-      localStorage.removeItem('userToken')
       state.token = null
       state.user = null
-      state.isLoggedIn = false
+      state.status = 'idle'
     },
     pushLocation(state, action) {
       state.locationHistory = state.locationHistory.concat(action.payload)
     },
+    clearError(state, action) {
+      state.error = null
+      state.status = 'idle'
+    },
+  },
+  extraReducers: {
+    [login.pending]: (state, action) => {
+      state.status = 'loading'
+    },
+    [login.fulfilled]: (state, action) => {
+      state.status = 'succeeded'
+
+      const { user, token } = action.payload
+
+      state.token = token
+      state.user = user
+      state.scanRoute = '/admin/pickup'
+      localStorage.setItem('__USER_TOKEN', token)
+    },
+    [login.rejected]: (state, action) => {
+      state.status = 'failed'
+      state.error = action.error.message
+      console.log(action.error.message)
+    },
+    [loginFromToken.pending]: (state, action) => {
+      state.status = 'loading'
+    },
+    [login.fulfilled]: (state, action) => {
+      state.status = 'succeeded'
+
+      const { user, token } = action.payload
+
+      state.token = token
+      state.user = user
+      state.scanRoute = '/admin/pickup'
+      localStorage.setItem('__USER_TOKEN', token)
+    },
+    [login.rejected]: (state, action) => {
+      state.status = 'failed'
+      state.error = action.error.message
+      console.log(action.error.message)
+    },
   },
 })
 
-export const { setUser, login, logout, pushLocation } = authSlice.actions
+export const { setUser, logout, pushLocation, clearError } = authSlice.actions
 
 export default authSlice.reducer

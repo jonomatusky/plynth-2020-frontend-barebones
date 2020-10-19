@@ -10,6 +10,13 @@ import App from './App'
 import store from './redux/store'
 import theme from './theme'
 
+store.subscribe(() => {
+  const token = store.getState().auth.token
+  if (!!token) {
+    localStorage.setItem('__USER_TOKEN', store.getState().auth.token)
+  }
+})
+
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
