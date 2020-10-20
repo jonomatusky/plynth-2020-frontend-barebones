@@ -15,30 +15,22 @@ import FormLayout from '../../shared/layouts/FormLayout'
 
 const UpdatePiece = props => {
   const dispatch = useDispatch()
-  const { isLoading, error, sendRequest, clearError } = useApiClient()
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
   const [piece, setPiece] = useState()
   const pieceId = useParams().pieceId
-  const propPiece = (props.location.data || {}).piece
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState(false)
 
   const history = useHistory()
 
-  useEffect(() => {
-    if (!propPiece || propPiece.id !== pieceId) {
-      const fetchPieces = async () => {
-        try {
-          const responseData = await sendRequest(`/pieces/${pieceId}`)
-          setPiece(responseData.piece)
-        } catch (err) {}
-      }
-      fetchPieces()
-    } else {
-      setPiece(propPiece)
-    }
-  }, [sendRequest, pieceId, propPiece])
-
   const handleSubmit = async response => {
-    history.push(`/admin/pieces/${response.piece.id}`)
+    try {
+      setIsLoading(true)
+      await dispatch(setPiece(response))
+      history.push(`/admin/pieces/${response.piece.id}`)
+    } catch (err) {
+      setError(err.message)
+    }
   }
 
   const handleDelete = async () => {
@@ -71,7 +63,13 @@ const UpdatePiece = props => {
           setDeleteModalIsOpen(false)
         }}
       />
-      <ErrorBar open={!!error} error={error} handleClose={clearError} />
+      <ErrorBar
+        open={!!error}
+        error={error}
+        handleClose={() => {
+          setError(false)
+        }}
+      />
       <Background />
       {!isLoading && piece ? (
         <FormLayout
@@ -90,7 +88,11 @@ const UpdatePiece = props => {
             </Button>
           }
         >
-          <PieceForm piece={piece} onSubmit={handleSubmit} />
+          <PieceForm
+            piece={piece}
+            onSubmit={handleSubmit}
+            isLoading={isLoading}
+          />
         </FormLayout>
       ) : (
         isLoading && !piece && <LoadingSpinner asOverlay />

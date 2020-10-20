@@ -19,6 +19,18 @@ export const fetchPieces = createAsyncThunk('pieces/fetchPieces', async () => {
   return pieces
 })
 
+export const updatePiece = createAsyncThunk(
+  'pieces/updatePiece',
+  async pieceData => {
+    const { piece } = await client.request({
+      url: `/pieces/${piece.id}`,
+      method: 'PATCH',
+      data: { user: pieceData },
+    })
+    return piece
+  }
+)
+
 const piecesSlice = createSlice({
   name: 'pieces',
   initialState,
@@ -66,6 +78,9 @@ const piecesSlice = createSlice({
     [fetchPieces.rejected]: (state, action) => {
       state.status = 'failed'
       state.error = action.error.message
+    },
+    [updatePiece.fulfilled]: (state, action) => {
+      state.piece = action.payload
     },
   },
 })

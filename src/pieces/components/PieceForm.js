@@ -19,15 +19,13 @@ import LinksList from '../../shared/components/forms/LinkList'
 
 const ASSET_URL = process.env.REACT_APP_ASSET_URL
 
-const PieceForm = props => {
+const PieceForm = ({ piece, imageFilepath, onSubmit, isLoading }) => {
   const dispatch = useDispatch()
   const { isLoading, error, sendRequest, clearError } = useApiClient()
 
-  const piece = props.piece
   const { id, title, description, links, awsId, ext, isDirect } = piece || {}
 
-  const imageFilepath =
-    props.imageFilepath || (awsId && ext ? `${awsId}.${ext}` : null)
+  imageFilepath = imageFilepath || (awsId && ext ? `${awsId}.${ext}` : null)
 
   const initialValues = {
     title: title || '',
@@ -37,6 +35,8 @@ const PieceForm = props => {
   }
 
   const handleSubmit = async formData => {
+    onSubmit()
+
     let url = piece ? `/pieces/${id}` : `/pieces`
     let method = piece ? 'PATCH' : 'POST'
 
