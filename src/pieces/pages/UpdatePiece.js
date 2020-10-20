@@ -1,24 +1,28 @@
 import React, { useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Button } from '@material-ui/core'
 
 import { useThunkClient } from '../../shared/hooks/thunk-hook'
+import { setMessage } from '../../redux/messageSlice'
 import { selectPiece, updatePiece, deletePiece } from '../../redux/piecesSlice'
 import Background from '../../shared/layouts/Background'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import NotificationModal from '../../shared/components/notifications/NotificationModal'
-import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
+import NotFound from '../../shared/components/navigation/NotFound'
 import PieceForm from '../components/PieceForm'
 import { BarRow } from '../../shared/components/ui/CardSections'
 import FormLayout from '../../shared/layouts/FormLayout'
 
 const UpdatePiece = () => {
+  const dispatch = useDispatch()
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
   const pieceId = useParams().pieceId
   const piece = useSelector(state => selectPiece(state, pieceId))
 
-  const { isLoading, error, dispatchThunk, clearError } = useThunkClient()
+  const { dispatchThunk, error, clearError } = useThunkClient()
+  const { updateStatus } = useSelector(state => state.pieces)
+  console.log(updateStatus)
 
   const history = useHistory()
 
@@ -28,16 +32,19 @@ const UpdatePiece = () => {
         action: updatePiece,
         input: { id: pieceId, updates: values },
       })
-      history.push(`/admin/pieces/${pieceId}`)
+      history.goBack()
     } catch (err) {}
   }
 
   const handleDelete = async () => {
-    await dispatchThunk({
-      action: deletePiece,
-      input: { piece },
-    })
-    history.push(`/admin/pieces/`)
+    try {
+      await dispatchThunk({
+        action: deletePiece,
+        input: { id: pieceId },
+      })
+      dispatch(setMessage('Your piece has been deleted.'))
+      history.push(`/admin/pieces/`)
+    } catch (err) {}
   }
 
   const handleOpenDeleteModal = () => {
@@ -66,7 +73,7 @@ const UpdatePiece = () => {
       />
       <ErrorBar open={!!error} error={error} handleClose={clearError} />
       <Background />
-      {piece ? (
+      {piece && (
         <FormLayout
           bar={
             <BarRow
@@ -86,12 +93,11 @@ const UpdatePiece = () => {
           <PieceForm
             piece={piece}
             onSubmit={handleSubmit}
-            isLoading={isLoading}
+            isLoading={updateStatus === 'loading'}
           />
         </FormLayout>
-      ) : (
-        !piece && <LoadingSpinner asOverlay />
       )}
+      {!piece && <NotFound />}
     </>
   )
 }

@@ -6,6 +6,7 @@ let initialState = {
   newPieceImage: null,
   status: 'idle',
   error: null,
+  updateStatus: 'idle',
 }
 
 const isMatch = piece => {
@@ -31,10 +32,14 @@ export const updatePiece = createAsyncThunk(
   }
 )
 
-export const deletePiece = createAsyncThunk('pieces/deletePiece', async id => {
-  await client.request({ url: `/pieces/${id}`, method: 'DELETE' })
-  return id
-})
+export const deletePiece = createAsyncThunk(
+  'pieces/deletePiece',
+  async ({ id }) => {
+    console.log('id: ' + id)
+    await client.request({ url: `/pieces/${id}`, method: 'DELETE' })
+    return id
+  }
+)
 
 const piecesSlice = createSlice({
   name: 'pieces',
@@ -61,7 +66,11 @@ const piecesSlice = createSlice({
       state.status = 'failed'
       state.error = action.error.message
     },
+    [updatePiece.pending]: (state, action) => {
+      state.updateStatus = 'loading'
+    },
     [updatePiece.fulfilled]: (state, action) => {
+      state.updateStatus = 'idle'
       const piece = action.payload
       const matchingIndex = state.pieces.findIndex(isMatch(piece))
 
@@ -74,7 +83,9 @@ const piecesSlice = createSlice({
       state.pieces = [piece, ...state.pieces]
     },
     [deletePiece.fulfilled]: (state, action) => {
+      console.log('fulfilled')
       const id = action.payload
+      console.log('id')
       const matchingIndex = state.pieces.findIndex(isMatch(id))
 
       if (matchingIndex >= 0) {

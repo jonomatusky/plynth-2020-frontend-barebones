@@ -37,13 +37,19 @@ const NewImage = () => {
   const imageSubmitHandler = async event => {
     event.preventDefault()
     try {
-      const awsRes = await sendRequest(signedUrl, 'PUT', image)
+      const awsRes = await sendRequest({
+        url: signedUrl,
+        method: 'PUT',
+        data: { image },
+      })
       if (awsRes.status === 200) {
         sessionStorage.setItem('imageId', imageData.id)
         sessionStorage.setItem('imageExt', imageData.ext)
         history.push('/admin/create/piece')
       }
-    } catch (err) {}
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   return (

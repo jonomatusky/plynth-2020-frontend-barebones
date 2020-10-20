@@ -9,8 +9,6 @@ export const request = async ({ cancelToken, url, ...config }) => {
 
   console.log(config.data)
 
-  console.log(token)
-
   let message
 
   if (url.indexOf('http://') < 0 && url.indexOf('https://') < 0) {
@@ -21,10 +19,6 @@ export const request = async ({ cancelToken, url, ...config }) => {
   } else if (url.search('amazonaws') !== -1) {
     message = 'Unable to upload image. Please try again.'
   }
-
-  console.log(headers)
-
-  console.log(url)
 
   try {
     const response = await axios.request({
@@ -43,16 +37,16 @@ export const request = async ({ cancelToken, url, ...config }) => {
     if (axios.isCancel(err)) {
       console.log('Request canceled: ', err.message)
       return
+    } else if (message) {
+      throw new Error(message)
+    } else if (((err.response || {}).data || {}).message) {
+      console.log(err.response.data.message)
+      throw new Error(err.response.data.message)
     } else if (err.request) {
       console.log(err.request)
       throw new Error(
         'Unable to connect to server. Please check your internet connection.'
       )
-    } else if (message) {
-      throw new Error(message)
-    } else if ((err.response.data || {}).message) {
-      console.log(err.response.data.message)
-      throw new Error(err.response.data.message)
     } else {
       console.log('Error', err.message)
       return
