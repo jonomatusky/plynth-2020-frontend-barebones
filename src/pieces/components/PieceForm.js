@@ -1,12 +1,8 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
 import { Grid, Box } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
-import { setPiece } from '../../redux/piecesSlice'
-import { useApiClient } from '../../shared/hooks/api-hook'
-import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import ActionButton from '../../shared/components/ui/ActionButton'
 import {
   TextField,
@@ -20,10 +16,7 @@ import LinksList from '../../shared/components/forms/LinkList'
 const ASSET_URL = process.env.REACT_APP_ASSET_URL
 
 const PieceForm = ({ piece, imageFilepath, onSubmit, isLoading }) => {
-  const dispatch = useDispatch()
-  const { isLoading, error, sendRequest, clearError } = useApiClient()
-
-  const { id, title, description, links, awsId, ext, isDirect } = piece || {}
+  const { title, description, links, awsId, ext, isDirect } = piece || {}
 
   imageFilepath = imageFilepath || (awsId && ext ? `${awsId}.${ext}` : null)
 
@@ -34,22 +27,8 @@ const PieceForm = ({ piece, imageFilepath, onSubmit, isLoading }) => {
     isDirect: isDirect || false,
   }
 
-  const handleSubmit = async formData => {
-    onSubmit()
-
-    let url = piece ? `/pieces/${id}` : `/pieces`
-    let method = piece ? 'PATCH' : 'POST'
-
-    formData.images = [imageFilepath]
-
-    try {
-      const pieceData = { piece: formData }
-      let response = await sendRequest(url, method, pieceData)
-      dispatch(setPiece(response))
-      props.onSubmit(response)
-    } catch (err) {
-      console.log(err)
-    }
+  const handleSubmit = async values => {
+    onSubmit(values)
   }
 
   const validationSchema = Yup.object({
@@ -71,7 +50,6 @@ const PieceForm = ({ piece, imageFilepath, onSubmit, isLoading }) => {
 
   return (
     <>
-      <ErrorBar open={!!error} error={error} handleClose={clearError} />
       <Formik
         enableReinitialize="true"
         initialValues={initialValues}

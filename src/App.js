@@ -15,7 +15,7 @@ import jwt from 'jsonwebtoken'
 
 import NewPieceImage from './pieces/pages/NewPieceImage'
 import NewPiece from './pieces/pages/NewPiece'
-import ViewPiece from './pieces/pages/ViewPiece'
+import ViewPiece from './pieces/pages/ViewMyPiece'
 import MyPieces from './pieces/pages/MyPieces'
 import UpdatePiece from './pieces/pages/UpdatePiece'
 import MyProfile from './users/pages/MyProfile'

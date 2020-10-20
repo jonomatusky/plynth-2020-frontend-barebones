@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { Button } from '@material-ui/core'
 
-import { deletePiece } from '../../redux/piecesSlice'
-import { useApiClient } from '../../shared/hooks/api-hook'
+import { useThunkClient } from '../../shared/hooks/thunk-hook'
+import { selectPiece, updatePiece, deletePiece } from '../../redux/piecesSlice'
 import Background from '../../shared/layouts/Background'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import NotificationModal from '../../shared/components/notifications/NotificationModal'
@@ -13,29 +13,30 @@ import PieceForm from '../components/PieceForm'
 import { BarRow } from '../../shared/components/ui/CardSections'
 import FormLayout from '../../shared/layouts/FormLayout'
 
-const UpdatePiece = props => {
-  const dispatch = useDispatch()
+const UpdatePiece = () => {
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
-  const [piece, setPiece] = useState()
   const pieceId = useParams().pieceId
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState(false)
+  const piece = useSelector(state => selectPiece(state, pieceId))
+
+  const { isLoading, error, dispatchThunk, clearError } = useThunkClient()
 
   const history = useHistory()
 
-  const handleSubmit = async response => {
+  const handleSubmit = async values => {
     try {
-      setIsLoading(true)
-      await dispatch(setPiece(response))
-      history.push(`/admin/pieces/${response.piece.id}`)
-    } catch (err) {
-      setError(err.message)
-    }
+      await dispatchThunk({
+        action: updatePiece,
+        input: { id: pieceId, updates: values },
+      })
+      history.push(`/admin/pieces/${pieceId}`)
+    } catch (err) {}
   }
 
   const handleDelete = async () => {
-    await sendRequest(`/pieces/${pieceId}`, 'DELETE')
-    dispatch(deletePiece({ piece }))
+    await dispatchThunk({
+      action: deletePiece,
+      input: { piece },
+    })
     history.push(`/admin/pieces/`)
   }
 
@@ -63,15 +64,9 @@ const UpdatePiece = props => {
           setDeleteModalIsOpen(false)
         }}
       />
-      <ErrorBar
-        open={!!error}
-        error={error}
-        handleClose={() => {
-          setError(false)
-        }}
-      />
+      <ErrorBar open={!!error} error={error} handleClose={clearError} />
       <Background />
-      {!isLoading && piece ? (
+      {piece ? (
         <FormLayout
           bar={
             <BarRow
@@ -95,7 +90,7 @@ const UpdatePiece = props => {
           />
         </FormLayout>
       ) : (
-        isLoading && !piece && <LoadingSpinner asOverlay />
+        !piece && <LoadingSpinner asOverlay />
       )}
     </>
   )

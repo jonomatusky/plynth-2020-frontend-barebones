@@ -43,16 +43,16 @@ export const request = async ({ cancelToken, url, ...config }) => {
     if (axios.isCancel(err)) {
       console.log('Request canceled: ', err.message)
       return
-    } else if (message) {
-      throw new Error(message)
-    } else if ((err.response.data || {}).message) {
-      console.log(err.response.data.message)
-      throw new Error(err.response.data.message)
     } else if (err.request) {
       console.log(err.request)
       throw new Error(
         'Unable to connect to server. Please check your internet connection.'
       )
+    } else if (message) {
+      throw new Error(message)
+    } else if ((err.response.data || {}).message) {
+      console.log(err.response.data.message)
+      throw new Error(err.response.data.message)
     } else {
       console.log('Error', err.message)
       return

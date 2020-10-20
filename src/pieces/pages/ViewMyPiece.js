@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
+import { selectPiece } from '../../redux/piecesSlice'
 import { useApiClient } from '../../shared/hooks/api-hook'
 import { Container } from '@material-ui/core'
 import Background from '../../shared/layouts/Background'
@@ -12,36 +13,35 @@ import ErrorBar from '../../shared/components/notifications/ErrorBar'
 
 const ViewPiece = props => {
   const { isLoading, error, sendRequest, clearError } = useApiClient()
-  const { pieces } = useSelector(state => state.pieces)
   const pieceId = useParams().pieceId
+  const existingPiece = useSelector(state => selectPiece(state, pieceId))
 
-  const [piece, setPiece] = useState(() => {
-    if (pieces && pieces.length > 0) {
-      return pieces.find(piece => piece.id === pieceId)
-    } else {
-      return null
-    }
-  })
+  const { status } = useSelector(state => state.pieces)
+  const [piece, setPiece] = useState(null)
 
   useEffect(() => {
-    if (!piece) {
-      const fetchPieces = async () => {
-        try {
-          const responseData = await sendRequest(`/pieces/${pieceId}`)
-          setPiece(responseData.piece)
-        } catch (err) {}
+    if (status === 'succeeded') {
+      if (!!existingPiece) {
+        setPiece(existingPiece)
+      } else {
+        const fetchPiece = async () => {
+          try {
+            const responseData = await sendRequest(`/pieces/${pieceId}`)
+            setPiece(responseData.piece)
+          } catch (err) {}
+        }
+        fetchPiece()
       }
-      fetchPieces()
     }
-  }, [sendRequest, pieceId, piece])
+  }, [sendRequest, pieceId, existingPiece, status])
 
   return (
     <React.Fragment>
       <ErrorBar open={!!error} error={error} handleClose={clearError} />
       <Background />
       <Container maxWidth="xs" disableGutters>
-        {isLoading && !piece && <LoadingSpinner asOverlay />}
-        {!isLoading && piece && <PieceCard piece={piece} />}
+        {!piece && <LoadingSpinner asOverlay />}
+        {!!piece && <PieceCard piece={piece} />}
       </Container>
     </React.Fragment>
   )

@@ -21,15 +21,20 @@ export const fetchPieces = createAsyncThunk('pieces/fetchPieces', async () => {
 
 export const updatePiece = createAsyncThunk(
   'pieces/updatePiece',
-  async pieceData => {
+  async ({ id, updates }) => {
     const { piece } = await client.request({
-      url: `/pieces/${piece.id}`,
+      url: `/pieces/${id}`,
       method: 'PATCH',
-      data: { user: pieceData },
+      data: { piece: updates },
     })
     return piece
   }
 )
+
+export const deletePiece = createAsyncThunk('pieces/deletePiece', async id => {
+  await client.request({ url: `/pieces/${id}`, method: 'DELETE' })
+  return id
+})
 
 const piecesSlice = createSlice({
   name: 'pieces',
@@ -38,29 +43,6 @@ const piecesSlice = createSlice({
     setPieces(state, action) {
       const { pieces } = action.payload
       state.pieces = pieces
-    },
-    setPiece(state, action) {
-      const { piece } = action.payload
-      const matchingIndex = state.pieces.findIndex(isMatch(piece))
-
-      if (matchingIndex >= 0) {
-        state.pieces = [
-          ...state.pieces.slice(0, matchingIndex),
-          ...state.pieces.slice(matchingIndex + 1),
-        ]
-      }
-      state.pieces = [piece, ...state.pieces]
-    },
-    deletePiece(state, action) {
-      const { piece } = action.payload
-      const matchingIndex = state.pieces.findIndex(isMatch(piece))
-
-      if (matchingIndex >= 0) {
-        state.pieces = [
-          ...state.pieces.slice(0, matchingIndex),
-          ...state.pieces.slice(matchingIndex + 1),
-        ]
-      }
     },
     setNewPieceImage(state, action) {
       state.newPieceImage = action.payload
@@ -80,16 +62,35 @@ const piecesSlice = createSlice({
       state.error = action.error.message
     },
     [updatePiece.fulfilled]: (state, action) => {
-      state.piece = action.payload
+      const piece = action.payload
+      const matchingIndex = state.pieces.findIndex(isMatch(piece))
+
+      if (matchingIndex >= 0) {
+        state.pieces = [
+          ...state.pieces.slice(0, matchingIndex),
+          ...state.pieces.slice(matchingIndex + 1),
+        ]
+      }
+      state.pieces = [piece, ...state.pieces]
+    },
+    [deletePiece.fulfilled]: (state, action) => {
+      const id = action.payload
+      const matchingIndex = state.pieces.findIndex(isMatch(id))
+
+      if (matchingIndex >= 0) {
+        state.pieces = [
+          ...state.pieces.slice(0, matchingIndex),
+          ...state.pieces.slice(matchingIndex + 1),
+        ]
+      }
     },
   },
 })
 
-export const {
-  setPieces,
-  setPiece,
-  deletePiece,
-  setNewPieceImage,
-} = piecesSlice.actions
+export const { setPieces, setPiece, setNewPieceImage } = piecesSlice.actions
 
 export default piecesSlice.reducer
+
+export const selectPiece = (state, pieceId) => {
+  return (state.pieces.pieces || []).find(piece => piece.id === pieceId)
+}
