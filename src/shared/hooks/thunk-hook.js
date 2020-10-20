@@ -1,49 +1,42 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useEffect, useCallback, useRef } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { unwrapResult } from '@reduxjs/toolkit'
 import axios from 'axios'
 
+import { setError } from '../../redux/messageSlice'
+
 export const useThunkClient = () => {
   const dispatch = useDispatch()
-  const [error, setError] = useState()
-  const [isLoading, setIsLoading] = useState(false)
+  const { token } = useSelector(state => state.auth)
 
   let activeAxiosSources = useRef([])
 
   const dispatchThunk = useCallback(
-    async ({ action, input }) => {
-      setIsLoading(true)
-
+    async ({ thunk, input }) => {
       try {
         const CancelToken = axios.CancelToken
         const source = CancelToken.source()
         activeAxiosSources.current.push(source)
 
         const resultAction = await dispatch(
-          action({ cancelToken: source.token, ...input })
+          thunk({ cancelToken: source.token, token, input })
         )
 
-        unwrapResult(resultAction)
+        const result = unwrapResult(resultAction)
 
         activeAxiosSources.current = activeAxiosSources.current.filter(
           reqCtrl => reqCtrl.token !== source.token
         )
 
-        setIsLoading(false)
-        return resultAction
+        return result
       } catch (err) {
         console.log(err)
-        err.message && setError(err.message)
-        setIsLoading(false)
+        err.message && dispatch(setError(err.message))
         throw err
       }
     },
     [dispatch]
   )
-
-  const clearError = () => {
-    setError(null)
-  }
 
   useEffect(() => {
     return () => {
@@ -53,5 +46,5 @@ export const useThunkClient = () => {
     }
   }, [])
 
-  return { dispatchThunk, error, clearError, isLoading }
+  return dispatchThunk
 }

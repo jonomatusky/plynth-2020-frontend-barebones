@@ -89,10 +89,10 @@ export const BarRow = ({ title, buttonLabel, onClose, ...props }) => {
 
     const { referrer } = location.state || {}
 
-    if (!!onClose) {
-      onClose()
-    } else if (!!referrer) {
+    if (!!referrer) {
       history.push(referrer)
+    } else if (!!onClose) {
+      onClose()
     } else if (!lastLocation) {
       history.push('/')
     } else {

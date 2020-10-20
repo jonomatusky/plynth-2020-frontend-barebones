@@ -1,37 +1,18 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
 import { Grid } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
-import { setUser } from '../../redux/authSlice'
-import { useApiClient } from '../../shared/hooks/api-hook'
-import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import { TextField } from '../../shared/components/forms/FormElements'
 import ActionButton from '../../shared/components/ui/ActionButton'
 
-const UsernameForm = props => {
-  const dispatch = useDispatch()
-
-  const { isLoading, error, sendRequest, clearError } = useApiClient()
-
+const UsernameForm = ({ onSubmit, isLoading, username }) => {
   const handleSubmit = async (values, { resetForm }) => {
-    delete values.passwordConfirmation
-
-    if (!isLoading) {
-      try {
-        const userData = { user: values }
-
-        const { user } = await sendRequest(`/users/me`, 'PATCH', userData)
-
-        dispatch(setUser({ user }))
-        props.onSubmit(values)
-      } catch (err) {}
-    }
+    onSubmit({ values, resetForm })
   }
 
   const initialValues = {
-    username: (props.user || {}).username,
+    username,
   }
 
   const validationSchema = Yup.object({
@@ -51,27 +32,23 @@ const UsernameForm = props => {
   })
 
   return (
-    <React.Fragment>
-      <ErrorBar open={!!error} error={error} handleClose={clearError} />
-
-      <Formik
-        enableReinitialize="true"
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
-        <Form>
-          <Grid container direction="column" spacing={3}>
-            <Grid item>
-              <TextField name="username" label="Username" />
-            </Grid>
-            <Grid item>
-              <ActionButton type="submit" label="Submit" loading={isLoading} />
-            </Grid>
+    <Formik
+      enableReinitialize="true"
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={handleSubmit}
+    >
+      <Form>
+        <Grid container direction="column" spacing={3}>
+          <Grid item>
+            <TextField name="username" label="Username" />
           </Grid>
-        </Form>
-      </Formik>
-    </React.Fragment>
+          <Grid item>
+            <ActionButton type="submit" label="Submit" loading={isLoading} />
+          </Grid>
+        </Grid>
+      </Form>
+    </Formik>
   )
 }
 

@@ -7,10 +7,7 @@ let initialState = {
   status: 'idle',
   error: null,
   updateStatus: 'idle',
-}
-
-const isMatch = piece => {
-  return item => item.id === piece.id
+  createStatus: 'idle',
 }
 
 export const fetchPieces = createAsyncThunk('pieces/fetchPieces', async () => {
@@ -19,6 +16,18 @@ export const fetchPieces = createAsyncThunk('pieces/fetchPieces', async () => {
   })
   return pieces
 })
+
+export const createPiece = createAsyncThunk(
+  'pieces/createPiece',
+  async ({ values }) => {
+    const { piece } = await client.request({
+      url: `/pieces`,
+      method: 'POST',
+      data: { piece: values },
+    })
+    return piece
+  }
+)
 
 export const updatePiece = createAsyncThunk(
   'pieces/updatePiece',
@@ -71,8 +80,10 @@ const piecesSlice = createSlice({
     },
     [updatePiece.fulfilled]: (state, action) => {
       state.updateStatus = 'idle'
-      const piece = action.payload
-      const matchingIndex = state.pieces.findIndex(isMatch(piece))
+      const updatedPiece = action.payload
+      const matchingIndex = state.pieces.findIndex(
+        piece => piece.id === updatedPiece.id
+      )
 
       if (matchingIndex >= 0) {
         state.pieces = [
@@ -80,13 +91,21 @@ const piecesSlice = createSlice({
           ...state.pieces.slice(matchingIndex + 1),
         ]
       }
+      state.pieces = [updatedPiece, ...state.pieces]
+    },
+    [createPiece.pending]: (state, action) => {
+      state.createStatus = 'loading'
+    },
+    [createPiece.fulfilled]: (state, action) => {
+      state.createStatus = 'idle'
+      const piece = action.payload
       state.pieces = [piece, ...state.pieces]
     },
     [deletePiece.fulfilled]: (state, action) => {
       console.log('fulfilled')
       const id = action.payload
       console.log('id')
-      const matchingIndex = state.pieces.findIndex(isMatch(id))
+      const matchingIndex = state.pieces.findIndex(piece => piece.id === id)
 
       if (matchingIndex >= 0) {
         state.pieces = [

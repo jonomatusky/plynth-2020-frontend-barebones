@@ -1,20 +1,18 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
-import { useSelector } from 'react-redux'
+import { useEffect, useCallback, useRef } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import axios from 'axios'
 
+import { setError } from '../../redux/messageSlice'
 import * as client from '../util/client'
 
 export const useApiClient = () => {
+  const dispatch = useDispatch()
   const { token } = useSelector(state => state.auth)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState()
 
   let activeAxiosSources = useRef([])
 
   const sendRequest = useCallback(
     async config => {
-      setIsLoading(true)
-
       console.log(config.url)
 
       try {
@@ -32,20 +30,14 @@ export const useApiClient = () => {
           reqCtrl => reqCtrl.token !== source.token
         )
 
-        setIsLoading(false)
         return response
       } catch (err) {
         console.log(err)
-        err.message && setError(err.message)
-        setIsLoading(false)
+        err.message && dispatch(setError(err.message))
       }
     },
-    [token]
+    [token, dispatch]
   )
-
-  const clearError = () => {
-    setError(null)
-  }
 
   useEffect(() => {
     return () => {
@@ -55,5 +47,5 @@ export const useApiClient = () => {
     }
   }, [])
 
-  return { isLoading, error, sendRequest, clearError }
+  return sendRequest
 }

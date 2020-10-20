@@ -7,7 +7,6 @@ import { useThunkClient } from '../../shared/hooks/thunk-hook'
 import { setMessage } from '../../redux/messageSlice'
 import { selectPiece, updatePiece, deletePiece } from '../../redux/piecesSlice'
 import Background from '../../shared/layouts/Background'
-import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import NotificationModal from '../../shared/components/notifications/NotificationModal'
 import NotFound from '../../shared/components/navigation/NotFound'
 import PieceForm from '../components/PieceForm'
@@ -20,31 +19,34 @@ const UpdatePiece = () => {
   const pieceId = useParams().pieceId
   const piece = useSelector(state => selectPiece(state, pieceId))
 
-  const { dispatchThunk, error, clearError } = useThunkClient()
+  const dispatchThunk = useThunkClient()
   const { updateStatus } = useSelector(state => state.pieces)
-  console.log(updateStatus)
 
   const history = useHistory()
 
   const handleSubmit = async values => {
     try {
       await dispatchThunk({
-        action: updatePiece,
+        thunk: updatePiece,
         input: { id: pieceId, updates: values },
       })
       history.goBack()
-    } catch (err) {}
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const handleDelete = async () => {
     try {
       await dispatchThunk({
-        action: deletePiece,
+        thunk: deletePiece,
         input: { id: pieceId },
       })
-      dispatch(setMessage('Your piece has been deleted.'))
-      history.push(`/admin/pieces/`)
-    } catch (err) {}
+      dispatch(setMessage({ message: 'Your piece has been deleted.' }))
+      history.push(`/admin/pieces`)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const handleOpenDeleteModal = () => {
@@ -71,19 +73,10 @@ const UpdatePiece = () => {
           setDeleteModalIsOpen(false)
         }}
       />
-      <ErrorBar open={!!error} error={error} handleClose={clearError} />
       <Background />
       {piece && (
         <FormLayout
-          bar={
-            <BarRow
-              title="Edit Your Piece"
-              onClick={() => {
-                history.goBack()
-              }}
-              buttonLabel={'Cancel X'}
-            />
-          }
+          bar={<BarRow title="Edit Your Piece" buttonLabel={'Cancel X'} />}
           bottom={
             <Button color="inherit" onClick={handleOpenDeleteModal}>
               Delete This Piece

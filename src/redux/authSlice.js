@@ -33,17 +33,14 @@ export const authWithToken = createAsyncThunk(
   }
 )
 
-export const updateUser = createAsyncThunk(
-  'auth/updateUser',
-  async userData => {
-    const { user } = await client.request({
-      url: `/users/me`,
-      method: 'PATCH',
-      data: { user: userData },
-    })
-    return user
-  }
-)
+export const updateUser = createAsyncThunk('auth/updateUser', async updates => {
+  const { user } = await client.request({
+    url: `/users/me`,
+    method: 'PATCH',
+    data: { user: updates },
+  })
+  return user
+})
 
 const authSlice = createSlice({
   name: 'auth',

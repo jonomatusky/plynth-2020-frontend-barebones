@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import jwt from 'jsonwebtoken'
 import {
   BrowserRouter as Router,
   Route,
@@ -11,7 +12,6 @@ import { LastLocationProvider } from 'react-router-last-location'
 
 import { authWithToken, logout } from './redux/authSlice'
 import { fetchPieces } from './redux/piecesSlice'
-import jwt from 'jsonwebtoken'
 
 import NewPieceImage from './pieces/pages/NewPieceImage'
 import NewPiece from './pieces/pages/NewPiece'
@@ -37,24 +37,38 @@ import ResetPassword from './users/pages/ResetPassword'
 import ContactSupport from './users/pages/ContactSupport'
 import Logout from './users/pages/Logout'
 
+import ErrorBar from './shared/components/notifications/Error'
+import MessageBar from './shared/components/notifications/Message'
 import NavBar from './shared/components/navigation/NavBar'
 
 const App = () => {
   const { token } = useSelector(state => state.auth)
+  const loggedOut =
+    (useSelector(state => state.auth) || {}).status !== 'succeeded'
   const dispatch = useDispatch()
 
   let routes
 
   useEffect(() => {
-    dispatch(authWithToken())
-    dispatch(fetchPieces())
-  }, [dispatch])
+    if (token && loggedOut) {
+      console.log('authenticating')
+      dispatch(authWithToken())
+    }
+  }, [dispatch, loggedOut, token])
+
+  useEffect(() => {
+    if (!loggedOut) {
+      dispatch(fetchPieces())
+    }
+  }, [dispatch, loggedOut])
 
   useEffect(() => {
     if (!!token) {
       const { exp } = jwt.decode(token) || {}
-      if (exp * 1000 > new Date()) {
-        dispatch(logout)
+      console.log(exp * 1000)
+      console.log(new Date())
+      if (Date.now() >= exp * 1000) {
+        dispatch(logout())
       }
     }
   }, [dispatch, token])
@@ -64,7 +78,7 @@ const App = () => {
       <Route
         {...rest}
         render={props =>
-          token ? (
+          !loggedOut ? (
             <React.Fragment>
               <NavBar />
               <main>
@@ -85,7 +99,7 @@ const App = () => {
       <Route
         {...rest}
         render={props =>
-          token ? (
+          !loggedOut ? (
             <React.Fragment>
               <main>
                 <Component {...props} />
@@ -104,7 +118,7 @@ const App = () => {
       <Route
         {...rest}
         render={props =>
-          !token || !restricted ? (
+          loggedOut || !restricted ? (
             <main>
               <Component {...props} />
             </main>
@@ -236,7 +250,13 @@ const App = () => {
 
   return (
     <Router>
-      <LastLocationProvider>{routes}</LastLocationProvider>
+      <LastLocationProvider>
+        <>
+          <ErrorBar />
+          <MessageBar />
+          {routes}
+        </>
+      </LastLocationProvider>
     </Router>
   )
 }

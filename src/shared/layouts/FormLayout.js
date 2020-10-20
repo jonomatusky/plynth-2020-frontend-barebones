@@ -15,12 +15,6 @@ const FormLayout = ({
   onClose,
   ...props
 }) => {
-  const handleClose = event => {
-    if (!!onClose) {
-      onClose()
-    }
-  }
-
   return (
     <React.Fragment>
       <Container maxWidth="xs">
@@ -39,7 +33,9 @@ const FormLayout = ({
           )}
           <Grid item>
             <PieceBox container direction="column">
-              {bar || <BarRow buttonLabel="Cancel X" onClose={handleClose} />}
+              {bar || (
+                <BarRow buttonLabel="Cancel X" onClose={onClose || null} />
+              )}
               <Grid item>
                 <Grid container justify="center">
                   <Grid item xs={11}>

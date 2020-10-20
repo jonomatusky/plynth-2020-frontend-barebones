@@ -118,9 +118,13 @@ export const useSignedRequest = () => {
   const getSignedRequest = useCallback(
     async file => {
       try {
-        const response = await sendRequest('/auth/sign-s3', 'POST', {
-          fileName: file.name,
-          fileType: file.type,
+        const response = await sendRequest({
+          url: '/auth/sign-s3',
+          method: 'POST',
+          data: {
+            fileName: file.name,
+            fileType: file.type,
+          },
         })
         return response
       } catch (err) {

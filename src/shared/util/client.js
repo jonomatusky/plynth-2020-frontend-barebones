@@ -7,8 +7,6 @@ const token = localStorage.getItem('__USER_TOKEN')
 export const request = async ({ cancelToken, url, ...config }) => {
   let headers = config.headers || {}
 
-  console.log(config.data)
-
   let message
 
   if (url.indexOf('http://') < 0 && url.indexOf('https://') < 0) {
@@ -29,7 +27,6 @@ export const request = async ({ cancelToken, url, ...config }) => {
       timeout: 10000,
     })
 
-    console.log(response.data)
     return response.data
   } catch (err) {
     console.log(err)

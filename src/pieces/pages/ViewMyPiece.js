@@ -12,7 +12,7 @@ import PieceCard from '../components/PieceCard'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
 
 const ViewPiece = props => {
-  const { isLoading, error, sendRequest, clearError } = useApiClient()
+  const { error, sendRequest, clearError } = useApiClient()
   const pieceId = useParams().pieceId
   const existingPiece = useSelector(state => selectPiece(state, pieceId))
 
