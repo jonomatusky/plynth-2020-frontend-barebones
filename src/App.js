@@ -39,19 +39,19 @@ import MessageBar from './shared/components/notifications/Message'
 import NavBar from './shared/components/navigation/NavBar'
 
 const App = () => {
-  const [token, setToken] = useState(localStorage.getItem('__USER_TOKEN'))
+  const token = localStorage.getItem('__USER_TOKEN')
   let routes
 
   console.log(token)
 
-  useEffect(() => {
-    const token = localStorage.getItem('__USER_TOKEN')
-    if (token) {
-      setToken(token)
-    } else {
-      setToken(null)
-    }
-  }, [token])
+  // useEffect(() => {
+  //   const token = localStorage.getItem('__USER_TOKEN')
+  //   if (token) {
+  //     setToken(token)
+  //   } else {
+  //     setToken(null)
+  //   }
+  // }, [token])
 
   const PrivateRoute = ({ component: Component, noNav, ...rest }) => {
     return (
