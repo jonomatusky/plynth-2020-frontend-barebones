@@ -28,7 +28,8 @@ const UpdatePiece = () => {
     try {
       await dispatchThunk({
         thunk: updatePiece,
-        input: { id: pieceId, updates: values },
+        id: pieceId,
+        inputs: { updates: values },
       })
       history.goBack()
     } catch (err) {
@@ -40,7 +41,7 @@ const UpdatePiece = () => {
     try {
       await dispatchThunk({
         thunk: deletePiece,
-        input: { id: pieceId },
+        id: pieceId,
       })
       dispatch(setMessage({ message: 'Your piece has been deleted.' }))
       history.push(`/admin/pieces`)

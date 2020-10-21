@@ -1,7 +1,6 @@
-import { useEffect, useCallback, useRef } from 'react'
+import { useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { unwrapResult } from '@reduxjs/toolkit'
-import axios from 'axios'
 
 import { setError } from '../../redux/messageSlice'
 
@@ -9,42 +8,33 @@ export const useThunkClient = () => {
   const dispatch = useDispatch()
   const { token } = useSelector(state => state.auth)
 
-  let activeAxiosSources = useRef([])
-
   const dispatchThunk = useCallback(
-    async ({ thunk, input }) => {
+    async ({ thunk, id, inputs }) => {
       try {
-        const CancelToken = axios.CancelToken
-        const source = CancelToken.source()
-        activeAxiosSources.current.push(source)
+        const headers = {}
+
+        if (!!token) {
+          headers.Authorization = 'Bearer ' + token
+        }
 
         const resultAction = await dispatch(
-          thunk({ cancelToken: source.token, token, input })
+          thunk({ id, config: { headers, data: inputs } })
         )
 
         const result = unwrapResult(resultAction)
 
-        activeAxiosSources.current = activeAxiosSources.current.filter(
-          reqCtrl => reqCtrl.token !== source.token
-        )
-
         return result
       } catch (err) {
-        console.log(err)
-        err.message && dispatch(setError(err.message))
+        dispatch(
+          setError({
+            error: err.message || 'An unknown error occured. Please try again.',
+          })
+        )
         throw err
       }
     },
-    [dispatch]
+    [dispatch, token]
   )
-
-  useEffect(() => {
-    return () => {
-      activeAxiosSources.current.forEach(source =>
-        source.cancel('Operation canceled due to new request.')
-      )
-    }
-  }, [])
 
   return dispatchThunk
 }

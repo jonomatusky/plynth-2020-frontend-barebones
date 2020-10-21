@@ -34,11 +34,7 @@ const ErrorBar = props => {
       <StyledErrorContent
         message={error}
         action={
-          <StyledButton
-            onClick={props.handleClose}
-            color="inherit"
-            size="small"
-          >
+          <StyledButton onClick={clearError} color="inherit" size="small">
             <ClearIcon />
           </StyledButton>
         }

@@ -4,41 +4,32 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Typography, Link } from '@material-ui/core'
 
 import Background from '../../shared/layouts/Background'
-import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import FormLayout from '../../shared/layouts/FormLayout'
 import LoginForm from '../components/LoginForm'
-import { login, clearError } from '../../redux/authSlice'
+import { login } from '../../redux/authSlice'
 import { BarRow } from '../../shared/components/ui/CardSections'
+import { useThunkClient } from '../../shared/hooks/thunk-hook'
 
 const SignUp = () => {
-  // const auth = useContext(AuthContext)
   const dispatch = useDispatch()
+  const dispatchThunk = useThunkClient()
   const history = useHistory()
 
   const loginStatus = useSelector(state => state.auth.status)
-  const loginError = useSelector(state => state.auth.error)
 
   const handleSubmit = async values => {
-    const { email, password } = values
-    if (loginStatus === 'idle') {
-      console.log('logging in')
-      try {
-        dispatch(login({ email, password }))
-        // history.push('/admin/pieces')
-      } catch (err) {
-        console.log(err)
-      }
-    }
+    try {
+      // await dispatchThunk({
+      //   thunk: login,
+      //   inputs: values,
+      // })
+      dispatch(login({ config: { data: values } }))
+    } catch (err) {}
   }
 
   return (
     <>
       <Background />
-      <ErrorBar
-        open={!!loginError}
-        error={loginError}
-        handleClose={() => dispatch(clearError())}
-      />
       <FormLayout
         title="Log In"
         bar={

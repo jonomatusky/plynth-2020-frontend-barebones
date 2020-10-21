@@ -1,17 +1,13 @@
-import React, { useEffect } from 'react'
-import jwt from 'jsonwebtoken'
+import React from 'react'
 import {
   BrowserRouter as Router,
   Route,
   Redirect,
   Switch,
 } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { Box } from '@material-ui/core'
 import { LastLocationProvider } from 'react-router-last-location'
-
-import { authWithToken, logout } from './redux/authSlice'
-import { fetchPieces } from './redux/piecesSlice'
 
 import NewPieceImage from './pieces/pages/NewPieceImage'
 import NewPiece from './pieces/pages/NewPiece'
@@ -37,78 +33,44 @@ import ResetPassword from './users/pages/ResetPassword'
 import ContactSupport from './users/pages/ContactSupport'
 import Logout from './users/pages/Logout'
 
+import TokenAuth from './users/components/TokenAuth'
 import ErrorBar from './shared/components/notifications/Error'
 import MessageBar from './shared/components/notifications/Message'
 import NavBar from './shared/components/navigation/NavBar'
+import Background from './shared/layouts/Background'
+import LoadingSpinner from './shared/components/ui/LoadingSpinner'
 
 const App = () => {
-  const { token } = useSelector(state => state.auth)
-  const loggedOut =
-    (useSelector(state => state.auth) || {}).status !== 'succeeded'
-  const dispatch = useDispatch()
-
+  const authStatus = useSelector(state => state.auth.status)
+  const token = localStorage.getItem('__USER_TOKEN')
   let routes
 
-  useEffect(() => {
-    if (token && loggedOut) {
-      console.log('authenticating')
-      dispatch(authWithToken())
-    }
-  }, [dispatch, loggedOut, token])
-
-  useEffect(() => {
-    if (!loggedOut) {
-      dispatch(fetchPieces())
-    }
-  }, [dispatch, loggedOut])
-
-  useEffect(() => {
-    if (!!token) {
-      const { exp } = jwt.decode(token) || {}
-      console.log(exp * 1000)
-      console.log(new Date())
-      if (Date.now() >= exp * 1000) {
-        dispatch(logout())
-      }
-    }
-  }, [dispatch, token])
-
-  const PrivateRoute = ({ component: Component, ...rest }) => {
+  const PrivateRoute = ({ component: Component, noNav, ...rest }) => {
     return (
       <Route
         {...rest}
-        render={props =>
-          !loggedOut ? (
-            <React.Fragment>
-              <NavBar />
+        render={props => {
+          if (authStatus === 'succeeded') {
+            return (
+              <React.Fragment>
+                {!noNav && <NavBar />}
+                <main>
+                  <Component {...props} />
+                  <Box height="5rem" />
+                </main>
+              </React.Fragment>
+            )
+          } else if (!token || authStatus === 'failed') {
+            return <Redirect to="/s/login" />
+          } else if (authStatus === 'loading') {
+            return (
               <main>
-                <Component {...props} />
-                <Box height="5rem" />
+                <Background />
+                <LoadingSpinner asOverlay />
               </main>
-            </React.Fragment>
-          ) : (
-            <Redirect to="/" />
-          )
-        }
-      />
-    )
-  }
-
-  const PrivateNoNavRoute = ({ component: Component, ...rest }) => {
-    return (
-      <Route
-        {...rest}
-        render={props =>
-          !loggedOut ? (
-            <React.Fragment>
-              <main>
-                <Component {...props} />
-              </main>
-            </React.Fragment>
-          ) : (
-            <Redirect to="/" />
-          )
-        }
+            )
+          }
+        }}
       />
     )
   }
@@ -118,7 +80,7 @@ const App = () => {
       <Route
         {...rest}
         render={props =>
-          loggedOut || !restricted ? (
+          authStatus !== 'succeeded' || !restricted ? (
             <main>
               <Component {...props} />
             </main>
@@ -179,43 +141,50 @@ const App = () => {
         }}
       />
 
-      <PrivateNoNavRoute
+      <PrivateRoute
         component={UserSignup2}
         path="/admin/get-started/profile"
+        noNav
         exact
       />
-      <PrivateNoNavRoute
+      <PrivateRoute
         component={SignupSuccess}
         path="/admin/get-started/success"
+        noNav
         exact
       />
 
-      <PrivateNoNavRoute
+      <PrivateRoute
         component={UpdateProfile}
         path="/admin/profile/edit"
+        noNav
         exact
       />
 
-      <PrivateNoNavRoute
+      <PrivateRoute
         component={NewPieceImage}
         path="/admin/create/style"
+        noNav
         exact
       />
-      <PrivateNoNavRoute
+      <PrivateRoute
         component={NewPiece}
         path="/admin/create/piece"
+        noNav
         exact
       />
-      <PrivateNoNavRoute
+      <PrivateRoute
         component={UpdatePiece}
         path="/admin/pieces/:pieceId/edit"
+        noNav
       />
-      <PrivateNoNavRoute component={ViewPiece} path="/admin/pieces/:pieceId" />
+      <PrivateRoute component={ViewPiece} path="/admin/pieces/:pieceId" noNav />
       <PrivateRoute component={MyPieces} path="/admin/pieces" exact />
       <PrivateRoute component={LoggedInScan} path="/admin/pickup" exact />
-      <PrivateNoNavRoute
+      <PrivateRoute
         component={UpdateProfile}
         path="/admin/profile/edit"
+        noNav
         exact
       />
       <PrivateRoute component={MyProfile} path="/admin/profile" exact />
@@ -252,8 +221,9 @@ const App = () => {
     <Router>
       <LastLocationProvider>
         <>
-          <ErrorBar />
-          <MessageBar />
+          {/* <TokenAuth /> */}
+          {/* <ErrorBar />
+          <MessageBar /> */}
           {routes}
         </>
       </LastLocationProvider>

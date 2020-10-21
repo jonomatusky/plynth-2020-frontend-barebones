@@ -1,11 +1,14 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import jwt from 'jsonwebtoken'
-import { authWithToken, logout } from './redux/authSlice'
-import { fetchPieces } from './redux/piecesSlice'
+import { authWithToken, logout } from '../../redux/authSlice'
+import { fetchPieces } from '../../redux/piecesSlice'
 
 import { useSelector, useDispatch } from 'react-redux'
+import { useThunkClient } from '../../shared/hooks/thunk-hook'
+import store from '../../redux/store'
 
 const TokenAuth = () => {
+  const dispatchThunk = useThunkClient()
   const authStatus = (useSelector(state => state.auth) || {}).status
   const { token } = useSelector(state => state.auth)
 
@@ -14,26 +17,42 @@ const TokenAuth = () => {
   useEffect(() => {
     if (token && authStatus === 'idle') {
       console.log('authenticating')
-      dispatch(authWithToken())
+      try {
+        dispatchThunk({ thunk: authWithToken })
+      } catch (err) {}
     }
-  }, [dispatch, authStatus, token])
+  }, [dispatchThunk, authStatus, token])
 
   useEffect(() => {
-    if (authStatus === 'suceeded') {
-      dispatch(fetchPieces())
+    const getPieces = async () => {
+      try {
+        await dispatchThunk({ thunk: fetchPieces })
+      } catch (err) {}
     }
-  }, [dispatch, authStatus])
+    if (authStatus === 'succeeded') {
+      getPieces()
+    }
+  }, [dispatchThunk, authStatus])
 
   useEffect(() => {
     if (!!token) {
       const { exp } = jwt.decode(token) || {}
-      console.log(exp * 1000)
-      console.log(new Date())
       if (Date.now() >= exp * 1000) {
         dispatch(logout())
       }
     }
   }, [dispatch, token])
+
+  // store.subscribe(() => {
+  //   const token = store.getState().auth.token
+  //   if (!!token) {
+  //     localStorage.setItem('__USER_TOKEN', store.getState().auth.token)
+  //   } else {
+  //     localStorage.removeItem('__USER_TOKEN')
+  //   }
+  // })
+
+  return null
 }
 
 export default TokenAuth

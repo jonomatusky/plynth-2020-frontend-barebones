@@ -2,35 +2,27 @@ import axios from 'axios'
 
 const { REACT_APP_BACKEND_URL } = process.env
 
-const token = localStorage.getItem('__USER_TOKEN')
-
-export const request = async ({ cancelToken, url, ...config }) => {
-  let headers = config.headers || {}
-
+export const request = async config => {
   let message
 
-  if (url.indexOf('http://') < 0 && url.indexOf('https://') < 0) {
-    if (token) {
-      headers.Authorization = 'Bearer ' + token
-    }
-    url = REACT_APP_BACKEND_URL.concat(url)
-  } else if (url.search('amazonaws') !== -1) {
+  if (config.url.indexOf('http://') < 0 && config.url.indexOf('https://') < 0) {
+    config.url = REACT_APP_BACKEND_URL.concat(config.url)
+  } else {
+    config.headers = {}
+  }
+
+  if (config.url.search('amazonaws') !== -1) {
     message = 'Unable to upload image. Please try again.'
   }
 
   try {
     const response = await axios.request({
-      ...config,
-      url,
-      headers,
-      cancelToken,
       timeout: 10000,
+      ...config,
     })
 
     return response.data
   } catch (err) {
-    console.log(err)
-
     if (axios.isCancel(err)) {
       console.log('Request canceled: ', err.message)
       return

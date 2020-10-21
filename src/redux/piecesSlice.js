@@ -10,20 +10,24 @@ let initialState = {
   createStatus: 'idle',
 }
 
-export const fetchPieces = createAsyncThunk('pieces/fetchPieces', async () => {
-  const { pieces } = await client.request({
-    url: '/users/me/pieces',
-  })
-  return pieces
-})
+export const fetchPieces = createAsyncThunk(
+  'pieces/fetchPieces',
+  async ({ config }) => {
+    const { pieces } = await client.request({
+      url: '/users/me/pieces',
+      ...config,
+    })
+    return pieces
+  }
+)
 
 export const createPiece = createAsyncThunk(
   'pieces/createPiece',
-  async ({ values }) => {
+  async ({ config }) => {
     const { piece } = await client.request({
       url: `/pieces`,
       method: 'POST',
-      data: { piece: values },
+      ...config,
     })
     return piece
   }
@@ -31,11 +35,11 @@ export const createPiece = createAsyncThunk(
 
 export const updatePiece = createAsyncThunk(
   'pieces/updatePiece',
-  async ({ id, updates }) => {
+  async ({ id, config }) => {
     const { piece } = await client.request({
       url: `/pieces/${id}`,
       method: 'PATCH',
-      data: { piece: updates },
+      ...config,
     })
     return piece
   }
@@ -43,9 +47,9 @@ export const updatePiece = createAsyncThunk(
 
 export const deletePiece = createAsyncThunk(
   'pieces/deletePiece',
-  async ({ id }) => {
+  async ({ id, config }) => {
     console.log('id: ' + id)
-    await client.request({ url: `/pieces/${id}`, method: 'DELETE' })
+    await client.request({ url: `/pieces/${id}`, method: 'DELETE', ...config })
     return id
   }
 )
@@ -102,9 +106,7 @@ const piecesSlice = createSlice({
       state.pieces = [piece, ...state.pieces]
     },
     [deletePiece.fulfilled]: (state, action) => {
-      console.log('fulfilled')
       const id = action.payload
-      console.log('id')
       const matchingIndex = state.pieces.findIndex(piece => piece.id === id)
 
       if (matchingIndex >= 0) {

@@ -1,77 +1,81 @@
-import { useState, useCallback, useRef, useEffect, useContext } from 'react'
-import { AuthContext } from '../context/auth-context'
+import { useEffect, useCallback, useRef } from 'react'
+import { useSelector } from 'react-redux'
+import axios from 'axios'
 
 const { REACT_APP_BACKEND_URL } = process.env
 
-export const useHttpClient = () => {
-  const auth = useContext(AuthContext)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState()
+const useHttpClient = () => {
+  const { token } = useSelector(state => state.auth)
 
-  const activeHttpRequests = useRef([])
+  let activeAxiosSources = useRef([])
 
-  const sendRequest = useCallback(
-    async (url, method = 'GET', body = null, headers = {}, json = true) => {
-      setIsLoading(true)
+  const request = useCallback(
+    async ({ url, ...config }) => {
+      const CancelToken = axios.CancelToken
+      const source = CancelToken.source()
+      activeAxiosSources.current.push(source)
 
-      if (url.search(REACT_APP_BACKEND_URL) !== -1) {
-        if (auth.token) {
-          headers['Authorization'] = 'Bearer ' + auth.token
+      let headers = config.headers || {}
+
+      let message
+
+      if (url.indexOf('http://') < 0 && url.indexOf('https://') < 0) {
+        if (token) {
+          headers.Authorization = 'Bearer ' + token
         }
+        url = REACT_APP_BACKEND_URL.concat(url)
+      } else if (url.search('amazonaws') !== -1) {
+        message = 'Unable to upload image. Please try again.'
       }
 
-      const httpAbortCtrl = new AbortController()
-      activeHttpRequests.current.push(httpAbortCtrl)
       try {
-        const response = await fetch(url, {
-          method,
-          body,
+        const response = await axios.request({
+          ...config,
+          url,
           headers,
-          signal: httpAbortCtrl.signal,
+          cancelToken: source.token,
+          timeout: 10000,
         })
 
-        activeHttpRequests.current = activeHttpRequests.current.filter(
-          reqCtrl => reqCtrl !== httpAbortCtrl
+        activeAxiosSources.current = activeAxiosSources.current.filter(
+          reqCtrl => reqCtrl.token !== source.token
         )
 
-        let data
-
-        if (json) {
-          data = await response.json()
-          if (!response.ok) {
-            if (data.message === 'Failed to fetch') {
-              throw new Error('Problem fulfilling HTTP request')
-            } else {
-              throw new Error(data.message)
-            }
-          }
-        } else {
-          data = response
-          if (!response.ok) {
-            throw new Error('Problem fulfilling HTTP request')
-          }
-        }
-
-        setIsLoading(false)
-        return data
+        return response.data
       } catch (err) {
-        setError(err.message)
-        setIsLoading(false)
-        throw err
+        console.log(err)
+
+        if (axios.isCancel(err)) {
+          console.log('Request canceled: ', err.message)
+          return
+        } else if (message) {
+          throw new Error(message)
+        } else if (((err.response || {}).data || {}).message) {
+          console.log(err.response.data.message)
+          throw new Error(err.response.data.message)
+        } else if (err.request) {
+          console.log(err.request)
+          throw new Error(
+            'Unable to connect to server. Please check your internet connection.'
+          )
+        } else {
+          console.log('Error', err.message)
+          return
+        }
       }
     },
-    [auth.token]
+    [token]
   )
-
-  const clearError = () => {
-    setError(null)
-  }
 
   useEffect(() => {
     return () => {
-      activeHttpRequests.current.forEach(abortCtrl => abortCtrl.abort())
+      activeAxiosSources.current.forEach(source =>
+        source.cancel('Operation canceled due to new request.')
+      )
     }
   }, [])
 
-  return { isLoading, error, sendRequest, clearError }
+  return request
 }
+
+export default useHttpClient
