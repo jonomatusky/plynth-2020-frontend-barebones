@@ -15,8 +15,11 @@ const TokenAuth = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
+    const loginAutomatically = async () => {
+      await dispatch(autoLogin())
+    }
     console.log('autologin')
-    dispatch(autoLogin())
+    loginAutomatically()
   }, [dispatch])
 
   // useEffect(() => {
