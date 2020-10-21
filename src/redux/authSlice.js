@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 
 let initialState = {
   user: null,
-  token: localStorage.getItem('__USER_TOKEN'),
+  token: null,
   expiration: null,
   status: 'idle',
   error: null,
@@ -12,19 +12,51 @@ let initialState = {
   locationHistory: [],
 }
 
-export const login = createAsyncThunk('auth/login', async ({ config }) => {
+export const autoLogin = createAsyncThunk('auth/autoLogin', async () => {
+  try {
+    const token = localStorage.getItem('__USER_TOKEN')
+
+    if (!token) {
+      throw new Error('No token found')
+    }
+
+    const { exp } = jwt.decode(token) || {}
+    if (Date.now() >= exp * 1000) {
+      throw new Error('Token expired')
+    }
+
+    const { user } = await client.request({
+      url: '/users/me',
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    return { user, token }
+  } catch (err) {
+    localStorage.removeItem('__USER_TOKEN')
+    throw err
+  }
+})
+
+export const login = createAsyncThunk('auth/login', async ({ id, config }) => {
+  console.log(config)
   const { user, token } = await client.request({
     url: '/auth/login',
     method: 'POST',
     ...config,
   })
 
+  localStorage.setItem('__USER_TOKEN', token)
+
   return { user, token }
+})
+
+export const logout = createAsyncThunk('auth/logout', async () => {
+  localStorage.removeItem('__USER_TOKEN')
+  return
 })
 
 export const authWithToken = createAsyncThunk(
   'auth/authWithToken',
-  async ({ config }) => {
+  async ({ id, config }) => {
     const { user } = await client.request({ url: '/users/me', ...config })
     return user
   }
@@ -32,7 +64,7 @@ export const authWithToken = createAsyncThunk(
 
 export const updateUser = createAsyncThunk(
   'auth/updateUser',
-  async ({ config }) => {
+  async ({ id, config }) => {
     const { user } = await client.request({
       url: `/users/me`,
       method: 'PATCH',
@@ -61,11 +93,12 @@ const authSlice = createSlice({
     //     state.scanRoute = '/admin/pickup'
     //   } catch (err) {}
     // },
-    logout(state, action) {
-      state.token = null
-      state.user = null
-      state.status = 'idle'
-    },
+    // logout(state, action) {
+    //   state.token = null
+    //   state.user = null
+    //   state.expiration = null
+    //   state.status = 'idle'
+    // },
     pushLocation(state, action) {
       state.locationHistory = state.locationHistory.concat(action.payload)
     },
@@ -94,17 +127,18 @@ const authSlice = createSlice({
       state.token = null
       state.expiration = null
     },
-    [authWithToken.pending]: (state, action) => {
+    [autoLogin.pending]: (state, action) => {
       state.status = 'loading'
     },
-    [authWithToken.fulfilled]: (state, action) => {
+    [autoLogin.fulfilled]: (state, action) => {
+      const { user, token } = action.payload
       state.status = 'succeeded'
-
-      state.user = action.payload
-      state.expiration = jwt.decode(state.token) * 1000
+      state.user = user
+      state.token = token
+      state.expiration = (jwt.decode(token) || {}).exp * 1000
       state.scanRoute = '/admin/pickup'
     },
-    [authWithToken.rejected]: (state, action) => {
+    [autoLogin.rejected]: (state, action) => {
       state.status = 'failed'
       state.error = action.error.message
       state.token = null
@@ -114,9 +148,15 @@ const authSlice = createSlice({
     [updateUser.fulfilled]: (state, action) => {
       state.user = action.payload
     },
+    [logout.fulfilled]: (state, action) => {
+      state.token = null
+      state.user = null
+      state.expiration = null
+      state.status = 'idle'
+    },
   },
 })
 
-export const { setUser, logout, pushLocation, clearError } = authSlice.actions
+export const { setUser, pushLocation, clearError } = authSlice.actions
 
 export default authSlice.reducer

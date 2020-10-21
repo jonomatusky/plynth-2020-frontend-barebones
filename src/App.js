@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   BrowserRouter as Router,
   Route,
@@ -37,39 +37,38 @@ import TokenAuth from './users/components/TokenAuth'
 import ErrorBar from './shared/components/notifications/Error'
 import MessageBar from './shared/components/notifications/Message'
 import NavBar from './shared/components/navigation/NavBar'
-import Background from './shared/layouts/Background'
-import LoadingSpinner from './shared/components/ui/LoadingSpinner'
 
 const App = () => {
-  const authStatus = useSelector(state => state.auth.status)
-  const token = localStorage.getItem('__USER_TOKEN')
+  const [token, setToken] = useState(localStorage.getItem('__USER_TOKEN'))
   let routes
+
+  console.log(token)
+
+  useEffect(() => {
+    const token = localStorage.getItem('__USER_TOKEN')
+    if (token) {
+      setToken(token)
+    } else {
+      setToken(null)
+    }
+  }, [token])
 
   const PrivateRoute = ({ component: Component, noNav, ...rest }) => {
     return (
       <Route
         {...rest}
         render={props => {
-          if (authStatus === 'succeeded') {
-            return (
-              <React.Fragment>
-                {!noNav && <NavBar />}
-                <main>
-                  <Component {...props} />
-                  <Box height="5rem" />
-                </main>
-              </React.Fragment>
-            )
-          } else if (!token || authStatus === 'failed') {
-            return <Redirect to="/s/login" />
-          } else if (authStatus === 'loading') {
-            return (
+          return token ? (
+            <React.Fragment>
+              {!noNav && <NavBar />}
               <main>
-                <Background />
-                <LoadingSpinner asOverlay />
+                <Component {...props} />
+                <Box height="5rem" />
               </main>
-            )
-          }
+            </React.Fragment>
+          ) : (
+            <Redirect to="/s/login" />
+          )
         }}
       />
     )
@@ -80,7 +79,7 @@ const App = () => {
       <Route
         {...rest}
         render={props =>
-          authStatus !== 'succeeded' || !restricted ? (
+          !token || !restricted ? (
             <main>
               <Component {...props} />
             </main>
@@ -221,9 +220,9 @@ const App = () => {
     <Router>
       <LastLocationProvider>
         <>
-          {/* <TokenAuth /> */}
-          {/* <ErrorBar />
-          <MessageBar /> */}
+          <TokenAuth />
+          <ErrorBar />
+          <MessageBar />
           {routes}
         </>
       </LastLocationProvider>

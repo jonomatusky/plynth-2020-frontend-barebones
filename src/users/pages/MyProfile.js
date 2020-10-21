@@ -57,8 +57,8 @@ const MyProfile = props => {
     setAnchorEl(null)
   }
 
-  const handleLogout = () => {
-    dispatch(logout())
+  const handleLogout = async () => {
+    await dispatch(logout())
     history.push('/s/login')
   }
 

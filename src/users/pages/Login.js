@@ -19,11 +19,11 @@ const SignUp = () => {
 
   const handleSubmit = async values => {
     try {
-      // await dispatchThunk({
-      //   thunk: login,
-      //   inputs: values,
-      // })
-      dispatch(login({ config: { data: values } }))
+      await dispatchThunk({
+        thunk: login,
+        inputs: values,
+      })
+      history.push('/admin/pieces')
     } catch (err) {}
   }
 
