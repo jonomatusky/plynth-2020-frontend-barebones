@@ -57,8 +57,8 @@ const App = () => {
     return (
       <Route
         {...rest}
-        render={props => {
-          return token ? (
+        render={props =>
+          token ? (
             <React.Fragment>
               {!noNav && <NavBar />}
               <main>
@@ -69,7 +69,7 @@ const App = () => {
           ) : (
             <Redirect to="/s/login" />
           )
-        }}
+        }
       />
     )
   }
