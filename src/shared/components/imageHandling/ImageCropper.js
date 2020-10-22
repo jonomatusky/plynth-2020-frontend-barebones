@@ -68,7 +68,7 @@ const ImageCropper = props => {
     try {
       let response = await uploadImage(props.imageSrc, croppedAreaPixels)
       const { signedUrl, imageUrl, imageFilepath, image } = response
-      await sendRequest(signedUrl, 'PUT', image)
+      await sendRequest({ url: signedUrl, method: 'PUT', data: image })
 
       props.onSubmit({ imageUrl, imageFilepath })
     } catch (err) {}

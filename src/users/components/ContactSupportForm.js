@@ -16,7 +16,11 @@ const EmailForm = props => {
       try {
         const request = { message: { ...values, type: 'support' } }
 
-        let response = await sendRequest(`/messages`, 'POST', request)
+        let response = await sendRequest({
+          url: `/messages`,
+          method: 'POST',
+          data: request,
+        })
 
         resetForm({})
         props.onSubmit(values, response)

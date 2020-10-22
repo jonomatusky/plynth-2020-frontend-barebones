@@ -1,12 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { Grid, Box } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
-import { useApiClient } from '../../shared/hooks/api-hook'
-import { setUser } from '../../redux/authSlice'
+import { updateUser } from '../../redux/userSlice'
 
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import Background from '../../shared/layouts/Background'
@@ -15,24 +14,32 @@ import { TextField, TextArea } from '../../shared/components/forms/FormElements'
 import AvatarInput from '../components/AvatarInput'
 import LinkList from '../../shared/components/forms/LinkList'
 import ActionButton from '../../shared/components/ui/ActionButton'
+import { useThunkClient } from '../../shared/hooks/thunk-hook'
 
-const UpdateProfile = props => {
-  const dispatch = useDispatch()
+const UpdateProfile = () => {
+  const dispatchThunk = useThunkClient()
   const history = useHistory()
-  const { user } = useSelector(state => state.auth)
-  const { isLoading, error, sendRequest, clearError } = useApiClient()
+  const { user } = useSelector(state => state.user)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState()
 
   const handleSubmit = async values => {
+    setIsLoading(true)
     try {
-      const userData = { user: values }
-      const response = await sendRequest(`/users/me`, 'PATCH', userData)
-      dispatch(setUser(response))
-      props.onSubmit(values)
-    } catch (err) {}
-    history.push('/admin/profile')
+      await dispatchThunk({
+        thunk: updateUser,
+        inputs: values,
+      })
+      setIsLoading(false)
+      history.push('/admin/profile')
+    } catch (err) {
+      console.log(err)
+      setError(err.message)
+      setIsLoading(false)
+    }
   }
 
-  const { displayName, bio, links, avatar, avatarLink } = user
+  const { displayName, bio, links, avatar, avatarLink } = user || {}
 
   const initialValues = {
     displayName: displayName || '',
@@ -61,7 +68,11 @@ const UpdateProfile = props => {
     <>
       <Background />
       <FormLayout>
-        <ErrorBar open={!!error} error={error} handleClose={clearError} />
+        <ErrorBar
+          open={!!error}
+          error={error}
+          handleClose={() => setError(false)}
+        />
         <Formik
           enableReinitialize="true"
           initialValues={initialValues}

@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Button } from '@material-ui/core'
 
-import { useApiClient } from '../../shared/hooks/api-hook'
+import { useThunkClient } from '../../shared/hooks/thunk-hook'
+import { setMessage } from '../../redux/alertSlice'
+import { selectPiece, updatePiece, deletePiece } from '../../redux/piecesSlice'
 import Background from '../../shared/layouts/Background'
-import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import NotificationModal from '../../shared/components/notifications/NotificationModal'
 import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
 import AdminPieceForm from '../components/AdminPieceForm'
@@ -13,23 +14,39 @@ import { BarRow } from '../../shared/components/ui/CardSections'
 import FormLayout from '../../shared/layouts/FormLayout'
 
 const UpdatePiece = props => {
+  const dispatch = useDispatch()
   const history = useHistory()
   const { users } = useSelector(state => state.users)
-  const { error, sendRequest, clearError } = useApiClient()
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
 
+  const dispatchThunk = useThunkClient()
   const pieceId = useParams().pieceId
-  const piece = useSelector(state =>
-    (state.pieces.pieces || []).find(piece => piece.id === pieceId)
-  )
+  const piece = useSelector(state => selectPiece(state, pieceId))
 
-  const handleSubmit = async response => {
-    history.goBack()
+  const handleSubmit = async values => {
+    try {
+      await dispatchThunk({
+        thunk: updatePiece,
+        inputs: { id: pieceId, ...values },
+      })
+      // dispatch(setMessage({ message: 'Your piece has been updated.' }))
+      history.goBack()
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const handleDelete = async () => {
-    await sendRequest(`/pieces/${pieceId}`, 'DELETE')
-    history.push(`/admin/pieces/`)
+    try {
+      await dispatchThunk({
+        thunk: deletePiece,
+        inputs: { id: pieceId },
+      })
+      dispatch(setMessage({ message: 'Your piece has been deleted.' }))
+      history.push(`/admin/pieces`)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const handleOpenDeleteModal = () => {
@@ -56,7 +73,6 @@ const UpdatePiece = props => {
           setDeleteModalIsOpen(false)
         }}
       />
-      <ErrorBar open={!!error} error={error} handleClose={clearError} />
       <Background />
       {piece && users ? (
         <FormLayout

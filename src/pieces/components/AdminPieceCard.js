@@ -32,9 +32,12 @@ const PieceCard = ({ piece, onClose, ...props }) => {
     const handleClick = async () => {
       try {
         if (scanToken) {
-          await sendLog('/scans', {
-            click: { type: 'link', destination: link.url },
-            scanToken,
+          await sendLog({
+            url: '/scans',
+            data: {
+              click: { type: 'link', destination: link.url },
+              scanToken,
+            },
           })
         }
       } catch (err) {}
@@ -52,13 +55,14 @@ const PieceCard = ({ piece, onClose, ...props }) => {
 
   const OwnerSection = ({ owner }) => {
     const handleClick = async () => {
-      console.log('clicked: owner profile')
       try {
         if (scanToken) {
-          console.log('there is a scan token')
-          await sendLog('/scans', {
-            click: { type: 'profile', destination: `/${owner.username}` },
-            scanToken,
+          await sendLog({
+            url: '/scans',
+            data: {
+              click: { type: 'profile', destination: `/${owner.username}` },
+              scanToken,
+            },
           })
         }
       } catch (err) {

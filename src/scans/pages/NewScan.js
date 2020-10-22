@@ -35,7 +35,7 @@ const NewPickup = ({ isOpen, setIsOpen, ...props }) => {
   const { imageUrl, foundPiece, scanToken, scanStage } = useSelector(
     state => state.scan
   )
-  const { scanRoute } = useSelector(state => state.auth)
+  const { scanRoute } = useSelector(state => state.user)
   const { uploadError, uploadImage, clearUploadError } = useImageUpload()
   const { error, sendRequest, clearError } = useApiClient()
   const [showFoundScreen, setShowFoundScreen] = useState(false)
@@ -50,10 +50,7 @@ const NewPickup = ({ isOpen, setIsOpen, ...props }) => {
   })
 
   useEffect(() => {
-    console.log(`it's ready`)
     if (scanStage === 'READY') {
-      console.log('pushing')
-      console.log(scanRoute)
       history.push(scanRoute)
     }
   }, [scanStage, history, scanRoute])
@@ -66,9 +63,13 @@ const NewPickup = ({ isOpen, setIsOpen, ...props }) => {
           dispatch(startScanning())
           let request = imageUrl
           let { signedUrl, imageFilepath, image } = await uploadImage(request)
-          await sendRequest(signedUrl, 'PUT', image)
-          let { scan, scanToken } = await sendRequest(`/scans`, 'POST', {
-            imageFilepath: imageFilepath,
+          await sendRequest({ url: signedUrl, method: 'PUT', data: image })
+          let { scan, scanToken } = await sendRequest({
+            url: `/scans`,
+            method: 'POST',
+            data: {
+              imageFilepath: imageFilepath,
+            },
           })
           dispatch(setScan({ scan, scanToken }))
         } else {
@@ -125,9 +126,13 @@ const NewPickup = ({ isOpen, setIsOpen, ...props }) => {
 
   const handleMissingPiece = () => {
     try {
-      sendRequest(`/scans`, 'PATCH', {
-        correct: false,
-        scanToken,
+      sendRequest({
+        url: `/scans`,
+        method: 'PATCH',
+        data: {
+          correct: false,
+          scanToken,
+        },
       })
     } catch (err) {}
 

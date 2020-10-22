@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
 import { Button } from '@material-ui/core'
 
-import { logout } from '../../redux/authSlice'
+import { useAuth } from '../../shared/hooks/auth-hook'
 import Background from '../../shared/layouts/Background'
 import FormLayout from '../../shared/layouts/FormLayout'
 import MessageLayout from '../../shared/layouts/MessageLayout'
 import ResetPasswordForm from '../components/ResetPasswordForm'
 
 const ChangePassword = () => {
-  const dispatch = useDispatch()
+  const { logout } = useAuth()
   const { token, userId } = useParams()
   const [submitted, setSubmitted] = useState(false)
   const history = useHistory()
@@ -30,8 +29,8 @@ const ChangePassword = () => {
   })
 
   useEffect(() => {
-    dispatch(logout())
-  }, [dispatch])
+    logout()
+  })
 
   return (
     <React.Fragment>

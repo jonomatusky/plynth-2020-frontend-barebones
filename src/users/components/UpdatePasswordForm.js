@@ -3,30 +3,15 @@ import { Grid, Box } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
-import { useApiClient } from '../../shared/hooks/api-hook'
-import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import MessageBar from '../../shared/components/notifications/MessageBar'
 import { TextField } from '../../shared/components/forms/FormElements'
 import ActionButton from '../../shared/components/ui/ActionButton'
 
-const SetPasswordForm = props => {
+const SetPasswordForm = ({ onSubmit, isLoading }) => {
   const [success, setSuccess] = useState(false)
-  const { isLoading, error, sendRequest, clearError } = useApiClient()
 
   const handleSubmit = async (values, { resetForm }) => {
-    let { passwordConfirmation, ...passwords } = values
-
-    if (!isLoading) {
-      try {
-        const body = { passwords }
-
-        await sendRequest(`/auth/password`, 'PATCH', body)
-        resetForm()
-        props.onSubmit(values)
-      } catch (err) {
-        resetForm()
-      }
-    }
+    onSubmit(values, resetForm)
   }
 
   const initialValues = {
@@ -47,7 +32,6 @@ const SetPasswordForm = props => {
 
   return (
     <React.Fragment>
-      <ErrorBar open={!!error} error={error} handleClose={clearError} />
       <MessageBar
         open={success}
         message="Your password has been updated"

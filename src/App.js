@@ -1,22 +1,14 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import {
   BrowserRouter as Router,
   Route,
   Redirect,
   Switch,
 } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import jwt from 'jsonwebtoken'
 import { Box } from '@material-ui/core'
 import { LastLocationProvider } from 'react-router-last-location'
 
-import { login, logout } from './redux/authSlice'
-import { setPieces } from './redux/piecesSlice'
-import { setUsers } from './redux/usersSlice'
-import { useApiClient } from './shared/hooks/api-hook'
-
-import Login from './users/pages/Login'
-import Logout from './users/pages/Logout'
+import SignIn from './users/pages/SignIn'
 import ViewUser from './users/pages/ViewUser'
 
 import NewPieceImage from './pieces/pages/NewPieceImage'
@@ -31,86 +23,38 @@ import AdminUpdateUser from './users/pages/AdminUpdateUser'
 import AdminRemoveUser from './users/pages/AdminRemoveUser'
 import AdminViewScans from './scans/pages/AdminViewScans'
 import AdminViewScan from './scans/pages/AdminViewScan'
+import { useAuth } from './shared/hooks/auth-hook'
+import { AuthContext } from './shared/context/auth-context'
+import firebase from './firebase'
 
+import ErrorBar from './shared/components/notifications/Error'
+import MessageBar from './shared/components/notifications/Message'
 import NavBar from './shared/components/navigation/NavBar'
 
+firebase.analytics()
+
 const App = () => {
-  const token = localStorage.getItem('userToken')
-  const { sendRequest } = useApiClient()
-  const dispatch = useDispatch()
-
   let routes
+  const { token, login, logout, authStatus } = useAuth()
 
-  useEffect(() => {
-    const getUser = async token => {
-      const { user } = await sendRequest('/users/me', 'GET', null, {
-        Authorization: 'Bearer ' + token,
-      })
-      dispatch(login({ user, token }))
-    }
-
-    const getPieces = async token => {
-      const response = await sendRequest(`/pieces`, 'GET', null, {
-        Authorization: 'Bearer ' + token,
-      })
-      dispatch(setPieces({ pieces: response.pieces }))
-    }
-
-    const getUsers = async token => {
-      const { users } = await sendRequest(`/users`, 'GET', null, {
-        Authorization: 'Bearer ' + token,
-      })
-      dispatch(setUsers({ users }))
-    }
-
-    if (!!token && jwt.decode(token).exp * 1000 > new Date()) {
-      try {
-        getUser(token)
-        getPieces(token)
-        getUsers(token)
-      } catch (err) {}
-    } else {
-      dispatch(logout())
-      dispatch(setPieces({ pieces: [] }))
-    }
-  }, [token, dispatch, sendRequest])
-
-  const PrivateRoute = ({ component: Component, ...rest }) => {
+  const PrivateRoute = ({ component: Component, noNav, ...rest }) => {
     return (
       <Route
         {...rest}
-        render={props =>
-          token ? (
-            <React.Fragment>
-              <NavBar />
-              <main>
-                <Component {...props} />
-                <Box height="5rem" />
-              </main>
-            </React.Fragment>
-          ) : (
-            <Redirect to="/" />
-          )
-        }
-      />
-    )
-  }
-
-  const PrivateNoNavRoute = ({ component: Component, ...rest }) => {
-    return (
-      <Route
-        {...rest}
-        render={props =>
-          token ? (
-            <React.Fragment>
-              <main>
-                <Component {...props} />
-              </main>
-            </React.Fragment>
-          ) : (
-            <Redirect to="/" />
-          )
-        }
+        render={props => (
+          <>
+            {authStatus === 'authenticated' && (
+              <React.Fragment>
+                {!noNav && <NavBar />}
+                <main>
+                  <Component {...props} />
+                  {!noNav && <Box height="5rem" />}
+                </main>
+              </React.Fragment>
+            )}
+            {authStatus === 'unauthenticated' && <Redirect to="/" />}
+          </>
+        )}
       />
     )
   }
@@ -119,66 +63,76 @@ const App = () => {
     return (
       <Route
         {...rest}
-        render={props =>
-          !token || !restricted ? (
-            <main>
-              <Component {...props} />
-            </main>
-          ) : (
-            <Redirect to="/admin/pieces" />
-          )
-        }
+        render={props => (
+          <>
+            {(authStatus === 'unauthenticated' || !restricted) && (
+              <main>
+                <Component {...props} />
+              </main>
+            )}
+            {authStatus === 'authenticated' && restricted && (
+              <Redirect to="/admin/pieces" />
+            )}
+          </>
+        )}
       />
     )
   }
 
   routes = (
     <Switch>
-      <PublicRoute restricted={true} component={Login} path="/" exact />
-      <PrivateRoute component={Logout} path="/admin/logout" exact />
+      <PublicRoute restricted={true} component={SignIn} path="/" exact />
 
-      <PrivateNoNavRoute
+      <PrivateRoute
         component={NewPieceImage}
         path="/admin/create/style"
+        noNav
         exact
       />
-      <PrivateNoNavRoute
+      <PrivateRoute
         component={NewPiece}
         path="/admin/create/piece"
+        noNav
         exact
       />
 
       <PrivateRoute component={AdminViewPieces} path="/admin/pieces" exact />
-      <PrivateNoNavRoute
+      <PrivateRoute
         component={AdminViewPiece}
         path="/admin/pieces/:pieceId"
+        noNav
         exact
       />
-      <PrivateNoNavRoute
+      <PrivateRoute
         component={AdminUpdatePiece}
         path="/admin/pieces/:pieceId/edit"
+        noNav
         exact
       />
       <PrivateRoute component={AdminViewScans} path="/admin/pickups" exact />
-      <PrivateNoNavRoute
+      <PrivateRoute
         component={AdminViewScan}
         path="/admin/pickups/:scanId"
+        noNav
         exact
       />
       <PrivateRoute component={AdminViewUsers} path="/admin/users" exact />
-      <PrivateNoNavRoute
+      <PrivateRoute
         component={AdminViewUser}
         path="/admin/users/:username"
+        noNav
         exact
       />
-      <PrivateNoNavRoute
+      <PrivateRoute
         component={AdminRemoveUser}
         path="/admin/users/:username/remove"
+        noNav
         exact
       />
-      <PrivateNoNavRoute
+      <PrivateRoute
         component={AdminUpdateUser}
         path="/admin/users/:username/edit"
+        noNav
         exact
       />
 
@@ -191,9 +145,24 @@ const App = () => {
   )
 
   return (
-    <Router>
-      <LastLocationProvider>{routes}</LastLocationProvider>
-    </Router>
+    <AuthContext.Provider
+      value={{
+        token: token,
+        login: login,
+        logout: logout,
+        authStatus: authStatus,
+      }}
+    >
+      <Router>
+        <LastLocationProvider>
+          <>
+            <ErrorBar />
+            <MessageBar />
+            {routes}
+          </>
+        </LastLocationProvider>
+      </Router>
+    </AuthContext.Provider>
   )
 }
 

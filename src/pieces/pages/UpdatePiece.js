@@ -1,50 +1,54 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Button } from '@material-ui/core'
 
-import { deletePiece } from '../../redux/piecesSlice'
-import { useApiClient } from '../../shared/hooks/api-hook'
+import { useThunkClient } from '../../shared/hooks/thunk-hook'
+import { setMessage } from '../../redux/alertSlice'
+import { selectPiece, updatePiece, deletePiece } from '../../redux/piecesSlice'
 import Background from '../../shared/layouts/Background'
-import ErrorBar from '../../shared/components/notifications/ErrorBar'
-import NotificationModal from '../../shared/components/notifications/NotificationModal'
 import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
+import NotificationModal from '../../shared/components/notifications/NotificationModal'
+import NotFound from '../../shared/components/navigation/NotFound'
 import PieceForm from '../components/PieceForm'
 import { BarRow } from '../../shared/components/ui/CardSections'
 import FormLayout from '../../shared/layouts/FormLayout'
 
-const UpdatePiece = props => {
+const UpdatePiece = () => {
   const dispatch = useDispatch()
-  const { isLoading, error, sendRequest, clearError } = useApiClient()
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
-  const [piece, setPiece] = useState()
   const pieceId = useParams().pieceId
-  const propPiece = (props.location.data || {}).piece
+  const piece = useSelector(state => selectPiece(state, pieceId))
+
+  const dispatchThunk = useThunkClient()
+  const { status, updateStatus } = useSelector(state => state.pieces)
 
   const history = useHistory()
 
-  useEffect(() => {
-    if (!propPiece || propPiece.id !== pieceId) {
-      const fetchPieces = async () => {
-        try {
-          const responseData = await sendRequest(`/pieces/${pieceId}`)
-          setPiece(responseData.piece)
-        } catch (err) {}
-      }
-      fetchPieces()
-    } else {
-      setPiece(propPiece)
+  const handleSubmit = async values => {
+    try {
+      await dispatchThunk({
+        thunk: updatePiece,
+        inputs: { id: pieceId, ...values },
+      })
+      // dispatch(setMessage({ message: 'Your piece has been updated.' }))
+      history.goBack()
+    } catch (err) {
+      console.log(err)
     }
-  }, [sendRequest, pieceId, propPiece])
-
-  const handleSubmit = async response => {
-    history.goBack()
   }
 
   const handleDelete = async () => {
-    await sendRequest(`/pieces/${pieceId}`, 'DELETE')
-    dispatch(deletePiece({ piece }))
-    history.push(`/admin/pieces/`)
+    try {
+      await dispatchThunk({
+        thunk: deletePiece,
+        inputs: { id: pieceId },
+      })
+      dispatch(setMessage({ message: 'Your piece has been deleted.' }))
+      history.push(`/admin/pieces`)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const handleOpenDeleteModal = () => {
@@ -57,6 +61,7 @@ const UpdatePiece = props => {
 
   return (
     <>
+      <Background />
       <NotificationModal
         primaryMessage="Delete This Piece"
         secondaryMessage={`This action cannot be undo. Your image will be removed from our database
@@ -71,30 +76,27 @@ const UpdatePiece = props => {
           setDeleteModalIsOpen(false)
         }}
       />
-      <ErrorBar open={!!error} error={error} handleClose={clearError} />
-      <Background />
-      {!isLoading && piece ? (
+      {status === 'succeeded' && !!piece && (
         <FormLayout
-          bar={
-            <BarRow
-              title="Edit Your Piece"
-              onClick={() => {
-                history.goBack()
-              }}
-              buttonLabel={'Cancel X'}
-            />
-          }
+          bar={<BarRow title="Edit Your Piece" buttonLabel={'Cancel X'} />}
           bottom={
             <Button color="inherit" onClick={handleOpenDeleteModal}>
               Delete This Piece
             </Button>
           }
         >
-          <PieceForm piece={piece} onSubmit={handleSubmit} />
+          <PieceForm
+            piece={piece}
+            onSubmit={handleSubmit}
+            isLoading={updateStatus === 'loading'}
+          />
         </FormLayout>
-      ) : (
-        isLoading && !piece && <LoadingSpinner asOverlay />
       )}
+      {(status === 'loading' || status === 'idle') && (
+        <LoadingSpinner asOverlay />
+      )}
+      {status === 'failed' && <NotFound />}
+      {status === 'succeeded' && !piece && <NotFound />}
     </>
   )
 }

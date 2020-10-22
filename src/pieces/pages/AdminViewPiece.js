@@ -10,15 +10,18 @@ import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
 
 import PieceCard from '../components/AdminPieceCard'
 
+import { selectPiece } from '../../redux/piecesSlice'
+
+import NotFound from '../../shared/components/navigation/NotFound'
+
 const ViewPiece = props => {
   const history = useHistory()
   const pieceId = useParams().pieceId
-  const { user } = useSelector(state => state.auth)
+  const piece = useSelector(state => selectPiece(state, pieceId))
   const { sendRequest } = useApiClient()
+  const { user } = useSelector(state => state.auth)
 
-  const piece = useSelector(state =>
-    (state.pieces.pieces || []).find(piece => piece.id === pieceId)
-  )
+  const { status } = useSelector(state => state.pieces)
 
   let [scanCount, setScanCount] = useState()
   let [clickCount, setClickCount] = useState()
@@ -26,9 +29,9 @@ const ViewPiece = props => {
   useEffect(() => {
     const getCount = async id => {
       try {
-        const { scanCount, clickCount } = await sendRequest(
-          `/pieces/${id}/scans/count`
-        )
+        const { scanCount, clickCount } = await sendRequest({
+          url: `/pieces/${id}/scans/count`,
+        })
         setScanCount(scanCount)
         setClickCount(clickCount)
       } catch (err) {}
@@ -38,10 +41,12 @@ const ViewPiece = props => {
 
   return (
     <React.Fragment>
-      {/* <ErrorBar open={!!error} error={error} handleClose={clearError} /> */}
       <Background />
       <Container maxWidth="xs" disableGutters>
-        {piece && (
+        {(status === 'loading' || status === 'idle') && (
+          <LoadingSpinner asOverlay />
+        )}
+        {status === 'succeeded' && !!piece && (
           <Grid container justify="center">
             <Grid item xs={11}>
               {piece.isRemoved && <PageTitle title="REMOVED" />}
@@ -64,7 +69,8 @@ const ViewPiece = props => {
             )}
           </Grid>
         )}
-        {!piece && <LoadingSpinner asOverlay />}
+        {status === 'failed' && <NotFound />}
+        {status === 'succeeded' && !piece && <NotFound />}
       </Container>
     </React.Fragment>
   )

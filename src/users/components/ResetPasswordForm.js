@@ -19,7 +19,7 @@ const ResetPasswordForm = ({ token, id, onSubmit }) => {
 
     if (!isLoading) {
       try {
-        await sendRequest(`/auth/reset`, 'POST', body)
+        await sendRequest({ url: `/auth/reset`, method: 'POST', data: body })
 
         resetForm()
         onSubmit(values)

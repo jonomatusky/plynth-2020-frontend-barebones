@@ -19,7 +19,11 @@ const EmailForm = props => {
       try {
         const request = { email: values.email }
 
-        let response = await sendRequest(`/auth/recover`, 'POST', request)
+        let response = await sendRequest({
+          url: `/auth/recover`,
+          method: 'POST',
+          data: request,
+        })
 
         props.onSubmit(values, response)
       } catch (err) {}

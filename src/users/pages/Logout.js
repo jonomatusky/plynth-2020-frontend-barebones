@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { logout } from '../../redux/authSlice'
+import { logout } from '../../redux/userSlice'
 
 const Logout = () => {
   const dispatch = useDispatch()

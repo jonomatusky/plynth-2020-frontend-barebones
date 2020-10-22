@@ -1,13 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
 import { Grid, Box } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
-import { login } from '../../redux/authSlice'
 import { useApiClient } from '../../shared/hooks/api-hook'
-
+import { AuthContext } from '../../shared/context/auth-context'
 import Background from '../../shared/layouts/Background'
 import FormLayout from '../../shared/layouts/FormLayout'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
@@ -50,7 +48,7 @@ const validationSchema = Yup.object({
 })
 
 const UserSignup1 = ({ values }) => {
-  const dispatch = useDispatch()
+  const auth = useContext(AuthContext)
   const history = useHistory()
   const { isLoading, error, sendRequest, clearError } = useApiClient()
 
@@ -58,13 +56,13 @@ const UserSignup1 = ({ values }) => {
     try {
       let { email, username, password, signupKey } = values
       let userData = { user: { email, username, password, signupKey } }
-      const { user, token } = await sendRequest(
-        `/auth/signup`,
-        'POST',
-        userData
-      )
+      const { token } = await sendRequest({
+        url: `/auth/signup`,
+        method: 'POST',
+        data: userData,
+      })
 
-      dispatch(login({ user, token }))
+      auth.login(token)
       history.push('/admin/get-started/profile')
     } catch (err) {}
   }
