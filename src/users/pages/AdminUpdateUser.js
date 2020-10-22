@@ -1,15 +1,13 @@
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useLastLocation } from 'react-router-last-location'
 import { Grid, Box, Button, Typography, Avatar } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import { makeStyles } from '@material-ui/core/styles'
 
-import { useApiClient } from '../../shared/hooks/api-hook'
 import { selectUser } from '../../redux/usersSlice'
-import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import Background from '../../shared/layouts/Background'
 import FormLayout from '../../shared/layouts/FormLayout'
 import {
@@ -29,7 +27,6 @@ const useStyles = makeStyles(theme => ({
 
 const UpdateProfile = props => {
   const classes = useStyles()
-  const dispatch = useDispatch()
   const dispatchThunk = useThunkClient()
   const history = useHistory()
   const lastLocation = useLastLocation()

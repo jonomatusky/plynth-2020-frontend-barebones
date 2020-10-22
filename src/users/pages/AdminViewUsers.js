@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useSelector } from 'react-redux'
-import { NavLink, useHistory, useLocation } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { Container, Grid, Box, Button } from '@material-ui/core'
 
 import PageTitle from '../../shared/components/ui/PageTitle'
