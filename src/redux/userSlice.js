@@ -4,6 +4,7 @@ import * as client from '../shared/util/client'
 let initialState = {
   user: {},
   status: 'idle',
+  updateStatus: 'idle',
   error: null,
   scanRoute: '/',
   locationHistory: [],
@@ -69,8 +70,16 @@ const userSlice = createSlice({
       state.error = action.error.message
       state.scanRoute = '/'
     },
+    [updateUser.pending]: (state, action) => {
+      state.updateStatus = 'loading'
+    },
     [updateUser.fulfilled]: (state, action) => {
+      state.updateStatus = 'idle'
       state.user = action.payload
+    },
+    [updateUser.rejected]: (state, action) => {
+      state.updateStatus = 'failed'
+      state.error = action.error.message
     },
   },
 })

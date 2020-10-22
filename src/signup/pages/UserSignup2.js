@@ -1,15 +1,14 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { Grid, Box } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
-import { useApiClient } from '../../shared/hooks/api-hook'
-
+import { useThunkClient } from '../../shared/hooks/thunk-hook'
+import { updateUser } from '../../redux/userSlice'
 import Background from '../../shared/layouts/Background'
 import FormLayout from '../../shared/layouts/FormLayout'
-import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import ActionButton from '../../shared/components/ui/ActionButton'
 import AvatarInput from '../../users/components/AvatarInput'
 import { BarRow } from '../../shared/components/ui/CardSections'
@@ -19,10 +18,9 @@ import LinkList from '../../shared/components/forms/LinkList'
 const title = 'Add Your Info'
 
 const UserSignup2 = ({ values }) => {
-  const dispatch = useDispatch()
-  const user = useSelector(state => state.user)
+  const dispatchThunk = useThunkClient()
+  const { user, updateStatus } = useSelector(state => state.user)
   const history = useHistory()
-  const { isLoading, error, sendRequest, clearError } = useApiClient()
 
   const initialValues = {
     avatar: user.avatar || '',
@@ -51,12 +49,14 @@ const UserSignup2 = ({ values }) => {
 
   const handleSubmit = async values => {
     try {
-      let userData = { user: values }
-      const { user } = await sendRequest(`/users/me`, 'PATCH', userData)
-
-      dispatch.setUser({ user })
+      await dispatchThunk({
+        thunk: updateUser,
+        inputs: values,
+      })
       history.push('/admin/get-started/success')
-    } catch (err) {}
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   const handleCancel = () => {
@@ -69,9 +69,7 @@ const UserSignup2 = ({ values }) => {
 
   return (
     <>
-      <ErrorBar open={!!error} error={error} handleClose={clearError} />
       <Background />
-
       <FormLayout
         title={title}
         bar={<BarRow onClick={handleCancel} buttonLabel={'Skip >'} />}
@@ -108,7 +106,7 @@ const UserSignup2 = ({ values }) => {
                   <ActionButton
                     type="submit"
                     label="Save"
-                    loading={isLoading}
+                    loading={updateStatus === 'loading'}
                   />
                 </Grid>
               </Grid>
