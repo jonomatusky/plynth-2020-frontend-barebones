@@ -4,6 +4,7 @@ import {
   Route,
   Redirect,
   Switch,
+  useLocation,
 } from 'react-router-dom'
 import { Box } from '@material-ui/core'
 import { LastLocationProvider } from 'react-router-last-location'
@@ -46,6 +47,8 @@ const App = () => {
   const { token, login, logout, authStatus } = useAuth()
 
   const PrivateRoute = ({ component: Component, noNav, ...rest }) => {
+    const location = useLocation()
+
     return (
       <Route
         {...rest}
@@ -60,7 +63,14 @@ const App = () => {
                 </main>
               </React.Fragment>
             )}
-            {authStatus === 'unauthenticated' && <Redirect to="/s/signin" />}
+            {authStatus === 'unauthenticated' && (
+              <Redirect
+                to={{
+                  pathname: '/admin/login',
+                  state: { referrer: location.pathname },
+                }}
+              />
+            )}
           </>
         )}
       />
@@ -68,6 +78,8 @@ const App = () => {
   }
 
   const PublicRoute = ({ component: Component, restricted, ...rest }) => {
+    const location = useLocation()
+
     return (
       <Route
         {...rest}
@@ -79,7 +91,9 @@ const App = () => {
               </main>
             )}
             {authStatus === 'authenticated' && restricted && (
-              <Redirect to="/admin/pieces" />
+              <Redirect
+                to={(location.state || {}).referrer || '/admin/pieces'}
+              />
             )}
           </>
         )}
@@ -89,10 +103,14 @@ const App = () => {
 
   routes = (
     <Switch>
+      <PublicRoute restricted={true} component={LoggedOutScan} path="/" exact />
+
+      <PublicRoute restricted={true} component={SignIn} path="/login" exact />
+
       <PublicRoute
         restricted={true}
-        component={SignIn}
-        path="/s/signin"
+        component={UserSignup1}
+        path="/signup"
         exact
       />
 
@@ -104,25 +122,23 @@ const App = () => {
       />
 
       <PublicRoute
+        restricted={true}
+        component={SignIn}
+        path="/admin/login"
+        exact
+      />
+
+      <PublicRoute
         restricted={false}
         component={RecoverPassword}
-        path="/s/recover"
+        path="/admin/recover"
         exact
       />
 
       <PublicRoute
         restricted={false}
         component={ResetPassword}
-        path="/s/reset/:userId/:token"
-        exact
-      />
-
-      <PublicRoute restricted={true} component={LoggedOutScan} path="/" exact />
-
-      <PublicRoute
-        restricted={true}
-        component={UserSignup1}
-        path="/signup"
+        path="/admin/reset/:userId/:token"
         exact
       />
 
