@@ -9,6 +9,7 @@ import { Box } from '@material-ui/core'
 import { LastLocationProvider } from 'react-router-last-location'
 import { useAuth } from './shared/hooks/auth-hook'
 import { AuthContext } from './shared/context/auth-context'
+import firebase from './firebase'
 
 import NewPieceImage from './pieces/pages/NewPieceImage'
 import NewPiece from './pieces/pages/NewPiece'
@@ -37,6 +38,8 @@ import ContactSupport from './users/pages/ContactSupport'
 import ErrorBar from './shared/components/notifications/Error'
 import MessageBar from './shared/components/notifications/Message'
 import NavBar from './shared/components/navigation/NavBar'
+
+firebase.analytics()
 
 const App = () => {
   let routes
