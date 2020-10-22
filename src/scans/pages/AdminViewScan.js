@@ -24,7 +24,7 @@ const ScanImage = styled.img`
 
 const ViewScan = () => {
   const { sendRequest } = useApiClient()
-  const [scan, setScan] = useState()
+  const [scan, setScan] = useState(null)
   const scanId = useParams().scanId
 
   const history = useHistory()
@@ -32,7 +32,8 @@ const ViewScan = () => {
   useEffect(() => {
     const fetchScan = async () => {
       try {
-        const responseData = await sendRequest(`/scans/${scanId}`)
+        const responseData = await sendRequest({ url: `/scans/${scanId}` })
+        console.log(responseData)
         setScan(responseData.scan)
       } catch (err) {}
     }

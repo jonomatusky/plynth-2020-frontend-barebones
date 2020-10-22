@@ -20,7 +20,7 @@ const ViewUsers = () => {
     if (user) {
       const fetchScans = async () => {
         try {
-          const responseData = await sendRequest(`/scans`)
+          const responseData = await sendRequest({ url: `/scans` })
           setLoadedScans(responseData.scans)
         } catch (err) {}
       }
