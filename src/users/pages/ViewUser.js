@@ -37,9 +37,8 @@ const UserProfile = props => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const responseData = await sendRequest(`/users/${username}`)
+        const responseData = await sendRequest({ url: `/users/${username}` })
         setUser(responseData.user)
-        console.log(responseData.user)
       } catch (err) {}
     }
     fetchUser()

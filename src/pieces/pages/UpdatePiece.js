@@ -4,9 +4,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Button } from '@material-ui/core'
 
 import { useThunkClient } from '../../shared/hooks/thunk-hook'
-import { setMessage } from '../../redux/messageSlice'
+import { setMessage } from '../../redux/alertSlice'
 import { selectPiece, updatePiece, deletePiece } from '../../redux/piecesSlice'
 import Background from '../../shared/layouts/Background'
+import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
 import NotificationModal from '../../shared/components/notifications/NotificationModal'
 import NotFound from '../../shared/components/navigation/NotFound'
 import PieceForm from '../components/PieceForm'
@@ -20,7 +21,7 @@ const UpdatePiece = () => {
   const piece = useSelector(state => selectPiece(state, pieceId))
 
   const dispatchThunk = useThunkClient()
-  const { updateStatus } = useSelector(state => state.pieces)
+  const { status, updateStatus } = useSelector(state => state.pieces)
 
   const history = useHistory()
 
@@ -28,9 +29,9 @@ const UpdatePiece = () => {
     try {
       await dispatchThunk({
         thunk: updatePiece,
-        id: pieceId,
-        inputs: { updates: values },
+        inputs: { id: pieceId, ...values },
       })
+      // dispatch(setMessage({ message: 'Your piece has been updated.' }))
       history.goBack()
     } catch (err) {
       console.log(err)
@@ -41,7 +42,7 @@ const UpdatePiece = () => {
     try {
       await dispatchThunk({
         thunk: deletePiece,
-        id: pieceId,
+        inputs: { id: pieceId },
       })
       dispatch(setMessage({ message: 'Your piece has been deleted.' }))
       history.push(`/admin/pieces`)
@@ -60,6 +61,7 @@ const UpdatePiece = () => {
 
   return (
     <>
+      <Background />
       <NotificationModal
         primaryMessage="Delete This Piece"
         secondaryMessage={`This action cannot be undo. Your image will be removed from our database
@@ -74,8 +76,7 @@ const UpdatePiece = () => {
           setDeleteModalIsOpen(false)
         }}
       />
-      <Background />
-      {piece && (
+      {status === 'succeeded' && !!piece && (
         <FormLayout
           bar={<BarRow title="Edit Your Piece" buttonLabel={'Cancel X'} />}
           bottom={
@@ -91,7 +92,11 @@ const UpdatePiece = () => {
           />
         </FormLayout>
       )}
-      {!piece && <NotFound />}
+      {(status === 'loading' || status === 'idle') && (
+        <LoadingSpinner asOverlay />
+      )}
+      {status === 'failed' && <NotFound />}
+      {status === 'succeeded' && !piece && <NotFound />}
     </>
   )
 }

@@ -6,8 +6,6 @@ import * as Yup from 'yup'
 
 import { TextField } from '../../shared/components/forms/FormElements'
 
-// import { AuthContext } from '../../shared/context/auth-context'
-
 import ActionButton from '../../shared/components/ui/ActionButton'
 
 console.log('rerendering')

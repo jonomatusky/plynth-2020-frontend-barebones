@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { Container, Grid } from '@material-ui/core'
 
-import { setMessage } from '../../redux/messageSlice'
+import { setMessage } from '../../redux/alertSlice'
 import Message from '../../shared/components/notifications/Message'
 import Background from '../../shared/layouts/Background'
 import PageTitle from '../../shared/components/ui/PageTitle'

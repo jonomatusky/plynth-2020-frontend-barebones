@@ -53,7 +53,7 @@ const App = () => {
                 {!noNav && <NavBar />}
                 <main>
                   <Component {...props} />
-                  <Box height="5rem" />
+                  {!noNav && <Box height="5rem" />}
                 </main>
               </React.Fragment>
             )}

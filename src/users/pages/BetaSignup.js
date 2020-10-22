@@ -32,10 +32,17 @@ const BetaSignup = () => {
     console.log('submitting')
     try {
       const userData = { user: values }
-      await sendRequest(`/users/subscribe`, 'POST', userData)
+      await sendRequest({
+        url: `/users/subscribe`,
+        method: 'POST',
+        data: userData,
+      })
       setSubmitted(true)
       if (!!scanToken) {
-        await sendLog(`/scans`, { email: values.email, scanToken })
+        await sendLog({
+          url: `/scans`,
+          data: { email: values.email, scanToken },
+        })
       }
     } catch (err) {}
   }

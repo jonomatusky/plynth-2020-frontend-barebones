@@ -1,14 +1,15 @@
 import { useState, useCallback, useEffect } from 'react'
-// import {useDispatch} from 'react-redux'
-
-import { fetchUser } from '../../redux/userSlice'
-import { fetchPieces } from '../../redux/piecesSlice'
+import { useDispatch } from 'react-redux'
 import jwt from 'jsonwebtoken'
+
+import { fetchUser, clearUser } from '../../redux/userSlice'
+import { fetchPieces, clearPieces } from '../../redux/piecesSlice'
 import { useThunkClient } from './thunk-hook'
 
 let logoutTimer
 
 export const useAuth = () => {
+  const dispatch = useDispatch()
   const dispatchThunk = useThunkClient()
   const [token, setToken] = useState(null)
   const [authStatus, setAuthStatus] = useState('loading')
@@ -27,10 +28,10 @@ export const useAuth = () => {
   const logout = useCallback(() => {
     setToken(null)
     setAuthStatus('unauthenticated')
-    // dispatch(clearUser())
-    // dispatch(clearPieces())
+    dispatch(clearUser())
+    dispatch(clearPieces())
     localStorage.removeItem('__USER_TOKEN')
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     const token = localStorage.getItem('__USER_TOKEN')

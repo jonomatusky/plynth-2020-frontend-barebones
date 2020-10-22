@@ -23,11 +23,12 @@ export const fetchPieces = createAsyncThunk(
 
 export const createPiece = createAsyncThunk(
   'pieces/createPiece',
-  async ({ config }) => {
+  async ({ headers, ...inputs }) => {
     const { piece } = await client.request({
+      headers,
       url: `/pieces`,
       method: 'POST',
-      ...config,
+      data: inputs,
     })
     return piece
   }
@@ -35,11 +36,12 @@ export const createPiece = createAsyncThunk(
 
 export const updatePiece = createAsyncThunk(
   'pieces/updatePiece',
-  async ({ id, config }) => {
+  async ({ headers, id, ...inputs }) => {
     const { piece } = await client.request({
+      headers,
       url: `/pieces/${id}`,
       method: 'PATCH',
-      ...config,
+      data: inputs,
     })
     return piece
   }
@@ -47,9 +49,9 @@ export const updatePiece = createAsyncThunk(
 
 export const deletePiece = createAsyncThunk(
   'pieces/deletePiece',
-  async ({ id, config }) => {
+  async ({ headers, id, ...rest }) => {
     console.log('id: ' + id)
-    await client.request({ url: `/pieces/${id}`, method: 'DELETE', ...config })
+    await client.request({ headers, url: `/pieces/${id}`, method: 'DELETE' })
     return id
   }
 )
@@ -65,6 +67,14 @@ const piecesSlice = createSlice({
     setNewPieceImage(state, action) {
       state.newPieceImage = action.payload
     },
+    clearPieces(state, action) {
+      state.pieces = null
+      state.newPieceImage = null
+      state.status = 'idle'
+      state.error = null
+      state.updateStatus = 'idle'
+      state.createStatus = 'idle'
+    },
   },
   extraReducers: {
     [fetchPieces.pending]: (state, action) => {
@@ -72,7 +82,6 @@ const piecesSlice = createSlice({
     },
     [fetchPieces.fulfilled]: (state, action) => {
       state.status = 'succeeded'
-
       state.pieces = action.payload
     },
     [fetchPieces.rejected]: (state, action) => {
@@ -97,6 +106,10 @@ const piecesSlice = createSlice({
       }
       state.pieces = [updatedPiece, ...state.pieces]
     },
+    [updatePiece.rejected]: (state, action) => {
+      state.updateStatus = 'failed'
+      state.error = action.error.message
+    },
     [createPiece.pending]: (state, action) => {
       state.createStatus = 'loading'
     },
@@ -104,6 +117,10 @@ const piecesSlice = createSlice({
       state.createStatus = 'idle'
       const piece = action.payload
       state.pieces = [piece, ...state.pieces]
+    },
+    [createPiece.rejected]: (state, action) => {
+      state.createStatus = 'failed'
+      state.error = action.error.message
     },
     [deletePiece.fulfilled]: (state, action) => {
       const id = action.payload
@@ -119,7 +136,12 @@ const piecesSlice = createSlice({
   },
 })
 
-export const { setPieces, setPiece, setNewPieceImage } = piecesSlice.actions
+export const {
+  setPieces,
+  setPiece,
+  setNewPieceImage,
+  clearPieces,
+} = piecesSlice.actions
 
 export default piecesSlice.reducer
 

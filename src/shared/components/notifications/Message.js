@@ -4,7 +4,7 @@ import { Snackbar, SnackbarContent, Button } from '@material-ui/core'
 import styled from 'styled-components'
 import ClearIcon from '@material-ui/icons/Clear'
 
-import { setMessage } from '../../../redux/messageSlice'
+import { setMessage } from '../../../redux/alertSlice'
 import theme from '../../../theme'
 
 const MessageContent = styled(SnackbarContent)`
@@ -19,7 +19,7 @@ const StyledButton = styled(Button)`
 
 const MessageBar = props => {
   const dispatch = useDispatch()
-  const { message } = useSelector(state => state.message)
+  const { message } = useSelector(state => state.alert)
 
   const clearMessage = () => {
     dispatch(setMessage(null))

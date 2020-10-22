@@ -8,7 +8,7 @@ import ActionButton from '../../shared/components/ui/ActionButton'
 
 const EmailForm = ({ email, onSubmit, isLoading }) => {
   const initialValues = {
-    email,
+    email: email || '',
   }
 
   const handleSubmit = async (values, { resetForm }) => {

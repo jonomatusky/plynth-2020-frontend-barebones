@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { unwrapResult } from '@reduxjs/toolkit'
 
 import { AuthContext } from '../context/auth-context'
-import { setError } from '../../redux/messageSlice'
+import { setError } from '../../redux/alertSlice'
 
 export const useThunkClient = () => {
   const auth = useContext(AuthContext)
@@ -14,13 +14,9 @@ export const useThunkClient = () => {
       try {
         const headers = {}
 
-        console.log(token)
-
         if (token || !!auth.token) {
           headers.Authorization = 'Bearer ' + (token || auth.token)
         }
-
-        console.log(inputs)
 
         const resultAction = await dispatch(thunk({ headers, ...inputs }))
 
@@ -28,9 +24,11 @@ export const useThunkClient = () => {
 
         return result
       } catch (err) {
+        console.log('error caught in thunk')
         dispatch(
           setError({
-            error: err.message || 'An unknown error occured. Please try again.',
+            message:
+              err.message || 'An unknown error occured. Please try again.',
           })
         )
         throw err

@@ -24,10 +24,12 @@ const NewPiece = () => {
   const handleSubmit = async values => {
     values.images = [newPieceImage]
 
+    console.log(values)
+
     try {
       const piece = await dispatchThunk({
         thunk: createPiece,
-        input: { values },
+        inputs: values,
       })
       console.log(piece)
       history.push({

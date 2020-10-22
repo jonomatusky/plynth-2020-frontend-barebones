@@ -1,15 +1,17 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 import { useThunkClient } from '../../shared/hooks/thunk-hook'
 import { updateUser } from '../../redux/userSlice'
+import { setMessage } from '../../redux/alertSlice'
 import Background from '../../shared/layouts/Background'
 import FormLayout from '../../shared/layouts/FormLayout'
 import EmailForm from '../components/UpdateEmailForm'
 
 // need to change loggedOut to auth instead of props
 const UpdateEmail = () => {
+  const dispatch = useDispatch()
   const dispatchThunk = useThunkClient()
   const { user, updateStatus } = useSelector(state => state.user)
   const history = useHistory()
@@ -18,12 +20,10 @@ const UpdateEmail = () => {
     try {
       await dispatchThunk({
         thunk: updateUser,
-        input: values,
+        inputs: values,
       })
-      history.push({
-        pathname: '/admin/profile',
-        state: { message: 'Email successfully updated.' },
-      })
+      dispatch(setMessage({ message: 'Your email has been updated.' }))
+      history.goBack()
     } catch (err) {
       console.log(err)
       resetForm()
@@ -38,7 +38,7 @@ const UpdateEmail = () => {
         message={`Update your email address.`}
       >
         <EmailForm
-          email={(user || {}).email}
+          email={user.email}
           onSubmit={handleSubmit}
           isLoading={updateStatus === 'loading'}
         />

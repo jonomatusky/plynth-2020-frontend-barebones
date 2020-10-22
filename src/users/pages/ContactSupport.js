@@ -15,6 +15,7 @@ const SignUp = () => {
 
   const handleSubmit = (values, response) => {
     setMessage(response.message)
+    history.goBack()
   }
 
   return (
@@ -29,10 +30,9 @@ const SignUp = () => {
         title="Contact Support"
         message={
           <>
-            Get help or report a bug by submitting the form below.
-            <br />
-            For immediate assistance, contact us at help@plynth.com or call or
-            text (484) 297-9919.
+            Get help or report a bug by submitting the form below. For immediate
+            assistance, contact us at help@plynth.com, or call or text us at
+            (484) 297-9919.
           </>
         }
         bar={

@@ -1,7 +1,9 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 
 import { useApiClient } from '../../shared/hooks/api-hook'
+import { setMessage } from '../../redux/alertSlice'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import Background from '../../shared/layouts/Background'
 import FormLayout from '../../shared/layouts/FormLayout'
@@ -9,6 +11,7 @@ import SetPasswordForm from '../components/UpdatePasswordForm'
 
 const ChangePassword = () => {
   const history = useHistory()
+  const dispatch = useDispatch()
   const { isLoading, error, sendRequest, clearError } = useApiClient()
 
   const handleSubmit = async (values, resetForm) => {
@@ -21,8 +24,8 @@ const ChangePassword = () => {
           method: 'PATCH',
           data: { passwords },
         })
-
-        history.push('/admin/profile')
+        dispatch(setMessage({ message: 'Your password has been updated.' }))
+        history.goBack()
       } catch (err) {
         resetForm()
       }

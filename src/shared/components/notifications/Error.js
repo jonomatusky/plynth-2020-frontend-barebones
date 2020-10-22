@@ -4,7 +4,7 @@ import { Snackbar, SnackbarContent, Button } from '@material-ui/core'
 import styled from 'styled-components'
 import ClearIcon from '@material-ui/icons/Clear'
 
-import { setError } from '../../../redux/messageSlice'
+import { setError } from '../../../redux/alertSlice'
 import theme from '../../../theme'
 
 const StyledErrorContent = styled(SnackbarContent)`
@@ -19,10 +19,10 @@ const StyledButton = styled(Button)`
 
 const ErrorBar = props => {
   const dispatch = useDispatch()
-  const { error } = useSelector(state => state.message)
+  const { error } = useSelector(state => state.alert)
 
   const clearError = () => {
-    dispatch(setError(null))
+    dispatch(setError({ message: null }))
   }
 
   return (

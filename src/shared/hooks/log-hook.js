@@ -8,7 +8,7 @@ export const useLogClient = () => {
   const { token } = useSelector(state => state.user)
 
   const sendLog = useCallback(
-    async (url, data = null) => {
+    async ({ url, data }) => {
       let headers
       if (token) {
         headers.Authorization = 'Bearer ' + token

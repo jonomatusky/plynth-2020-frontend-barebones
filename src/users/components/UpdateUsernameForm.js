@@ -12,7 +12,7 @@ const UsernameForm = ({ onSubmit, isLoading, username }) => {
   }
 
   const initialValues = {
-    username,
+    username: username || '',
   }
 
   const validationSchema = Yup.object({

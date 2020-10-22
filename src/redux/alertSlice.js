@@ -5,19 +5,19 @@ let initialState = {
   error: null,
 }
 
-const messageSlice = createSlice({
-  name: 'message',
+const alertSlice = createSlice({
+  name: 'alert',
   initialState,
   reducers: {
     setMessage(state, action) {
       state.message = (action.payload || {}).message
     },
     setError(state, action) {
-      state.error = (action.payload || {}).error
+      state.error = (action.payload || {}).message
     },
   },
 })
 
-export const { setMessage, setError } = messageSlice.actions
+export const { setMessage, setError } = alertSlice.actions
 
-export default messageSlice.reducer
+export default alertSlice.reducer

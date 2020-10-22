@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom'
 
 import { useThunkClient } from '../../shared/hooks/thunk-hook'
 import { updateUser } from '../../redux/userSlice'
-import { setMessage } from '../../redux/messageSlice'
+import { setMessage } from '../../redux/alertSlice'
 import Background from '../../shared/layouts/Background'
 import FormLayout from '../../shared/layouts/FormLayout'
 import UsernameForm from '../components/UpdateUsernameForm'
@@ -20,10 +20,10 @@ const ChangeUsername = () => {
     try {
       await dispatchThunk({
         thunk: updateUser,
-        input: { updates: values },
+        inputs: values,
       })
-      dispatch(setMessage('Username successfully updated.'))
-      history.push('/admin/profile')
+      dispatch(setMessage({ message: 'Username successfully updated.' }))
+      history.goBack()
     } catch (err) {
       console.log(err)
       resetForm()
@@ -48,7 +48,7 @@ const ChangeUsername = () => {
         }
       >
         <UsernameForm
-          username={(user || {}).username}
+          username={user.username}
           onSubmit={handleSubmit}
           isLoading={updateStatus === 'loading'}
         />
