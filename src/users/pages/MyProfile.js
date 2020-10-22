@@ -80,7 +80,7 @@ const MyProfile = props => {
             onClose={handleClose}
           >
             <MenuItem component={Link} to={'/admin/profile/help'}>
-              Support
+              Help
             </MenuItem>
             <MenuItem component={Link} to={'/admin/profile/email/change'}>
               Email Preferences
@@ -91,7 +91,7 @@ const MyProfile = props => {
             <MenuItem component={Link} to={'/s/recover'}>
               Forgot Password
             </MenuItem>
-            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            <MenuItem onClick={handleLogout}>Sign Out</MenuItem>
           </Menu>
         </PageTitle>
         <Grid container justify="flex-start" direction="column">

@@ -60,7 +60,7 @@ const App = () => {
                 </main>
               </React.Fragment>
             )}
-            {authStatus === 'unauthenticated' && <Redirect to="/s/login" />}
+            {authStatus === 'unauthenticated' && <Redirect to="/s/signin" />}
           </>
         )}
       />
@@ -89,7 +89,12 @@ const App = () => {
 
   routes = (
     <Switch>
-      <PublicRoute restricted={true} component={SignIn} path="/s/login" exact />
+      <PublicRoute
+        restricted={true}
+        component={SignIn}
+        path="/s/signin"
+        exact
+      />
 
       <PublicRoute
         restricted={true}
