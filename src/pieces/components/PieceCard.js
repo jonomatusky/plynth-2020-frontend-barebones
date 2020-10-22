@@ -55,10 +55,8 @@ const PieceCard = ({ piece, onClose, ...props }) => {
 
   const OwnerSection = ({ owner }) => {
     const handleClick = async () => {
-      console.log('clicked: owner profile')
       try {
         if (scanToken) {
-          console.log('there is a scan token')
           await sendLog({
             url: '/scans',
             data: {
