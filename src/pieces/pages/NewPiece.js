@@ -24,14 +24,11 @@ const NewPiece = () => {
   const handleSubmit = async values => {
     values.images = [newPieceImage]
 
-    console.log(values)
-
     try {
       const piece = await dispatchThunk({
         thunk: createPiece,
         inputs: values,
       })
-      console.log(piece)
       history.push({
         pathname: `/admin/pieces/${piece.id}`,
         state: { referrer: `/admin/pieces` },

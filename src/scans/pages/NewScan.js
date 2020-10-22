@@ -50,10 +50,7 @@ const NewPickup = ({ isOpen, setIsOpen, ...props }) => {
   })
 
   useEffect(() => {
-    console.log(`it's ready`)
     if (scanStage === 'READY') {
-      console.log('pushing')
-      console.log(scanRoute)
       history.push(scanRoute)
     }
   }, [scanStage, history, scanRoute])

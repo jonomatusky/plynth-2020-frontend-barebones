@@ -50,7 +50,6 @@ export const updatePiece = createAsyncThunk(
 export const deletePiece = createAsyncThunk(
   'pieces/deletePiece',
   async ({ headers, id, ...rest }) => {
-    console.log('id: ' + id)
     await client.request({ headers, url: `/pieces/${id}`, method: 'DELETE' })
     return id
   }
