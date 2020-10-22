@@ -56,13 +56,13 @@ const ViewUsers = () => {
       {!users && <LoadingSpinner asOverlay />}
       {users && (
         <Grid container direction="column" alignItems="stretch" spacing={2}>
-          <Grid item>
+          {/* <Grid item>
             <ActionButton
               component={NavLink}
               to={'/admin/users/new'}
               label="Add User +"
             ></ActionButton>
-          </Grid>
+          </Grid> */}
           <Grid item>
             <FilterButtons
               items={filterButtons}
