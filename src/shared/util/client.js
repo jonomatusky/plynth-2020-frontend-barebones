@@ -15,8 +15,6 @@ export const request = async config => {
     message = 'Unable to upload image. Please try again.'
   }
 
-  console.log(config)
-
   try {
     const response = await axios.request({
       timeout: 10000,
