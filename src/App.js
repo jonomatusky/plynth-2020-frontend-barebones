@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import {
   BrowserRouter as Router,
   Route,
   Redirect,
   Switch,
 } from 'react-router-dom'
-import { useSelector } from 'react-redux'
 import { Box } from '@material-ui/core'
 import { LastLocationProvider } from 'react-router-last-location'
+import { useAuth } from './shared/hooks/auth-hook'
+import { AuthContext } from './shared/context/auth-context'
 
 import NewPieceImage from './pieces/pages/NewPieceImage'
 import NewPiece from './pieces/pages/NewPiece'
@@ -20,7 +21,7 @@ import NewPickup from './scans/pages/NewScan'
 import UserSignup1 from './signup/pages/UserSignup1'
 import UserSignup2 from './signup/pages/UserSignup2'
 import SignupSuccess from './signup/pages/SignupSuccess'
-import Login from './users/pages/Login'
+import SignIn from './users/pages/SignIn'
 import LoggedOutScan from './scans/pages/LoggedOutScan'
 import LoggedInScan from './scans/pages/LoggedInScan'
 import BetaSignup from './users/pages/BetaSignup'
@@ -31,45 +32,34 @@ import UpdateUsername from './users/pages/UpdateUsername'
 import RecoverPassword from './users/pages/RecoverPassword'
 import ResetPassword from './users/pages/ResetPassword'
 import ContactSupport from './users/pages/ContactSupport'
-import Logout from './users/pages/Logout'
+// import Logout from './users/pages/Logout'
 
-import TokenAuth from './users/components/TokenAuth'
 import ErrorBar from './shared/components/notifications/Error'
 import MessageBar from './shared/components/notifications/Message'
 import NavBar from './shared/components/navigation/NavBar'
 
 const App = () => {
-  const token = localStorage.getItem('__USER_TOKEN')
   let routes
-
-  console.log(token)
-
-  // useEffect(() => {
-  //   const token = localStorage.getItem('__USER_TOKEN')
-  //   if (token) {
-  //     setToken(token)
-  //   } else {
-  //     setToken(null)
-  //   }
-  // }, [token])
+  const { token, login, logout, authStatus } = useAuth()
 
   const PrivateRoute = ({ component: Component, noNav, ...rest }) => {
     return (
       <Route
         {...rest}
-        render={props =>
-          token ? (
-            <React.Fragment>
-              {!noNav && <NavBar />}
-              <main>
-                <Component {...props} />
-                <Box height="5rem" />
-              </main>
-            </React.Fragment>
-          ) : (
-            <Redirect to="/s/login" />
-          )
-        }
+        render={props => (
+          <>
+            {authStatus === 'authenticated' && (
+              <React.Fragment>
+                {!noNav && <NavBar />}
+                <main>
+                  <Component {...props} />
+                  <Box height="5rem" />
+                </main>
+              </React.Fragment>
+            )}
+            {authStatus === 'unauthenticated' && <Redirect to="/s/login" />}
+          </>
+        )}
       />
     )
   }
@@ -78,22 +68,25 @@ const App = () => {
     return (
       <Route
         {...rest}
-        render={props =>
-          !token || !restricted ? (
-            <main>
-              <Component {...props} />
-            </main>
-          ) : (
-            <Redirect to="/admin/pieces" />
-          )
-        }
+        render={props => (
+          <>
+            {(authStatus === 'unauthenticated' || !restricted) && (
+              <main>
+                <Component {...props} />
+              </main>
+            )}
+            {authStatus === 'authenticated' && restricted && (
+              <Redirect to="/admin/pieces" />
+            )}
+          </>
+        )}
       />
     )
   }
 
   routes = (
     <Switch>
-      <PublicRoute restricted={true} component={Login} path="/s/login" exact />
+      <PublicRoute restricted={true} component={SignIn} path="/s/login" exact />
 
       <PublicRoute
         restricted={true}
@@ -207,7 +200,7 @@ const App = () => {
         path="/admin/profile/help"
         exact
       />
-      <PrivateRoute component={Logout} path="/admin/logout" exact />
+      {/* <PrivateRoute component={Logout} path="/admin/logout" exact /> */}
       <Redirect from="/admin" to="/" />
 
       <PublicRoute restricted={false} component={ViewUser} path="/:username" />
@@ -217,16 +210,24 @@ const App = () => {
   )
 
   return (
-    <Router>
-      <LastLocationProvider>
-        <>
-          <TokenAuth />
-          <ErrorBar />
-          <MessageBar />
-          {routes}
-        </>
-      </LastLocationProvider>
-    </Router>
+    <AuthContext.Provider
+      value={{
+        token: token,
+        login: login,
+        logout: logout,
+        authStatus: authStatus,
+      }}
+    >
+      <Router>
+        <LastLocationProvider>
+          <>
+            <ErrorBar />
+            <MessageBar />
+            {routes}
+          </>
+        </LastLocationProvider>
+      </Router>
+    </AuthContext.Provider>
   )
 }
 

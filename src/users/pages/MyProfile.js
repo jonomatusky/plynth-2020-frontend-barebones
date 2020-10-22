@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
+import React, { useState, useContext } from 'react'
+import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
-
 import {
   Container,
   Grid,
@@ -13,6 +12,13 @@ import {
   Avatar,
   Typography,
 } from '@material-ui/core'
+import SettingsIcon from '@material-ui/icons/Settings'
+
+import { AuthContext } from '../../shared/context/auth-context'
+import MessageBar from '../../shared/components/notifications/MessageBar'
+import ActionButton from '../../shared/components/ui/ActionButton'
+import Background from '../../shared/layouts/Background'
+import PageTitle from '../../shared/components/ui/PageTitle'
 import {
   PieceBox,
   ProfileTopRow,
@@ -24,13 +30,6 @@ import {
   BottomRow,
   UnstyledLink,
 } from '../../shared/components/ui/CardSections'
-import SettingsIcon from '@material-ui/icons/Settings'
-
-import { logout } from '../../redux/authSlice'
-import MessageBar from '../../shared/components/notifications/MessageBar'
-import ActionButton from '../../shared/components/ui/ActionButton'
-import Background from '../../shared/layouts/Background'
-import PageTitle from '../../shared/components/ui/PageTitle'
 
 const title = 'My Profile'
 
@@ -42,9 +41,8 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const MyProfile = props => {
-  const history = useHistory()
-  const dispatch = useDispatch()
-  const { user } = useSelector(state => state.auth)
+  const auth = useContext(AuthContext)
+  const { user } = useSelector(state => state.user)
   const classes = useStyles()
   const [message, setMessage] = useState((props.location.state || {}).message)
   const [anchorEl, setAnchorEl] = useState(null)
@@ -58,8 +56,7 @@ const MyProfile = props => {
   }
 
   const handleLogout = async () => {
-    await dispatch(logout())
-    history.push('/s/login')
+    auth.logout()
   }
 
   return (

@@ -7,7 +7,7 @@ import { Grid, Button } from '@material-ui/core'
 import { BottomRow } from '../../shared/components/ui/CardSections'
 
 const BottomBar = ({ piece }) => {
-  const { user } = useSelector(state => state.auth)
+  const { user } = useSelector(state => state.user)
   const history = useHistory()
 
   if (!user) {

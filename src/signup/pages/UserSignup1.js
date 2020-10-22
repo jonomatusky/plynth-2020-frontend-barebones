@@ -5,7 +5,7 @@ import { Grid, Box } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
-import { login } from '../../redux/authSlice'
+import { useAuth } from '../../shared/hooks/auth-hook'
 import { useApiClient } from '../../shared/hooks/api-hook'
 
 import Background from '../../shared/layouts/Background'
@@ -50,6 +50,7 @@ const validationSchema = Yup.object({
 })
 
 const UserSignup1 = ({ values }) => {
+  const { login } = useAuth
   const dispatch = useDispatch()
   const history = useHistory()
   const { isLoading, error, sendRequest, clearError } = useApiClient()

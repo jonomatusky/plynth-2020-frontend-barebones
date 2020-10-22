@@ -5,7 +5,7 @@ import axios from 'axios'
 const { REACT_APP_BACKEND_URL } = process.env
 
 const useHttpClient = () => {
-  const { token } = useSelector(state => state.auth)
+  const { token } = useSelector(state => state.user)
 
   let activeAxiosSources = useRef([])
 

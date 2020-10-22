@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
 import { useThunkClient } from '../../shared/hooks/thunk-hook'
-import { updateUser } from '../../redux/authSlice'
+import { updateUser } from '../../redux/userSlice'
 import { setMessage } from '../../redux/messageSlice'
 import Background from '../../shared/layouts/Background'
 import FormLayout from '../../shared/layouts/FormLayout'
@@ -13,7 +13,7 @@ import UsernameForm from '../components/UpdateUsernameForm'
 const ChangeUsername = () => {
   const dispatch = useDispatch()
   const dispatchThunk = useThunkClient()
-  const { user, updateStatus } = useSelector(state => state.auth)
+  const { user, updateStatus } = useSelector(state => state.user)
   const history = useHistory()
 
   const handleSubmit = async ({ values, resetForm }) => {

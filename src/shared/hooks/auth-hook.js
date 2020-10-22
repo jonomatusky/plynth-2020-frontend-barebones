@@ -1,104 +1,57 @@
 import { useState, useCallback, useEffect } from 'react'
+// import {useDispatch} from 'react-redux'
+
+import { fetchUser } from '../../redux/userSlice'
+import { fetchPieces } from '../../redux/piecesSlice'
+import jwt from 'jsonwebtoken'
+import { useThunkClient } from './thunk-hook'
 
 let logoutTimer
 
 export const useAuth = () => {
+  const dispatchThunk = useThunkClient()
   const [token, setToken] = useState(null)
-  const [tokenExpirationDate, setTokenExpirationDate] = useState()
-  // const [user, setUser] = useState(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [authStatus, setAuthStatus] = useState('loading')
 
-  const login = useCallback(async (userId, token, expirationDate) => {
-    setToken(token)
-    setIsLoading(false)
-
-    // let {
-    //   id,
-    //   username,
-    //   displayName,
-    //   bio,
-    //   links,
-    //   completedSignup,
-    //   avatar,
-    //   avatarLink,
-    //   pieceLimit,
-    // } = user
-
-    const tokenExpirationDate =
-      expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60 * 24)
-    setTokenExpirationDate(tokenExpirationDate)
-    // this is where I could set addititional user data in localStorage (eg, avatar link, bio, links, etc)
-    // it would need to be updated when a user changes their info (eg, uploads a new photo)
-
-    // localStorage.setItem(
-    //   'userData',
-    //   JSON.stringify({
-    //     user: {
-    //       id,
-    // username,
-    // displayName,
-    // bio,
-    // links,
-    // completedSignup,
-    // avatar,
-    // avatarLink,
-    // pieceLimit,
-    //     },
-    //     token: token,
-    //     expiration: tokenExpirationDate.toISOString(),
-    //   })
-    // )
-
-    localStorage.setItem(
-      'userData',
-      JSON.stringify({
-        userId,
-        token,
-        expiration: tokenExpirationDate.toISOString(),
-      })
-    )
-  }, [])
+  const login = useCallback(
+    async token => {
+      setToken(token)
+      setAuthStatus('authenticated')
+      localStorage.setItem('__USER_TOKEN', token)
+      await dispatchThunk({ thunk: fetchUser, token })
+      await dispatchThunk({ thunk: fetchPieces, token })
+    },
+    [dispatchThunk]
+  )
 
   const logout = useCallback(() => {
     setToken(null)
-    setTokenExpirationDate(null)
-    setIsLoading(false)
-    localStorage.removeItem('userData')
-  }, [])
-
-  const doneLoading = useCallback(() => {
-    setIsLoading(false)
+    setAuthStatus('unauthenticated')
+    // dispatch(clearUser())
+    // dispatch(clearPieces())
+    localStorage.removeItem('__USER_TOKEN')
   }, [])
 
   useEffect(() => {
-    if (token && tokenExpirationDate) {
-      const remainingTime = tokenExpirationDate.getTime() - new Date().getTime()
-      logoutTimer = setTimeout(logout, remainingTime)
+    const token = localStorage.getItem('__USER_TOKEN')
+
+    if (token) {
+      try {
+        const { exp } = jwt.decode(token)
+
+        if (exp * 1000 >= new Date()) {
+          login(token)
+        }
+
+        const remainingTime = exp * 1000 - new Date().getTime()
+        logoutTimer = setTimeout(logout, remainingTime)
+        //dispatch set user
+      } catch (err) {}
     } else {
+      logout()
       clearTimeout(logoutTimer)
     }
-  }, [token, logout, tokenExpirationDate])
+  }, [login, logout])
 
-  useEffect(() => {
-    if (!token) {
-      doneLoading()
-    }
-  }, [token, doneLoading])
-
-  useEffect(() => {
-    const storedData = JSON.parse(localStorage.getItem('userData'))
-    if (
-      storedData &&
-      storedData.token &&
-      new Date(storedData.expiration) > new Date()
-    ) {
-      login(
-        storedData.userId,
-        storedData.token,
-        new Date(storedData.expiration)
-      )
-    }
-  }, [login])
-
-  return { token, isLoading, login, logout }
+  return { token, login, logout, authStatus }
 }

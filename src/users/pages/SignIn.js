@@ -1,35 +1,37 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link as RouterLink, useHistory } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
 import { Typography, Link } from '@material-ui/core'
 
+import { AuthContext } from '../../shared/context/auth-context'
+import { useApiClient } from '../../shared/hooks/api-hook'
+import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import Background from '../../shared/layouts/Background'
 import FormLayout from '../../shared/layouts/FormLayout'
-import LoginForm from '../components/LoginForm'
-import { login } from '../../redux/authSlice'
+import LoginForm from '../components/SignInForm'
 import { BarRow } from '../../shared/components/ui/CardSections'
-import { useThunkClient } from '../../shared/hooks/thunk-hook'
 
-const SignUp = () => {
-  const dispatch = useDispatch()
-  const dispatchThunk = useThunkClient()
+const SignIn = () => {
+  const auth = useContext(AuthContext)
+  const { isLoading, error, sendRequest, clearError } = useApiClient()
   const history = useHistory()
-
-  const loginStatus = useSelector(state => state.auth.status)
 
   const handleSubmit = async values => {
     try {
-      await dispatchThunk({
-        thunk: login,
-        inputs: values,
+      const { token } = await sendRequest({
+        url: '/auth/login',
+        method: 'POST',
+        data: values,
       })
-      history.push('/admin/pieces')
-    } catch (err) {}
+      auth.login(token)
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   return (
     <>
       <Background />
+      <ErrorBar open={!!error} error={error} handleClose={clearError} />
       <FormLayout
         title="Log In"
         bar={
@@ -54,13 +56,10 @@ const SignUp = () => {
           </Typography>
         }
       >
-        <LoginForm
-          onSubmit={handleSubmit}
-          isLoading={loginStatus === 'loading'}
-        />
+        <LoginForm onSubmit={handleSubmit} isLoading={isLoading} />
       </FormLayout>
     </>
   )
 }
 
-export default SignUp
+export default SignIn

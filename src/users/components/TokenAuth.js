@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 // import jwt from 'jsonwebtoken'
-import { authWithToken, logout, autoLogin } from '../../redux/authSlice'
+import { authWithToken, logout, autoLogin } from '../../redux/userSlice'
 // import { fetchPieces } from '../../redux/piecesSlice'
 
 import { useSelector, useDispatch } from 'react-redux'
@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from 'react-redux'
 
 const TokenAuth = () => {
   // const dispatchThunk = useThunkClient()
-  // const authStatus = (useSelector(state => state.auth) || {}).status
+  // const authStatus = (useSelector(state => state.user) || {}).status
   // const token = localStorage.getItem('__USER_TOKEN')
 
   const dispatch = useDispatch()

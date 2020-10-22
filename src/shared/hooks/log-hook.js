@@ -5,7 +5,7 @@ import axios from 'axios'
 const { REACT_APP_BACKEND_URL } = process.env
 
 export const useLogClient = () => {
-  const { token } = useSelector(state => state.auth)
+  const { token } = useSelector(state => state.user)
 
   const sendLog = useCallback(
     async (url, data = null) => {

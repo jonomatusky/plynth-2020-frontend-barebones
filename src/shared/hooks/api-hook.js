@@ -1,43 +1,42 @@
-import { useEffect, useCallback, useRef } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import axios from 'axios'
 
-import { setError } from '../../redux/messageSlice'
 import * as client from '../util/client'
 
 export const useApiClient = () => {
-  const dispatch = useDispatch()
-  const { token } = useSelector(state => state.auth)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState()
 
   let activeAxiosSources = useRef([])
 
-  const sendRequest = useCallback(
-    async config => {
-      console.log(config.url)
+  const sendRequest = useCallback(async config => {
+    setIsLoading(true)
 
-      try {
-        const CancelToken = axios.CancelToken
-        const source = CancelToken.source()
-        activeAxiosSources.current.push(source)
+    try {
+      const CancelToken = axios.CancelToken
+      const source = CancelToken.source()
+      activeAxiosSources.current.push(source)
 
-        let response = client.request({
-          token,
-          cancelToken: source.token,
-          ...config,
-        })
+      let response = await client.request({
+        cancelToken: source.token,
+        ...config,
+      })
 
-        activeAxiosSources.current = activeAxiosSources.current.filter(
-          reqCtrl => reqCtrl.token !== source.token
-        )
+      activeAxiosSources.current = activeAxiosSources.current.filter(
+        reqCtrl => reqCtrl.token !== source.token
+      )
 
-        return response
-      } catch (err) {
-        console.log(err)
-        err.message && dispatch(setError(err.message))
-      }
-    },
-    [token, dispatch]
-  )
+      setIsLoading(false)
+      return response
+    } catch (err) {
+      setError(err.message)
+      setIsLoading(false)
+    }
+  }, [])
+
+  const clearError = () => {
+    setError(null)
+  }
 
   useEffect(() => {
     return () => {
@@ -47,5 +46,5 @@ export const useApiClient = () => {
     }
   }, [])
 
-  return sendRequest
+  return { isLoading, error, sendRequest, clearError }
 }

@@ -12,10 +12,10 @@ let initialState = {
 
 export const fetchPieces = createAsyncThunk(
   'pieces/fetchPieces',
-  async ({ config }) => {
+  async ({ headers }) => {
     const { pieces } = await client.request({
+      headers,
       url: '/users/me/pieces',
-      ...config,
     })
     return pieces
   }

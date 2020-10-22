@@ -35,7 +35,7 @@ const NewPickup = ({ isOpen, setIsOpen, ...props }) => {
   const { imageUrl, foundPiece, scanToken, scanStage } = useSelector(
     state => state.scan
   )
-  const { scanRoute } = useSelector(state => state.auth)
+  const { scanRoute } = useSelector(state => state.user)
   const { uploadError, uploadImage, clearUploadError } = useImageUpload()
   const { error, sendRequest, clearError } = useApiClient()
   const [showFoundScreen, setShowFoundScreen] = useState(false)

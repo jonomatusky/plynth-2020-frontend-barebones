@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { Grid, Box } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
-import { updateUser } from '../../redux/authSlice'
+import { updateUser } from '../../redux/userSlice'
 
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import Background from '../../shared/layouts/Background'
@@ -14,23 +14,29 @@ import { TextField, TextArea } from '../../shared/components/forms/FormElements'
 import AvatarInput from '../components/AvatarInput'
 import LinkList from '../../shared/components/forms/LinkList'
 import ActionButton from '../../shared/components/ui/ActionButton'
+import { useThunkClient } from '../../shared/hooks/thunk-hook'
 
 const UpdateProfile = () => {
-  const dispatch = useDispatch()
+  const dispatchThunk = useThunkClient()
   const history = useHistory()
-  const { user } = useSelector(state => state.auth)
+  const { user } = useSelector(state => state.user)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState()
 
   const handleSubmit = async values => {
     setIsLoading(true)
-    console.log(isLoading)
     try {
-      await dispatch(updateUser(values))
+      await dispatchThunk({
+        thunk: updateUser,
+        inputs: values,
+      })
+      setIsLoading(false)
+      history.push('/admin/profile')
     } catch (err) {
+      console.log(err)
       setError(err.message)
+      setIsLoading(false)
     }
-    history.push('/admin/profile')
   }
 
   const { displayName, bio, links, avatar, avatarLink } = user || {}

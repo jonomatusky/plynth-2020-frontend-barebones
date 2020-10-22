@@ -1,25 +1,28 @@
-import { useCallback } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useCallback, useContext } from 'react'
+import { useDispatch } from 'react-redux'
 import { unwrapResult } from '@reduxjs/toolkit'
 
+import { AuthContext } from '../context/auth-context'
 import { setError } from '../../redux/messageSlice'
 
 export const useThunkClient = () => {
+  const auth = useContext(AuthContext)
   const dispatch = useDispatch()
-  const { token } = useSelector(state => state.auth)
 
   const dispatchThunk = useCallback(
-    async ({ thunk, id, inputs }) => {
+    async ({ thunk, inputs, token }) => {
       try {
         const headers = {}
 
-        if (!!token) {
-          headers.Authorization = 'Bearer ' + token
+        console.log(token)
+
+        if (token || !!auth.token) {
+          headers.Authorization = 'Bearer ' + (token || auth.token)
         }
 
-        const resultAction = await dispatch(
-          thunk({ id, config: { headers, data: inputs } })
-        )
+        console.log(inputs)
+
+        const resultAction = await dispatch(thunk({ headers, ...inputs }))
 
         const result = unwrapResult(resultAction)
 
@@ -33,7 +36,7 @@ export const useThunkClient = () => {
         throw err
       }
     },
-    [dispatch, token]
+    [dispatch, auth.token]
   )
 
   return dispatchThunk
