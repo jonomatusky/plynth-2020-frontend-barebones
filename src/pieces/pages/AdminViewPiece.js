@@ -19,7 +19,7 @@ const ViewPiece = props => {
   const pieceId = useParams().pieceId
   const piece = useSelector(state => selectPiece(state, pieceId))
   const { sendRequest } = useApiClient()
-  const { user } = useSelector(state => state.auth)
+  const { user } = useSelector(state => state.user)
 
   const { status } = useSelector(state => state.pieces)
 

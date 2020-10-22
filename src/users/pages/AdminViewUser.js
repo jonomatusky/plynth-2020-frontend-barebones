@@ -42,9 +42,7 @@ const AdminViewUser = props => {
   const history = useHistory()
   const { username } = useParams()
   const user = useSelector(state => selectUser(state, username))
-  console.log(user)
   const pieces = useSelector(state => selectPiecesByUser(state, username))
-  console.log(pieces)
 
   const classes = useStyles()
   const [message, setMessage] = useState((props.location.state || {}).message)

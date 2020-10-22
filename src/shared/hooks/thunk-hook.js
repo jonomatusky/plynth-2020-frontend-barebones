@@ -18,10 +18,6 @@ export const useThunkClient = () => {
           headers.Authorization = 'Bearer ' + (token || auth.token)
         }
 
-        console.log(inputs)
-        console.log(token)
-        console.log(thunk)
-
         const resultAction = await dispatch(thunk({ headers, ...inputs }))
 
         const result = unwrapResult(resultAction)

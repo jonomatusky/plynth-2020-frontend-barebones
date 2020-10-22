@@ -14,7 +14,7 @@ const ViewUsers = () => {
   const { isLoading, sendRequest } = useApiClient()
   const [scanCountDaily, setScanCountDaily] = useState()
   const [scanCountMonthly, setScanCountMonthly] = useState()
-  const { user } = useSelector(state => state.auth)
+  const { user } = useSelector(state => state.user)
 
   useEffect(() => {
     if (user) {

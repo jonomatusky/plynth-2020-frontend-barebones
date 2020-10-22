@@ -8,7 +8,7 @@ import * as Yup from 'yup'
 import { makeStyles } from '@material-ui/core/styles'
 
 import { useApiClient } from '../../shared/hooks/api-hook'
-import { selectUser, setUser } from '../../redux/usersSlice'
+import { selectUser } from '../../redux/usersSlice'
 import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import Background from '../../shared/layouts/Background'
 import FormLayout from '../../shared/layouts/FormLayout'
@@ -17,6 +17,8 @@ import {
   CheckButton,
 } from '../../shared/components/forms/FormElements'
 import ActionButton from '../../shared/components/ui/ActionButton'
+import { updateUser } from '../../redux/usersSlice'
+import { useThunkClient } from '../../shared/hooks/thunk-hook'
 
 const useStyles = makeStyles(theme => ({
   large: {
@@ -28,10 +30,11 @@ const useStyles = makeStyles(theme => ({
 const UpdateProfile = props => {
   const classes = useStyles()
   const dispatch = useDispatch()
+  const dispatchThunk = useThunkClient()
   const history = useHistory()
   const lastLocation = useLastLocation()
   const { username } = useParams()
-  const { isLoading, error, sendRequest, clearError } = useApiClient()
+  const { updateStatus } = useSelector(state => state.users)
 
   const user = useSelector(state => selectUser(state, username))
 
@@ -39,14 +42,10 @@ const UpdateProfile = props => {
 
   const handleSubmit = async values => {
     try {
-      const userData = { user: values }
-      const response = await sendRequest(
-        `/users/${user.username}`,
-        'PATCH',
-        userData
-      )
-      console.log(response.user)
-      dispatch(setUser({ user: response.user }))
+      await dispatchThunk({
+        thunk: updateUser,
+        inputs: { username, ...values },
+      })
       !!lastLocation
         ? history.goBack()
         : history.push(`admin/users/${username}`)
@@ -77,7 +76,6 @@ const UpdateProfile = props => {
   return (
     <>
       <Background />
-      <ErrorBar open={!!error} error={error} handleClose={clearError} />
       {user && (
         <FormLayout
           bottom={
@@ -152,7 +150,7 @@ const UpdateProfile = props => {
                     <ActionButton
                       type="submit"
                       label="Save"
-                      loading={isLoading}
+                      loading={updateStatus === 'loading'}
                     />
                   </Grid>
                 </Grid>

@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+// import axios from 'axios'
 import * as client from '../shared/util/client'
 
 let initialState = {
@@ -13,7 +14,6 @@ let initialState = {
 export const fetchUser = createAsyncThunk(
   'user/fetchUser',
   async ({ headers, ...rest }) => {
-    console.log(headers)
     const { user } = await client.request({
       headers,
       url: '/users/me',
@@ -39,6 +39,10 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    setUser(state, action) {
+      const { user } = action.payload
+      state.user = user
+    },
     pushLocation(state, action) {
       state.locationHistory = state.locationHistory.concat(action.payload)
     },
@@ -81,6 +85,11 @@ const userSlice = createSlice({
   },
 })
 
-export const { pushLocation, clearError, clearUser } = userSlice.actions
+export const {
+  setUser,
+  pushLocation,
+  clearError,
+  clearUser,
+} = userSlice.actions
 
 export default userSlice.reducer

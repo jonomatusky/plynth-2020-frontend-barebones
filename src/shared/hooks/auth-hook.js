@@ -21,8 +21,8 @@ export const useAuth = () => {
       setAuthStatus('authenticated')
       localStorage.setItem('__USER_TOKEN', token)
       await dispatchThunk({ thunk: fetchUser, token })
-      // await dispatchThunk({ thunk: fetchPieces, token })
-      // await dispatchThunk({ thunk: fetchUsers, token })
+      await dispatchThunk({ thunk: fetchPieces, token })
+      await dispatchThunk({ thunk: fetchUsers, token })
     },
     [dispatchThunk]
   )

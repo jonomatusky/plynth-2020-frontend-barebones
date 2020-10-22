@@ -18,6 +18,7 @@ const UpdatePiece = props => {
   const history = useHistory()
   const { users } = useSelector(state => state.users)
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
+  const updateStatus = useSelector(state => state.pieces)
 
   const dispatchThunk = useThunkClient()
   const pieceId = useParams().pieceId
@@ -91,7 +92,12 @@ const UpdatePiece = props => {
             </Button>
           }
         >
-          <AdminPieceForm piece={piece} users={users} onSubmit={handleSubmit} />
+          <AdminPieceForm
+            piece={piece}
+            users={users}
+            onSubmit={handleSubmit}
+            isLoading={updateStatus === 'loading'}
+          />
         </FormLayout>
       ) : (
         <LoadingSpinner asOverlay />
