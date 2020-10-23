@@ -19,7 +19,7 @@ const ChangePassword = () => {
   }
 
   const handleClose = () => {
-    history.push('/s/signin')
+    history.push('/admin/login')
   }
 
   useEffect(() => {
