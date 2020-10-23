@@ -47,7 +47,7 @@ const SignIn = () => {
             {`Forgot your password? `}
             <Link
               component={RouterLink}
-              to="/s/recover"
+              to="/admin/recover"
               color="inherit"
               underline="always"
             >

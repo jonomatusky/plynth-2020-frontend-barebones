@@ -46,7 +46,7 @@ const LoggedOutScan = () => {
               {`Already have an account? `}
               <Link
                 component={RouterLink}
-                to="/s/signin"
+                to="/admin/login"
                 color="inherit"
                 underline="always"
               >
