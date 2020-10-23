@@ -16,17 +16,16 @@ const title = 'My Pieces'
 const MyPieces = () => {
   const dispatch = useDispatch()
   const { pieces } = useSelector(state => state.pieces)
-  const user = useSelector(state => state.user)
+  const { user } = useSelector(state => state.user)
   const history = useHistory()
 
-  let pieceLimit = (user || {}).pieceLimit
-
   const handleClick = () => {
-    if (pieceLimit <= pieces.length) {
+    const { pieceLimit } = user || {}
+    if (pieces.length >= pieceLimit) {
       dispatch(
-        setMessage(
-          `Sorry, looks like you've reached your piece limit! Please remove a piece or contact an admin to add another piece.`
-        )
+        setMessage({
+          message: `Sorry, looks like you've reached your piece limit! Please remove a piece or contact an admin to add another piece.`,
+        })
       )
     } else {
       history.push('/admin/create/style')

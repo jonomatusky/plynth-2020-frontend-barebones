@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import { Container, Grid, Box, Avatar } from '@material-ui/core'
 import {
   PieceBox,
@@ -19,6 +20,7 @@ import ActionButton from '../../shared/components/ui/ActionButton'
 import Background from '../../shared/layouts/Background'
 
 import NotFound from '../../shared/components/navigation/NotFound'
+import { useLogClient } from '../../shared/hooks/log-hook'
 
 const useStyles = makeStyles(theme => ({
   large: {
@@ -29,7 +31,8 @@ const useStyles = makeStyles(theme => ({
 
 const UserProfile = props => {
   const classes = useStyles()
-
+  let { scanToken } = useSelector(state => state.scan)
+  const { sendLog } = useLogClient()
   const { isLoading, error, sendRequest } = useApiClient()
   const [user, setUser] = useState()
   const username = useParams().username
@@ -43,6 +46,32 @@ const UserProfile = props => {
     }
     fetchUser()
   }, [sendRequest, username])
+
+  const LinkButton = ({ link }) => {
+    const handleClick = async () => {
+      console.log('click')
+      try {
+        if (scanToken) {
+          await sendLog({
+            url: '/scans',
+            data: {
+              click: { type: 'link', destination: link.url },
+              scanToken,
+            },
+          })
+        }
+      } catch (err) {}
+    }
+
+    return (
+      <ActionButton
+        onClick={handleClick}
+        target="_blank"
+        href={link.url}
+        label={link.name}
+      />
+    )
+  }
 
   return (
     <>
@@ -88,11 +117,7 @@ const UserProfile = props => {
                 return (
                   <LinkRow container key={link._id} justify="center">
                     <Grid item xs={11}>
-                      <ActionButton
-                        target="_blank"
-                        href={link.url}
-                        label={link.name}
-                      />
+                      <LinkButton link={link} />
                     </Grid>
                   </LinkRow>
                 )

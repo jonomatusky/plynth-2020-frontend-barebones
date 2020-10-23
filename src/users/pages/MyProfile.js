@@ -88,7 +88,7 @@ const MyProfile = props => {
             <MenuItem component={Link} to={'/admin/profile/password/change'}>
               Change Password
             </MenuItem>
-            <MenuItem component={Link} to={'/s/recover'}>
+            <MenuItem component={Link} to={'/admin/recover'}>
               Forgot Password
             </MenuItem>
             <MenuItem onClick={handleLogout}>Sign Out</MenuItem>
