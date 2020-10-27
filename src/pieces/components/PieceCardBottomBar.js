@@ -7,10 +7,10 @@ import { Grid, Button } from '@material-ui/core'
 import { BottomRow } from '../../shared/components/ui/CardSections'
 
 const BottomBar = ({ piece }) => {
-  const { user } = useSelector(state => state.user)
+  const { status, user } = useSelector(state => state.user)
   const history = useHistory()
 
-  if (!user) {
+  if (status !== 'succeeded') {
     return (
       <BottomRow container justify="center">
         <Grid item>
@@ -20,7 +20,7 @@ const BottomBar = ({ piece }) => {
         </Grid>
       </BottomRow>
     )
-  } else if (piece.owner.id === user.id) {
+  } else if (status === 'succeeded' && piece.owner.id === user.id) {
     return (
       <BottomRow container justify="center">
         <Grid item>

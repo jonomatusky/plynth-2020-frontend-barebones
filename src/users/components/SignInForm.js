@@ -8,8 +8,6 @@ import { TextField } from '../../shared/components/forms/FormElements'
 
 import ActionButton from '../../shared/components/ui/ActionButton'
 
-console.log('rerendering')
-
 const SignInForm = ({ onSubmit, isLoading }) => {
   const initialValues = {
     email: '',

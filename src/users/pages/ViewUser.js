@@ -49,7 +49,6 @@ const UserProfile = props => {
 
   const LinkButton = ({ link }) => {
     const handleClick = async () => {
-      console.log('click')
       try {
         if (scanToken) {
           await sendLog({

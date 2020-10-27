@@ -23,13 +23,11 @@ const BetaSignup = () => {
   const [submitted, setSubmitted] = useState(false)
 
   const handleClose = event => {
-    console.log('closing')
     event.preventDefault()
     history.goBack()
   }
 
   const handleSubmit = async values => {
-    console.log('submitting')
     try {
       const userData = { user: values }
       await sendRequest({

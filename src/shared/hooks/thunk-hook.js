@@ -24,7 +24,6 @@ export const useThunkClient = () => {
 
         return result
       } catch (err) {
-        console.log('error caught in thunk')
         dispatch(
           setError({
             message:
