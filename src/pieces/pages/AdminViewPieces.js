@@ -13,7 +13,7 @@ import ActionButton from '../../shared/components/ui/ActionButton'
 import FilterButtons from '../../shared/components/ui/FilterButtons'
 import { setFilter, getPiecesByFilter } from '../../redux/piecesSlice'
 
-const title = 'My Pieces'
+const title = 'Pieces'
 
 const filterButtons = [
   {

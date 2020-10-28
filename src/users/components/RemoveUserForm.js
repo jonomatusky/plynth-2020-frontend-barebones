@@ -1,33 +1,14 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
 import { Grid } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
-import { deleteUser } from '../../redux/usersSlice'
-import { useApiClient } from '../../shared/hooks/api-hook'
-import ErrorBar from '../../shared/components/notifications/ErrorBar'
 import { TextField } from '../../shared/components/forms/FormElements'
 import ActionButton from '../../shared/components/ui/ActionButton'
 
-const UsernameForm = props => {
-  const dispatch = useDispatch()
-  const username = props.username
-  const { isLoading, error, sendRequest, clearError } = useApiClient()
-
+const UsernameForm = ({ username, onSubmit, isLoading }) => {
   const handleSubmit = async values => {
-    delete values.passwordConfirmation
-
-    if (!isLoading) {
-      try {
-        if (username === values.username) {
-          await sendRequest(`/users/${username}`, 'DELETE')
-          dispatch(deleteUser(username))
-        }
-
-        props.onSubmit(values)
-      } catch (err) {}
-    }
+    onSubmit(values)
   }
 
   const initialValues = {
@@ -43,8 +24,6 @@ const UsernameForm = props => {
 
   return (
     <React.Fragment>
-      <ErrorBar open={!!error} error={error} handleClose={clearError} />
-
       <Formik
         enableReinitialize="true"
         initialValues={initialValues}

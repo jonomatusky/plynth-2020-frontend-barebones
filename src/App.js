@@ -71,7 +71,7 @@ const App = () => {
               </main>
             )}
             {authStatus === 'authenticated' && restricted && (
-              <Redirect to="/admin/pieces" />
+              <Redirect to="/admin/users" />
             )}
           </>
         )}

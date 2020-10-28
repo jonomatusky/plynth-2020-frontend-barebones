@@ -23,6 +23,7 @@ export const useApiClient = () => {
         const headers = {}
 
         if (auth.token) {
+          console.log(auth.token)
           headers.Authorization = 'Bearer ' + auth.token
         }
 
