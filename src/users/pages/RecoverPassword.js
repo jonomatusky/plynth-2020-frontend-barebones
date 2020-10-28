@@ -26,7 +26,6 @@ const ChangePassword = () => {
         <FormLayout
           title="Forgot Your Password?"
           message={`Enter your email below and we will send you intructions on how to reset your password.`}
-          onClose={handleClose}
         >
           <RecoverPasswordForm onSubmit={handleSubmit} />
         </FormLayout>
