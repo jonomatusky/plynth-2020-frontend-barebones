@@ -5,7 +5,6 @@ import { Container, Grid, Box, Typography } from '@material-ui/core'
 import { useApiClient } from '../../shared/hooks/api-hook'
 import PageTitle from '../../shared/components/ui/PageTitle'
 import ScanList from '../components/ScanList'
-import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
 import { CircularProgress } from '@material-ui/core'
 
 const title = 'Scans'
