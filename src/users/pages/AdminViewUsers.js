@@ -34,7 +34,8 @@ const ViewUsers = () => {
 
   const items = users.map(user => {
     let pieceCount = pieces.filter(
-      piece => piece.owner.username === user.username
+      piece =>
+        piece.owner.username === user.username && piece.isRemoved !== true
     ).length
     return { pieceCount, ...user }
   })
