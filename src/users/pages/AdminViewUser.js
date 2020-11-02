@@ -138,7 +138,9 @@ const AdminViewUser = props => {
                 <>
                   <CardRow container justify="center">
                     <DescriptionBox item xs={11}>
-                      <PieceList items={pieces} />
+                      <PieceList
+                        items={pieces.filter(piece => piece.isRemoved !== true)}
+                      />
                     </DescriptionBox>
                   </CardRow>
                   <Box height="1rem"></Box>
