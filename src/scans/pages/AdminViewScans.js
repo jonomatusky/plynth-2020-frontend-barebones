@@ -6,6 +6,7 @@ import { useApiClient } from '../../shared/hooks/api-hook'
 import PageTitle from '../../shared/components/ui/PageTitle'
 import ScanList from '../components/ScanList'
 import LoadingSpinner from '../../shared/components/ui/LoadingSpinner'
+import { CircularProgress } from '@material-ui/core'
 
 const title = 'Scans'
 
@@ -33,17 +34,17 @@ const ViewUsers = () => {
 
       const fetchScanCountDaily = async () => {
         try {
-          const { scanCount } = await sendRequest(
-            `/scans/count?startDate=${startDateDaily}`
-          )
+          const { scanCount } = await sendRequest({
+            url: `/scans/count?startDate=${startDateDaily}`,
+          })
           setScanCountDaily(scanCount)
         } catch (err) {}
       }
       const fetchScanCountMonthly = async () => {
         try {
-          const responseData = await sendRequest(
-            `/scans/count?startDate=${startDateMonthly}`
-          )
+          const responseData = await sendRequest({
+            url: `/scans/count?startDate=${startDateMonthly}`,
+          })
           setScanCountMonthly(responseData.scanCount)
         } catch (err) {}
       }
@@ -53,31 +54,62 @@ const ViewUsers = () => {
     }
   }, [sendRequest, user])
 
+  useEffect(() => {
+    const handleScroll = async () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop !==
+        document.documentElement.offsetHeight
+      )
+        return
+      try {
+        let skip = loadedScans.length
+        let params = { skip }
+        const responseData = await sendRequest({ url: `/scans`, params })
+        let scans = loadedScans.concat(responseData.scans)
+        setLoadedScans(scans)
+      } catch (err) {}
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [loadedScans, sendRequest])
+
   return (
     <Container maxWidth="sm">
       <PageTitle title={title} />
-      {isLoading && <LoadingSpinner asOverlay />}
-      {!isLoading && loadedScans && (
-        <Grid container direction="column" alignItems="stretch" spacing={2}>
-          <Grid item xs={11}>
-            <Grid container justify="space-evenly">
-              <Grid item>
-                <Typography variant="subtitle1">
-                  Daily Pickups: {scanCountDaily}
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography variant="subtitle1">
-                  Monthly Pickups: {scanCountMonthly}
-                </Typography>
-              </Grid>
+      <Grid container direction="column" alignItems="stretch" spacing={2}>
+        <Grid item xs={11}>
+          <Grid container justify="space-evenly">
+            <Grid item>
+              <Typography variant="subtitle1">
+                Daily Pickups: {scanCountDaily}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="subtitle1">
+                Monthly Pickups: {scanCountMonthly}
+              </Typography>
             </Grid>
           </Grid>
+        </Grid>
+        {loadedScans && (
           <Grid item>
             <ScanList items={loadedScans} />
           </Grid>
-        </Grid>
-      )}
+        )}
+        {isLoading && (
+          <Grid item>
+            <Box height="5rem">
+              <Grid container justify="center" alignItems="center">
+                <Grid item>
+                  <CircularProgress />
+                </Grid>
+              </Grid>
+            </Box>
+          </Grid>
+        )}
+      </Grid>
+
       <Box height="4rem"></Box>
     </Container>
   )
