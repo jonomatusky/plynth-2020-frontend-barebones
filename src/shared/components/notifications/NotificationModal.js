@@ -17,6 +17,7 @@ const NotificationModal = ({
   primaryActionLabel,
   secondaryAction,
   secondaryActionLabel,
+  isLoading,
 }) => {
   return (
     <Dialog open={open} onClose={handleClose}>
@@ -33,6 +34,7 @@ const NotificationModal = ({
           fullWidth={false}
           onClick={primaryAction}
           label={primaryActionLabel}
+          loading={isLoading}
         />
       </DialogActions>
     </Dialog>

@@ -57,11 +57,12 @@ const NewPiece = () => {
           primaryMessage="We Respect Artist’s Rights"
           secondaryMessage={`You are about to publish this piece. Please confirm that you are the copyright holder to this artwork and have the right to display it.`}
           primaryAction={handleSubmit}
-          primaryActionLabel="Create"
+          primaryActionLabel={`Confirm`}
           secondaryAction={handleCloseConfirmationModal}
           secondaryActionLabel="Cancel"
           open={confirmationModalIsOpen}
           handleClose={handleCloseConfirmationModal}
+          isLoading={createStatus === 'loading'}
         />
         <FormLayout
           bar={
@@ -77,7 +78,7 @@ const NewPiece = () => {
           <PieceForm
             onSubmit={handleOpenConfirmationModal}
             imageFilepath={newPieceImage}
-            isLoading={createStatus === 'loading'}
+            submitLabel="Create Piece"
           />
         </FormLayout>
       </>
