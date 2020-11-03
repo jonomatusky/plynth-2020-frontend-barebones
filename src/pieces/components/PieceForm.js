@@ -15,7 +15,13 @@ import LinksList from '../../shared/components/forms/LinkList'
 
 const ASSET_URL = process.env.REACT_APP_ASSET_URL
 
-const PieceForm = ({ piece, imageFilepath, onSubmit, isLoading }) => {
+const PieceForm = ({
+  piece,
+  imageFilepath,
+  onSubmit,
+  isLoading,
+  submitLabel,
+}) => {
   const { title, description, links, awsId, ext, isDirect } = piece || {}
 
   imageFilepath = imageFilepath || (awsId && ext ? `${awsId}.${ext}` : null)
@@ -95,7 +101,7 @@ const PieceForm = ({ piece, imageFilepath, onSubmit, isLoading }) => {
               <Grid item>
                 <ActionButton
                   type="submit"
-                  label={`Save & Close`}
+                  label={submitLabel || `Save & Close`}
                   loading={isLoading}
                 />
               </Grid>

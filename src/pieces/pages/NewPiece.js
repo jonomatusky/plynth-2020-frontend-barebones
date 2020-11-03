@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
@@ -8,9 +8,12 @@ import Background from '../../shared/layouts/Background'
 import FormLayout from '../../shared/layouts/FormLayout'
 import PieceForm from '../components/PieceForm'
 import { BarRow } from '../../shared/components/ui/CardSections'
+import NotificationModal from '../../shared/components/notifications/NotificationModal'
 
 const NewPiece = () => {
   const dispatchThunk = useThunkClient()
+  const [confirmationModalIsOpen, setConfirmationModalIsOpen] = useState(false)
+  const [formValues, setFormValues] = useState({})
   const { createStatus } = useSelector(state => state.pieces)
   const { newPieceImage } = useSelector(state => state.pieces)
   const history = useHistory()
@@ -21,13 +24,11 @@ const NewPiece = () => {
     }
   }, [history, newPieceImage])
 
-  const handleSubmit = async values => {
-    values.images = [newPieceImage]
-
+  const handleSubmit = async () => {
     try {
       const piece = await dispatchThunk({
         thunk: createPiece,
-        inputs: values,
+        inputs: formValues,
       })
       history.push({
         pathname: `/admin/pieces/${piece.id}`,
@@ -38,10 +39,30 @@ const NewPiece = () => {
     }
   }
 
+  const handleOpenConfirmationModal = values => {
+    values.images = [newPieceImage]
+    setFormValues(values)
+    setConfirmationModalIsOpen(true)
+  }
+
+  const handleCloseConfirmationModal = () => {
+    setConfirmationModalIsOpen(false)
+  }
+
   return (
     newPieceImage && (
       <>
         <Background />
+        <NotificationModal
+          primaryMessage="We Respect Artist’s Rights"
+          secondaryMessage={`You are about to publish this piece. Please confirm that you are the copyright holder to this artwork and have the right to display it.`}
+          primaryAction={handleSubmit}
+          primaryActionLabel="Create"
+          secondaryAction={handleCloseConfirmationModal}
+          secondaryActionLabel="Cancel"
+          open={confirmationModalIsOpen}
+          handleClose={handleCloseConfirmationModal}
+        />
         <FormLayout
           bar={
             <BarRow
@@ -54,7 +75,7 @@ const NewPiece = () => {
           }
         >
           <PieceForm
-            onSubmit={handleSubmit}
+            onSubmit={handleOpenConfirmationModal}
             imageFilepath={newPieceImage}
             isLoading={createStatus === 'loading'}
           />
