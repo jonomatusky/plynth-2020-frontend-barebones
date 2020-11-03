@@ -61,7 +61,7 @@ const UserItem = ({ scan, ...props }) => {
                   <Typography variant="subtitle1" color="textSecondary">
                     {`picked up by ${
                       scan.owner ? scan.owner.displayName : 'Anonymous'
-                    } on ${Date(scan.createdAt)}`}
+                    } on ${new Date(scan.createdAt).toLocaleString()}`}
                   </Typography>
                 </CardContent>
               </div>

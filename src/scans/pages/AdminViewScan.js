@@ -69,7 +69,9 @@ const ViewScan = () => {
                     </DescriptionText>
                   </Grid>
                   <Grid item>
-                    <DescriptionText>on {Date(scan.createdAt)}</DescriptionText>
+                    <DescriptionText>
+                      on {new Date(scan.createdAt).toLocaleString()}
+                    </DescriptionText>
                   </Grid>
                 </Box>
               </CardRow>
