@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
-import FormLayout from '../../layouts/FormLayout'
+import FormLayout from 'layouts/FormLayout'
 import ContactSupportForm from './components/ContactSupportForm'
 
 import MessageBar from 'components/MessageBar'
 
-import { BarRow } from '../../components/CardSections'
+import { BarRow } from 'components/CardSections'
 
 const SignUp = () => {
   const history = useHistory()

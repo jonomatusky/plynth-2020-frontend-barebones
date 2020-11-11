@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback, useRef, useContext } from 'react'
 import axios from 'axios'
 
-import { AuthContext } from '../contexts/auth-context'
-import * as client from '../util/client'
+import { AuthContext } from 'contexts/auth-context'
+import * as client from 'util/client'
 
 export const useApiClient = () => {
   const auth = useContext(AuthContext)

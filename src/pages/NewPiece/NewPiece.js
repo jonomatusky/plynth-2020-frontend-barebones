@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
-import { useThunkClient } from '../../hooks/thunk-hook'
-import { createPiece } from '../../redux/piecesSlice'
-import Background from '../../layouts/Background'
-import FormLayout from '../../layouts/FormLayout'
-import PieceForm from '../../components/PieceForm'
-import { BarRow } from '../../components/CardSections'
-import NotificationModal from '../../components/NotificationModal'
+import { useThunkClient } from 'hooks/thunk-hook'
+import { createPiece } from 'redux/piecesSlice'
+import FormLayout from 'layouts/FormLayout'
+import PieceForm from 'components/PieceForm'
+import { BarRow } from 'components/CardSections'
+import NotificationModal from 'components/NotificationModal'
 
 const NewPiece = () => {
   const dispatchThunk = useThunkClient()
@@ -52,7 +51,6 @@ const NewPiece = () => {
   return (
     newPieceImage && (
       <>
-        <Background />
         <NotificationModal
           primaryMessage="We Respect Artist’s Rights"
           secondaryMessage={`You are about to publish this piece. Please confirm that you are the copyright holder to this artwork and have the right to display it.`}

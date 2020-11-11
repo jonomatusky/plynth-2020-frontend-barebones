@@ -2,17 +2,16 @@ import React, { useState, useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
-import { useApiClient } from '../../hooks/api-hook'
+import { useApiClient } from 'hooks/api-hook'
+import { setError } from 'redux/alertSlice'
 import { Container } from '@material-ui/core'
-import Background from '../../shared/layouts/Background'
-import LoadingSpinner from '../../components/LoadingSpinner'
+import LoadingSpinner from 'components/LoadingSpinner'
 
-import PieceCard from '../components/PieceCard'
-import ErrorBar from '../../shared/components/notifications/ErrorBar'
+import PieceCard from 'components/PieceCard'
 
 const ViewPiece = props => {
   const history = useHistory()
-  const { isLoading, error, sendRequest, clearError } = useApiClient()
+  const { isLoading, sendRequest } = useApiClient()
   const { pieces } = useSelector(state => state.pieces)
   const pieceId = useParams().pieceId
 
@@ -26,32 +25,30 @@ const ViewPiece = props => {
 
   useEffect(() => {
     if (!piece) {
-      const fetchPieces = async () => {
+      const fetchPiece = async () => {
         try {
           const responseData = await sendRequest(`/pieces/${pieceId}`)
           setPiece(responseData.piece)
-        } catch (err) {}
+        } catch (err) {
+          dispatchEvent(setError({ message: err.message }))
+        }
       }
-      fetchPieces()
+      fetchPiece()
     }
   }, [sendRequest, pieceId, piece])
 
   return (
-    <React.Fragment>
-      <ErrorBar open={!!error} error={error} handleClose={clearError} />
-      <Background />
-      <Container maxWidth="xs" disableGutters>
-        {isLoading && !piece && <LoadingSpinner asOverlay />}
-        {!isLoading && piece && (
-          <PieceCard
-            piece={piece}
-            onClose={() => {
-              history.push('/admin/pieces')
-            }}
-          />
-        )}
-      </Container>
-    </React.Fragment>
+    <Container maxWidth="xs" disableGutters>
+      {isLoading && !piece && <LoadingSpinner asOverlay />}
+      {!isLoading && piece && (
+        <PieceCard
+          piece={piece}
+          onClose={() => {
+            history.push('/admin/pieces')
+          }}
+        />
+      )}
+    </Container>
   )
 }
 

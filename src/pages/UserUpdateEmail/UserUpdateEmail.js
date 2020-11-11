@@ -2,11 +2,10 @@ import React from 'react'
 import { useHistory } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 
-import { useThunkClient } from '../../hooks/thunk-hook'
-import { updateUser } from '../../redux/userSlice'
-import { setMessage } from '../../redux/alertSlice'
-import Background from '../../layouts/Background'
-import FormLayout from '../../layouts/FormLayout'
+import { useThunkClient } from 'hooks/thunk-hook'
+import { updateUser } from 'redux/userSlice'
+import { setMessage } from 'redux/alertSlice'
+import FormLayout from 'layouts/FormLayout'
 import EmailForm from './components/UpdateEmailForm'
 
 // need to change loggedOut to auth instead of props
@@ -31,19 +30,16 @@ const UpdateEmail = () => {
   }
 
   return (
-    <>
-      <Background />
-      <FormLayout
-        title="Email Preferences"
-        message={`Update your email address.`}
-      >
-        <EmailForm
-          email={user.email}
-          onSubmit={handleSubmit}
-          isLoading={updateStatus === 'loading'}
-        />
-      </FormLayout>
-    </>
+    <FormLayout
+      title="Email Preferences"
+      message={`Update your email address.`}
+    >
+      <EmailForm
+        email={user.email}
+        onSubmit={handleSubmit}
+        isLoading={updateStatus === 'loading'}
+      />
+    </FormLayout>
   )
 }
 

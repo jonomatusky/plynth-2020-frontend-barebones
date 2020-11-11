@@ -2,9 +2,9 @@ import React, { useState, useEffect, useContext } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { Button } from '@material-ui/core'
 
-import { AuthContext } from '../../contexts/auth-context'
-import FormLayout from '../../layouts/FormLayout'
-import MessageLayout from '../../layouts/MessageLayout'
+import { AuthContext } from 'contexts/auth-context'
+import FormLayout from 'layouts/FormLayout'
+import MessageLayout from 'layouts/MessageLayout'
 import ResetPasswordForm from './components/ResetPasswordForm'
 
 const ChangePassword = () => {

@@ -1,9 +1,9 @@
 import React from 'react'
 
 import { Container, Grid, Box, Typography } from '@material-ui/core'
-import { PieceBox, BarRow, BottomRow } from '../components/CardSections'
+import { PieceBox, BarRow, BottomRow } from 'components/CardSections'
 
-import PageTitle from '../components/PageTitle'
+import PageTitle from 'components/PageTitle'
 
 const FormLayout = ({
   children,

@@ -2,11 +2,10 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
-import { useThunkClient } from '../../hooks/thunk-hook'
-import { updateUser } from '../../redux/userSlice'
-import { setMessage } from '../../redux/alertSlice'
-import Background from '../../layouts/Background'
-import FormLayout from '../../layouts/FormLayout'
+import { useThunkClient } from 'hooks/thunk-hook'
+import { updateUser } from 'redux/userSlice'
+import { setMessage } from 'redux/alertSlice'
+import FormLayout from 'layouts/FormLayout'
 import UsernameForm from './components/UpdateUsernameForm'
 
 // need to change loggedOut to auth instead of props
@@ -31,29 +30,26 @@ const ChangeUsername = () => {
   }
 
   return (
-    <React.Fragment>
-      <Background />
-      <FormLayout
-        title="Change Username"
-        message={
-          <>
-            Are you sure you want to change your username? Links to your old
-            profile will <strong>not</strong> be forwarded automatically. You
-            may not be able to change your username back.
-            <br />
-            <br />
-            Usernames must be between 6 and 30 characters and can only contain
-            numbers, letters, "." and "_".
-          </>
-        }
-      >
-        <UsernameForm
-          username={user.username}
-          onSubmit={handleSubmit}
-          isLoading={updateStatus === 'loading'}
-        />
-      </FormLayout>
-    </React.Fragment>
+    <FormLayout
+      title="Change Username"
+      message={
+        <>
+          Are you sure you want to change your username? Links to your old
+          profile will <strong>not</strong> be forwarded automatically. You may
+          not be able to change your username back.
+          <br />
+          <br />
+          Usernames must be between 6 and 30 characters and can only contain
+          numbers, letters, "." and "_".
+        </>
+      }
+    >
+      <UsernameForm
+        username={user.username}
+        onSubmit={handleSubmit}
+        isLoading={updateStatus === 'loading'}
+      />
+    </FormLayout>
   )
 }
 

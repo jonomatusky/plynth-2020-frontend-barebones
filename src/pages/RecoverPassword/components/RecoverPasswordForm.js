@@ -1,18 +1,20 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
 import { Grid } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
 import { useApiClient } from 'hooks/api-hook'
-import ErrorBar from 'components/ErrorBar'
+import { setError } from 'redux/alertSlice'
 import { TextField } from 'components/FormElements'
 import ActionButton from 'components/ActionButton'
 
 const EmailForm = props => {
+  const dispatch = useDispatch()
   const initialValues = {
     email: '',
   }
-  const { isLoading, error, sendRequest, clearError } = useApiClient()
+  const { isLoading, sendRequest } = useApiClient()
 
   const handleSubmit = async values => {
     if (!isLoading) {
@@ -26,7 +28,9 @@ const EmailForm = props => {
         })
 
         props.onSubmit(values, response)
-      } catch (err) {}
+      } catch (err) {
+        dispatch(setError({ message: err.message }))
+      }
     }
   }
 
@@ -37,26 +41,23 @@ const EmailForm = props => {
   })
 
   return (
-    <React.Fragment>
-      <ErrorBar open={!!error} error={error} handleClose={clearError} />
-      <Formik
-        enableReinitialize="true"
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
-        <Form>
-          <Grid container direction="column" spacing={2}>
-            <Grid item>
-              <TextField name="email" label="Email" type="email" />
-            </Grid>
-            <Grid item>
-              <ActionButton type="submit" label="Submit" loading={isLoading} />
-            </Grid>
+    <Formik
+      enableReinitialize="true"
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={handleSubmit}
+    >
+      <Form>
+        <Grid container direction="column" spacing={2}>
+          <Grid item>
+            <TextField name="email" label="Email" type="email" />
           </Grid>
-        </Form>
-      </Formik>
-    </React.Fragment>
+          <Grid item>
+            <ActionButton type="submit" label="Submit" loading={isLoading} />
+          </Grid>
+        </Grid>
+      </Form>
+    </Formik>
   )
 }
 

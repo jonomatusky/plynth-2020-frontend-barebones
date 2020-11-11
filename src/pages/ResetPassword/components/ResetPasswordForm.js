@@ -1,18 +1,17 @@
-import React, { useState } from 'react'
-
+import React from 'react'
+import { useDispatch } from 'react-redux'
 import { Grid, Box } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
-import { useApiClient } from '../../../hooks/api-hook'
-import ErrorBar from 'components/ErrorBar'
-import MessageBar from 'components/MessageBar'
-import { TextField } from '../../../components/FormElements'
-import ActionButton from '../../../components/ActionButton'
+import { useApiClient } from 'hooks/api-hook'
+import { TextField } from 'components/FormElements'
+import ActionButton from 'components/ActionButton'
+import { setMessage, setError } from 'redux/alertSlice'
 
 const ResetPasswordForm = ({ token, id, onSubmit }) => {
-  const [success, setSuccess] = useState(false)
-  const { isLoading, error, sendRequest, clearError } = useApiClient()
+  const dispatch = useDispatch()
+  const { isLoading, sendRequest } = useApiClient()
 
   const handleSubmit = async (values, { resetForm }) => {
     const body = { password: values.newPassword, token, id }
@@ -20,10 +19,12 @@ const ResetPasswordForm = ({ token, id, onSubmit }) => {
     if (!isLoading) {
       try {
         await sendRequest({ url: `/auth/reset`, method: 'POST', data: body })
-
         resetForm()
         onSubmit(values)
-      } catch (err) {}
+        dispatch(setMessage({ message: 'Your password has been updated' }))
+      } catch (err) {
+        dispatch(setError({ message: err.message }))
+      }
     }
   }
 
@@ -42,43 +43,35 @@ const ResetPasswordForm = ({ token, id, onSubmit }) => {
   })
 
   return (
-    <React.Fragment>
-      <ErrorBar open={!!error} error={error} handleClose={clearError} />
-      <MessageBar
-        open={success}
-        message="Your password has been updated"
-        handleClose={() => setSuccess(false)}
-      />
-      <Formik
-        enableReinitialize="true"
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
-        <Form>
-          <Grid container direction="column" spacing={1}>
-            <Grid item>
-              <TextField
-                name="newPassword"
-                label="New Password"
-                type="password"
-              />
-            </Grid>
-            <Grid item>
-              <TextField
-                name="passwordConfirmation"
-                label="Confirm New Password"
-                type="password"
-              />
-            </Grid>
-            <Box height="1rem" />
-            <Grid item>
-              <ActionButton type="submit" label="Submit" loading={isLoading} />
-            </Grid>
+    <Formik
+      enableReinitialize="true"
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={handleSubmit}
+    >
+      <Form>
+        <Grid container direction="column" spacing={1}>
+          <Grid item>
+            <TextField
+              name="newPassword"
+              label="New Password"
+              type="password"
+            />
           </Grid>
-        </Form>
-      </Formik>
-    </React.Fragment>
+          <Grid item>
+            <TextField
+              name="passwordConfirmation"
+              label="Confirm New Password"
+              type="password"
+            />
+          </Grid>
+          <Box height="1rem" />
+          <Grid item>
+            <ActionButton type="submit" label="Submit" loading={isLoading} />
+          </Grid>
+        </Grid>
+      </Form>
+    </Formik>
   )
 }
 

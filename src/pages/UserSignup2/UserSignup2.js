@@ -5,15 +5,14 @@ import { Grid, Box } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
-import { useThunkClient } from '../../hooks/thunk-hook'
-import { updateUser } from '../../redux/userSlice'
-import Background from '../../layouts/Background'
-import FormLayout from '../../layouts/FormLayout'
-import ActionButton from '../../components/ActionButton'
-import AvatarInput from '../../components/AvatarInput'
-import { BarRow } from '../../components/CardSections'
-import { TextField, TextArea } from '../../components/FormElements'
-import LinkList from '../../components/LinkList'
+import { useThunkClient } from 'hooks/thunk-hook'
+import { updateUser } from 'redux/userSlice'
+import FormLayout from 'layouts/FormLayout'
+import ActionButton from 'components/ActionButton'
+import AvatarInput from 'components/AvatarInput'
+import { BarRow } from 'components/CardSections'
+import { TextField, TextArea } from 'components/FormElements'
+import LinkList from 'components/LinkList'
 
 const title = 'Add Your Info'
 
@@ -68,53 +67,50 @@ const UserSignup2 = ({ values }) => {
   }
 
   return (
-    <>
-      <Background />
-      <FormLayout
-        title={title}
-        bar={<BarRow onClick={handleCancel} buttonLabel={'Skip >'} />}
+    <FormLayout
+      title={title}
+      bar={<BarRow onClick={handleCancel} buttonLabel={'Skip >'} />}
+    >
+      <Formik
+        enableReinitialize="true"
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
       >
-        <Formik
-          enableReinitialize="true"
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-        >
-          {({ values, isValid, setFieldValue }) => (
-            <Form>
-              <Grid container direction="column" spacing={1}>
-                <Box height="1rem"></Box>
-                <Grid item>
-                  <AvatarInput
-                    previewUrl={user.avatarLink || undefined}
-                    onInput={avatar => {
-                      onImageInput({ avatar, setFieldValue })
-                    }}
-                  />
-                </Grid>
-                <Grid item>
-                  <TextField name="displayName" label="Name (Optional)" />
-                </Grid>
-                <Grid item>
-                  <TextArea name="bio" label="Bio (Optional)" />
-                </Grid>
-                <Grid item>
-                  <LinkList links={values.links} />
-                </Grid>
-                <Box height="4vh"></Box>
-                <Grid item>
-                  <ActionButton
-                    type="submit"
-                    label="Save"
-                    loading={updateStatus === 'loading'}
-                  />
-                </Grid>
+        {({ values, isValid, setFieldValue }) => (
+          <Form>
+            <Grid container direction="column" spacing={1}>
+              <Box height="1rem"></Box>
+              <Grid item>
+                <AvatarInput
+                  previewUrl={user.avatarLink || undefined}
+                  onInput={avatar => {
+                    onImageInput({ avatar, setFieldValue })
+                  }}
+                />
               </Grid>
-            </Form>
-          )}
-        </Formik>
-      </FormLayout>
-    </>
+              <Grid item>
+                <TextField name="displayName" label="Name (Optional)" />
+              </Grid>
+              <Grid item>
+                <TextArea name="bio" label="Bio (Optional)" />
+              </Grid>
+              <Grid item>
+                <LinkList links={values.links} />
+              </Grid>
+              <Box height="4vh"></Box>
+              <Grid item>
+                <ActionButton
+                  type="submit"
+                  label="Save"
+                  loading={updateStatus === 'loading'}
+                />
+              </Grid>
+            </Grid>
+          </Form>
+        )}
+      </Formik>
+    </FormLayout>
   )
 }
 

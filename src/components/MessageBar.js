@@ -4,8 +4,8 @@ import { Snackbar, SnackbarContent, Button } from '@material-ui/core'
 import styled from 'styled-components'
 import ClearIcon from '@material-ui/icons/Clear'
 
-import { setMessage } from '../redux/alertSlice'
-import theme from '../theme'
+import { setMessage } from 'redux/alertSlice'
+import theme from 'theme'
 
 const MessageContent = styled(SnackbarContent)`
   background-color: ${theme.palette.secondary.main};

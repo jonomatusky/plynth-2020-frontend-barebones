@@ -2,8 +2,8 @@ import { useCallback, useContext } from 'react'
 import { useDispatch } from 'react-redux'
 import { unwrapResult } from '@reduxjs/toolkit'
 
-import { AuthContext } from '../contexts/auth-context'
-import { setError } from '../redux/alertSlice'
+import { AuthContext } from 'contexts/auth-context'
+import { setError } from 'redux/alertSlice'
 
 export const useThunkClient = () => {
   const auth = useContext(AuthContext)

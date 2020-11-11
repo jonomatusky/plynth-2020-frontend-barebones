@@ -2,8 +2,8 @@ import { useState, useCallback, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import jwt from 'jsonwebtoken'
 
-import { fetchUser, clearUser } from '../redux/userSlice'
-import { fetchPieces, clearPieces } from '../redux/piecesSlice'
+import { fetchUser, clearUser } from 'redux/userSlice'
+import { fetchPieces, clearPieces } from 'redux/piecesSlice'
 import { useThunkClient } from './thunk-hook'
 
 let logoutTimer

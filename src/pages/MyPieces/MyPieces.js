@@ -4,8 +4,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Container, Grid } from '@material-ui/core'
 
 import { setMessage } from 'redux/alertSlice'
-import Message from 'components/MessageBar'
-import Background from 'layouts/Background'
 import PageTitle from 'components/PageTitle'
 import PieceList from './components/PieceList'
 import LoadingSpinner from 'components/LoadingSpinner'
@@ -34,8 +32,6 @@ const MyPieces = () => {
 
   return (
     <React.Fragment>
-      <Message />
-      <Background />
       <Container maxWidth="sm">
         <PageTitle title={title} />
         <Grid container direction="column" alignItems="stretch" spacing={2}>

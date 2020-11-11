@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Button } from '@material-ui/core'
 
-import FormLayout from '../../layouts/FormLayout'
-import MessageLayout from '../../layouts/MessageLayout'
+import FormLayout from 'layouts/FormLayout'
+import MessageLayout from 'layouts/MessageLayout'
 import RecoverPasswordForm from './components/RecoverPasswordForm'
 
 const ChangePassword = () => {

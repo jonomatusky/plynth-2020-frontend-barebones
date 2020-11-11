@@ -3,8 +3,8 @@ import { Grid } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
-import { TextField } from '../../../components/FormElements'
-import ActionButton from '../../../components/ActionButton'
+import { TextField } from 'components/FormElements'
+import ActionButton from 'components/ActionButton'
 
 const UsernameForm = ({ onSubmit, isLoading, username }) => {
   const handleSubmit = async (values, { resetForm }) => {

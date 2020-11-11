@@ -1,41 +1,36 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useHistory } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Grid, Box } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
+import { useThunkClient } from 'hooks/thunk-hook'
 import { updateUser } from 'redux/userSlice'
+import { setError } from 'redux/alertSlice'
 
-import ErrorBar from 'components/ErrorBar'
-import Background from 'layouts/Background'
 import FormLayout from 'layouts/FormLayout'
 import { TextField, TextArea } from 'components/FormElements'
 import AvatarInput from 'components/AvatarInput'
 import LinkList from 'components/LinkList'
 import ActionButton from 'components/ActionButton'
-import { useThunkClient } from 'hooks/thunk-hook'
 
 const UpdateProfile = () => {
+  const dispatch = useDispatch()
   const dispatchThunk = useThunkClient()
   const history = useHistory()
-  const { user } = useSelector(state => state.user)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState()
+  const { user, updateStatus } = useSelector(state => state.user)
 
   const handleSubmit = async values => {
-    setIsLoading(true)
     try {
       await dispatchThunk({
         thunk: updateUser,
         inputs: values,
       })
-      setIsLoading(false)
       history.push('/admin/profile')
     } catch (err) {
       console.log(err)
-      setError(err.message)
-      setIsLoading(false)
+      dispatch(setError({ message: err.message }))
     }
   }
 
@@ -65,56 +60,48 @@ const UpdateProfile = () => {
   })
 
   return (
-    <>
-      <Background />
-      <FormLayout>
-        <ErrorBar
-          open={!!error}
-          error={error}
-          handleClose={() => setError(false)}
-        />
-        <Formik
-          enableReinitialize="true"
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-        >
-          {({ values, setFieldValue }) => (
-            <Form>
-              <Grid container direction="column" spacing={1}>
-                <Box height="1rem"></Box>
-                <Grid item>
-                  <AvatarInput
-                    imageUrl={avatarLink || undefined}
-                    onInput={avatar => {
-                      setFieldValue('avatar', avatar)
-                    }}
-                  />
-                </Grid>
-                <Grid item>
-                  <TextField name="displayName" label="Name" />
-                </Grid>
-                <Grid item>
-                  <TextArea name="bio" label="Bio" />
-                </Grid>
-                <Box height="1rem"></Box>
-                <Grid item>
-                  <LinkList links={values.links} />
-                </Grid>
-                <Box height="1rem"></Box>
-                <Grid item>
-                  <ActionButton
-                    type="submit"
-                    label="Save"
-                    loading={isLoading}
-                  />
-                </Grid>
+    <FormLayout>
+      <Formik
+        enableReinitialize="true"
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        {({ values, setFieldValue }) => (
+          <Form>
+            <Grid container direction="column" spacing={1}>
+              <Box height="1rem"></Box>
+              <Grid item>
+                <AvatarInput
+                  imageUrl={avatarLink || undefined}
+                  onInput={avatar => {
+                    setFieldValue('avatar', avatar)
+                  }}
+                />
               </Grid>
-            </Form>
-          )}
-        </Formik>
-      </FormLayout>
-    </>
+              <Grid item>
+                <TextField name="displayName" label="Name" />
+              </Grid>
+              <Grid item>
+                <TextArea name="bio" label="Bio" />
+              </Grid>
+              <Box height="1rem"></Box>
+              <Grid item>
+                <LinkList links={values.links} />
+              </Grid>
+              <Box height="1rem"></Box>
+              <Grid item>
+                <ActionButton
+                  type="submit"
+                  label="Save"
+                  loading={updateStatus === 'loading'}
+                />
+              </Grid>
+            </Grid>
+          </Form>
+        )}
+      </Formik>
+    </FormLayout>
   )
 }
 

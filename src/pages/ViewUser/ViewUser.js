@@ -11,15 +11,15 @@ import {
   DescriptionBox,
   DescriptionText,
   LinkRow,
-} from '../../components/CardSections'
+} from 'components/CardSections'
 import { makeStyles } from '@material-ui/core/styles'
 
-import { useApiClient } from '../../hooks/api-hook'
+import { useApiClient } from 'hooks/api-hook'
 
-import ActionButton from '../../components/ActionButton'
+import ActionButton from 'components/ActionButton'
 
-import NotFound from '../../layouts/NotFound'
-import { useLogClient } from '../../hooks/log-hook'
+import NotFound from 'layouts/NotFound'
+import { useLogClient } from 'hooks/log-hook'
 
 const useStyles = makeStyles(theme => ({
   large: {

@@ -3,16 +3,14 @@ import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 
 import { useApiClient } from 'hooks/api-hook'
-import { setMessage } from 'redux/alertSlice'
-import ErrorBar from 'components/ErrorBar'
-import Background from 'layouts/Background'
+import { setMessage, setError } from 'redux/alertSlice'
 import FormLayout from 'layouts/FormLayout'
 import SetPasswordForm from './components/UpdatePasswordForm'
 
 const ChangePassword = () => {
   const history = useHistory()
   const dispatch = useDispatch()
-  const { isLoading, error, sendRequest, clearError } = useApiClient()
+  const { isLoading, sendRequest } = useApiClient()
 
   const handleSubmit = async (values, resetForm) => {
     let { passwordConfirmation, ...passwords } = values
@@ -27,19 +25,16 @@ const ChangePassword = () => {
         dispatch(setMessage({ message: 'Your password has been updated.' }))
         history.goBack()
       } catch (err) {
+        dispatch(setError({ message: err.message }))
         resetForm()
       }
     }
   }
 
   return (
-    <React.Fragment>
-      <Background />
-      <ErrorBar open={!!error} error={error} handleClose={clearError} />
-      <FormLayout title="Change Password">
-        <SetPasswordForm onSubmit={handleSubmit} isLoading={isLoading} />
-      </FormLayout>
-    </React.Fragment>
+    <FormLayout title="Change Password">
+      <SetPasswordForm onSubmit={handleSubmit} isLoading={isLoading} />
+    </FormLayout>
   )
 }
 

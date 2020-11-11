@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { Container, Grid, Box, Typography } from '@material-ui/core'
-import PageTitle from '../components/PageTitle'
+import PageTitle from 'components/PageTitle'
 
 const FormLayout = ({ children, title, message, ...props }) => {
   return (

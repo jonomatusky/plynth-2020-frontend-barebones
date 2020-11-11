@@ -4,9 +4,9 @@ import Cropper from 'react-easy-crop'
 import { AppBar, Toolbar, Slider } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
-import { useApiClient } from '../hooks/api-hook'
-import { useImageResize } from '../hooks/image-hook'
-import { setError } from '../redux/alertSlice'
+import { useApiClient } from 'hooks/api-hook'
+import { useImageResize } from 'hooks/image-hook'
+import { setError } from 'redux/alertSlice'
 import LoadingSpinner from './LoadingSpinner'
 import ActionButton from './ActionButton'
 
