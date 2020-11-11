@@ -8,37 +8,37 @@ import {
 } from 'react-router-dom'
 import { Box } from '@material-ui/core'
 import { LastLocationProvider } from 'react-router-last-location'
-import { useAuth } from './shared/hooks/auth-hook'
-import { AuthContext } from './shared/context/auth-context'
+
+import { useAuth } from 'hooks/auth-hook'
+import { AuthContext } from 'contexts/auth-context'
 import firebase from './firebase'
 
-import NewPieceImage from './pieces/pages/NewPieceImage'
-import NewPiece from './pieces/pages/NewPiece'
-import ViewPiece from './pieces/pages/ViewMyPiece'
-import MyPieces from './pieces/pages/MyPieces'
-import UpdatePiece from './pieces/pages/UpdatePiece'
-import MyProfile from './users/pages/MyProfile'
-import UpdateProfile from './users/pages/UpdateProfile'
-import NewPickup from './scans/pages/NewScan'
-import UserSignup1 from './signup/pages/UserSignup1'
-import UserSignup2 from './signup/pages/UserSignup2'
-import SignupSuccess from './signup/pages/SignupSuccess'
-import SignIn from './users/pages/SignIn'
-import LoggedOutScan from './scans/pages/LoggedOutScan'
-import LoggedInScan from './scans/pages/LoggedInScan'
-import BetaSignup from './users/pages/BetaSignup'
-import ViewUser from './users/pages/ViewUser'
-import UpdateEmail from './users/pages/UpdateEmail'
-import UpdatePassword from './users/pages/UpdatePassword'
-import UpdateUsername from './users/pages/UpdateUsername'
-import RecoverPassword from './users/pages/RecoverPassword'
-import ResetPassword from './users/pages/ResetPassword'
-import ContactSupport from './users/pages/ContactSupport'
-// import Logout from './users/pages/Logout'
+import Background from './layouts/Background'
+import NewPieceImage from './pages/NewPieceImage/NewPieceImage'
+import NewPiece from './pages/NewPiece/NewPiece'
+import ViewPiece from './pages/ViewMyPiece/ViewMyPiece'
+import MyPieces from './pages/MyPieces/MyPieces'
+import UpdatePiece from './pages/UpdatePiece/UpdatePiece'
+import MyProfile from './pages/UserProfile/UserProfile'
+import UpdateProfile from './pages/UpdateProfile/UpdateProfile'
+import NewPickup from './pages/Pickup/Pickup'
+import UserSignup1 from './pages/UserSignup1/UserSignup1'
+import UserSignup2 from './pages/UserSignup2/UserSignup2'
+import SignupSuccess from './pages/UserSignupSuccess/SignupSuccess'
+import SignIn from './pages/SignIn/SignIn'
+import BetaSignup from './pages/BetaSignup/BetaSignup'
+import ViewUser from './pages/ViewUser/ViewUser'
+import UpdateEmail from './pages/UserUpdateEmail/UserUpdateEmail'
+import UpdatePassword from './pages/UserUpdatePassword/UserUpdatePassword'
+import UpdateUsername from './pages/UserUpdateUsername/UserUpdateUsername'
+import RecoverPassword from './pages/RecoverPassword/RecoverPassword'
+import ResetPassword from './pages/ResetPassword/ResetPassword'
+import ContactSupport from './pages/UserContactSupport/ContactSupport'
+import NewScan from './pages/PickupStart/PickupStart'
 
-import ErrorBar from './shared/components/notifications/Error'
-import MessageBar from './shared/components/notifications/Message'
-import NavBar from './shared/components/navigation/NavBar'
+import ErrorBar from 'components/ErrorBar'
+import MessageBar from './components/MessageBar'
+import NavBar from 'components/NavBar'
 
 firebase.analytics()
 
@@ -103,7 +103,7 @@ const App = () => {
 
   routes = (
     <Switch>
-      <PublicRoute restricted={true} component={LoggedOutScan} path="/" exact />
+      <PublicRoute restricted={true} component={NewScan} path="/" exact />
 
       <PublicRoute restricted={true} component={SignIn} path="/login" exact />
 
@@ -196,7 +196,7 @@ const App = () => {
       />
       <PrivateRoute component={ViewPiece} path="/admin/pieces/:pieceId" noNav />
       <PrivateRoute component={MyPieces} path="/admin/pieces" exact />
-      <PrivateRoute component={LoggedInScan} path="/admin/pickup" exact />
+      <PrivateRoute component={NewScan} path="/admin/pickup" exact />
       <PrivateRoute
         component={UpdateProfile}
         path="/admin/profile/edit"
@@ -247,6 +247,7 @@ const App = () => {
           <>
             <ErrorBar />
             <MessageBar />
+            <Background />
             {routes}
           </>
         </LastLocationProvider>
