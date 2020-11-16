@@ -1,8 +1,8 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import { Grid, Box, Avatar } from '@material-ui/core'
 
 import { useLogClient } from '../hooks/log-hook'
+import { useScanStore } from 'hooks/store/use-scan-store'
 import { BarRow } from './CardSections'
 import ActionButton from './ActionButton'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
@@ -26,7 +26,7 @@ import BottomBar from './PieceCardBottomBar'
 
 const PieceCard = ({ piece, onClose, ...props }) => {
   const { sendLog } = useLogClient()
-  let { scanToken } = useSelector(state => state.scan)
+  let { scanToken } = useScanStore()
 
   const LinkButton = ({ link }) => {
     const handleClick = async () => {

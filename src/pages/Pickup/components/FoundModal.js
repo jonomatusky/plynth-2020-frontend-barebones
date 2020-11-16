@@ -3,9 +3,9 @@ import React from 'react'
 import { Dialog, Grid, Box, Typography, Fade } from '@material-ui/core'
 
 import styled from 'styled-components'
-import theme from '../../../theme'
+import theme from 'theme'
 
-import foundImage from '../../../images/Plynth-Loading-Final.png'
+import foundImage from 'images/Plynth-Loading-Final.png'
 
 const FoundImage = styled.img`
   height: 75px;

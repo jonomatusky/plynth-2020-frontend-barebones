@@ -1,141 +1,71 @@
 import React, { useState, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 
 import { Container, Grid, Box, Typography, Button } from '@material-ui/core'
 
-import {
-  setScan,
-  setScanStage,
-  startScanning,
-  clearScan,
-} from 'redux/scanSlice'
+import { useScanStore } from 'hooks/store/use-scan-store'
 import { useApiClient } from 'hooks/api-hook'
-import { useImageResize } from 'hooks/image-hook'
 
 import CenteredGrid from 'layouts/CenteredGrid'
 import PieceCard from 'components/PieceCard'
 import ActionBar from 'components/ActionBar'
-import FoundModal from './components/FoundModal'
-
-import styled from 'styled-components'
-
-import loadingImage from 'images/Plynth-Loading-GIF.gif'
-
-const LoadingImage = styled.img`
-  height: 50px;
-  width: 50px;
-`
 
 const NewPickup = ({ isOpen, setIsOpen, ...props }) => {
-  const { imageUrl, foundPiece, scanToken, scanStage } = useSelector(
-    state => state.scan
-  )
+  const {
+    startScan,
+    clearScan,
+    status,
+    imageUrl,
+    foundPiece,
+    scanToken,
+    error,
+    isDirect,
+  } = useScanStore()
+
   const { scanRoute } = useSelector(state => state.user)
 
-  let resizeImage = useImageResize()
-  const { error, sendRequest, clearError } = useApiClient()
-  const [showFoundScreen, setShowFoundScreen] = useState(false)
+  const { sendRequest } = useApiClient()
   const [submittedMissingPiece, setSubmittedMissingPiece] = useState(false)
   const history = useHistory()
-  const dispatch = useDispatch()
 
   useEffect(() => {
-    if (error) {
-      dispatch(setScanStage('ERROR'))
-    }
-  })
-
-  useEffect(() => {
-    if (scanStage === 'READY') {
+    if (status === 'idle') {
       history.push(scanRoute)
     }
-  }, [scanStage, history, scanRoute])
+  }, [status, history, scanRoute])
 
   // start the scan when the page loads, if the piece image is set
   useEffect(() => {
-    const startScan = async () => {
+    const start = async () => {
       try {
         if (imageUrl) {
-          dispatch(startScanning())
-
-          let resizedImage = await resizeImage(imageUrl)
-
-          let { signedUrl, imageFilepath } = await sendRequest({
-            url: '/auth/sign-s3',
-            method: 'POST',
-            data: {
-              fileName: resizedImage.name,
-              fileType: resizedImage.type,
-            },
-          })
-
-          await sendRequest({
-            url: signedUrl,
-            method: 'PUT',
-            data: resizedImage,
-          })
-
-          let { scan, scanToken } = await sendRequest({
-            url: `/scans`,
-            method: 'POST',
-            data: {
-              imageFilepath: imageFilepath,
-            },
-          })
-
-          dispatch(setScan({ scan, scanToken }))
+          startScan(imageUrl)
         } else {
-          dispatch(clearScan())
+          clearScan()
         }
       } catch (err) {}
     }
 
-    if (scanStage === 'SET') {
-      startScan()
+    if (status === 'ready') {
+      start()
     }
-  }, [
-    imageUrl,
-    sendRequest,
-    dispatch,
-    history,
-    scanStage,
-    scanRoute,
-    resizeImage,
-  ])
+  }, [status, imageUrl, startScan, clearScan])
 
-  // if the scan is in progress ('GOING') and the piece is found, set the found screen and piece card
   useEffect(() => {
-    if (foundPiece && scanStage === 'FOUND') {
-      setShowFoundScreen(true)
-      const timer2 = setTimeout(() => {
-        setShowFoundScreen(false)
-      }, 500)
-      const timer1 = setTimeout(() => {
-        setShowFoundScreen(false)
-        if ((foundPiece || {}).isDirect) {
-          history.push({
-            pathname: `/${foundPiece.owner.username}`,
-            state: { referrer: scanRoute },
-          })
-          dispatch(setScanStage('READY'))
-        } else {
-          dispatch(setScanStage('COMPLETE'))
-        }
-      }, 300)
-      return () => {
-        clearTimeout(timer1)
-        clearTimeout(timer2)
-      }
+    if (isDirect) {
+      history.push({
+        pathname: `/${foundPiece.owner.username}`,
+        state: { referrer: scanRoute },
+      })
     }
-  }, [foundPiece, history, dispatch, scanStage, scanRoute])
+  }, [foundPiece, history, isDirect, scanRoute])
 
-  // on close, reset all variables
   const handleClose = () => {
-    dispatch(clearScan())
-    clearError()
+    clearScan()
   }
 
+  //change to updateScan
   const handleMissingPiece = () => {
     try {
       sendRequest({
@@ -152,7 +82,7 @@ const NewPickup = ({ isOpen, setIsOpen, ...props }) => {
   }
 
   const Content = () => {
-    if (scanStage === 'ERROR') {
+    if (error) {
       return (
         <CenteredGrid>
           <Grid item>
@@ -167,21 +97,7 @@ const NewPickup = ({ isOpen, setIsOpen, ...props }) => {
           </Grid>
         </CenteredGrid>
       )
-    } else if (scanStage === 'GOING') {
-      return (
-        <CenteredGrid>
-          <Grid item>
-            <LoadingImage src={loadingImage} />
-          </Grid>
-          <Grid item>
-            <Typography variant="h5">Searching...</Typography>
-          </Grid>
-          <Grid item>
-            <Button onClick={handleClose}>Cancel</Button>
-          </Grid>
-        </CenteredGrid>
-      )
-    } else if (scanStage === 'COMPLETE') {
+    } else if (status === 'succeeded' && !!foundPiece) {
       return (
         <>
           <Container maxWidth="xs" disableGutters>
@@ -202,7 +118,7 @@ const NewPickup = ({ isOpen, setIsOpen, ...props }) => {
           </Container>
         </>
       )
-    } else if (scanStage === 'NO_MATCH') {
+    } else if (status === 'succeeded' && !foundPiece) {
       return (
         <CenteredGrid>
           <Grid item>
@@ -237,12 +153,7 @@ const NewPickup = ({ isOpen, setIsOpen, ...props }) => {
     }
   }
 
-  return (
-    <React.Fragment>
-      <FoundModal fullscreen open={showFoundScreen} message="FOUND!" />
-      <Content />
-    </React.Fragment>
-  )
+  return <Content />
 }
 
 export default NewPickup

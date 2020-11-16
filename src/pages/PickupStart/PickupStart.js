@@ -1,22 +1,26 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
 import { Grid, Fab, Typography } from '@material-ui/core'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 
 import { AuthContext } from 'contexts/auth-context'
-import { setImageUrl } from 'redux/scanSlice'
+import { useScanStore } from 'hooks/store/use-scan-store'
+
 import CenteredGrid from 'layouts/CenteredGrid'
 import LogoBar from './components/LogoBar'
 import ImagePicker from 'components/ImagePicker'
 
 const NewScan = () => {
+  const { setImageUrl, clearScan } = useScanStore()
   const auth = useContext(AuthContext)
   const history = useHistory()
-  const dispatch = useDispatch()
+
+  useEffect(() => {
+    clearScan()
+  }, [clearScan])
 
   const handleSelect = imageUrl => {
-    dispatch(setImageUrl(imageUrl))
+    setImageUrl(imageUrl)
     history.push({ pathname: '/pickup' })
   }
 

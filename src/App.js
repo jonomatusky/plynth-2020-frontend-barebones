@@ -35,6 +35,7 @@ import RecoverPassword from 'pages/RecoverPassword/RecoverPassword'
 import ResetPassword from 'pages/ResetPassword/ResetPassword'
 import ContactSupport from 'pages/UserContactSupport/ContactSupport'
 import NewScan from 'pages/PickupStart/PickupStart'
+import ScanLoadingScreen from 'components/ScanLoadingScreen'
 
 import ErrorBar from 'components/ErrorBar'
 import MessageBar from 'components/MessageBar'
@@ -248,6 +249,7 @@ const App = () => {
             <ErrorBar />
             <MessageBar />
             <Background />
+            <ScanLoadingScreen />
             {routes}
           </>
         </LastLocationProvider>
