@@ -8,6 +8,7 @@ import { useScanStore } from 'hooks/store/use-scan-store'
 
 import CenteredGrid from 'layouts/CenteredGrid'
 import LogoBar from './components/LogoBar'
+import InfoBar from './components/InfoBar'
 import ImagePicker from 'components/ImagePicker'
 
 const NewScan = () => {
@@ -27,6 +28,7 @@ const NewScan = () => {
   return (
     <>
       <CenteredGrid>
+        {auth.authStatus !== 'authenticated' && <InfoBar />}
         <Grid item>
           <ImagePicker onSelect={handleSelect}>
             <Fab size="large" color="primary">

@@ -25,7 +25,7 @@ const BottomBar = styled.div`
   right: 0;
 `
 
-const LoggedOutScan = () => {
+const LogoBar = () => {
   return (
     <BottomBar>
       <Grid container direction="column" alignItems="center" spacing={0}>
@@ -69,4 +69,4 @@ const LoggedOutScan = () => {
   )
 }
 
-export default LoggedOutScan
+export default LogoBar
