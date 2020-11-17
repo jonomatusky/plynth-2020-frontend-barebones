@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid, Box, Avatar } from '@material-ui/core'
+import { Grid, Box, Avatar, Typography } from '@material-ui/core'
 
 import { useLogClient } from '../hooks/log-hook'
 import { useScanStore } from 'hooks/store/use-scan-store'
@@ -117,6 +117,33 @@ const PieceCard = ({ piece, onClose, ...props }) => {
               </TitleText>
             </TitleBox>
           </TopRow>
+          {props.showAnalytics && (
+            <CardRow container justify="center">
+              <Grid item xs={11}>
+                <Grid container justify="space-between">
+                  <Grid item>
+                    <Typography variant="subtitle1">
+                      Pickups: {props.scanCount}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="subtitle1">
+                      Link clicks: {props.clickCount}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="subtitle1">
+                      Click Rate:{' '}
+                      {Math.round((props.clickCount / props.scanCount) * 100) ||
+                        0}
+                      %
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </CardRow>
+          )}
+
           {piece.isDirect ? (
             <CardRow container justify="center">
               <DescriptionBox item xs={11}>
