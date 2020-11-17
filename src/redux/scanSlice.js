@@ -74,6 +74,9 @@ const scanSlice = createSlice({
       state.error = null
       state.isDirect = null
     },
+    setScanStatus(state, action) {
+      state.status = action.payload
+    },
   },
   extraReducers: {
     [createScan.pending]: (state, action) => {
@@ -100,12 +103,8 @@ const scanSlice = createSlice({
 export const {
   setImageUrl,
   clearImageUrl,
-  setScan,
-  setPiece,
   clearScan,
-  setIsScanning,
-  setScanStage,
-  startScanning,
+  setScanStatus,
 } = scanSlice.actions
 
 export default scanSlice.reducer

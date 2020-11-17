@@ -3,7 +3,12 @@ import { useSelector, useDispatch } from 'react-redux'
 import { unwrapResult } from '@reduxjs/toolkit'
 
 import { AuthContext } from 'contexts/auth-context'
-import { setImageUrl, createScan, clearScan } from 'redux/scanSlice'
+import {
+  setImageUrl,
+  createScan,
+  clearScan,
+  setScanStatus,
+} from 'redux/scanSlice'
 
 export const useScanStore = () => {
   const auth = useContext(AuthContext)
@@ -48,14 +53,21 @@ export const useScanStore = () => {
 
   const _clearScan = useCallback(() => {
     dispatch(clearScan())
-    console.log('cleared scan')
   }, [dispatch])
+
+  const _setScanStatus = useCallback(
+    status => {
+      dispatch(setScanStatus(status))
+    },
+    [dispatch]
+  )
 
   return {
     setImageUrl: _setImageUrl,
     clearImageUrl,
     startScan,
     clearScan: _clearScan,
+    setScanStatus: _setScanStatus,
     status,
     imageUrl,
     foundPiece,

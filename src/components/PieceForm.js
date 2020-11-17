@@ -22,7 +22,8 @@ const PieceForm = ({
   isLoading,
   submitLabel,
 }) => {
-  const { title, description, links, awsId, ext, isDirect } = piece || {}
+  const { title, description, links, awsId, ext, isDirect, directLink } =
+    piece || {}
 
   imageFilepath = imageFilepath || (awsId && ext ? `${awsId}.${ext}` : null)
 
@@ -31,6 +32,7 @@ const PieceForm = ({
     description: description || '',
     links: links || [],
     isDirect: isDirect || false,
+    directLink: directLink || '',
   }
 
   const handleSubmit = async values => {
@@ -42,6 +44,9 @@ const PieceForm = ({
       .max(32, 'Must be 32 characters or less')
       .required('Required'),
     description: Yup.string(),
+    directLink: Yup.string().url(
+      `Must be a valid URL. Include http:// or https://`
+    ),
     links: Yup.array().of(
       Yup.object({
         name: Yup.string()
@@ -84,19 +89,37 @@ const PieceForm = ({
               </Grid>
               <Grid item>
                 <CheckButton
-                  onClick={() => setFieldValue('isDirect', !values.isDirect)}
+                  onClick={() => {
+                    setFieldValue('isDirect', !values.isDirect)
+                    setFieldValue('directLink', '')
+                  }}
                   name="isDirect"
-                  label="Skip this page and take users directly to my profile"
+                  label="Take users directly to my profile or content"
                   checked={values.isDirect}
                 />
               </Grid>
-              <Grid item>
-                <TextArea name="description" label="Description" />
-              </Grid>
-              <Box height="1rem" />
-              <Grid item>
-                <LinksList links={values.links} />
-              </Grid>
+              {values.isDirect ? (
+                <Grid item>
+                  <TextField
+                    name="directLink"
+                    label="Enter your direct link. Otherwise users will be directed to your profile."
+                  />
+                </Grid>
+              ) : (
+                <>
+                  {!values.isDirect && (
+                    <>
+                      <Grid item>
+                        <TextArea name="description" label="Description" />
+                      </Grid>
+                      <Box height="1rem" />
+                      <Grid item>
+                        <LinksList links={values.links} />
+                      </Grid>
+                    </>
+                  )}
+                </>
+              )}
               <Box height="1rem"></Box>
               <Grid item>
                 <ActionButton

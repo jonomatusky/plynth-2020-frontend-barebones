@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import * as client from '../util/client'
 
 let initialState = {
-  user: {},
+  user: null,
   status: 'idle',
   updateStatus: 'idle',
   error: null,

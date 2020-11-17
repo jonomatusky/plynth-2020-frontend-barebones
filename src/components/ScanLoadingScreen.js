@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-
+import { useHistory } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import { Dialog, Grid, Box, Typography, Button, Fade } from '@material-ui/core'
 import styled from 'styled-components'
 
@@ -45,6 +46,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 })
 
 const ScanLoadingScreen = ({ open, onClose }) => {
+  const history = useHistory()
+  const { scanRoute } = useSelector(state => state.user)
   const { status, foundPiece, clearScan } = useScanStore()
 
   const [isOpen, setIsOpen] = useState(open || false)
@@ -73,10 +76,12 @@ const ScanLoadingScreen = ({ open, onClose }) => {
       return () => {
         clearTimeout(timer)
       }
-    } else if (!foundPiece && status === 'succeeded') {
+    } else if ((!foundPiece && status === 'succeeded') || status === 'failed') {
       setIsOpen(false)
     }
-  }, [foundPiece, status])
+  }, [foundPiece, status, history, scanRoute])
+
+  useEffect(() => {}, [foundPiece, history, scanRoute])
 
   return (
     <Dialog fullScreen open={isOpen} TransitionComponent={Transition}>

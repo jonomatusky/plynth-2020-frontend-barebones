@@ -10,6 +10,7 @@ import { useApiClient } from 'hooks/api-hook'
 import CenteredGrid from 'layouts/CenteredGrid'
 import PieceCard from 'components/PieceCard'
 import ActionBar from 'components/ActionBar'
+import { setScanStatus } from 'redux/scanSlice'
 
 const NewPickup = ({ isOpen, setIsOpen, ...props }) => {
   const {
@@ -20,7 +21,6 @@ const NewPickup = ({ isOpen, setIsOpen, ...props }) => {
     foundPiece,
     scanToken,
     error,
-    isDirect,
   } = useScanStore()
 
   const { scanRoute } = useSelector(state => state.user)
@@ -32,8 +32,16 @@ const NewPickup = ({ isOpen, setIsOpen, ...props }) => {
   useEffect(() => {
     if (status === 'idle') {
       history.push(scanRoute)
+    } else if ((foundPiece || {}).directLink) {
+      window.location.assign(foundPiece.directLink)
+    } else if ((foundPiece || {}).isDirect) {
+      history.push({
+        pathname: `/${foundPiece.owner.username}`,
+        state: { referrer: scanRoute },
+      })
+      setScanStatus('idle')
     }
-  }, [status, history, scanRoute])
+  }, [status, history, scanRoute, foundPiece])
 
   // start the scan when the page loads, if the piece image is set
   useEffect(() => {
@@ -51,15 +59,6 @@ const NewPickup = ({ isOpen, setIsOpen, ...props }) => {
       start()
     }
   }, [status, imageUrl, startScan, clearScan])
-
-  useEffect(() => {
-    if (isDirect) {
-      history.push({
-        pathname: `/${foundPiece.owner.username}`,
-        state: { referrer: scanRoute },
-      })
-    }
-  }, [foundPiece, history, isDirect, scanRoute])
 
   const handleClose = () => {
     clearScan()
@@ -97,7 +96,7 @@ const NewPickup = ({ isOpen, setIsOpen, ...props }) => {
           </Grid>
         </CenteredGrid>
       )
-    } else if (status === 'succeeded' && !!foundPiece) {
+    } else if (status === 'succeeded' && foundPiece && !foundPiece.isDirect) {
       return (
         <>
           <Container maxWidth="xs" disableGutters>

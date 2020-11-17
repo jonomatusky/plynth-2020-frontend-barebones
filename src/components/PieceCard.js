@@ -117,20 +117,33 @@ const PieceCard = ({ piece, onClose, ...props }) => {
               </TitleText>
             </TitleBox>
           </TopRow>
-          <CardRow container justify="center">
-            <DescriptionBox item xs={11}>
-              <DescriptionText>{piece.description}</DescriptionText>
-            </DescriptionBox>
-          </CardRow>
-          {piece.links.map(link => {
-            return (
-              <LinkRow container key={link._id} justify="center">
-                <Grid item xs={11}>
-                  <LinkButton link={link} />
-                </Grid>
-              </LinkRow>
-            )
-          })}
+          {piece.isDirect ? (
+            <CardRow container justify="center">
+              <DescriptionBox item xs={11}>
+                <DescriptionText>
+                  Taking users directly to {piece.directLink || `your profile`}
+                </DescriptionText>
+              </DescriptionBox>
+            </CardRow>
+          ) : (
+            <>
+              <CardRow container justify="center">
+                <DescriptionBox item xs={11}>
+                  <DescriptionText>{piece.description}</DescriptionText>
+                </DescriptionBox>
+              </CardRow>
+              {piece.links.map(link => {
+                return (
+                  <LinkRow container key={link._id} justify="center">
+                    <Grid item xs={11}>
+                      <LinkButton link={link} />
+                    </Grid>
+                  </LinkRow>
+                )
+              })}
+            </>
+          )}
+
           <Box height="1rem"></Box>
           <BottomBar piece={piece} />
         </PieceBox>
