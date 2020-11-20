@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Dialog, Fade } from '@material-ui/core'
 import styled from 'styled-components'
-// import { Transition } from 'react-transition-group'
+import { Transition } from 'react-transition-group'
 
 import image from 'images/loading-demo-image.jpeg'
 import loadingAnimationDots from 'images/loading-animation-dots.svg'
@@ -11,19 +11,17 @@ import loadingAnimationOuter from 'images/loading-animation-outer.svg'
 import loadingAnimationOutline from 'images/loading-animation-outline.svg'
 // import loadingAnimation from 'images/loading-animation.svg'
 
-import LoadingScreen from './ScanLoadingElement'
-
 const TransitionComponent = React.forwardRef(function Transition(props, ref) {
   return <Fade in={props.open} timeout={500} ref={ref} {...props} />
 })
 
-// const ImageBackground = styled.div`
-//   position: absolute;
-//   top: 0px;
-//   right: 0px;
-//   bottom: 0px;
-//   left: 0px;
-// `
+const ImageBackground = styled.div`
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+`
 
 const Image = styled.div`
   width: 100%;
@@ -39,53 +37,54 @@ const PieceImage = styled(Image)`
   background-image: url(${image});
 `
 
-// const LoadingElement = styled(Image)`
-//   background-image: url(${props => props.backgroundImage});
-//   transition: ${props => `${props.duration}ms`};
-//   opacity: ${({ state }) => (state === 'entered' ? 1 : 0)};
-//   display: ${({ state }) => (state === 'exited' ? 'none' : 'block')};
-// `
+const LoadingElement = styled(Image)`
+  background-image: url(${props => props.backgroundImage});
+  transition: ${props => `${props.duration}ms`};
+  opacity: ${({ state }) => (state === 'entered' ? 1 : 0)};
+  display: ${({ state }) => (state === 'exited' ? 'none' : 'block')};
+`
 
-// const PulsingElement = styled(Image)`
-//   background-image: url(${props => props.backgroundImage});
-//   transition: ${props => `${props.duration}ms`};
-//   opacity: ${({ state }) => (state === 'entered' ? 1 : 0.5)};
-//   display: ${({ state }) => (state === 'exited' ? 'none' : 'block')};
-// `
+const PulsingElement = styled(Image)`
+  background-image: url(${props => props.backgroundImage});
+  transition: ${props => `${props.duration}ms`};
+  opacity: ${({ state }) => (state === 'entered' ? 1 : 0.5)};
+  display: ${({ state }) => (state === 'exited' ? 'none' : 'block')};
+`
 
-// const GrowElement = styled(Image)`
-//   background-image: url(${props => props.backgroundImage});
-//   transition: ${props => `${props.duration}ms`};
-//   opacity: ${({ state }) => (state === 'entered' ? 1 : 0)};
-//   display: ${({ state }) => (state === 'exited' ? 'none' : 'block')};
-//   transform: ${({ state }) => (state === 'exiting' ? 'scale(10)' : 'block')};
-// `
+const GrowElement = styled(Image)`
+  background-image: url(${props => props.backgroundImage});
+  transition: ${props => `${props.duration}ms`};
+  opacity: ${({ state }) => (state === 'entered' ? 1 : 0)};
+  display: ${({ state }) => (state === 'exited' ? 'none' : 'block')};
+  transform: ${({ state }) => (state === 'exiting' ? 'scale(10)' : 'block')};
+`
 
-// const LoadingScreen = ({ duration, backgroundImage, ...props }) => {
-//   return (
-//     <ImageBackground>
-//       <Transition timeout={duration} {...props}>
-//         {state => (
-//           <LoadingElement
-//             state={state}
-//             backgroundImage={backgroundImage}
-//             duration={duration}
-//           />
-//         )}
-//       </Transition>
-//     </ImageBackground>
-//   )
-// }
+const LoadingScreen = ({ duration, backgroundImage, ...props }) => {
+  return (
+    <ImageBackground>
+      <Transition timeout={duration} {...props}>
+        {state => (
+          <LoadingElement
+            state={state}
+            backgroundImage={backgroundImage}
+            duration={duration}
+          />
+        )}
+      </Transition>
+    </ImageBackground>
+  )
+}
 
-// const LoadingBuild = () => {
+// const LoadingStageOne = () => {
 //   timeout = {
-//     enter: 1500,
-//     exit: 1500,
+//     appear: 500,
+//     enter: 300,
+//     exit: 300,
 //   }
 
 //   return (
 //     <ImageBackground>
-//       <Transition timeout={duration} onEnter={} ></Transition>
+//       <Transition timeout={}></Transition>
 //     </ImageBackground>
 //   )
 // }
@@ -147,7 +146,7 @@ const ScanLoadingScreenDemo = ({ open, onClose }) => {
           setShowOutline(true)
           setLoadingIndex(loadingIndex + 1)
         },
-        duration: 500,
+        duration: 0,
       },
       // {
       //   loadingStatus: 'lines',
@@ -217,30 +216,30 @@ const ScanLoadingScreenDemo = ({ open, onClose }) => {
     >
       <PieceImage />
       <LoadingScreen
-        in={false}
-        timeout={{ enter: 500, exit: 500 }}
+        in={showBackgroundOuter}
+        duration={1500}
         backgroundImage={loadingAnimationOuter}
       />
-      {/* <ScanLoadingElement
+      <LoadingScreen
         in={showBackgroundInner}
-        timeout={{ enter: 500, exit: 500 }}
+        duration={1500}
         backgroundImage={loadingAnimationInner}
       />
-      <ScanLoadingElement
+      <LoadingScreen
         in={showOutline}
-        timeout={{ enter: 500, exit: 500 }}
+        duration={500}
         backgroundImage={loadingAnimationOutline}
       />
-      <ScanLoadingElement
+      <LoadingScreen
         in={showDots}
-        timeout={{ enter: 500, exit: 500 }}
+        duration={500}
         backgroundImage={loadingAnimationDots}
       />
-      <ScanLoadingElement
+      <LoadingScreen
         in={showLines}
-        timeout={{ enter: 500, exit: 500 }}
+        duration={1000}
         backgroundImage={loadingAnimationLines}
-      /> */}
+      />
     </Dialog>
   )
 }
