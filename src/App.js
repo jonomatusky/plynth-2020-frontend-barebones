@@ -36,6 +36,7 @@ import ResetPassword from 'pages/ResetPassword/ResetPassword'
 import ContactSupport from 'pages/UserContactSupport/ContactSupport'
 import NewScan from 'pages/PickupStart/PickupStart'
 import ScanLoadingScreen from 'components/ScanLoadingScreen'
+import ScanLoadingScreenDemo from 'components/ScanLoadingScreenDemo'
 
 import ErrorBar from 'components/ErrorBar'
 import MessageBar from 'components/MessageBar'
@@ -104,6 +105,13 @@ const App = () => {
 
   routes = (
     <Switch>
+      <PublicRoute
+        restricted={false}
+        component={ScanLoadingScreenDemo}
+        path="/loading"
+        exact
+      />
+
       <PublicRoute restricted={true} component={NewScan} path="/" exact />
 
       <PublicRoute restricted={true} component={SignIn} path="/login" exact />
