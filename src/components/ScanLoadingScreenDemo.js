@@ -1,52 +1,49 @@
 import React, { useEffect, useState, useReducer } from 'react'
-import { Dialog, Fade } from '@material-ui/core'
+import { Dialog, Grid, Button } from '@material-ui/core'
 import styled from 'styled-components'
 
-import image from 'images/loading-demo-image.jpeg'
+import { useScanStore } from 'hooks/store/use-scan-store'
+
 import loadingAnimationDotsInner from 'images/loading-animation-dots-inner.svg'
 import loadingAnimationDotsOuter from 'images/loading-animation-dots-outer.svg'
 import loadingAnimationLines from 'images/loading-animation-lines-inner.svg'
-import loadingAnimationInner from 'images/loading-animation-inner.svg'
-import loadingAnimationOuter from 'images/loading-animation-outer.svg'
 import loadingAnimationOutline from 'images/loading-animation-lines-outer.svg'
-// import loadingAnimation from 'images/loading-animation.svg'
 import LoadingScreen from './ScanLoadingElement'
+import theme from 'theme'
 
-const TransitionComponent = React.forwardRef(function Transition(props, ref) {
-  return <Fade in={props.open} timeout={500} ref={ref} {...props} />
-})
-
-const Image = styled.div`
-  width: 100%;
-  height: 100%;
-  max-width: 600px;
-  margin: auto;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+const Background = styled.div`
+  background-color: black;
+  background-image: linear-gradient(
+    0deg,
+    ${theme.palette.primary.main}70,
+    ${theme.palette.primary.main}00
+  );
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
 `
 
-const PieceImage = styled(Image)`
-  background-image: url(${image});
-`
-
-const GrowElement = styled(Image)`
-  background-image: url(${props => props.backgroundImage});
-  transition: ${props => `${props.duration}ms`};
-  opacity: ${({ state }) => (state === 'entered' ? 1 : 0)};
-  display: ${({ state }) => (state === 'exited' ? 'none' : 'block')};
-  transform: ${({ state }) => (state === 'exiting' ? 'scale(10)' : 'block')};
+const BottomBar = styled.div`
+  top: 'auto';
+  bottom: 0;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem;
+  left: 0;
+  right: 0;
 `
 
 const initialState = {
   name: 'image',
+  showImage: true,
   showBuild: false,
   showPulse: false,
   showDotsInner: false,
   showDotsOuter: false,
   showLines: false,
-  showBackgroundInnter: false,
-  showBackgroundOuter: false,
 }
 
 const reducer = (state, action) => {
@@ -54,42 +51,38 @@ const reducer = (state, action) => {
     case 'image':
       return {
         name: 'image',
+        showImage: true,
         showDotsInner: false,
         showDotsOuter: false,
         showLines: false,
         showOutline: false,
-        showBackgroundInner: false,
-        showBackgroundOuter: false,
       }
     case 'dots':
       return {
         name: 'dots',
+        showImage: true,
         showDotsInner: true,
         showDotsOuter: true,
         showLines: false,
         showOutline: false,
-        showBackgroundInner: false,
-        showBackgroundOuter: false,
       }
     case 'lines':
       return {
         name: 'lines',
+        showImage: true,
         showDotsInner: true,
         showDotsOuter: true,
         showLines: true,
         showOutline: true,
-        showBackgroundInner: false,
-        showBackgroundOuter: false,
       }
     case 'build':
       return {
         name: 'build',
+        showImage: false,
         showDotsInner: true,
         showDotsOuter: true,
         showLines: true,
         showOutline: true,
-        showBackgroundInner: true,
-        showBackgroundOuter: true,
       }
     case 'loadingOn':
       return {
@@ -98,8 +91,6 @@ const reducer = (state, action) => {
         showDotsOuter: true,
         showLines: false,
         showOutline: false,
-        showBackgroundInner: true,
-        showBackgroundOuter: true,
         showPulse: true,
       }
     case 'loadingOff':
@@ -109,19 +100,7 @@ const reducer = (state, action) => {
         showDotsOuter: true,
         showLines: false,
         showOutline: false,
-        showBackgroundInner: true,
-        showBackgroundOuter: true,
         showPulse: false,
-      }
-    case 'loaded':
-      return {
-        name: 'loaded',
-        showDotsInner: false,
-        showDotsOuter: true,
-        showLines: false,
-        showOutline: true,
-        showBackgroundInner: false,
-        showBackgroundOuter: true,
       }
     case 'reveal':
       return {
@@ -130,8 +109,6 @@ const reducer = (state, action) => {
         showDotsOuter: false,
         showLines: false,
         showOutline: false,
-        showBackgroundInner: false,
-        showBackgroundOuter: false,
       }
     default:
       throw new Error()
@@ -139,69 +116,45 @@ const reducer = (state, action) => {
 }
 
 const ScanLoadingScreenDemo = ({ open, onClose }) => {
+  const { status, clearScan, imageUrl } = useScanStore()
   const [state, dispatch] = useReducer(reducer, initialState)
 
-  const [isOpen, setIsOpen] = useState(true)
-  const [isLoaded, setIsLoaded] = useState(false)
+  const [isOpen, setIsOpen] = useState(open || false)
+
+  const handleClose = () => {
+    clearScan()
+    setIsOpen(false)
+    dispatch({ stage: 'image' })
+    onClose && onClose()
+  }
 
   useEffect(() => {
     console.log(state.name)
   }, [state])
 
   useEffect(() => {
-    if (state.name === 'image') {
-      const timer = setTimeout(() => {
-        dispatch({ stage: 'dots' })
-      }, 1000)
-
-      return () => {
-        clearTimeout(timer)
-      }
+    if (status === 'loading') {
+      setIsOpen(true)
+    } else if (status === 'idle') {
+      dispatch({ stage: 'image' })
     }
-  }, [state])
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoaded(true)
-      console.log('LOADED!')
-    }, 10000)
-
-    return () => {
-      clearTimeout(timer)
-    }
-  }, [])
+  }, [status])
 
   return (
-    <Dialog
-      fullScreen
-      open={isOpen}
-      TransitionComponent={TransitionComponent}
-      PaperProps={{
-        style: {
-          backgroundColor: 'transparent',
-          boxShadow: 'none',
-        },
-      }}
-    >
-      <PieceImage />
+    <Dialog fullScreen open={isOpen}>
+      <Background />
       <LoadingScreen
-        in={state.showBackgroundOuter}
-        timeout={{ enter: 1000, exit: 1000 }}
-        backgroundImage={loadingAnimationOuter}
+        in={state.showImage && !!imageUrl}
+        timeout={{ enter: 500, exit: 1000 }}
+        backgroundImage={imageUrl}
+        onEntering={() => {
+          console.log('entering')
+        }}
         onEntered={() => {
-          dispatch({ stage: 'loadingOn' })
+          dispatch({ stage: 'dots' })
+          console.log('switching to dots')
         }}
-        onExited={() => {
-          dispatch({ stage: 'image' })
-        }}
-      />
-      <LoadingScreen
-        in={state.showBackgroundInner}
-        timeout={{ enter: 1000, exit: 1000 }}
-        backgroundImage={loadingAnimationInner}
-        onExited={() => {
-          dispatch({ stage: 'reveal' })
-        }}
+        appear
       />
       <LoadingScreen
         in={state.showLines}
@@ -210,7 +163,7 @@ const ScanLoadingScreenDemo = ({ open, onClose }) => {
       />
       <LoadingScreen
         in={state.showOutline}
-        timeout={{ enter: 1000, exit: 1000 }}
+        timeout={{ enter: 500, exit: 1000 }}
         backgroundImage={loadingAnimationOutline}
         onEntered={() => {
           dispatch({ stage: 'loadingOn' })
@@ -218,15 +171,18 @@ const ScanLoadingScreenDemo = ({ open, onClose }) => {
       />
       <LoadingScreen
         in={state.showDotsInner}
-        timeout={{ enter: 500, exit: 0 }}
+        timeout={{ enter: 500, exit: 1000 }}
         backgroundImage={loadingAnimationDotsInner}
       />
       <LoadingScreen
         in={state.showDotsOuter}
-        timeout={{ enter: 1000, exit: 0 }}
+        timeout={{ enter: 500, exit: 1000 }}
         backgroundImage={loadingAnimationDotsOuter}
         onEntered={() => {
           dispatch({ stage: 'lines' })
+        }}
+        onExited={() => {
+          setIsOpen(false)
         }}
       />
       <LoadingScreen
@@ -234,9 +190,8 @@ const ScanLoadingScreenDemo = ({ open, onClose }) => {
         timeout={{ appear: 0, enter: 1000, exit: 1000 }}
         backgroundImage={loadingAnimationLines}
         onEntered={() => {
-          if (isLoaded) {
-            dispatch({ stage: 'loaded' })
-            setIsLoaded(false)
+          if (status === 'succeeded' || status === 'failed') {
+            dispatch({ stage: 'reveal' })
           } else {
             dispatch({ stage: 'loadingOff' })
           }
@@ -252,6 +207,15 @@ const ScanLoadingScreenDemo = ({ open, onClose }) => {
         timeout={{ appear: 0, enter: 1000, exit: 1000 }}
         backgroundImage={loadingAnimationOutline}
       />
+      <BottomBar>
+        <Grid container direction="column" alignItems="center" spacing={0}>
+          <Grid item>
+            <Button onClick={handleClose} color="secondary">
+              Cancel
+            </Button>
+          </Grid>
+        </Grid>
+      </BottomBar>
     </Dialog>
   )
 }
