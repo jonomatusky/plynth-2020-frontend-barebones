@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useReducer } from 'react'
 import { Dialog, Fade } from '@material-ui/core'
 import styled from 'styled-components'
-import { Transition } from 'react-transition-group'
 
 import image from 'images/loading-demo-image.jpeg'
 import loadingAnimationDots from 'images/loading-animation-dots.svg'
@@ -10,18 +9,11 @@ import loadingAnimationInner from 'images/loading-animation-inner.svg'
 import loadingAnimationOuter from 'images/loading-animation-outer.svg'
 import loadingAnimationOutline from 'images/loading-animation-outline.svg'
 // import loadingAnimation from 'images/loading-animation.svg'
+import LoadingScreen from './ScanLoadingElement'
 
 const TransitionComponent = React.forwardRef(function Transition(props, ref) {
   return <Fade in={props.open} timeout={500} ref={ref} {...props} />
 })
-
-const ImageBackground = styled.div`
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
-  left: 0px;
-`
 
 const Image = styled.div`
   width: 100%;
@@ -37,20 +29,6 @@ const PieceImage = styled(Image)`
   background-image: url(${image});
 `
 
-const LoadingElement = styled(Image)`
-  background-image: url(${props => props.backgroundImage});
-  transition: ${props => `${props.duration}ms`};
-  opacity: ${({ state }) => (state === 'entered' ? 1 : 0)};
-  display: ${({ state }) => (state === 'exited' ? 'none' : 'block')};
-`
-
-const PulsingElement = styled(Image)`
-  background-image: url(${props => props.backgroundImage});
-  transition: ${props => `${props.duration}ms`};
-  opacity: ${({ state }) => (state === 'entered' ? 1 : 0.5)};
-  display: ${({ state }) => (state === 'exited' ? 'none' : 'block')};
-`
-
 const GrowElement = styled(Image)`
   background-image: url(${props => props.backgroundImage});
   transition: ${props => `${props.duration}ms`};
@@ -59,148 +37,112 @@ const GrowElement = styled(Image)`
   transform: ${({ state }) => (state === 'exiting' ? 'scale(10)' : 'block')};
 `
 
-const LoadingScreen = ({ duration, backgroundImage, ...props }) => {
-  return (
-    <ImageBackground>
-      <Transition timeout={duration} {...props}>
-        {state => (
-          <LoadingElement
-            state={state}
-            backgroundImage={backgroundImage}
-            duration={duration}
-          />
-        )}
-      </Transition>
-    </ImageBackground>
-  )
+const initialState = {
+  name: 'image',
+  showBuild: false,
+  showPulse: false,
+  showDots: false,
+  showLines: false,
+  showBackgroundInnter: false,
+  showBackgroundOuter: false,
+  duration: 1000,
+  next: 'build',
 }
 
-// const LoadingStageOne = () => {
-//   timeout = {
-//     appear: 500,
-//     enter: 300,
-//     exit: 300,
-//   }
-
-//   return (
-//     <ImageBackground>
-//       <Transition timeout={}></Transition>
-//     </ImageBackground>
-//   )
-// }
+const reducer = (state, action) => {
+  switch (action.stage) {
+    case 'image':
+      return {
+        name: 'image',
+        showBuild: false,
+        showDots: false,
+        showLines: false,
+        showOutline: false,
+        showBackgroundInner: false,
+        showBackgroundOuter: false,
+        duration: 1000,
+        next: 'build',
+      }
+    case 'build':
+      return {
+        name: 'build',
+        showBuild: true,
+        showDots: true,
+        showLines: true,
+        showOutline: true,
+        showBackgroundInner: true,
+        showBackgroundOuter: true,
+      }
+    case 'loading':
+      return {
+        name: 'loading',
+        showBuild: false,
+        showDots: false,
+        showLines: false,
+        showOutline: true,
+        showBackgroundInner: true,
+        showBackgroundOuter: true,
+        next: 'show',
+      }
+    case 'show':
+      return {
+        name: 'show',
+        showBuild: false,
+        showDots: false,
+        showLines: false,
+        showOutline: true,
+        showBackgroundInner: false,
+        showBackgroundOuter: true,
+        duration: 200,
+        next: 'image',
+      }
+    default:
+      throw new Error()
+  }
+}
 
 const ScanLoadingScreenDemo = ({ open, onClose }) => {
+  const [state, dispatch] = useReducer(reducer, initialState)
+
   const [isOpen, setIsOpen] = useState(true)
 
-  const [loadingStatus, setLoadingStatus] = useState('image')
-  const [loadingIndex, setLoadingIndex] = useState(0)
+  const [showPulse, setShowPulse] = useState(false)
+
   const [loadingCount, setLoadingCount] = useState(0)
-  const [showDots, setShowDots] = useState(false)
-  const [showLines, setShowLines] = useState(false)
-  const [showBackgroundInner, setShowBackgroundInner] = useState(false)
-  const [showBackgroundOuter, setShowBackgroundOuter] = useState(false)
-  const [showOutline, setShowOutline] = useState(false)
-
-  const handleReset = () => {
-    setLoadingIndex(0)
-  }
-
-  // {
-  //   loadingStatus: 'loadingOn',
-  //   setFunction: () => {
-  //     if (loadingCount <= 3) {
-  //       setShowLines(true)
-  //       setShowDots(true)
-  //       console.log(loadingCount)
-  //       setLoadingIndex(loadingIndex - 1)
-  //       setLoadingCount(loadingCount + 1)
-  //     } else {
-  //       setShowLines(false)
-  //       setShowDots(false)
-  //       setShowBackgroundInner(false)
-  //       setLoadingIndex(loadingIndex + 1)
-  //       setLoadingCount(0)
-  //     }
-  //   },
-  //   duration: 600,
-  // },
-  // {
-  //   loadingStatus: 'loadingOff',
-  //   setFunction: () => {
-  //     setShowLines(false)
-  //     setShowDots(false)
-  //     setLoadingIndex(loadingIndex + 1)
-  //   },
-  //   duration: 1000,
-  // },
 
   useEffect(() => {
-    const loadingStages = [
-      {
-        loadingStatus: 'build',
-        setFunction: () => {
-          setShowDots(true)
-          setShowLines(true)
-          setShowBackgroundInner(true)
-          setShowBackgroundOuter(true)
-          setShowOutline(true)
-          setLoadingIndex(loadingIndex + 1)
-        },
-        duration: 0,
-      },
-      // {
-      //   loadingStatus: 'lines',
-      //   setFunction: () => {
-      //     setShowLines(true)
-      //     setLoadingIndex(loadingIndex + 1)
-      //   },
-      //   duration: 1000,
-      // },
-      {
-        loadingStatus: 'loading',
-        setFunction: () => {
-          setLoadingIndex(loadingIndex + 1)
-        },
-        duration: 750,
-      },
-      {
-        loadingStatus: 'loading',
-        setFunction: () => {
-          setShowBackgroundInner(false)
-          setLoadingIndex(loadingIndex + 1)
-        },
-        duration: 3000,
-      },
-      {
-        loadingStatus: 'showSecond',
-        setFunction: () => {
-          setShowBackgroundInner(false)
-          setShowDots(false)
-          setShowLines(false)
-          setLoadingIndex(loadingIndex + 1)
-        },
-        duration: 200,
-      },
-      {
-        loadingStatus: 'image',
-        setFunction: () => {
-          setShowOutline(false)
-          setShowBackgroundOuter(false)
-          setLoadingIndex(0)
-        },
-        duration: 500,
-      },
-    ]
+    console.log(state.name)
 
-    const timer = setTimeout(() => {
-      loadingStages[loadingIndex].setFunction()
-      console.log(loadingStages[loadingIndex].loadingStatus)
-    }, loadingStages[loadingIndex].duration)
+    let timer
+    if (state.duration) {
+      timer = setTimeout(() => {
+        dispatch({ stage: state.next })
+      }, state.duration)
+    }
 
     return () => {
       clearTimeout(timer)
     }
-  }, [loadingIndex, loadingCount])
+  }, [state])
+
+  useEffect(() => {
+    if (state.name === 'loading') {
+      let timer
+      if (loadingCount < 3) {
+        timer = setTimeout(() => {
+          setShowPulse(!showPulse)
+          console.log(loadingCount)
+          setLoadingCount(loadingCount + 1)
+        }, 500)
+      } else {
+        setLoadingCount(0)
+        dispatch({ stage: state.next })
+      }
+      return () => {
+        clearTimeout(timer)
+      }
+    }
+  }, [state, loadingCount, showPulse])
 
   return (
     <Dialog
@@ -216,28 +158,31 @@ const ScanLoadingScreenDemo = ({ open, onClose }) => {
     >
       <PieceImage />
       <LoadingScreen
-        in={showBackgroundOuter}
-        duration={1500}
+        in={state.showBuild}
+        timeout={{ enter: 2000, exit: 2000 }}
         backgroundImage={loadingAnimationOuter}
+        onEntered={() => {
+          dispatch({ stage: 'loading' })
+        }}
       />
       <LoadingScreen
-        in={showBackgroundInner}
-        duration={1500}
+        in={state.showBuild}
+        timeout={{ enter: 2000, exit: 2000 }}
         backgroundImage={loadingAnimationInner}
       />
       <LoadingScreen
-        in={showOutline}
-        duration={500}
+        in={state.showBuild}
+        timeout={{ enter: 2000, exit: 2000 }}
         backgroundImage={loadingAnimationOutline}
       />
       <LoadingScreen
-        in={showDots}
-        duration={500}
+        in={state.showDots}
+        timeout={{ enter: 500, exit: 500 }}
         backgroundImage={loadingAnimationDots}
       />
       <LoadingScreen
-        in={showLines}
-        duration={1000}
+        in={state.showLines}
+        timeout={{ enter: 1000, exit: 500 }}
         backgroundImage={loadingAnimationLines}
       />
     </Dialog>
