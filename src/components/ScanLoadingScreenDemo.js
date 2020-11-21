@@ -3,11 +3,12 @@ import { Dialog, Fade } from '@material-ui/core'
 import styled from 'styled-components'
 
 import image from 'images/loading-demo-image.jpeg'
-import loadingAnimationDots from 'images/loading-animation-dots.svg'
-import loadingAnimationLines from 'images/loading-animation-lines.svg'
+import loadingAnimationDotsInner from 'images/loading-animation-dots-inner.svg'
+import loadingAnimationDotsOuter from 'images/loading-animation-dots-outer.svg'
+import loadingAnimationLines from 'images/loading-animation-lines-inner.svg'
 import loadingAnimationInner from 'images/loading-animation-inner.svg'
 import loadingAnimationOuter from 'images/loading-animation-outer.svg'
-import loadingAnimationOutline from 'images/loading-animation-outline.svg'
+import loadingAnimationOutline from 'images/loading-animation-lines-outer.svg'
 // import loadingAnimation from 'images/loading-animation.svg'
 import LoadingScreen from './ScanLoadingElement'
 
@@ -41,12 +42,11 @@ const initialState = {
   name: 'image',
   showBuild: false,
   showPulse: false,
-  showDots: false,
+  showDotsInner: false,
+  showDotsOuter: false,
   showLines: false,
   showBackgroundInnter: false,
   showBackgroundOuter: false,
-  duration: 1000,
-  next: 'build',
 }
 
 const reducer = (state, action) => {
@@ -54,47 +54,84 @@ const reducer = (state, action) => {
     case 'image':
       return {
         name: 'image',
-        showBuild: false,
-        showDots: false,
+        showDotsInner: false,
+        showDotsOuter: false,
         showLines: false,
         showOutline: false,
         showBackgroundInner: false,
         showBackgroundOuter: false,
-        duration: 1000,
-        next: 'build',
+      }
+    case 'dots':
+      return {
+        name: 'dots',
+        showDotsInner: true,
+        showDotsOuter: true,
+        showLines: false,
+        showOutline: false,
+        showBackgroundInner: false,
+        showBackgroundOuter: false,
+      }
+    case 'lines':
+      return {
+        name: 'lines',
+        showDotsInner: true,
+        showDotsOuter: true,
+        showLines: true,
+        showOutline: true,
+        showBackgroundInner: false,
+        showBackgroundOuter: false,
       }
     case 'build':
       return {
         name: 'build',
-        showBuild: true,
-        showDots: true,
+        showDotsInner: true,
+        showDotsOuter: true,
         showLines: true,
         showOutline: true,
         showBackgroundInner: true,
         showBackgroundOuter: true,
       }
-    case 'loading':
+    case 'loadingOn':
       return {
-        name: 'loading',
-        showBuild: false,
-        showDots: false,
+        name: 'loadingOn',
+        showDotsInner: true,
+        showDotsOuter: true,
         showLines: false,
-        showOutline: true,
+        showOutline: false,
         showBackgroundInner: true,
         showBackgroundOuter: true,
-        next: 'show',
+        showPulse: true,
       }
-    case 'show':
+    case 'loadingOff':
       return {
-        name: 'show',
-        showBuild: false,
-        showDots: false,
+        name: 'loadingOff',
+        showDotsInner: true,
+        showDotsOuter: true,
+        showLines: false,
+        showOutline: false,
+        showBackgroundInner: true,
+        showBackgroundOuter: true,
+        showPulse: false,
+      }
+    case 'loaded':
+      return {
+        name: 'loaded',
+        showDotsInner: false,
+        showDotsOuter: true,
         showLines: false,
         showOutline: true,
         showBackgroundInner: false,
         showBackgroundOuter: true,
-        duration: 200,
-        next: 'image',
+      }
+    case 'reveal':
+      return {
+        name: 'reveal',
+        showDotsInner: false,
+        showDotsOuter: false,
+        showLines: false,
+        showOutline: false,
+        showBackgroundInner: false,
+        showBackgroundOuter: false,
       }
     default:
       throw new Error()
@@ -105,44 +142,34 @@ const ScanLoadingScreenDemo = ({ open, onClose }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
 
   const [isOpen, setIsOpen] = useState(true)
-
-  const [showPulse, setShowPulse] = useState(false)
-
-  const [loadingCount, setLoadingCount] = useState(0)
+  const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
     console.log(state.name)
-
-    let timer
-    if (state.duration) {
-      timer = setTimeout(() => {
-        dispatch({ stage: state.next })
-      }, state.duration)
-    }
-
-    return () => {
-      clearTimeout(timer)
-    }
   }, [state])
 
   useEffect(() => {
-    if (state.name === 'loading') {
-      let timer
-      if (loadingCount < 3) {
-        timer = setTimeout(() => {
-          setShowPulse(!showPulse)
-          console.log(loadingCount)
-          setLoadingCount(loadingCount + 1)
-        }, 500)
-      } else {
-        setLoadingCount(0)
-        dispatch({ stage: state.next })
-      }
+    if (state.name === 'image') {
+      const timer = setTimeout(() => {
+        dispatch({ stage: 'dots' })
+      }, 1000)
+
       return () => {
         clearTimeout(timer)
       }
     }
-  }, [state, loadingCount, showPulse])
+  }, [state])
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoaded(true)
+      console.log('LOADED!')
+    }, 10000)
+
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [])
 
   return (
     <Dialog
@@ -158,32 +185,72 @@ const ScanLoadingScreenDemo = ({ open, onClose }) => {
     >
       <PieceImage />
       <LoadingScreen
-        in={state.showBuild}
-        timeout={{ enter: 2000, exit: 2000 }}
+        in={state.showBackgroundOuter}
+        timeout={{ enter: 1000, exit: 1000 }}
         backgroundImage={loadingAnimationOuter}
         onEntered={() => {
-          dispatch({ stage: 'loading' })
+          dispatch({ stage: 'loadingOn' })
+        }}
+        onExited={() => {
+          dispatch({ stage: 'image' })
         }}
       />
       <LoadingScreen
-        in={state.showBuild}
-        timeout={{ enter: 2000, exit: 2000 }}
+        in={state.showBackgroundInner}
+        timeout={{ enter: 1000, exit: 1000 }}
         backgroundImage={loadingAnimationInner}
-      />
-      <LoadingScreen
-        in={state.showBuild}
-        timeout={{ enter: 2000, exit: 2000 }}
-        backgroundImage={loadingAnimationOutline}
-      />
-      <LoadingScreen
-        in={state.showDots}
-        timeout={{ enter: 500, exit: 500 }}
-        backgroundImage={loadingAnimationDots}
+        onExited={() => {
+          dispatch({ stage: 'reveal' })
+        }}
       />
       <LoadingScreen
         in={state.showLines}
-        timeout={{ enter: 1000, exit: 500 }}
+        timeout={{ enter: 500, exit: 1000 }}
         backgroundImage={loadingAnimationLines}
+      />
+      <LoadingScreen
+        in={state.showOutline}
+        timeout={{ enter: 1000, exit: 1000 }}
+        backgroundImage={loadingAnimationOutline}
+        onEntered={() => {
+          dispatch({ stage: 'loadingOn' })
+        }}
+      />
+      <LoadingScreen
+        in={state.showDotsInner}
+        timeout={{ enter: 500, exit: 0 }}
+        backgroundImage={loadingAnimationDotsInner}
+      />
+      <LoadingScreen
+        in={state.showDotsOuter}
+        timeout={{ enter: 1000, exit: 0 }}
+        backgroundImage={loadingAnimationDotsOuter}
+        onEntered={() => {
+          dispatch({ stage: 'lines' })
+        }}
+      />
+      <LoadingScreen
+        in={state.showPulse}
+        timeout={{ appear: 0, enter: 1000, exit: 1000 }}
+        backgroundImage={loadingAnimationLines}
+        onEntered={() => {
+          if (isLoaded) {
+            dispatch({ stage: 'loaded' })
+            setIsLoaded(false)
+          } else {
+            dispatch({ stage: 'loadingOff' })
+          }
+        }}
+        onExited={() => {
+          if (state.name === 'loadingOff') {
+            dispatch({ stage: 'loadingOn' })
+          }
+        }}
+      />
+      <LoadingScreen
+        in={state.showPulse}
+        timeout={{ appear: 0, enter: 1000, exit: 1000 }}
+        backgroundImage={loadingAnimationOutline}
       />
     </Dialog>
   )

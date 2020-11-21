@@ -19,15 +19,23 @@ const LoadingElement = styled.div`
   background-repeat: no-repeat;
   background-size: cover;
   background-image: url(${props => props.backgroundImage});
-  transition: ${({ state }) => props =>
-    state === state.entering
-      ? `${props.timeout.enter || props.timeout}ms`
-      : `${props.timeout.exit || props.timeout}ms`};
-  opacity: ${({ state }) => (state === 'entered' ? 1 : 0)};
-  display: ${({ state }) => (state === 'exited' ? 'none' : 'block')};
 `
 
 const LoadingScreen = ({ timeout, backgroundImage, ...props }) => {
+  const defaultStyle = {
+    entering: { transition: `opacity ${timeout.enter}ms ease-in-out` },
+    entered: { transition: `opacity ${timeout.enter}ms ease-in-out` },
+    exiting: { transition: `opacity ${timeout.exit}ms ease-in-out` },
+    exited: { transition: `opacity ${timeout.exit}ms ease-in-out` },
+  }
+
+  const transitionStyles = {
+    entering: { opacity: 1 },
+    entered: { opacity: 1 },
+    exiting: { opacity: 0 },
+    exited: { opacity: 0 },
+  }
+
   return (
     <ImageBackground>
       <Transition timeout={timeout} {...props}>
@@ -36,6 +44,10 @@ const LoadingScreen = ({ timeout, backgroundImage, ...props }) => {
             state={state}
             backgroundImage={backgroundImage}
             timeout={timeout}
+            style={{
+              ...defaultStyle[state],
+              ...transitionStyles[state],
+            }}
           />
         )}
       </Transition>
