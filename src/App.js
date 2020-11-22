@@ -4,32 +4,53 @@ import {
   Route,
   Redirect,
   Switch,
+  useLocation,
 } from 'react-router-dom'
 import { Box } from '@material-ui/core'
 import { LastLocationProvider } from 'react-router-last-location'
 
-import SignIn from './users/pages/SignIn'
-import ViewUser from './users/pages/ViewUser'
-
-import NewPieceImage from './pieces/pages/NewPieceImage'
-import NewPiece from './pieces/pages/NewPiece'
-
-import AdminViewPieces from './pieces/pages/AdminViewPieces'
-import AdminViewPiece from './pieces/pages/AdminViewPiece'
-import AdminUpdatePiece from './pieces/pages/AdminUpdatePiece'
-import AdminViewUsers from './users/pages/AdminViewUsers'
-import AdminViewUser from './users/pages/AdminViewUser'
-import AdminUpdateUser from './users/pages/AdminUpdateUser'
-import AdminRemoveUser from './users/pages/AdminRemoveUser'
-import AdminViewScans from './scans/pages/AdminViewScans'
-import AdminViewScan from './scans/pages/AdminViewScan'
-import { useAuth } from './shared/hooks/auth-hook'
-import { AuthContext } from './shared/context/auth-context'
+import { useAuth } from 'hooks/auth-hook'
+import { AuthContext } from 'contexts/auth-context'
 import firebase from './firebase'
 
-import ErrorBar from './shared/components/notifications/Error'
-import MessageBar from './shared/components/notifications/Message'
-import NavBar from './shared/components/navigation/NavBar'
+import AdminViewPieces from './pages/AdminViewPieces/AdminViewPieces'
+import AdminViewPiece from './pages/AdminViewPiece/AdminViewPiece'
+import AdminUpdatePiece from './pages/AdminUpdatePiece/AdminUpdatePiece'
+import AdminViewUsers from './pages/AdminViewUsers/AdminViewUsers'
+import AdminViewUser from './pages/AdminViewUser/AdminViewUser'
+import AdminUpdateUser from './pages/AdminUpdateUser.js/AdminUpdateUser'
+import AdminRemoveUser from './pages/AdminRemoveUser/AdminRemoveUser'
+import AdminViewScans from './pages/AdminViewScans/AdminViewScans'
+import AdminViewScan from './pages/AdminViewScan/AdminViewScan'
+
+import Background from 'layouts/Background'
+import NewPieceImage from 'pages/NewPieceImage/NewPieceImage'
+import NewPiece from 'pages/NewPiece/NewPiece'
+// import ViewPiece from 'pages/ViewMyPiece/ViewMyPiece'
+// import MyPieces from 'pages/MyPieces/MyPieces'
+// import UpdatePiece from 'pages/UpdatePiece/UpdatePiece'
+// import MyProfile from 'pages/UserProfile/UserProfile'
+// import UpdateProfile from 'pages/UpdateProfile/UpdateProfile'
+// import NewPickup from 'pages/Pickup/Pickup'
+// import UserSignup1 from 'pages/UserSignup1/UserSignup1'
+// import UserSignup2 from 'pages/UserSignup2/UserSignup2'
+// import SignupSuccess from 'pages/UserSignupSuccess/SignupSuccess'
+import SignIn from 'pages/SignIn/SignIn'
+// import BetaSignup from 'pages/BetaSignup/BetaSignup'
+import ViewUser from 'pages/ViewUser/ViewUser'
+// import UpdateEmail from 'pages/UserUpdateEmail/UserUpdateEmail'
+// import UpdatePassword from 'pages/UserUpdatePassword/UserUpdatePassword'
+// import UpdateUsername from 'pages/UserUpdateUsername/UserUpdateUsername'
+// import RecoverPassword from 'pages/RecoverPassword/RecoverPassword'
+// import ResetPassword from 'pages/ResetPassword/ResetPassword'
+// import ContactSupport from 'pages/UserContactSupport/ContactSupport'
+// import NewScan from 'pages/PickupStart/PickupStart'
+// import ScanLoadingScreen from 'components/ScanLoadingScreen'
+import ScanLoadingScreenDemo from 'components/ScanLoadingScreenDemo'
+
+import ErrorBar from 'components/ErrorBar'
+import MessageBar from 'components/MessageBar'
+import NavBar from 'components/NavBar'
 
 firebase.analytics()
 
@@ -38,6 +59,8 @@ const App = () => {
   const { token, login, logout, authStatus } = useAuth()
 
   const PrivateRoute = ({ component: Component, noNav, ...rest }) => {
+    const location = useLocation()
+
     return (
       <Route
         {...rest}
@@ -52,7 +75,15 @@ const App = () => {
                 </main>
               </React.Fragment>
             )}
-            {authStatus === 'unauthenticated' && <Redirect to="/" />}
+
+            {authStatus === 'unauthenticated' && (
+              <Redirect
+                to={{
+                  pathname: '/admin/login',
+                  state: { referrer: location.pathname },
+                }}
+              />
+            )}
           </>
         )}
       />
@@ -60,6 +91,8 @@ const App = () => {
   }
 
   const PublicRoute = ({ component: Component, restricted, ...rest }) => {
+    const location = useLocation()
+
     return (
       <Route
         {...rest}
@@ -71,7 +104,9 @@ const App = () => {
               </main>
             )}
             {authStatus === 'authenticated' && restricted && (
-              <Redirect to="/admin/users" />
+              <Redirect
+                to={(location.state || {}).referrer || '/admin/pieces'}
+              />
             )}
           </>
         )}
@@ -103,6 +138,7 @@ const App = () => {
         noNav
         exact
       />
+
       <PrivateRoute
         component={AdminUpdatePiece}
         path="/admin/pieces/:pieceId/edit"
@@ -158,6 +194,9 @@ const App = () => {
           <>
             <ErrorBar />
             <MessageBar />
+            <Background />
+            {/* <ScanLoadingScreen /> */}
+            <ScanLoadingScreenDemo />
             {routes}
           </>
         </LastLocationProvider>

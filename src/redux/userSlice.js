@@ -1,9 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-// import axios from 'axios'
-import * as client from '../shared/util/client'
+import * as client from '../util/client'
 
 let initialState = {
-  user: {},
+  user: null,
   status: 'idle',
   updateStatus: 'idle',
   error: null,

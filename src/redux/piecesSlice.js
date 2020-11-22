@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import * as client from '../shared/util/client'
+import * as client from 'util/client'
 
 let initialState = {
   pieces: [],
