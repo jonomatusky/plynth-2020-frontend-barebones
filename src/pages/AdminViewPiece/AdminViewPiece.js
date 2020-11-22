@@ -26,6 +26,8 @@ const ViewPiece = props => {
   let [scanCount, setScanCount] = useState()
   let [clickCount, setClickCount] = useState()
 
+  console.log(piece)
+
   useEffect(() => {
     const getCount = async id => {
       try {

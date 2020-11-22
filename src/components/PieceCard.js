@@ -172,10 +172,18 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                 return (
                   <>
                     {section.title && (
-                      <PieceTitle variant="h5">{section.title}</PieceTitle>
+                      <LinkRow container justify="center">
+                        <Grid item xs={11}>
+                          <PieceTitle variant="h5">{section.title}</PieceTitle>
+                        </Grid>
+                      </LinkRow>
                     )}
                     {section.text && (
-                      <DescriptionText>{section.text}</DescriptionText>
+                      <LinkRow container justify="center">
+                        <Grid item xs={11}>
+                          <DescriptionText>{section.text}</DescriptionText>
+                        </Grid>
+                      </LinkRow>
                     )}
                     {section.links.map(link => {
                       return (
