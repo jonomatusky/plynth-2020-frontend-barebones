@@ -12,6 +12,7 @@ import {
   CheckButton,
 } from './FormElements'
 import LinksList from './LinkList'
+import SectionList from './SectionList'
 
 const ASSET_URL = process.env.REACT_APP_ASSET_URL
 
@@ -22,8 +23,16 @@ const PieceForm = ({
   isLoading,
   submitLabel,
 }) => {
-  const { title, description, links, awsId, ext, isDirect, directLink } =
-    piece || {}
+  const {
+    title,
+    description,
+    links,
+    awsId,
+    ext,
+    isDirect,
+    directLink,
+    sections,
+  } = piece || {}
 
   imageFilepath = imageFilepath || (awsId && ext ? `${awsId}.${ext}` : null)
 
@@ -33,6 +42,7 @@ const PieceForm = ({
     links: links || [],
     isDirect: isDirect || false,
     directLink: directLink || '',
+    sections: sections || [],
   }
 
   const handleSubmit = async values => {
@@ -115,6 +125,12 @@ const PieceForm = ({
                       <Box height="1rem" />
                       <Grid item>
                         <LinksList links={values.links} />
+                      </Grid>
+                      <Grid item>
+                        <SectionList
+                          sections={values.sections}
+                          setFieldValue={setFieldValue}
+                        />
                       </Grid>
                     </>
                   )}

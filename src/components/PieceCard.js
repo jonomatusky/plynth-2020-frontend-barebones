@@ -168,6 +168,36 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                   </LinkRow>
                 )
               })}
+              {piece.sections.map(section => {
+                return (
+                  <>
+                    {section.title && (
+                      <PieceTitle variant="h5">{section.title}</PieceTitle>
+                    )}
+                    {section.text && (
+                      <DescriptionText>{section.text}</DescriptionText>
+                    )}
+                    {section.links.map(link => {
+                      return (
+                        <LinkRow container key={link._id} justify="center">
+                          <Grid item xs={11}>
+                            <LinkButton link={link} />
+                          </Grid>
+                        </LinkRow>
+                      )
+                    })}
+                    {section.users.map(user => {
+                      return (
+                        <LinkRow container key={user._id} justify="center">
+                          <Grid item xs={11}>
+                            <LinkButton link={user} />
+                          </Grid>
+                        </LinkRow>
+                      )
+                    })}
+                  </>
+                )
+              })}
             </>
           )}
 

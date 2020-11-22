@@ -2,17 +2,17 @@ import React from 'react'
 import { Grid, Button } from '@material-ui/core'
 import { FieldArray } from 'formik'
 
-import SectionListItem from './SectionListItem'
+import UserListItem from './UserListItem'
 
-const SectionList = ({ sections, setFieldValue }) => {
+const UserList = ({ users, setFieldValue }) => {
   return (
-    <FieldArray name="sections">
+    <FieldArray name="users">
       {({ remove, push, move }) => (
         <Grid container direction="column" spacing={2}>
-          {(sections || []).map((section, index) => (
-            <SectionListItem
+          {(users || []).map((user, index) => (
+            <UserListItem
               key={index}
-              sections={sections}
+              users={users}
               index={index}
               remove={remove}
               move={move}
@@ -23,19 +23,11 @@ const SectionList = ({ sections, setFieldValue }) => {
           <Grid item>
             <Grid container justify="center">
               <Button
-                onClick={() =>
-                  push({
-                    title: '',
-                    text: '',
-                    links: [],
-                    linkListIsSecondary: false,
-                    users: [],
-                  })
-                }
+                onClick={() => push({ user: null })}
                 color="secondary"
                 size="large"
               >
-                <b>+ Add Section</b>
+                <b>+ Add A Link</b>
               </Button>
             </Grid>
           </Grid>
@@ -45,4 +37,4 @@ const SectionList = ({ sections, setFieldValue }) => {
   )
 }
 
-export default SectionList
+export default UserList
