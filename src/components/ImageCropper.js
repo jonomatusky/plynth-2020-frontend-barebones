@@ -53,7 +53,7 @@ const ImageCropper = props => {
     let resizedImage
 
     try {
-      resizedImage = await resizeImage(props.imageSrc, croppedAreaPixels)
+      resizedImage = await resizeImage(props.imageSrc, 600, croppedAreaPixels)
     } catch (err) {
       dispatch(setError({ message: err.message }))
       return
