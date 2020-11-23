@@ -12,7 +12,7 @@ export const request = async config => {
   }
 
   if (config.url.search('amazonaws') !== -1) {
-    message = 'Unable to upload image. Please try again.'
+    message = 'Connect to server. Please try again.'
   }
 
   try {

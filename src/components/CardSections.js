@@ -63,7 +63,7 @@ export const CardRow = styled(Grid)`
 `
 
 export const DescriptionBox = styled(Grid)`
-  margin: 1.5rem 0rem 1rem 0rem;
+  margin: 1em 0em 1em 0em;
 `
 
 export const DescriptionText = styled(Typography)`
@@ -72,7 +72,7 @@ export const DescriptionText = styled(Typography)`
 `
 
 export const LinkRow = styled(Grid)`
-  margin: 0.75rem 0rem;
+  margin: 0.6rem 0rem;
 `
 
 export const BottomRow = styled(Grid)`

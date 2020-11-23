@@ -1,7 +1,8 @@
 import React from 'react'
-import { Grid, Box, Avatar, Typography } from '@material-ui/core'
+import { Grid, Box, Avatar, Typography, Button } from '@material-ui/core'
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos'
 
-import { useLogClient } from '../hooks/log-hook'
+import { useLogClient } from 'hooks/log-hook'
 import { useScanStore } from 'hooks/store/use-scan-store'
 import { BarRow } from './CardSections'
 import ActionButton from './ActionButton'
@@ -23,10 +24,25 @@ import {
   LinkRow,
 } from './CardSections'
 import BottomBar from './PieceCardBottomBar'
+import theme from 'theme'
 
 const PieceCard = ({ piece, onClose, ...props }) => {
   const { sendLog } = useLogClient()
   let { scanToken } = useScanStore()
+
+  const handleLinkClick = async link => {
+    try {
+      if (scanToken) {
+        await sendLog({
+          url: '/scans',
+          data: {
+            click: { type: 'link', destination: link.url },
+            scanToken,
+          },
+        })
+      }
+    } catch (err) {}
+  }
 
   const LinkButton = ({ link }) => {
     const handleClick = async () => {
@@ -172,14 +188,18 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                 return (
                   <div key={index}>
                     {section.title && (
-                      <LinkRow container justify="center">
+                      <LinkRow container justify="center" key={index}>
                         <Grid item xs={11}>
-                          <PieceTitle variant="h5">{section.title}</PieceTitle>
+                          <Box padding={`0.5rem 0rem 0rem 0rem`}>
+                            <PieceTitle variant="h5">
+                              {section.title}
+                            </PieceTitle>
+                          </Box>
                         </Grid>
                       </LinkRow>
                     )}
                     {section.text && (
-                      <LinkRow container justify="center">
+                      <LinkRow container justify="center" key={index}>
                         <Grid item xs={11}>
                           <DescriptionText>{section.text}</DescriptionText>
                         </Grid>
@@ -187,7 +207,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                     )}
                     {section.linkListIsSecondary
                       ? (section.links || []).length > 0 && (
-                          <LinkRow container justify="center">
+                          <LinkRow container justify="center" key={index}>
                             <Grid item xs={11}>
                               <Grid
                                 container
@@ -250,7 +270,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                           )
                         })}
                     {(section.users || []).length > 0 && (
-                      <LinkRow container justify="center">
+                      <LinkRow container justify="center" key={index}>
                         <Grid item xs={11}>
                           <Grid container justify="space-between" spacing={2}>
                             {section.users.map(user => {
@@ -304,7 +324,6 @@ const PieceCard = ({ piece, onClose, ...props }) => {
             </>
           )}
 
-          <Box height="1rem"></Box>
           <BottomBar piece={piece} />
         </PieceBox>
         <Box height="1rem"></Box>
