@@ -269,7 +269,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                     {(section.users || []).length > 0 && (
                       <LinkRow container justify="center" key={index}>
                         <Grid item xs={11}>
-                          <DescriptionBox>
+                          <Box margin={`0em 0em 1em 0em`}>
                             <Grid container justify="space-between" spacing={2}>
                               {section.users.map(user => {
                                 return (
@@ -313,7 +313,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                                 )
                               })}
                             </Grid>
-                          </DescriptionBox>
+                          </Box>
                         </Grid>
                       </LinkRow>
                     )}
