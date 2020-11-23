@@ -12,7 +12,7 @@ export const request = async config => {
   }
 
   if (config.url.search('amazonaws') !== -1) {
-    message = 'Connect to server. Please try again.'
+    message = 'Unable to connect to server. Please try again.'
   }
 
   try {
