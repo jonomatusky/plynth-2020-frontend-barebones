@@ -35,7 +35,7 @@ import RecoverPassword from 'pages/RecoverPassword/RecoverPassword'
 import ResetPassword from 'pages/ResetPassword/ResetPassword'
 import ContactSupport from 'pages/UserContactSupport/ContactSupport'
 import NewScan from 'pages/PickupStart/PickupStart'
-import ScanLoadingScreen from 'components/ScanLoadingScreen'
+// import ScanLoadingScreen from 'components/ScanLoadingScreen'
 import ScanLoadingScreenDemo from 'components/ScanLoadingScreenDemo'
 
 import ErrorBar from 'components/ErrorBar'
