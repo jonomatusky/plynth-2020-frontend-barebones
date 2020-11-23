@@ -12,13 +12,14 @@ const BottomBar = ({ piece }) => {
 
   if (status !== 'succeeded') {
     return (
-      <BottomRow container justify="center">
-        <Grid item>
-          <Button component={Link} color="inherit" to="/s/subscribe">
-            Sign Up to Save This Page
-          </Button>
-        </Grid>
-      </BottomRow>
+      // <BottomRow container justify="center">
+      //   <Grid item>
+      //     <Button component={Link} color="inherit" to="/s/subscribe">
+      //       Sign Up to Save This Page
+      //     </Button>
+      //   </Grid>
+      // </BottomRow>
+      <div></div>
     )
   } else if (status === 'succeeded' && piece.owner.id === user.id) {
     return (
