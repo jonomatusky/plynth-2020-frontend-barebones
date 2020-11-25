@@ -320,6 +320,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                   </Grid>
                 )
               })}
+              {!piece.sections.length > 0 && <Box height="1rem"></Box>}
             </>
           )}
           <BottomBar piece={piece} />
