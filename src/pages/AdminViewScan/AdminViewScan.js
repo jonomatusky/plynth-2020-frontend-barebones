@@ -44,6 +44,9 @@ const ViewScan = () => {
     history.goBack()
   }
 
+  const { city, region, country } = (scan || {}).geolocation || {}
+  const location = [city, region, country].filter(Boolean).join(', ')
+
   return (
     <React.Fragment>
       <Background />
@@ -64,7 +67,7 @@ const ViewScan = () => {
                   </Grid>
                   <Grid item>
                     <DescriptionText>
-                      picked up by
+                      picked up by{' '}
                       {scan.owner ? scan.owner.displayName : 'Anonymous'}
                     </DescriptionText>
                   </Grid>
@@ -72,6 +75,9 @@ const ViewScan = () => {
                     <DescriptionText>
                       on {new Date(scan.createdAt).toLocaleString()}
                     </DescriptionText>
+                  </Grid>
+                  <Grid item>
+                    <DescriptionText>{location}</DescriptionText>
                   </Grid>
                 </Box>
               </CardRow>
