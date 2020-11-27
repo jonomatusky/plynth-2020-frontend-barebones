@@ -5,6 +5,8 @@ const { REACT_APP_BACKEND_URL } = process.env
 export const request = async config => {
   let message
 
+  console.log(config.url)
+
   if (config.url.indexOf('http://') < 0 && config.url.indexOf('https://') < 0) {
     config.url = REACT_APP_BACKEND_URL.concat(config.url)
   } else {

@@ -15,6 +15,7 @@ let initialState = {
 export const createScan = createAsyncThunk(
   'scans/createScan',
   async ({ headers, imageSrc }) => {
+    console.log('scanning')
     let resizedImage = await resizeImage(imageSrc)
 
     let { signedUrl, imageFilepath } = await client.request({

@@ -1,8 +1,7 @@
-import { useCallback, useContext } from 'react'
+import { useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { unwrapResult } from '@reduxjs/toolkit'
 
-import { AuthContext } from 'contexts/auth-context'
+import { useThunk } from 'hooks/use-thunk'
 import {
   setImageUrl,
   createScan,
@@ -11,8 +10,8 @@ import {
 } from 'redux/scanSlice'
 
 export const useScanStore = () => {
-  const auth = useContext(AuthContext)
   const dispatch = useDispatch()
+  const dispatchThunk = useThunk()
 
   const {
     status,
@@ -36,19 +35,15 @@ export const useScanStore = () => {
   }, [dispatch])
 
   const startScan = useCallback(
-    async imageSrc => {
+    imageSrc => {
+      console.log('scanning')
       try {
-        const headers = {}
-        auth.token && (headers.Authorization = 'Bearer ' + auth.token)
-
-        const resultAction = await dispatch(createScan({ headers, imageSrc }))
-
-        const result = unwrapResult(resultAction)
-
-        return result
-      } catch (err) {}
+        dispatchThunk(createScan, { imageSrc })
+      } catch (err) {
+        console.log(err)
+      }
     },
-    [auth.token, dispatch]
+    [dispatchThunk]
   )
 
   const _clearScan = useCallback(() => {

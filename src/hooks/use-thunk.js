@@ -10,7 +10,7 @@ export const useThunk = () => {
   const dispatch = useDispatch()
 
   const dispatchThunk = useCallback(
-    async ({ action, inputs }) => {
+    async (action, inputs) => {
       try {
         const headers = {}
 

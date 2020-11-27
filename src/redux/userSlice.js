@@ -38,17 +38,17 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUser(state, action) {
-      const { user } = action.payload
-      state.user = user
-    },
-    pushLocation(state, action) {
-      state.locationHistory = state.locationHistory.concat(action.payload)
-    },
-    clearError(state, action) {
-      state.error = null
-      state.status = 'idle'
-    },
+    // setUser(state, action) {
+    //   const { user } = action.payload
+    //   state.user = user
+    // },
+    // pushLocation(state, action) {
+    //   state.locationHistory = state.locationHistory.concat(action.payload)
+    // },
+    // clearError(state, action) {
+    //   state.error = null
+    //   state.status = 'idle'
+    // },
     clearUser(state, action) {
       state.status = 'idle'
       state.user = {}

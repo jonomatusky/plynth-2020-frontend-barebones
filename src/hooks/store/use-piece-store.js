@@ -12,7 +12,7 @@ import {
 
 export const usePieceStore = () => {
   const dispatch = useDispatch()
-  const { dispatchThunk } = useThunk()
+  const dispatchThunk = useThunk()
 
   const _fetchPieces = useCallback(() => {
     dispatchThunk(fetchPieces)

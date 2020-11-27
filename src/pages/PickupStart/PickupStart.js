@@ -31,7 +31,7 @@ const NewScan = () => {
         {auth.authStatus !== 'authenticated' && <InfoBar />}
         <Grid item>
           <ImagePicker onSelect={handleSelect}>
-            <Fab size="large" color="primary">
+            <Fab size="large" color="primary" aria-label="upload an image">
               <PhotoCameraIcon />
             </Fab>
           </ImagePicker>

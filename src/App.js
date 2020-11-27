@@ -1,7 +1,7 @@
 import React from 'react'
 import {
   BrowserRouter as Router,
-  Route,
+  Route as DomRoute,
   Redirect,
   Switch,
   useLocation,
@@ -11,6 +11,7 @@ import { LastLocationProvider } from 'react-router-last-location'
 
 import { useAuth } from 'hooks/auth-hook'
 import { AuthContext } from 'contexts/auth-context'
+import { useFetch } from 'hooks/use-fetch'
 import firebase from './firebase'
 
 import Background from 'layouts/Background'
@@ -35,8 +36,7 @@ import RecoverPassword from 'pages/RecoverPassword/RecoverPassword'
 import ResetPassword from 'pages/ResetPassword/ResetPassword'
 import ContactSupport from 'pages/UserContactSupport/ContactSupport'
 import NewScan from 'pages/PickupStart/PickupStart'
-// import ScanLoadingScreen from 'components/ScanLoadingScreen'
-import ScanLoadingScreenDemo from 'components/ScanLoadingScreenDemo'
+import ScanLoadingScreen from 'components/ScanLoadingScreen'
 
 import ErrorBar from 'components/ErrorBar'
 import MessageBar from 'components/MessageBar'
@@ -48,24 +48,22 @@ const App = () => {
   let routes
   const { token, login, logout, authStatus } = useAuth()
 
-  const PrivateRoute = ({ component: Component, noNav, ...rest }) => {
+  const Route = ({
+    component: Component,
+    noNav,
+    publicRoute,
+    restricted,
+    ...rest
+  }) => {
     const location = useLocation()
+    useFetch()
 
     return (
-      <Route
+      <DomRoute
         {...rest}
         render={props => (
           <>
-            {authStatus === 'authenticated' && (
-              <React.Fragment>
-                {!noNav && <NavBar />}
-                <main>
-                  <Component {...props} />
-                  {!noNav && <Box height="5rem" />}
-                </main>
-              </React.Fragment>
-            )}
-            {authStatus === 'unauthenticated' && (
+            {!publicRoute && authStatus === 'unauthenticated' && (
               <Redirect
                 to={{
                   pathname: '/admin/login',
@@ -73,30 +71,24 @@ const App = () => {
                 }}
               />
             )}
-          </>
-        )}
-      />
-    )
-  }
-
-  const PublicRoute = ({ component: Component, restricted, ...rest }) => {
-    const location = useLocation()
-
-    return (
-      <Route
-        {...rest}
-        render={props => (
-          <>
-            {(authStatus === 'unauthenticated' || !restricted) && (
-              <main>
-                <Component {...props} />
-              </main>
-            )}
-            {authStatus === 'authenticated' && restricted && (
+            {publicRoute && restricted && authStatus === 'authenticated' && (
               <Redirect
                 to={(location.state || {}).referrer || '/admin/pieces'}
               />
             )}
+            {
+              <>
+                {authStatus === 'authenticated' && !publicRoute && !noNav && (
+                  <NavBar />
+                )}
+                <main>
+                  <Component {...props} />
+                  {authStatus === 'authenticated' && !publicRoute && !noNav && (
+                    <Box height="5rem" />
+                  )}
+                </main>
+              </>
+            }
           </>
         )}
       />
@@ -105,60 +97,64 @@ const App = () => {
 
   routes = (
     <Switch>
-      <PublicRoute
-        restricted={false}
-        component={ScanLoadingScreenDemo}
-        path="/loading"
+      <Route
+        publicRoute={true}
+        restricted={true}
+        component={NewScan}
+        path="/"
         exact
       />
 
-      <PublicRoute restricted={true} component={NewScan} path="/" exact />
+      <Route
+        publicRoute={true}
+        restricted={true}
+        component={SignIn}
+        path="/login"
+        exact
+      />
 
-      <PublicRoute restricted={true} component={SignIn} path="/login" exact />
-
-      <PublicRoute
+      <Route
+        publicRoute={true}
         restricted={true}
         component={UserSignup1}
         path="/signup"
         exact
       />
 
-      <PublicRoute
+      <Route
+        publicRoute={true}
         restricted={true}
         component={BetaSignup}
         path="/s/subscribe"
         exact
       />
 
-      <PublicRoute
+      <Route
+        publicRoute={true}
         restricted={true}
         component={SignIn}
         path="/admin/login"
         exact
       />
 
-      <PublicRoute
-        restricted={false}
+      <Route
+        publicRoute={true}
         component={RecoverPassword}
         path="/admin/recover"
         exact
       />
 
-      <PublicRoute
-        restricted={false}
+      <Route
+        publicRoute={true}
         component={ResetPassword}
         path="/admin/reset/:userId/:token"
         exact
       />
 
-      <PublicRoute
-        restricted={false}
-        component={NewPickup}
-        path="/pickup"
-        exact
-      />
+      <Route publicRoute={true} component={NewPickup} path="/pickup" exact />
 
-      <PublicRoute
+      <Route
+        publicRoute={true}
         path="/get-on-plynth"
         component={() => {
           window.location.href = 'https://site.plynth.com/get-on-plynth'
@@ -166,77 +162,45 @@ const App = () => {
         }}
       />
 
-      <PrivateRoute
+      <Route
         component={UserSignup2}
         path="/admin/get-started/profile"
         noNav
         exact
       />
-      <PrivateRoute
+      <Route
         component={SignupSuccess}
         path="/admin/get-started/success"
         noNav
         exact
       />
 
-      <PrivateRoute
-        component={UpdateProfile}
-        path="/admin/profile/edit"
-        noNav
-        exact
-      />
+      <Route component={UpdateProfile} path="/admin/profile/edit" noNav exact />
 
-      <PrivateRoute
-        component={NewPieceImage}
-        path="/admin/create/style"
-        noNav
-        exact
-      />
-      <PrivateRoute
-        component={NewPiece}
-        path="/admin/create/piece"
-        noNav
-        exact
-      />
-      <PrivateRoute
-        component={UpdatePiece}
-        path="/admin/pieces/:pieceId/edit"
-        noNav
-      />
-      <PrivateRoute component={ViewPiece} path="/admin/pieces/:pieceId" noNav />
-      <PrivateRoute component={MyPieces} path="/admin/pieces" exact />
-      <PrivateRoute component={NewScan} path="/admin/pickup" exact />
-      <PrivateRoute
-        component={UpdateProfile}
-        path="/admin/profile/edit"
-        noNav
-        exact
-      />
-      <PrivateRoute component={MyProfile} path="/admin/profile" exact />
-      <PrivateRoute
-        component={UpdateEmail}
-        path="/admin/profile/email/change"
-        exact
-      />
-      <PrivateRoute
+      <Route component={NewPieceImage} path="/admin/create/style" noNav exact />
+      <Route component={NewPiece} path="/admin/create/piece" noNav exact />
+      <Route component={UpdatePiece} path="/admin/pieces/:pieceId/edit" noNav />
+      <Route component={ViewPiece} path="/admin/pieces/:pieceId" noNav />
+      <Route component={MyPieces} path="/admin/pieces" exact />
+      <Route component={NewScan} path="/admin/pickup" exact />
+      <Route component={UpdateProfile} path="/admin/profile/edit" noNav exact />
+      <Route component={MyProfile} path="/admin/profile" exact />
+      <Route component={UpdateEmail} path="/admin/profile/email/change" exact />
+      <Route
         component={UpdatePassword}
         path="/admin/profile/password/change"
         exact
       />
-      <PrivateRoute
+      <Route
         component={UpdateUsername}
         path="/admin/profile/username/change"
         exact
       />
-      <PrivateRoute
-        component={ContactSupport}
-        path="/admin/profile/help"
-        exact
-      />
+      <Route component={ContactSupport} path="/admin/profile/help" exact />
       {/* <PrivateRoute component={Logout} path="/admin/logout" exact /> */}
       <Redirect from="/admin" to="/" />
 
-      <PublicRoute restricted={false} component={ViewUser} path="/:username" />
+      <Route restricted={false} component={ViewUser} path="/:username" />
 
       <Redirect to="/" />
     </Switch>
@@ -258,7 +222,7 @@ const App = () => {
             <MessageBar />
             <Background />
             {/* <ScanLoadingScreen /> */}
-            <ScanLoadingScreenDemo />
+            <ScanLoadingScreen />
             {routes}
           </>
         </LastLocationProvider>
