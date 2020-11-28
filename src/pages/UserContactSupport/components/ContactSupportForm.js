@@ -1,34 +1,29 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
 import { Grid } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
-import { useApiClient } from 'hooks/api-hook'
-import { setError } from 'redux/alertSlice'
+import { useRequest } from 'hooks/use-request'
 import { TextField, TextArea } from 'components/FormElements'
 import ActionButton from 'components/ActionButton'
 
 const EmailForm = props => {
-  const dispatch = useDispatch()
-  const { isLoading, sendRequest } = useApiClient()
+  const { isLoading, request } = useRequest()
 
   const handleSubmit = async (values, { resetForm }) => {
     if (!isLoading) {
       try {
-        const request = { message: { ...values, type: 'support' } }
+        const data = { message: { ...values, type: 'support' } }
 
-        let response = await sendRequest({
+        let response = await request({
           url: `/messages`,
           method: 'POST',
-          data: request,
+          data,
         })
 
-        resetForm({})
+        resetForm()
         props.onSubmit(values, response)
-      } catch (err) {
-        dispatch(setError({ message: err.message }))
-      }
+      } catch (err) {}
     }
   }
 

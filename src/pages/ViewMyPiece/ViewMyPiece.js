@@ -3,14 +3,14 @@ import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { Container } from '@material-ui/core'
 
-import { useApiClient } from 'hooks/api-hook'
+import { useRequest } from 'hooks/use-request'
 import { selectPiece } from 'redux/piecesSlice'
 import LoadingSpinner from 'components/LoadingSpinner'
 import NotFound from 'layouts/NotFound'
 import PieceCard from 'components/PieceCard'
 
 const ViewPiece = props => {
-  const { sendRequest } = useApiClient()
+  const { request } = useRequest()
   const pieceId = useParams().pieceId
   const piece = useSelector(state => selectPiece(state, pieceId))
   const { user } = useSelector(state => state.user)
@@ -24,7 +24,7 @@ const ViewPiece = props => {
   useEffect(() => {
     const getCount = async id => {
       try {
-        const { scanCount, clickCount } = await sendRequest({
+        const { scanCount, clickCount } = await request({
           url: `/pieces/${id}/scans/count`,
         })
         setScanCount(scanCount)
@@ -34,7 +34,7 @@ const ViewPiece = props => {
     if (piece && showAnalytics) {
       getCount(piece.id)
     }
-  }, [piece, showAnalytics, sendRequest])
+  }, [piece, showAnalytics, request])
 
   return (
     <React.Fragment>

@@ -1,29 +1,46 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useHistory } from 'react-router-dom'
+import * as Yup from 'yup'
 
+import { useRequest } from 'hooks/use-request'
 import FormLayout from 'layouts/FormLayout'
-import ContactSupportForm from './components/ContactSupportForm'
-
-import MessageBar from 'components/MessageBar'
-
-import { BarRow } from 'components/CardSections'
+import SimpleForm from 'components/SimpleForm'
+import { TextField, TextArea } from 'components/FormElements'
 
 const SignUp = () => {
+  const { status, request } = useRequest()
   const history = useHistory()
-  const [message, setMessage] = useState()
 
-  const handleSubmit = (values, response) => {
-    setMessage(response.message)
-    history.goBack()
+  const confirmationMessage = `Thanks for contacting support. We'll get back to you shortly.`
+
+  const handleSubmit = async values => {
+    try {
+      const data = { message: { ...values, type: 'support' } }
+
+      await request({
+        url: `/messages`,
+        method: 'POST',
+        data,
+      })
+    } catch (err) {}
   }
+
+  const handleClose = () => {
+    history.push('/admin/profile')
+  }
+
+  const initialValues = {
+    subject: '',
+    content: '',
+  }
+
+  const validationSchema = Yup.object({
+    subject: Yup.string(),
+    content: Yup.string(),
+  })
 
   return (
     <>
-      <MessageBar
-        open={!!message}
-        message={message}
-        handleClose={() => setMessage(null)}
-      />
       <FormLayout
         title="Contact Support"
         message={
@@ -33,16 +50,19 @@ const SignUp = () => {
             (484) 297-9919.
           </>
         }
-        bar={
-          <BarRow
-            onClick={() => {
-              history.push('/admin/profile')
-            }}
-            buttonLabel={'Cancel X'}
-          />
-        }
       >
-        <ContactSupportForm onSubmit={handleSubmit} />
+        <SimpleForm
+          onSubmit={handleSubmit}
+          onClose={handleClose}
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          confirmationMessage={confirmationMessage}
+          status={status}
+        >
+          <TextField name="subject" label="Subject" />
+
+          <TextArea name="content" label="Message" />
+        </SimpleForm>
       </FormLayout>
     </>
   )

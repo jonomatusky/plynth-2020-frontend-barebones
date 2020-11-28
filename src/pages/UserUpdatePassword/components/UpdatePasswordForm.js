@@ -1,17 +1,14 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Grid, Box } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
-import MessageBar from 'components/MessageBar'
 import { TextField } from 'components/FormElements'
 import ActionButton from 'components/ActionButton'
 
 const SetPasswordForm = ({ onSubmit, isLoading }) => {
-  const [success, setSuccess] = useState(false)
-
-  const handleSubmit = async (values, { resetForm }) => {
-    onSubmit(values, resetForm)
+  const handleSubmit = async (values, actions) => {
+    onSubmit(values, actions)
   }
 
   const initialValues = {
@@ -31,12 +28,7 @@ const SetPasswordForm = ({ onSubmit, isLoading }) => {
   })
 
   return (
-    <React.Fragment>
-      <MessageBar
-        open={success}
-        message="Your password has been updated"
-        handleClose={() => setSuccess(false)}
-      />
+    <>
       <Formik
         enableReinitialize="true"
         initialValues={initialValues}
@@ -73,7 +65,7 @@ const SetPasswordForm = ({ onSubmit, isLoading }) => {
           </Grid>
         </Form>
       </Formik>
-    </React.Fragment>
+    </>
   )
 }
 

@@ -14,7 +14,7 @@ import {
 } from 'components/CardSections'
 import { makeStyles } from '@material-ui/core/styles'
 
-import { useApiClient } from 'hooks/api-hook'
+import { useRequest } from 'hooks/use-request'
 
 import ActionButton from 'components/ActionButton'
 
@@ -32,19 +32,19 @@ const UserProfile = props => {
   const classes = useStyles()
   let { scanToken } = useSelector(state => state.scan)
   const { sendLog } = useLogClient()
-  const { isLoading, error, sendRequest } = useApiClient()
+  const { isLoading, request } = useRequest()
   const [user, setUser] = useState()
   const username = useParams().username
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const responseData = await sendRequest({ url: `/users/${username}` })
+        const responseData = await request({ url: `/users/${username}` })
         setUser(responseData.user)
       } catch (err) {}
     }
     fetchUser()
-  }, [sendRequest, username])
+  }, [request, username])
 
   const LinkButton = ({ link }) => {
     const handleClick = async () => {
@@ -73,7 +73,7 @@ const UserProfile = props => {
 
   return (
     <>
-      {!user && !isLoading && error && <NotFound />}
+      {!user && !isLoading && <NotFound />}
 
       {user && !isLoading && (
         <Container maxWidth="xs">

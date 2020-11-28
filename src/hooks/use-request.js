@@ -1,19 +1,21 @@
 import { useState, useEffect, useCallback, useRef, useContext } from 'react'
+import { useDispatch } from 'react-redux'
 import axios from 'axios'
 
 import { AuthContext } from 'contexts/auth-context'
 import * as client from 'util/client'
+import { setError } from 'redux/alertSlice'
 
-export const useApiClient = () => {
+export const useRequest = () => {
   const auth = useContext(AuthContext)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState()
+  const dispatch = useDispatch()
+  const [status, setStatus] = useState('idle')
 
   let activeAxiosSources = useRef([])
 
-  const sendRequest = useCallback(
+  const request = useCallback(
     async config => {
-      setIsLoading(true)
+      setStatus('loading')
 
       try {
         const CancelToken = axios.CancelToken
@@ -36,20 +38,21 @@ export const useApiClient = () => {
           reqCtrl => reqCtrl.token !== source.token
         )
 
-        setIsLoading(false)
+        setStatus('success')
         return response
       } catch (err) {
-        setError(err.message)
-        setIsLoading(false)
+        dispatch(
+          setError({
+            message:
+              err.message || 'An unknown error occured. Please try again.',
+          })
+        )
+        setStatus('failed')
         throw err
       }
     },
-    [auth.token]
+    [dispatch, auth.token]
   )
-
-  const clearError = () => {
-    setError(null)
-  }
 
   useEffect(() => {
     return () => {
@@ -59,5 +62,5 @@ export const useApiClient = () => {
     }
   }, [])
 
-  return { isLoading, error, sendRequest, clearError }
+  return { status, request }
 }

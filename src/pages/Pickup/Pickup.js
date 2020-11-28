@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom'
 import { Container, Grid, Box, Typography, Button } from '@material-ui/core'
 
 import { useScanStore } from 'hooks/store/use-scan-store'
-import { useApiClient } from 'hooks/api-hook'
+import { useRequest } from 'hooks/use-request'
 
 import CenteredGrid from 'layouts/CenteredGrid'
 import PieceCard from 'components/PieceCard'
@@ -25,7 +25,7 @@ const NewPickup = ({ isOpen, setIsOpen, ...props }) => {
 
   const { scanRoute } = useSelector(state => state.user)
 
-  const { sendRequest } = useApiClient()
+  const { request } = useRequest()
   const [submittedMissingPiece, setSubmittedMissingPiece] = useState(false)
   const history = useHistory()
 
@@ -67,7 +67,7 @@ const NewPickup = ({ isOpen, setIsOpen, ...props }) => {
   //change to updateScan
   const handleMissingPiece = () => {
     try {
-      sendRequest({
+      request({
         url: `/scans`,
         method: 'PATCH',
         data: {

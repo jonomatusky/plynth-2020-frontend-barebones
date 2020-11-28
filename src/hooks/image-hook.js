@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { useApiClient } from './api-hook'
+import { useRequest } from './use-request'
 
 const loadImgAsync = imgSrc => {
   return new Promise((resolve, reject) => {
@@ -88,14 +88,14 @@ export const useSignRequest = () => {
   const {
     isLoading: isSigning,
     error: signError,
-    sendRequest,
+    request,
     clearError: clearSignError,
-  } = useApiClient()
+  } = useRequest()
 
   const getSignRequest = useCallback(
     async file => {
       try {
-        const response = await sendRequest({
+        const response = await request({
           url: '/auth/sign-s3',
           method: 'POST',
           data: {
@@ -111,7 +111,7 @@ export const useSignRequest = () => {
         throw error
       }
     },
-    [sendRequest]
+    [request]
   )
 
   return {

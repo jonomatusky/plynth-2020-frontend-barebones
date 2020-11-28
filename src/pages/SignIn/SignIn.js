@@ -1,32 +1,27 @@
 import React, { useContext } from 'react'
 import { Link as RouterLink, useHistory } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
 import { Typography, Link } from '@material-ui/core'
 
 import { AuthContext } from 'contexts/auth-context'
-import { useApiClient } from 'hooks/api-hook'
-import { setError } from 'redux/alertSlice'
+import { useRequest } from 'hooks/use-request'
 import FormLayout from 'layouts/FormLayout'
 import { BarRow } from 'components/CardSections'
 import LoginForm from './components/SignInForm'
 
 const SignIn = () => {
   const auth = useContext(AuthContext)
-  const dispatch = useDispatch()
-  const { isLoading, sendRequest } = useApiClient()
+  const { isLoading, request } = useRequest()
   const history = useHistory()
 
   const handleSubmit = async values => {
     try {
-      const { token } = await sendRequest({
+      const { token } = await request({
         url: '/auth/login',
         method: 'POST',
         data: values,
       })
       auth.login(token)
-    } catch (err) {
-      dispatch(setError({ message: err.message }))
-    }
+    } catch (err) {}
   }
 
   return (

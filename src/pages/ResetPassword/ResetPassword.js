@@ -1,25 +1,48 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useEffect, useContext } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { Button } from '@material-ui/core'
+import * as Yup from 'yup'
 
 import { AuthContext } from 'contexts/auth-context'
+import { useRequest } from 'hooks/use-request'
+
 import FormLayout from 'layouts/FormLayout'
-import MessageLayout from 'layouts/MessageLayout'
-import ResetPasswordForm from './components/ResetPasswordForm'
+import SimpleForm from 'components/SimpleForm'
+import { TextField } from 'components/FormElements'
 
 const ChangePassword = () => {
   const auth = useContext(AuthContext)
   const { token, userId } = useParams()
-  const [submitted, setSubmitted] = useState(false)
+  const { status, request } = useRequest()
   const history = useHistory()
 
-  const handleSubmit = () => {
-    setSubmitted(true)
+  const handleSubmit = async (values, action) => {
+    const body = { password: values.newPassword, token, id: userId }
+
+    if (status !== 'loading') {
+      try {
+        await request({ url: `/auth/reset`, method: 'POST', data: body })
+        action.resetForm()
+      } catch (err) {}
+    }
   }
 
   const handleClose = () => {
     history.push('/admin/login')
   }
+
+  const initialValues = {
+    newPassword: '',
+    passwordConfirmation: '',
+  }
+
+  const validationSchema = Yup.object({
+    newPassword: Yup.string()
+      .min(5, 'Password must be at least 5 characters long')
+      .required('Required'),
+    passwordConfirmation: Yup.string()
+      .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
+      .required('Required'),
+  })
 
   useEffect(() => {
     if (!token) {
@@ -29,30 +52,38 @@ const ChangePassword = () => {
 
   useEffect(() => {
     auth.logout()
-  })
+  }, [auth])
 
   return (
     <React.Fragment>
-      {!submitted ? (
+      {
         <FormLayout
           title="Reset Password"
           message={`Enter your new password below.`}
           onClose={handleClose}
         >
-          <ResetPasswordForm
+          <SimpleForm
             onSubmit={handleSubmit}
-            token={token}
-            id={userId}
-          />
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            status={status}
+            confirmationMessage="Your password has been reset. Please log in."
+            onClose={handleClose}
+          >
+            <TextField
+              name="newPassword"
+              label="New Password"
+              type="password"
+            />
+
+            <TextField
+              name="passwordConfirmation"
+              label="Confirm New Password"
+              type="password"
+            />
+          </SimpleForm>
         </FormLayout>
-      ) : (
-        <MessageLayout
-          title="Success"
-          message={`Your password has been reset. Please log in.`}
-        >
-          <Button onClick={handleClose}>Log In</Button>
-        </MessageLayout>
-      )}
+      }
     </React.Fragment>
   )
 }

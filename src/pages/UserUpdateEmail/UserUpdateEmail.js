@@ -1,28 +1,28 @@
 import React from 'react'
-import { useHistory } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
+import * as Yup from 'yup'
 
-import { useThunkClient } from 'hooks/thunk-hook'
-import { updateUser } from 'redux/userSlice'
-import { setMessage } from 'redux/alertSlice'
+import { useUserStore } from 'hooks/store/use-user-store'
 import FormLayout from 'layouts/FormLayout'
-import EmailForm from './components/UpdateEmailForm'
+import SimpleForm from 'components/SimpleForm'
+import { TextField } from 'components/FormElements'
 
 // need to change loggedOut to auth instead of props
 const UpdateEmail = () => {
-  const dispatch = useDispatch()
-  const dispatchThunk = useThunkClient()
-  const { user, updateStatus } = useSelector(state => state.user)
-  const history = useHistory()
+  const { user, updateStatus, updateUser } = useUserStore()
+
+  const initialValues = {
+    email: user.email || '',
+  }
+
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email('Please provide your email address')
+      .required('Required'),
+  })
 
   const handleSubmit = async ({ values, resetForm }) => {
     try {
-      await dispatchThunk({
-        thunk: updateUser,
-        inputs: values,
-      })
-      dispatch(setMessage({ message: 'Your email has been updated.' }))
-      history.goBack()
+      await updateUser({ ...values })
     } catch (err) {
       console.log(err)
       resetForm()
@@ -34,11 +34,15 @@ const UpdateEmail = () => {
       title="Email Preferences"
       message={`Update your email address.`}
     >
-      <EmailForm
-        email={user.email}
+      <SimpleForm
         onSubmit={handleSubmit}
-        isLoading={updateStatus === 'loading'}
-      />
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        confirmationMessage={'Your email has been updated.'}
+        status={updateStatus}
+      >
+        <TextField name="email" label="Email" type="email" />
+      </SimpleForm>
     </FormLayout>
   )
 }

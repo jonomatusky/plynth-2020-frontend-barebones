@@ -1,25 +1,24 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { useDispatch } from 'react-redux'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import { useHistory } from 'react-router-dom'
 import { Grid, Box, Typography, Button } from '@material-ui/core'
 
 import theme from 'theme'
-import { setError } from 'redux/alertSlice'
-import { useApiClient } from 'hooks/api-hook'
+import { useRequest } from 'hooks/use-request'
 import { useLogClient } from 'hooks/log-hook'
 
 import { TextField } from 'components/FormElements'
 import ActionButton from 'components/ActionButton'
 import FormLayout from 'layouts/FormLayout'
 import MessageLayout from 'layouts/MessageLayout'
+import { useAlertStore } from 'hooks/store/use-alert-store'
 
 const BetaSignup = () => {
-  const dispatch = useDispatch()
+  const { setError } = useAlertStore()
   const scanToken = useSelector(state => state.scan)
-  const { isLoading, sendRequest } = useApiClient()
+  const { isLoading, request } = useRequest()
   const { sendLog } = useLogClient()
   const history = useHistory()
   const [submitted, setSubmitted] = useState(false)
@@ -32,7 +31,7 @@ const BetaSignup = () => {
   const handleSubmit = async values => {
     try {
       const userData = { user: values }
-      await sendRequest({
+      await request({
         url: `/users/subscribe`,
         method: 'POST',
         data: userData,
@@ -46,7 +45,7 @@ const BetaSignup = () => {
       }
     } catch (err) {
       console.log('there was an error')
-      dispatch(setError({ message: err.message }))
+      setError({ message: err.message })
     }
   }
 

@@ -1,12 +1,11 @@
 import React, { useState, useCallback } from 'react'
-import { useDispatch } from 'react-redux'
 import Cropper from 'react-easy-crop'
 import { AppBar, Toolbar, Slider } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
-import { useApiClient } from 'hooks/api-hook'
+import { useRequest } from 'hooks/use-request'
 import { useImageResize } from 'hooks/image-hook'
-import { setError } from 'redux/alertSlice'
+import { useAlertStore } from 'hooks/store/use-alert-store'
 import LoadingSpinner from './LoadingSpinner'
 import ActionButton from './ActionButton'
 
@@ -39,8 +38,8 @@ const useStyles = makeStyles(theme => ({
 const ImageCropper = props => {
   const classes = useStyles()
   const resizeImage = useImageResize()
-  const dispatch = useDispatch()
-  const { isLoading, sendRequest } = useApiClient()
+  const { setError } = useAlertStore()
+  const { isLoading, request } = useRequest()
 
   const [crop, setCrop] = useState({ x: 0, y: 0 })
   const [zoom, setZoom] = useState(1)
@@ -55,12 +54,11 @@ const ImageCropper = props => {
     try {
       resizedImage = await resizeImage(props.imageSrc, 600, croppedAreaPixels)
     } catch (err) {
-      dispatch(setError({ message: err.message }))
-      return
+      setError({ message: err.message })
     }
 
     try {
-      let { signedUrl, imageFilepath, imageUrl } = await sendRequest({
+      let { signedUrl, imageFilepath, imageUrl } = await request({
         url: '/auth/sign-s3',
         method: 'POST',
         data: {
@@ -69,13 +67,10 @@ const ImageCropper = props => {
         },
       })
 
-      await sendRequest({ url: signedUrl, method: 'PUT', data: resizedImage })
+      await request({ url: signedUrl, method: 'PUT', data: resizedImage })
 
       props.onSubmit({ imageUrl, imageFilepath })
-    } catch (err) {
-      dispatch(setError({ message: err.message }))
-      return
-    }
+    } catch (err) {}
   }
 
   return (

@@ -1,13 +1,10 @@
 import React from 'react'
 import { useHistory } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
 import { Grid, Box } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
-import { useThunkClient } from 'hooks/thunk-hook'
-import { updateUser } from 'redux/userSlice'
-import { setError } from 'redux/alertSlice'
+import { useUserStore } from 'hooks/store/use-user-store'
 
 import FormLayout from 'layouts/FormLayout'
 import { TextField, TextArea } from 'components/FormElements'
@@ -16,22 +13,14 @@ import LinkList from 'components/LinkList'
 import ActionButton from 'components/ActionButton'
 
 const UpdateProfile = () => {
-  const dispatch = useDispatch()
-  const dispatchThunk = useThunkClient()
   const history = useHistory()
-  const { user, updateStatus } = useSelector(state => state.user)
+  const { user, updateStatus, updateUser } = useUserStore()
 
   const handleSubmit = async values => {
     try {
-      await dispatchThunk({
-        thunk: updateUser,
-        inputs: values,
-      })
+      await updateUser(values)
       history.push('/admin/profile')
-    } catch (err) {
-      console.log(err)
-      dispatch(setError({ message: err.message }))
-    }
+    } catch (err) {}
   }
 
   const { displayName, bio, links, avatar, avatarLink } = user || {}

@@ -1,30 +1,24 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
 import { Grid, Box } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
-import { useApiClient } from 'hooks/api-hook'
+import { useRequest } from 'hooks/use-request'
 import { TextField } from 'components/FormElements'
 import ActionButton from 'components/ActionButton'
-import { setMessage, setError } from 'redux/alertSlice'
 
 const ResetPasswordForm = ({ token, id, onSubmit }) => {
-  const dispatch = useDispatch()
-  const { isLoading, sendRequest } = useApiClient()
+  const { isLoading, request } = useRequest()
 
   const handleSubmit = async (values, { resetForm }) => {
     const body = { password: values.newPassword, token, id }
 
     if (!isLoading) {
       try {
-        await sendRequest({ url: `/auth/reset`, method: 'POST', data: body })
+        await request({ url: `/auth/reset`, method: 'POST', data: body })
         resetForm()
         onSubmit(values)
-        dispatch(setMessage({ message: 'Your password has been updated' }))
-      } catch (err) {
-        dispatch(setError({ message: err.message }))
-      }
+      } catch (err) {}
     }
   }
 

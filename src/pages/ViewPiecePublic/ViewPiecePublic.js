@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
-import { useApiClient } from 'hooks/api-hook'
-import { setError } from 'redux/alertSlice'
+import { useRequest } from 'hooks/use-request'
 import { Container } from '@material-ui/core'
 import LoadingSpinner from 'components/LoadingSpinner'
 
@@ -11,7 +10,7 @@ import PieceCard from 'components/PieceCard'
 
 const ViewPiece = props => {
   const history = useHistory()
-  const { isLoading, sendRequest } = useApiClient()
+  const { isLoading, request } = useRequest()
   const { pieces } = useSelector(state => state.pieces)
   const pieceId = useParams().pieceId
 
@@ -27,15 +26,13 @@ const ViewPiece = props => {
     if (!piece) {
       const fetchPiece = async () => {
         try {
-          const responseData = await sendRequest(`/pieces/${pieceId}`)
+          const responseData = await request(`/pieces/${pieceId}`)
           setPiece(responseData.piece)
-        } catch (err) {
-          dispatchEvent(setError({ message: err.message }))
-        }
+        } catch (err) {}
       }
       fetchPiece()
     }
-  }, [sendRequest, pieceId, piece])
+  }, [request, pieceId, piece])
 
   return (
     <Container maxWidth="xs" disableGutters>

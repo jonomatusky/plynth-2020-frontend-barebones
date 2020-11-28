@@ -1,41 +1,58 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useHistory } from 'react-router-dom'
-import { Button } from '@material-ui/core'
+import * as Yup from 'yup'
 
+import { useRequest } from 'hooks/use-request'
 import FormLayout from 'layouts/FormLayout'
-import MessageLayout from 'layouts/MessageLayout'
-import RecoverPasswordForm from './components/RecoverPasswordForm'
+import SimpleForm from 'components/SimpleForm'
+import { TextField } from 'components/FormElements'
 
 const ChangePassword = () => {
-  const [submitted, setSubmitted] = useState(false)
+  const { status, request } = useRequest()
   const history = useHistory()
 
-  const handleSubmit = () => {
-    setSubmitted(true)
+  const handleSubmit = async values => {
+    try {
+      const data = { email: values.email }
+
+      await request({
+        url: `/auth/recover`,
+        method: 'POST',
+        data,
+      })
+    } catch (err) {}
   }
 
   const handleClose = () => {
     history.push('/')
   }
 
+  const initialValues = {
+    email: '',
+  }
+
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email('Please provide your email address')
+      .required('Required'),
+  })
+
   return (
-    <React.Fragment>
-      {!submitted ? (
-        <FormLayout
-          title="Forgot Your Password?"
-          message={`Enter your email below and we will send you intructions on how to reset your password.`}
-        >
-          <RecoverPasswordForm onSubmit={handleSubmit} />
-        </FormLayout>
-      ) : (
-        <MessageLayout
-          title="Check Your Inbox"
-          message={`We've sent password reset intructions to the email provided. Please check your inbox.`}
-        >
-          <Button onClick={handleClose}>Back to Home</Button>
-        </MessageLayout>
-      )}
-    </React.Fragment>
+    <FormLayout
+      title="Forgot Your Password?"
+      message={`Enter your email below and we will send you intructions on how to reset your password.`}
+    >
+      <SimpleForm
+        onSubmit={handleSubmit}
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        confirmationMessage={`We've sent password reset intructions to the email provided. Please check your inbox.`}
+        status={status}
+        onClose={handleClose}
+      >
+        <TextField name="email" label="Email" type="email" />
+      </SimpleForm>
+    </FormLayout>
   )
 }
 
