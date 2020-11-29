@@ -18,16 +18,19 @@ const SimpleForm = ({
   const history = useHistory()
 
   const handleSubmit = async (values, actions) => {
-    if (!status === 'loading') {
+    if (status !== 'loading') {
       onSubmit(values, actions)
     }
   }
 
-  if (status === 'success') {
+  if (status === 'succeeded') {
     return (
       <>
         <Grid item>
-          <Typography variant="h5">{confirmationMessage}</Typography>
+          <Typography variant="h6">{confirmationMessage}</Typography>
+        </Grid>
+        <Grid item>
+          <Box height="1rem" />
         </Grid>
         {onClose && (
           <Grid item>
@@ -46,9 +49,13 @@ const SimpleForm = ({
       >
         <Form>
           <Grid container direction="column" spacing={1}>
-            {(children || []).map(child => {
-              return <Grid item>{child}</Grid>
-            })}
+            {children.isArray ? (
+              children.map(child => {
+                return <Grid item>{child}</Grid>
+              })
+            ) : (
+              <Grid item>{children}</Grid>
+            )}
             <Box height="1rem" />
             <Grid item>
               <ActionButton

@@ -18,12 +18,10 @@ const ChangePassword = () => {
   const handleSubmit = async (values, action) => {
     const body = { password: values.newPassword, token, id: userId }
 
-    if (status !== 'loading') {
-      try {
-        await request({ url: `/auth/reset`, method: 'POST', data: body })
-        action.resetForm()
-      } catch (err) {}
-    }
+    try {
+      await request({ url: `/auth/reset`, method: 'POST', data: body })
+      action.resetForm()
+    } catch (err) {}
   }
 
   const handleClose = () => {

@@ -1,31 +1,53 @@
-import React from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import * as Yup from 'yup'
 
-import { useThunkClient } from 'hooks/thunk-hook'
-import { updateUser } from 'redux/userSlice'
-import { setMessage } from 'redux/alertSlice'
+import { useUserStore } from 'hooks/store/use-user-store'
+import { useAlertStore } from 'hooks/store/use-alert-store'
 import FormLayout from 'layouts/FormLayout'
-import UsernameForm from './components/UpdateUsernameForm'
+import SimpleForm from 'components/SimpleForm'
+import { TextField } from 'components/FormElements'
 
-// need to change loggedOut to auth instead of props
 const ChangeUsername = () => {
-  const dispatch = useDispatch()
-  const dispatchThunk = useThunkClient()
-  const { user, updateStatus } = useSelector(state => state.user)
-  const history = useHistory()
+  const { user, status, updateStatus, updateUser } = useUserStore()
+  const { setMessage } = useAlertStore()
+  const [initialValues, setInitialValues] = useState({
+    username: '',
+  })
 
-  const handleSubmit = async ({ values, resetForm }) => {
-    try {
-      await dispatchThunk({
-        thunk: updateUser,
-        inputs: values,
+  console.log(updateStatus)
+
+  useEffect(() => {
+    if (status === 'succeeded') {
+      setInitialValues({
+        username: user.username,
       })
-      dispatch(setMessage({ message: 'Username successfully updated.' }))
-      history.goBack()
+    }
+  }, [status, user.username])
+
+  const validationSchema = Yup.object({
+    username: Yup.string()
+      .min(6, 'Username must be at least 6 characters long')
+      .max(30, 'Username must be no longer than 30 characters')
+      .matches(
+        /^[a-z0-9_.]*$/,
+        'Username must only contain lowercase characters a-z, numbers, . and _'
+      )
+      .matches(
+        /^(?!.*?\.\.).*?$/,
+        'Username cannot contain two consecutive (.)'
+      )
+      .matches(/^((?!\.).*(?!\.))$/, 'Username cannot start or end with (.)')
+      .required('Required'),
+  })
+
+  const handleSubmit = async (values, actions) => {
+    try {
+      console.log('submitting')
+      await updateUser({ ...values })
+      setMessage({ message: 'Your username has been updated.' })
     } catch (err) {
       console.log(err)
-      resetForm()
+      actions.resetForm()
     }
   }
 
@@ -44,11 +66,14 @@ const ChangeUsername = () => {
         </>
       }
     >
-      <UsernameForm
-        username={user.username}
+      <SimpleForm
         onSubmit={handleSubmit}
-        isLoading={updateStatus === 'loading'}
-      />
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        status={updateStatus}
+      >
+        <TextField name="username" label="Username" />
+      </SimpleForm>
     </FormLayout>
   )
 }

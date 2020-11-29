@@ -1,17 +1,31 @@
 import React, { useContext } from 'react'
 import { Link as RouterLink, useHistory } from 'react-router-dom'
 import { Typography, Link } from '@material-ui/core'
+import * as Yup from 'yup'
 
 import { AuthContext } from 'contexts/auth-context'
 import { useRequest } from 'hooks/use-request'
 import FormLayout from 'layouts/FormLayout'
 import { BarRow } from 'components/CardSections'
-import LoginForm from './components/SignInForm'
+import { TextField } from 'components/FormElements'
+import SimpleForm from 'components/SimpleForm'
 
 const SignIn = () => {
   const auth = useContext(AuthContext)
-  const { isLoading, request } = useRequest()
+  const { status, request } = useRequest()
   const history = useHistory()
+
+  const initialValues = {
+    email: '',
+    password: '',
+  }
+
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email('Please provide your email address.')
+      .required('Required'),
+    password: Yup.string().required('Required'),
+  })
 
   const handleSubmit = async values => {
     try {
@@ -49,7 +63,27 @@ const SignIn = () => {
         </Typography>
       }
     >
-      <LoginForm onSubmit={handleSubmit} isLoading={isLoading} />
+      <SimpleForm
+        onSubmit={handleSubmit}
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        status={status}
+      >
+        <TextField
+          name="email"
+          label="Email"
+          type="text"
+          autocapitalize="none"
+          autocorrect="off"
+        />
+        <TextField
+          name="password"
+          label="Password"
+          type="password"
+          autocapitalize="none"
+          autocorrect="off"
+        />
+      </SimpleForm>
     </FormLayout>
   )
 }

@@ -8,13 +8,13 @@ export const useUserStore = () => {
   const dispatch = useDispatch()
   const dispatchThunk = useThunk()
 
-  const _fetchUser = useCallback(() => {
-    dispatchThunk(fetchUser)
+  const _fetchUser = useCallback(async () => {
+    await dispatchThunk(fetchUser)
   }, [dispatchThunk])
 
   const _updateUser = useCallback(
-    updates => {
-      dispatchThunk(updateUser, { ...updates })
+    async updates => {
+      await dispatchThunk(updateUser, { ...updates })
     },
     [dispatchThunk]
   )
@@ -23,19 +23,24 @@ export const useUserStore = () => {
     dispatch(clearUser)
   }, [dispatch])
 
-  const { imageUrl, scan, error, status, foundPiece, scanToken } = useSelector(
-    state => state.user
-  )
+  const {
+    user,
+    status,
+    updateStatus,
+    error,
+    scanRoute,
+    locationHistory,
+  } = useSelector(state => state.user)
 
   return {
     fetchUser: _fetchUser,
     updateUser: _updateUser,
     clearUser: _clearUser,
-    imageUrl,
-    scan,
-    error,
+    user,
     status,
-    foundPiece,
-    scanToken,
+    updateStatus,
+    error,
+    scanRoute,
+    locationHistory,
   }
 }

@@ -38,7 +38,7 @@ export const useRequest = () => {
           reqCtrl => reqCtrl.token !== source.token
         )
 
-        setStatus('success')
+        setStatus('succeeded')
         return response
       } catch (err) {
         dispatch(

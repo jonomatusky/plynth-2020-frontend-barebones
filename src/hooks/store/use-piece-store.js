@@ -14,27 +14,27 @@ export const usePieceStore = () => {
   const dispatch = useDispatch()
   const dispatchThunk = useThunk()
 
-  const _fetchPieces = useCallback(() => {
-    dispatchThunk(fetchPieces)
+  const _fetchPieces = useCallback(async () => {
+    await dispatchThunk(fetchPieces)
   }, [dispatchThunk])
 
   const _createPiece = useCallback(
-    piece => {
-      dispatchThunk(createPiece, piece)
+    async piece => {
+      await dispatchThunk(createPiece, piece)
     },
     [dispatchThunk]
   )
 
   const _updatePiece = useCallback(
-    ({ id, piece }) => {
-      dispatchThunk(updatePiece, { id, ...piece })
+    async ({ id, piece }) => {
+      await dispatchThunk(updatePiece, { id, ...piece })
     },
     [dispatchThunk]
   )
 
   const _deletPiece = useCallback(
-    ({ id }) => {
-      dispatchThunk(deletePiece, { id })
+    async ({ id }) => {
+      await dispatchThunk(deletePiece, { id })
     },
     [dispatchThunk]
   )
