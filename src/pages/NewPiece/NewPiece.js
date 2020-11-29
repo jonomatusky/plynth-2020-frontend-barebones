@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+// import { useSelector } from 'react-redux'
 
-import { useThunkClient } from 'hooks/thunk-hook'
-import { createPiece } from 'redux/piecesSlice'
+import { usePieceStore } from 'hooks/store/use-piece-store'
+// import { createPiece } from 'redux/piecesSlice'
 import FormLayout from 'layouts/FormLayout'
 import PieceForm from 'components/PieceForm'
 import { BarRow } from 'components/CardSections'
 import NotificationModal from 'components/NotificationModal'
 
 const NewPiece = () => {
-  const dispatchThunk = useThunkClient()
+  const { createPiece, newPieceImage, createStatus } = usePieceStore()
   const [confirmationModalIsOpen, setConfirmationModalIsOpen] = useState(false)
   const [formValues, setFormValues] = useState({})
-  const { createStatus } = useSelector(state => state.pieces)
-  const { newPieceImage } = useSelector(state => state.pieces)
+
   const history = useHistory()
 
   useEffect(() => {
@@ -25,10 +24,7 @@ const NewPiece = () => {
 
   const handleSubmit = async () => {
     try {
-      const piece = await dispatchThunk({
-        thunk: createPiece,
-        inputs: formValues,
-      })
+      const piece = await createPiece(formValues)
       history.push({
         pathname: `/admin/pieces/${piece.id}`,
         state: { referrer: `/admin/pieces` },

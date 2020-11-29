@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
 import { Button } from '@material-ui/core'
 
-import { useThunkClient } from 'hooks/thunk-hook'
-import { setMessage } from 'redux/alertSlice'
-import { selectPiece, updatePiece, deletePiece } from 'redux/piecesSlice'
+import { usePieceStore } from 'hooks/store/use-piece-store'
+import { useAlertStore } from 'hooks/store/use-alert-store'
 import LoadingSpinner from 'components/LoadingSpinner'
 import NotificationModal from 'components/NotificationModal'
 import NotFound from 'layouts/NotFound'
@@ -14,23 +12,23 @@ import { BarRow } from 'components/CardSections'
 import FormLayout from 'layouts/FormLayout'
 
 const UpdatePiece = () => {
-  const dispatch = useDispatch()
+  const {
+    selectPiece,
+    updatePiece,
+    deletePiece,
+    status,
+    updateStatus,
+  } = usePieceStore()
+  const { setMessage } = useAlertStore()
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
   const pieceId = useParams().pieceId
-  const piece = useSelector(state => selectPiece(state, pieceId))
-
-  const dispatchThunk = useThunkClient()
-  const { status, updateStatus } = useSelector(state => state.pieces)
+  const piece = selectPiece(pieceId)
 
   const history = useHistory()
 
   const handleSubmit = async values => {
     try {
-      await dispatchThunk({
-        thunk: updatePiece,
-        inputs: { id: pieceId, ...values },
-      })
-      // dispatch(setMessage({ message: 'Your piece has been updated.' }))
+      await updatePiece({ id: pieceId, ...values })
       history.goBack()
     } catch (err) {
       console.log(err)
@@ -39,11 +37,8 @@ const UpdatePiece = () => {
 
   const handleDelete = async () => {
     try {
-      await dispatchThunk({
-        thunk: deletePiece,
-        inputs: { id: pieceId },
-      })
-      dispatch(setMessage({ message: 'Your piece has been deleted.' }))
+      await deletePiece({ id: pieceId })
+      setMessage({ message: 'Your piece has been deleted.' })
       history.push(`/admin/pieces`)
     } catch (err) {
       console.log(err)

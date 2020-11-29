@@ -1,17 +1,16 @@
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
 import { Grid, Fab, Typography, Button } from '@material-ui/core'
-
-import { setNewPieceImage } from '../../redux/piecesSlice'
-import ImageCropper from '../../components/ImageCropper'
 import AddAPhotoIcon from '@material-ui/icons/AddAPhoto'
-import CenteredGrid from '../../layouts/CenteredGrid'
-import ImagePicker from '../../components/ImagePicker'
+
+import { usePieceStore } from 'hooks/store/use-piece-store'
+import ImageCropper from '../../components/ImageCropper'
+import CenteredGrid from 'layouts/CenteredGrid'
+import ImagePicker from 'components/ImagePicker'
 
 const PieceImageCrop = () => {
+  const { setNewPieceImage } = usePieceStore()
   const history = useHistory()
-  const dispatch = useDispatch()
   const [imageSrc, setImageSrc] = useState(null)
 
   const setUploadMode = () => {
@@ -24,7 +23,7 @@ const PieceImageCrop = () => {
 
   const handleSubmit = async response => {
     try {
-      dispatch(setNewPieceImage(response.imageFilepath))
+      setNewPieceImage(response.imageFilepath)
       history.push('/admin/create/piece')
     } catch (err) {}
   }

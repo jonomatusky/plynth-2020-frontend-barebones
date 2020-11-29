@@ -39,7 +39,7 @@ const ImageCropper = props => {
   const classes = useStyles()
   const resizeImage = useImageResize()
   const { setError } = useAlertStore()
-  const { isLoading, request } = useRequest()
+  const { status, request } = useRequest()
 
   const [crop, setCrop] = useState({ x: 0, y: 0 })
   const [zoom, setZoom] = useState(1)
@@ -96,7 +96,7 @@ const ImageCropper = props => {
           />
           <ActionButton
             onClick={submitHandler}
-            loading={isLoading}
+            loading={status === 'loading'}
             label={`Accept`}
             fullWidth={false}
           />

@@ -32,7 +32,7 @@ const UserProfile = props => {
   const classes = useStyles()
   let { scanToken } = useSelector(state => state.scan)
   const { sendLog } = useLogClient()
-  const { isLoading, request } = useRequest()
+  const { status, request } = useRequest()
   const [user, setUser] = useState()
   const username = useParams().username
 
@@ -73,9 +73,8 @@ const UserProfile = props => {
 
   return (
     <>
-      {!user && !isLoading && <NotFound />}
-
-      {user && !isLoading && (
+      {!user && status !== 'loading' && <NotFound />}
+      {user && status === 'succeeded' && (
         <Container maxWidth="xs">
           <Grid container justify="flex-start" direction="column">
             <Box height="1.5rem"></Box>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useSelector } from 'react-redux'
 import * as Yup from 'yup'
 import { useHistory } from 'react-router-dom'
@@ -10,7 +10,6 @@ import { useLogClient } from 'hooks/log-hook'
 
 import { TextField } from 'components/FormElements'
 import FormLayout from 'layouts/FormLayout'
-import { useAlertStore } from 'hooks/store/use-alert-store'
 import SimpleForm from 'components/SimpleForm'
 
 const BetaSignup = () => {

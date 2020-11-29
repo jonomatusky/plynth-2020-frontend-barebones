@@ -1,15 +1,14 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Grid, Box } from '@material-ui/core'
-import { Formik, Form } from 'formik'
+import { Box } from '@material-ui/core'
 import * as Yup from 'yup'
 
 import { AuthContext } from 'contexts/auth-context'
 import { useRequest } from 'hooks/use-request'
 import FormLayout from 'layouts/FormLayout'
-import ActionButton from 'components/ActionButton'
 import { BarRow } from 'components/CardSections'
 import { TextField } from 'components/FormElements'
+import SimpleForm from 'components/SimpleForm'
 
 const title = 'Create an Account'
 
@@ -48,7 +47,7 @@ const validationSchema = Yup.object({
 const UserSignup1 = ({ values }) => {
   const auth = useContext(AuthContext)
   const history = useHistory()
-  const { isLoading, request } = useRequest()
+  const { status, request } = useRequest()
 
   const handleSubmit = async values => {
     try {
@@ -77,60 +76,34 @@ const UserSignup1 = ({ values }) => {
         />
       }
     >
-      <Formik
-        enableReinitialize="true"
+      <SimpleForm
+        onSubmit={handleSubmit}
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={handleSubmit}
+        status={status}
       >
-        {({ values }) => (
-          <Form>
-            <Grid container direction="column" spacing={1}>
-              <Grid item>
-                <TextField name="email" label="Email" type="email" />
-              </Grid>
-              <Grid item>
-                <TextField
-                  name="username"
-                  label={`Username (plynth.com/${
-                    values.username || 'username'
-                  })`}
-                  autoCorrect="off"
-                  autoCapitalize="none"
-                />
-              </Grid>
-              <Box height="1rem"></Box>
-              <Grid item>
-                <TextField name="password" label="Password" type="password" />
-              </Grid>
-              <Grid item>
-                <TextField
-                  name="passwordConfirmation"
-                  label="Confirm Password"
-                  type="password"
-                />
-              </Grid>
-              <Box height="1rem"></Box>
-              <Grid item>
-                <TextField
-                  name="signupKey"
-                  label="Access Code"
-                  autoCorrect="off"
-                  autoCapitalize="none"
-                />
-              </Grid>
-              <Box height="1.5rem"></Box>
-              <Grid item>
-                <ActionButton
-                  type="submit"
-                  label="Create Account"
-                  loading={isLoading}
-                />
-              </Grid>
-            </Grid>
-          </Form>
-        )}
-      </Formik>
+        <TextField name="email" label="Email" type="email" />
+        <TextField
+          name="username"
+          label={`Username (plynth.com/${values.username || 'username'})`}
+          autoCorrect="off"
+          autoCapitalize="none"
+        />
+        <Box height="1rem"></Box>
+        <TextField name="password" label="Password" type="password" />
+        <TextField
+          name="passwordConfirmation"
+          label="Confirm Password"
+          type="password"
+        />
+        <Box height="1rem"></Box>
+        <TextField
+          name="signupKey"
+          label="Access Code"
+          autoCorrect="off"
+          autoCapitalize="none"
+        />
+      </SimpleForm>
     </FormLayout>
   )
 }

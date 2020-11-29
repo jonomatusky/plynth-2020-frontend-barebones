@@ -20,13 +20,14 @@ export const usePieceStore = () => {
 
   const _createPiece = useCallback(
     async piece => {
-      await dispatchThunk(createPiece, piece)
+      const newPiece = await dispatchThunk(createPiece, piece)
+      return newPiece
     },
     [dispatchThunk]
   )
 
   const _updatePiece = useCallback(
-    async ({ id, piece }) => {
+    async ({ id, ...piece }) => {
       await dispatchThunk(updatePiece, { id, ...piece })
     },
     [dispatchThunk]
@@ -55,12 +56,17 @@ export const usePieceStore = () => {
     createStatus,
   } = useSelector(state => state.pieces)
 
+  const selectPiece = pieceId => {
+    return (pieces || []).find(piece => piece.id === pieceId)
+  }
+
   return {
     fetchPieces: _fetchPieces,
     createPiece: _createPiece,
     updatePiece: _updatePiece,
     deletePiece: _deletPiece,
     setNewPieceImage: _setPieceImage,
+    selectPiece,
     pieces,
     newPieceImage,
     status,

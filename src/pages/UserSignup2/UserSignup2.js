@@ -1,12 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useSelector } from 'react-redux'
 import { Grid, Box } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
-import { useThunkClient } from 'hooks/thunk-hook'
-import { updateUser } from 'redux/userSlice'
+import { useUserStore } from 'hooks/store/use-user-store'
 import FormLayout from 'layouts/FormLayout'
 import ActionButton from 'components/ActionButton'
 import AvatarInput from 'components/AvatarInput'
@@ -16,17 +14,24 @@ import LinkList from 'components/LinkList'
 
 const title = 'Add Your Info'
 
-const UserSignup2 = ({ values }) => {
-  const dispatchThunk = useThunkClient()
-  const { user, updateStatus } = useSelector(state => state.user)
+const UserSignup2 = () => {
+  const { user, updateStatus, updateUser } = useUserStore()
   const history = useHistory()
-
-  const initialValues = {
-    avatar: user.avatar || '',
-    displayName: user.displayName || '',
-    bio: user.bio || '',
-    links: user.links || [],
+  const [initialValues, setInitialValues] = {
+    avatar: '',
+    displayName: '',
+    bio: '',
+    links: [],
   }
+
+  useEffect(() => {
+    setInitialValues({
+      avatar: user.avatar,
+      displayName: user.displayName,
+      bio: user.bio,
+      links: user.links,
+    })
+  }, [user, setInitialValues])
 
   const validationSchema = Yup.object({
     avatar: Yup.string(),
@@ -48,14 +53,9 @@ const UserSignup2 = ({ values }) => {
 
   const handleSubmit = async values => {
     try {
-      await dispatchThunk({
-        thunk: updateUser,
-        inputs: values,
-      })
+      await updateUser(values)
       history.push('/admin/get-started/success')
-    } catch (err) {
-      console.log(err)
-    }
+    } catch (err) {}
   }
 
   const handleCancel = () => {
