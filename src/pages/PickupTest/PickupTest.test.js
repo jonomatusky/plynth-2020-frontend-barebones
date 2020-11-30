@@ -4,7 +4,7 @@ import { Provider } from 'react-redux'
 import configureStore from 'redux-mock-store'
 import { BrowserRouter as Router } from 'react-router-dom'
 
-import PickupStart from './PickupStart'
+import PickupStart from './PickupTest'
 
 describe('With React Testing Library', () => {
   const initialState = {}

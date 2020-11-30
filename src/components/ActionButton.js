@@ -8,6 +8,8 @@ import theme from '../theme'
 const StyledButton = styled(Button)`
   border-radius: 0;
   padding: 0.6em;
+  padding-right: 1.5rem;
+  padding-left: 1.5rem;
   background-image: linear-gradient(
     90deg,
     ${theme.palette.primary.main},
@@ -28,7 +30,7 @@ const ActionButton = props => {
     return (
       <Button
         color={'default'}
-        fullWidth={fullWidth || true}
+        fullWidth={fullWidth === false ? false : true}
         variant={variant}
         onClick={onClick}
         {...other}
@@ -44,7 +46,7 @@ const ActionButton = props => {
     return (
       <StyledButton
         color={variant && variant === 'text' ? 'default' : 'primary'}
-        fullWidth={fullWidth || true}
+        fullWidth={fullWidth === false ? false : true}
         variant={variant || 'contained'}
         disableRipple={props.loading}
         onClick={!loading ? onClick : null}

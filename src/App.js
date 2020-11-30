@@ -35,8 +35,9 @@ import UpdateUsername from 'pages/UserUpdateUsername/UserUpdateUsername'
 import RecoverPassword from 'pages/RecoverPassword/RecoverPassword'
 import ResetPassword from 'pages/ResetPassword/ResetPassword'
 import ContactSupport from 'pages/UserContactSupport/ContactSupport'
-import NewScan from 'pages/PickupStart/PickupStart'
+import NewScan from 'pages/PickupTest/PickupTest'
 import ScanLoadingScreen from 'components/ScanLoadingScreen'
+import Home from 'pages/Home/Home'
 
 import ErrorBar from 'components/ErrorBar'
 import MessageBar from 'components/MessageBar'
@@ -97,13 +98,7 @@ const App = () => {
 
   routes = (
     <Switch>
-      <Route
-        publicRoute={true}
-        restricted={true}
-        component={NewScan}
-        path="/"
-        exact
-      />
+      <Route publicRoute={true} component={Home} path="/" exact />
 
       <Route
         publicRoute={true}
