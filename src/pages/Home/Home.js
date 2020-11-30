@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import {
   Grid,
   Typography,
@@ -10,8 +10,6 @@ import {
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import styled from 'styled-components'
 import { HashLink } from 'react-router-hash-link'
-
-import { AuthContext } from 'contexts/auth-context'
 
 import theme from 'theme'
 import InfoBar from './components/InfoBar'
@@ -59,11 +57,11 @@ const CardImage = styled(AppImage)`
   transform: rotate(-20deg);
 `
 
-const SmoothHashLink = props => <HashLink smooth {...props} />
+const SmoothHashLink = React.forwardRef((props, ref) => (
+  <HashLink smooth innerRef={ref} {...props} />
+))
 
 const Home = () => {
-  const auth = useContext(AuthContext)
-
   return (
     <>
       <Container disableGutters maxWidth={false}>
@@ -76,11 +74,9 @@ const Home = () => {
             wrap="nowrap"
             style={{ height: '100vh' }}
           >
-            {auth.authStatus !== 'authenticated' && (
-              <Grid item>
-                <InfoBar />
-              </Grid>
-            )}
+            <Grid item>
+              <InfoBar />
+            </Grid>
             <Grid item>
               <Grid container direction="column">
                 <Grid item>
@@ -119,7 +115,7 @@ const Home = () => {
 
       <Container disableGutters maxWidth={false}>
         <SectionLight id="about">
-          <Grid container justify="center" maxWidth="md">
+          <Grid container justify="center">
             <Grid item xs={8}>
               <Grid container direction="column" align="center">
                 <Box height="5rem" />
@@ -229,7 +225,6 @@ const Home = () => {
             justify="center"
             alignItems="center"
             alignContent="center"
-            maxWidth="md"
           >
             <Grid item xs={10}>
               <Box height="3rem" />
@@ -293,7 +288,7 @@ const Home = () => {
         </SectionDark>
         {/* For Artists */}
         <SectionLight id="for-creators">
-          <Grid container justify="center" maxWidth="md">
+          <Grid container justify="center">
             <Grid item xs={10}>
               <Box height="4rem" />
               <Grid container>
