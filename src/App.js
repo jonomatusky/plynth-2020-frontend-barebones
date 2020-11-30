@@ -38,6 +38,8 @@ import ContactSupport from 'pages/UserContactSupport/ContactSupport'
 import NewScan from 'pages/PickupTest/PickupTest'
 import ScanLoadingScreen from 'components/ScanLoadingScreen'
 import Home from 'pages/Home/Home'
+import SignupCreator from 'pages/SignupCreator/SignupCreator'
+import SignupFan from 'pages/SignupFan/SignupFan'
 
 import ErrorBar from 'components/ErrorBar'
 import MessageBar from 'components/MessageBar'
@@ -105,6 +107,20 @@ const App = () => {
         restricted={true}
         component={SignIn}
         path="/login"
+        exact
+      />
+
+      <Route
+        publicRoute={true}
+        component={SignupCreator}
+        path="/s/signup/creators"
+        exact
+      />
+
+      <Route
+        publicRoute={true}
+        component={SignupFan}
+        path="/s/signup/fans"
         exact
       />
 

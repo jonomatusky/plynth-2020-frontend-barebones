@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link as RouterLink } from 'react-router-dom'
 import {
   Grid,
   Typography,
@@ -12,6 +13,7 @@ import styled from 'styled-components'
 import { HashLink } from 'react-router-hash-link'
 
 import theme from 'theme'
+import { SectionLight, SectionDark } from 'layouts/PageSections'
 import InfoBar from './components/InfoBar'
 import PickupButton from 'components/PickupButton'
 import appImage from 'images/plynth_matchbook.png'
@@ -27,18 +29,6 @@ const StyledBox = styled(Box)`
     ${theme.palette.primary.main}00
   );
   height: 100vh;
-`
-
-const SectionLight = styled(Box)`
-  heigh: 100%;
-  width: 100%;
-  color: ${theme.palette.background.default};
-  background-color: white;
-`
-
-const SectionDark = styled(SectionLight)`
-  color: white;
-  background-color: ${theme.palette.background.card};
 `
 
 const AppImage = styled.img`
@@ -274,7 +264,8 @@ const Home = () => {
                     </Grid>
                     <Grid item>
                       <ActionButton
-                        onClick={() => {}}
+                        component={RouterLink}
+                        to="/s/signup/fans"
                         label="Sign Up"
                         fullWidth={false}
                       />
@@ -291,8 +282,8 @@ const Home = () => {
           <Grid container justify="center">
             <Grid item xs={10}>
               <Box height="4rem" />
-              <Grid container>
-                <Grid item xs={12} sm={7}>
+              <Grid container justify="space-around">
+                <Grid item xs={12} sm={6}>
                   <Grid container direction="column" spacing={2}>
                     <Grid item>
                       <Box color={theme.palette.primary.main}>
@@ -351,8 +342,9 @@ const Home = () => {
                     </Grid>
                     <Grid item>
                       <ActionButton
-                        onClick={() => {}}
-                        label="Sign Up"
+                        component={RouterLink}
+                        to="/s/signup/creators"
+                        label="Get Access"
                         fullWidth={false}
                       />
                     </Grid>
