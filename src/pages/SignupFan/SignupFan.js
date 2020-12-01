@@ -1,16 +1,15 @@
 import React from 'react'
-import { useHistory } from 'react-router-dom'
 import { Container, Grid, Typography, Box } from '@material-ui/core'
 import styled from 'styled-components'
-import * as Yup from 'yup'
+import { PayPalButton } from 'react-paypal-button-v2'
 
-import { PieceBox, BarRow, BottomRow } from 'components/CardSections'
-import { useRequest } from 'hooks/use-request'
-import FormLayout from 'layouts/FormLayout'
-import SimpleForm from 'components/SimpleForm'
+import { useAuth } from 'hooks/auth-hook'
+import { PieceBox } from 'components/CardSections'
+
 import appImage from 'images/plynth_matchbook.png'
-import { TextField, TextArea } from 'components/FormElements'
+
 import { SectionLight } from 'layouts/PageSections'
+// import PayPalBtn from './components/PayPalBtn'
 
 export const AppImage = styled.img`
   height: 100%;
@@ -28,210 +27,188 @@ export const CardImage = styled(AppImage)`
   transform: rotate(-20deg);
 `
 
+const { REACT_APP_PAYPAL_CLIENT_ID } = process.env
+
+console.log(REACT_APP_PAYPAL_CLIENT_ID)
+
 const SignUp = () => {
-  const { status, request } = useRequest()
-  const history = useHistory()
+  const auth = useAuth()
 
-  const confirmationMessage = `Thanks for signing up! We'll reach out shortly to get you set up.`
+  // const handleClose = () => {
+  //   history.push('/')
+  // }
 
-  const handleSubmit = async values => {
-    try {
-      const { link, address, content, name, email } = values
+  // const paypalSubscribe = (data, actions) => {
+  //   return actions.subscription.create({
+  //     plan_id: '<plan-id>',
+  //   })
+  // }
 
-      const messageContent = `${content}<br/><br/>Link: ${link}<br/><br/>${
-        address ? `Send a postcard to: ` + address : ''
-      }`
+  // const paypalOnError = err => {
+  //   console.log('Error')
+  // }
 
-      const data = {
-        message: { name, email, content: messageContent, type: 'contact' },
-      }
-
-      await request({
-        url: `/messages`,
-        method: 'POST',
-        data,
-      })
-    } catch (err) {}
-  }
-
-  const handleClose = () => {
-    history.push('/')
-  }
-
-  const initialValues = {
-    name: '',
-    email: '',
-    link: '',
-    content: '',
-    address: '',
-  }
-
-  const validationSchema = Yup.object({
-    name: Yup.string().required('Required'),
-    email: Yup.string().email('Must be an email address').required('Required'),
-    link: Yup.string()
-      .url('Please paste in a link to your work')
-      .required('Required'),
-    content: Yup.string(),
-    address: Yup.string(),
-  })
+  // const paypalOnApprove = (data, detail) => {
+  //   // call the backend api to store transaction details
+  //   console.log('Payapl approved')
+  //   console.log(data.subscriptionID)
+  // }
 
   return (
-    <>
-      <Container disableGutters maxWidth={false}>
-        <SectionLight>
-          <Grid container justify="center">
-            <Grid item xs={12}>
-              <Grid
-                container
-                direction="column"
-                justify="center"
-                alignContent="center"
-                alignItems="center"
-                style={{ minHeight: '100vh' }}
-              >
-                <Box height="3rem" />
-                <Grid item>
-                  <Grid container justify="center">
-                    <Grid xs={10}>
-                      <Typography variant="h3" align="center">
-                        <b>Get a Postacard Mixtape</b>
-                      </Typography>
-                      <Box mb={2}></Box>
-                    </Grid>
+    <Container disableGutters maxWidth={false}>
+      <SectionLight>
+        <Grid container justify="center">
+          <Grid item xs={12}>
+            <Grid
+              container
+              direction="column"
+              justify="center"
+              alignContent="center"
+              alignItems="center"
+              style={{ minHeight: '100vh' }}
+            >
+              <Box height="3rem" />
+              <Grid item>
+                <Grid container justify="center">
+                  <Grid item xs={10}>
+                    <Typography variant="h3" align="center">
+                      <b>Get a Postacard Mixtape</b>
+                    </Typography>
+                    <Box mb={2}></Box>
                   </Grid>
                 </Grid>
-                <Grid item>
-                  <Grid container justify="center">
-                    <Grid xs={8}>
-                      <Typography align="center">
-                        A whole new way to discover music. Get a new postcard
-                        delivered to your door every month. Use the Plynth app
-                        to unlock an exclusive mixtape featuring tracks from 10+
-                        amazing artists. Collect and keep 'em forever.
-                      </Typography>
-                    </Grid>
+              </Grid>
+              <Grid item>
+                <Grid container justify="center">
+                  <Grid item xs={8}>
+                    <Typography align="center">
+                      A whole new way to discover music. Get a new postcard
+                      delivered to your door every month. Use the Plynth app to
+                      unlock an exclusive mixtape featuring tracks from 10+
+                      amazing artists. Collect and keep 'em forever.
+                    </Typography>
                   </Grid>
                 </Grid>
-                <Grid item>
-                  <Grid container justify="center">
-                    <Grid xs={8}>
-                      <Typography align="center">
-                        We're currently offering our Postcard mixtapes starting
-                        January 2021. Sign up now to get a FREE holiday postcard
-                        from the Plynth team.
-                      </Typography>
-                    </Grid>
+              </Grid>
+              <Grid item>
+                <Grid container justify="center">
+                  <Grid item xs={8}>
+                    <Typography align="center">
+                      We're currently offering our Postcard mixtapes starting
+                      January 2021. Sign up now to get a FREE holiday postcard
+                      from the Plynth team. Your credit card won't be charged
+                    </Typography>
                   </Grid>
                 </Grid>
-                <Grid item></Grid>
-                <Grid item>
-                  <Grid container justify="space-around">
-                    <Grid item md={1} sm={0}></Grid>
-                    <Grid item md={4} sm={7} xs={11}>
-                      <Grid container>
+              </Grid>
+              <Grid item>
+                <Grid container justify="space-around">
+                  <Grid item>
+                    <Grid item>
+                      <PieceBox container direction="column">
                         <Grid item>
-                          <Grid container direction="column" spacing={3}>
-                            <Grid item>
-                              {/* <Box color={theme.palette.primary.main}> */}
+                          <Grid container justify="center">
+                            <Grid item xs={11}>
+                              <Box height="1rem"></Box>
+                              {auth.authStatus !== 'loading' && (
+                                <PayPalButton
+                                  options={{
+                                    clientId: REACT_APP_PAYPAL_CLIENT_ID,
+                                    vault: true,
+                                    intent: 'subscription',
+                                  }}
+                                  createSubscription={(data, actions) => {
+                                    return actions.subscription.create({
+                                      plan_id: 'P-33Y03752RE9200540L7CYTQI',
+                                    })
+                                  }}
+                                  onApprove={(data, actions) => {
+                                    // Capture the funds from the transaction
+                                    return actions.subscription
+                                      .get()
+                                      .then(function (details) {
+                                        // Show a success message to your buyer
+                                        alert('Subscription completed')
 
-                              {/* </Box> */}
+                                        // OPTIONAL: Call your server to save the subscription
+                                        // return fetch('/paypal-subscription-complete', {
+                                        //   method: 'post',
+                                        //   body: JSON.stringify({
+                                        //     orderID: data.orderID,
+                                        //     subscriptionID: data.subscriptionID,
+                                        //   }),
+                                        // })
+                                      })
+                                  }}
+                                />
+                              )}
                             </Grid>
-                            <Grid item>
-                              <Typography>
-                                We’re opening up the Plynth app to a small group
-                                of beta users. Sign up below to try it out.
-                              </Typography>
-                            </Grid>
-                            <Grid item>
-                              <PieceBox container direction="column">
-                                <Grid item>
-                                  <Grid container justify="center">
-                                    <Grid item xs={11}>
-                                      <Box height="1rem"></Box>
-                                      <SimpleForm
-                                        onSubmit={handleSubmit}
-                                        onClose={handleClose}
-                                        initialValues={initialValues}
-                                        validationSchema={validationSchema}
-                                        confirmationMessage={
-                                          confirmationMessage
-                                        }
-                                        status={status}
-                                      >
-                                        <Box mb={1}>
-                                          <TextField
-                                            name="name"
-                                            label="Name*"
-                                          />
-                                        </Box>
-                                        <Box mb={1}>
-                                          <TextField
-                                            name="email"
-                                            label="Email*"
-                                            type="email"
-                                          />
-                                        </Box>
+                          </Grid>
+                        </Grid>
+                        <Box height="2rem"></Box>
+                      </PieceBox>
+                    </Grid>
+                  </Grid>
+                  <Grid item>
+                    <Grid container>
+                      <Grid item>
+                        <Grid container direction="column" spacing={3}>
+                          <Grid item>
+                            <PieceBox container direction="column">
+                              <Grid item>
+                                <Grid container justify="center">
+                                  <Grid item xs={11}>
+                                    <Box height="1rem"></Box>
+                                    {/* {auth.authStatus !== 'loading' && (
+                                      <PayPalButton
+                                        options={{
+                                          clientId: REACT_APP_PAYPAL_CLIENT_ID,
+                                          vault: true,
+                                          intent: 'subscription',
+                                        }}
+                                        createSubscription={(data, actions) => {
+                                          return actions.subscription.create({
+                                            plan_id:
+                                              'P-33Y03752RE9200540L7CYTQI',
+                                          })
+                                        }}
+                                        onApprove={(data, actions) => {
+                                          // Capture the funds from the transaction
+                                          return actions.subscription
+                                            .get()
+                                            .then(function (details) {
+                                              // Show a success message to your buyer
+                                              alert('Subscription completed')
 
-                                        <Box mb={1}>
-                                          <TextField
-                                            name="link"
-                                            label={
-                                              <>
-                                                Where can we find your work?*
-                                                <br /> (Spotify, Bandcamp,
-                                                Patreon, website URL)
-                                              </>
-                                            }
-                                            type="url"
-                                          />
-                                        </Box>
-                                        <Box mb={1}>
-                                          <TextField
-                                            name="content"
-                                            label="Message (optional)"
-                                          />
-                                        </Box>
-                                        <Box mb={1}>
-                                          <TextField
-                                            name="address"
-                                            label="Include your address and we'll send your a free Postard Mixtape to try it out in person!"
-                                          />
-                                        </Box>
-                                      </SimpleForm>
-                                    </Grid>
+                                              // OPTIONAL: Call your server to save the subscription
+                                              // return fetch('/paypal-subscription-complete', {
+                                              //   method: 'post',
+                                              //   body: JSON.stringify({
+                                              //     orderID: data.orderID,
+                                              //     subscriptionID: data.subscriptionID,
+                                              //   }),
+                                              // })
+                                            })
+                                        }}
+                                      />
+                                    )} */}
                                   </Grid>
                                 </Grid>
-                                <Box height="2rem"></Box>
-                                {/* <BottomRow container justify="center">
-                        {bottom}
-                      </BottomRow> */}
-                              </PieceBox>
-                            </Grid>
+                              </Grid>
+                              <Box height="2rem"></Box>
+                            </PieceBox>
                           </Grid>
                         </Grid>
                       </Grid>
                     </Grid>
-                    <Grid item md={1} sm={0}></Grid>
-                    <Grid item md={5} sm={12}>
-                      <Grid
-                        container
-                        direction="column"
-                        justify="center"
-                        style={{ height: '100%' }}
-                      >
-                        <AppImage src={appImage} />
-                      </Grid>
-                    </Grid>
-                    <Grid item md={1} sm={0}></Grid>
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </SectionLight>
-      </Container>
-    </>
+        </Grid>
+      </SectionLight>
+    </Container>
   )
 }
 
