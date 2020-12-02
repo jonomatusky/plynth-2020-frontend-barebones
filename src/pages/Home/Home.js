@@ -200,6 +200,7 @@ const Home = () => {
                 <Box height="5rem" />
                 <Grid item>
                   <Box mb={2}>
+                    p
                     <Typography variant="h3">
                       <b>
                         Bring Your Art to Life{' '}
@@ -354,7 +355,7 @@ const Home = () => {
                     <Grid item>
                       <ActionButton
                         component={RouterLink}
-                        to="/s/signup/potcard-mixtape"
+                        to="/s/signup/postcard-mixtape"
                         label="Sign Up"
                         fullWidth={false}
                       />
