@@ -1,10 +1,12 @@
 import React from 'react'
-import { useHistory } from 'react-router-dom'
-import { Container, Grid, Typography, Box } from '@material-ui/core'
+import { Link as RouterLink, useHistory, useLocation } from 'react-router-dom'
+import { Container, Grid, Typography, Box, Button } from '@material-ui/core'
+import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 import styled from 'styled-components'
 import * as Yup from 'yup'
 
 import { PieceBox, BarRow } from 'components/CardSections'
+import WebsiteNavBar from 'components/WebsiteNavBar'
 import { useRequest } from 'hooks/use-request'
 import SimpleForm from 'components/SimpleForm'
 import appImage from 'images/plynth_matchbook.png'
@@ -29,7 +31,7 @@ export const CardImage = styled(AppImage)`
 const SignUp = () => {
   const { status, request } = useRequest()
   const history = useHistory()
-
+  const location = useLocation()
   const confirmationMessage = `Thanks for signing up! We'll reach out shortly to get you set up.`
 
   const handleSubmit = async values => {
@@ -80,10 +82,46 @@ const SignUp = () => {
         <Grid
           container
           direction="column"
-          justify="center"
-          // style={{ height: '100vh' }}
+          justify="flex-start"
+          style={{ minHeight: '100vh' }}
         >
-          <Box height="3rem" />
+          <WebsiteNavBar
+            position="static"
+            left={
+              <Grid item xs={1}>
+                <Grid container justify="flex-start">
+                  <Grid item>
+                    <Button
+                      component={RouterLink}
+                      to="/"
+                      startIcon={<PhotoCameraIcon />}
+                      style={{ textTransform: 'none' }}
+                    >
+                      Home
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Grid>
+            }
+            right={
+              <Grid item xs={1}>
+                <Grid container justify="flex-end">
+                  <Grid item>
+                    <Button
+                      component={RouterLink}
+                      to={{
+                        pathname: '/admin/login',
+                        state: { referrer: location.pathname },
+                      }}
+                      style={{ textTransform: 'none' }}
+                    >
+                      Sign In
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Grid>
+            }
+          />
           <Grid item>
             <Grid container justify="space-around">
               <Grid item md={1} sm={0}></Grid>

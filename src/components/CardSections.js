@@ -88,6 +88,8 @@ export const BarRow = ({ title, buttonLabel, onClose, ...props }) => {
   const handleClose = event => {
     event.preventDefault()
 
+    console.log(location)
+
     const { referrer } = location.state || {}
 
     if (!!referrer) {

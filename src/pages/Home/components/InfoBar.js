@@ -10,7 +10,7 @@ import {
 
 import InfoIcon from '@material-ui/icons/Info'
 import { withStyles } from '@material-ui/core/styles'
-import plynthLogo from '../../../images/plynth-logo-white.png'
+import plynthLogo from 'images/plynth-logo-white.png'
 import styled from 'styled-components'
 import { HashLink } from 'react-router-hash-link'
 

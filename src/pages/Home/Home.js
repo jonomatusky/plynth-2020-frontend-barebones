@@ -28,7 +28,8 @@ const StyledBox = styled(Box)`
     ${theme.palette.primary.main}70,
     ${theme.palette.primary.main}00
   );
-  height: 100vh;
+  height: 100vh; /* Fallback for browsers that do not support Custom Properties */
+  height: calc(var(--vh, 1vh) * 100);
 `
 
 const AppImage = styled.img`
@@ -52,6 +53,10 @@ const SmoothHashLink = React.forwardRef((props, ref) => (
 ))
 
 const Home = () => {
+  let vh = window.innerHeight * 0.01
+
+  document.documentElement.style.setProperty('--vh', `${vh}px`)
+
   return (
     <>
       <Container disableGutters maxWidth={false}>
@@ -62,7 +67,7 @@ const Home = () => {
             align="center"
             justify="space-between"
             wrap="nowrap"
-            style={{ height: '100vh' }}
+            style={{ height: '100%' }}
           >
             <Grid item>
               <InfoBar />
@@ -390,7 +395,9 @@ const Home = () => {
             alignContent="center"
           >
             <Grid item>
+              <Box height="1rem" />
               <Typography variant="body2">Copyright © 2020 Plynth</Typography>
+              <Box height="1rem" />
             </Grid>
           </Grid>
         </SectionDark>

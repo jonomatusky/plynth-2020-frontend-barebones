@@ -41,14 +41,6 @@ const SignIn = () => {
   return (
     <FormLayout
       title="Log In"
-      bar={
-        <BarRow
-          onClick={() => {
-            history.push('/')
-          }}
-          buttonLabel={'Cancel X'}
-        />
-      }
       below={
         <Typography>
           {`Forgot your password? `}

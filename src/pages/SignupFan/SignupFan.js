@@ -1,214 +1,297 @@
-import React from 'react'
-import { Container, Grid, Typography, Box } from '@material-ui/core'
+import React, { useState } from 'react'
+import { Link as RouterLink, useLocation } from 'react-router-dom'
+import {
+  Container,
+  Grid,
+  Typography,
+  Box,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormControl,
+  FormLabel,
+  Hidden,
+  Button,
+} from '@material-ui/core'
 import styled from 'styled-components'
-import { PayPalButton } from 'react-paypal-button-v2'
+import { ThemeProvider } from '@material-ui/core/styles'
+import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 
-import { useAuth } from 'hooks/auth-hook'
-import { PieceBox } from 'components/CardSections'
+import Emoji from 'components/Emoji'
+import ActionButton from 'components/ActionButton'
+import theme, { lightTheme } from 'theme'
 
-import appImage from 'images/plynth_matchbook.png'
-
-import { SectionLight } from 'layouts/PageSections'
-// import PayPalBtn from './components/PayPalBtn'
+import { SectionLight, SectionDark } from 'layouts/PageSections'
+import cardImage from 'images/postcard_back.png'
+import WebsiteNavBar from 'components/WebsiteNavBar'
 
 export const AppImage = styled.img`
-  height: 100%;
-  max-height: 600px;
-  width: 100%;
+  max-height: 300px;
+  max-width: 100%;
   object-fit: contain;
   object-position: 50% 50%;
   display: block;
 `
 
 export const CardImage = styled(AppImage)`
-  width: 75%;
-  height: 80%;
-  padding: 20% 0;
+  margin: 20% 0%;
+  border: 1px solid #424242;
   transform: rotate(-20deg);
 `
 
-const { REACT_APP_PAYPAL_CLIENT_ID } = process.env
-
-console.log(REACT_APP_PAYPAL_CLIENT_ID)
+const paypal = {
+  monthly: { link: 'https://py.pl/fGOTI', label: 'Try 1 month for $5' },
+  annual: { link: 'https://py.pl/1FwDqe', label: 'Try 12 months for $36' },
+}
 
 const SignUp = () => {
-  const auth = useAuth()
+  const location = useLocation()
+  const [billing, setBilling] = useState('annual')
 
-  // const handleClose = () => {
-  //   history.push('/')
-  // }
+  let vh = window.innerHeight * 0.01
 
-  // const paypalSubscribe = (data, actions) => {
-  //   return actions.subscription.create({
-  //     plan_id: '<plan-id>',
-  //   })
-  // }
+  document.documentElement.style.setProperty('--vh', `${vh}px`)
 
-  // const paypalOnError = err => {
-  //   console.log('Error')
-  // }
-
-  // const paypalOnApprove = (data, detail) => {
-  //   // call the backend api to store transaction details
-  //   console.log('Payapl approved')
-  //   console.log(data.subscriptionID)
-  // }
+  const handleChange = event => {
+    setBilling(event.target.value)
+  }
 
   return (
-    <Container disableGutters maxWidth={false}>
-      <SectionLight>
-        <Grid container justify="center">
-          <Grid item xs={12}>
-            <Grid
-              container
-              direction="column"
-              justify="center"
-              alignContent="center"
-              alignItems="center"
-              style={{ minHeight: '100vh' }}
-            >
-              <Box height="3rem" />
-              <Grid item>
-                <Grid container justify="center">
-                  <Grid item xs={10}>
-                    <Typography variant="h3" align="center">
-                      <b>Get a Postacard Mixtape</b>
-                    </Typography>
-                    <Box mb={2}></Box>
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item>
-                <Grid container justify="center">
-                  <Grid item xs={8}>
-                    <Typography align="center">
-                      A whole new way to discover music. Get a new postcard
-                      delivered to your door every month. Use the Plynth app to
-                      unlock an exclusive mixtape featuring tracks from 10+
-                      amazing artists. Collect and keep 'em forever.
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item>
-                <Grid container justify="center">
-                  <Grid item xs={8}>
-                    <Typography align="center">
-                      We're currently offering our Postcard mixtapes starting
-                      January 2021. Sign up now to get a FREE holiday postcard
-                      from the Plynth team. Your credit card won't be charged
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item>
-                <Grid container justify="space-around">
-                  <Grid item>
+    <>
+      <ThemeProvider theme={lightTheme}>
+        <Container disableGutters maxWidth={false}>
+          <SectionLight
+            style={{ minHeight: '100vh', height: 'calc(var(--vh, 1vh) * 100)' }}
+          >
+            <WebsiteNavBar
+              position="static"
+              left={
+                <Grid item xs={1}>
+                  <Grid container justify="flex-start">
                     <Grid item>
-                      <PieceBox container direction="column">
-                        <Grid item>
-                          <Grid container justify="center">
-                            <Grid item xs={11}>
-                              <Box height="1rem"></Box>
-                              {auth.authStatus !== 'loading' && (
-                                <PayPalButton
-                                  options={{
-                                    clientId: REACT_APP_PAYPAL_CLIENT_ID,
-                                    vault: true,
-                                    intent: 'subscription',
-                                  }}
-                                  createSubscription={(data, actions) => {
-                                    return actions.subscription.create({
-                                      plan_id: 'P-33Y03752RE9200540L7CYTQI',
-                                    })
-                                  }}
-                                  onApprove={(data, actions) => {
-                                    // Capture the funds from the transaction
-                                    return actions.subscription
-                                      .get()
-                                      .then(function (details) {
-                                        // Show a success message to your buyer
-                                        alert('Subscription completed')
-
-                                        // OPTIONAL: Call your server to save the subscription
-                                        // return fetch('/paypal-subscription-complete', {
-                                        //   method: 'post',
-                                        //   body: JSON.stringify({
-                                        //     orderID: data.orderID,
-                                        //     subscriptionID: data.subscriptionID,
-                                        //   }),
-                                        // })
-                                      })
-                                  }}
-                                />
-                              )}
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                        <Box height="2rem"></Box>
-                      </PieceBox>
+                      <Button
+                        component={RouterLink}
+                        to="/"
+                        startIcon={<PhotoCameraIcon />}
+                        style={{ textTransform: 'none' }}
+                      >
+                        Home
+                      </Button>
                     </Grid>
                   </Grid>
-                  <Grid item>
-                    <Grid container>
-                      <Grid item>
-                        <Grid container direction="column" spacing={3}>
-                          <Grid item>
-                            <PieceBox container direction="column">
-                              <Grid item>
-                                <Grid container justify="center">
-                                  <Grid item xs={11}>
-                                    <Box height="1rem"></Box>
-                                    {/* {auth.authStatus !== 'loading' && (
-                                      <PayPalButton
-                                        options={{
-                                          clientId: REACT_APP_PAYPAL_CLIENT_ID,
-                                          vault: true,
-                                          intent: 'subscription',
-                                        }}
-                                        createSubscription={(data, actions) => {
-                                          return actions.subscription.create({
-                                            plan_id:
-                                              'P-33Y03752RE9200540L7CYTQI',
-                                          })
-                                        }}
-                                        onApprove={(data, actions) => {
-                                          // Capture the funds from the transaction
-                                          return actions.subscription
-                                            .get()
-                                            .then(function (details) {
-                                              // Show a success message to your buyer
-                                              alert('Subscription completed')
-
-                                              // OPTIONAL: Call your server to save the subscription
-                                              // return fetch('/paypal-subscription-complete', {
-                                              //   method: 'post',
-                                              //   body: JSON.stringify({
-                                              //     orderID: data.orderID,
-                                              //     subscriptionID: data.subscriptionID,
-                                              //   }),
-                                              // })
-                                            })
-                                        }}
-                                      />
-                                    )} */}
-                                  </Grid>
-                                </Grid>
-                              </Grid>
-                              <Box height="2rem"></Box>
-                            </PieceBox>
-                          </Grid>
+                </Grid>
+              }
+              right={
+                <Grid item xs={1}>
+                  <Grid container justify="flex-end">
+                    <Grid item>
+                      <Button
+                        component={RouterLink}
+                        to={{
+                          pathname: '/admin/login',
+                          state: { referrer: location.pathname },
+                        }}
+                        style={{ textTransform: 'none' }}
+                      >
+                        Sign In
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              }
+            />
+            <Grid container justify="center">
+              <Hidden smDown>
+                <Grid item xs={12}>
+                  <Box height={theme.spacing(8)} />
+                </Grid>
+              </Hidden>
+              <Hidden mdUp>
+                <Grid item xs={12}>
+                  <Box height={theme.spacing(2)} />
+                </Grid>
+              </Hidden>
+              <Grid item md={10} sm={8} xs={11}>
+                <Grid container justify="space-around" spacing={3}>
+                  <Grid item md={5} xs={11}>
+                    <Grid container spacing={2} justify="center">
+                      <Grid item xs={12}>
+                        {/* <Box color={theme.palette.primary.main}> */}
+                        <Typography variant="h3">
+                          <b>Join the Club </b>
+                          <Emoji symbol="📬" label="mailbox" />
+                        </Typography>
+                        {/* </Box> */}
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography>
+                          Get a new <b>Postcard Mixtape</b> delivered monthly,
+                          <b> starting at $3/month</b>. Scan each postcard on
+                          the Plynth app to <b>unlock an exclusive playlist</b>{' '}
+                          <Emoji symbol="✨" label="sparkle" />
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography>
+                          <i>
+                            Subscriptions start in January. Sign up by December
+                            25th to get a free <b>Plynth Holiday Postcard</b>.
+                          </i>
+                        </Typography>
+                      </Grid>
+                      <Hidden smDown>
+                        <Grid item md={8}>
+                          <CardImage src={cardImage} alt="App image" />
                         </Grid>
+                      </Hidden>
+                    </Grid>
+                  </Grid>
+                  <Grid item md={5} xs={11}>
+                    <Grid
+                      container
+                      justify="center"
+                      style={{
+                        border: `2px solid ${theme.palette.secondary.main}`,
+                        padding: theme.spacing(3),
+                      }}
+                    >
+                      <Grid item sm={11} xs={12}>
+                        <Box mb="0.5rem">
+                          <Typography
+                            align="center"
+                            variant="h6"
+                            color="primary"
+                          >
+                            <b>Try Your First Postcard Mixtape</b>
+                          </Typography>
+                        </Box>{' '}
+                      </Grid>
+                      <Grid item sm={11} xs={12}>
+                        <Box height="0.5rem" />
+                      </Grid>
+                      <Grid item sm={11} xs={12}>
+                        <Box mb="0.5rem">
+                          <Typography align="center">
+                            <b>– Sign up to receive –</b>
+                          </Typography>
+                        </Box>
+                        <Box mb="0.5rem">
+                          <Typography>
+                            <Emoji symbol="📬" label="handshake" /> A new
+                            postcard in the mail every month
+                          </Typography>
+                        </Box>
+                        <Box mb="0.5rem">
+                          <Typography>
+                            <Emoji symbol="🎧" label="handshake" /> Linked to an
+                            exclusive mixtape
+                          </Typography>
+                        </Box>
+                        <Box mb="0.5rem">
+                          <Typography>
+                            <Emoji symbol="👨‍🎤" label="headphones" />
+                            {'  '}Featuring 10+ awesome artists
+                          </Typography>
+                        </Box>
+                        <Box mb="0.5rem">
+                          <Typography>
+                            <Emoji symbol="🔑" label="handshake" />
+                            {'  '}Unlockable only with the Plynth web app
+                          </Typography>
+                        </Box>
+                        <Box mb="0.5rem">
+                          <Typography>
+                            <Emoji symbol="🖼" label="crystal-ball" />
+                            {'  '}Collect and keep forever
+                          </Typography>
+                        </Box>
+                        <Box mb="0.5rem">
+                          <Typography>
+                            <Emoji symbol="❌" label="cd" />
+                            {'  '}Cancel anytime
+                          </Typography>
+                        </Box>
+                      </Grid>
+                      <Grid item sm={11} xs={12}>
+                        <Box height="0.5rem" />
+                      </Grid>
+                      <Grid item sm={11} xs={12}>
+                        <FormControl component="fieldset" margin="normal">
+                          <FormLabel component="legend">
+                            Choose your subscription:
+                          </FormLabel>
+                          <Box height="0.5rem" />
+
+                          <RadioGroup
+                            aria-label="billing"
+                            name="billing1"
+                            value={billing}
+                            onChange={handleChange}
+                          >
+                            <FormControlLabel
+                              value="annual"
+                              control={<Radio color="primary" />}
+                              label={
+                                <Typography>
+                                  <b>$3/month</b>, billed annually ($36 per
+                                  year)
+                                </Typography>
+                              }
+                            />
+                            <FormControlLabel
+                              value="monthly"
+                              control={<Radio color="primary" />}
+                              label={
+                                <Typography>
+                                  <b>$5/month</b>, billed monthly ($60 per year)
+                                </Typography>
+                              }
+                            />
+                          </RadioGroup>
+                        </FormControl>
+                      </Grid>
+                      <Grid item sm={11} xs={12}>
+                        <Box height="1rem" />
+                      </Grid>
+                      <Grid item sm={11} xs={12}>
+                        <ActionButton
+                          style={{
+                            paddingRight: '1rem',
+                            paddingLeft: '1rem',
+                          }}
+                          href={paypal[billing].link}
+                          label={paypal[billing].label}
+                          target="_blank"
+                        />
+                      </Grid>
+                      <Grid item sm={11} xs={12}>
+                        <Box height="0.5rem" />
+                      </Grid>
+                      <Grid item sm={11} xs={10}>
+                        <Typography align="center" variant="body2">
+                          <i>
+                            Pay via Paypal, credit or debit. First payment will
+                            be for $0 to authorize card.
+                          </i>
+                        </Typography>
                       </Grid>
                     </Grid>
                   </Grid>
+                  {/* <Hidden mdUp>
+                  <Grid item xs={10}>
+                    <CardImage src={cardImage} alt="App image" />
+                  </Grid>
+                </Hidden> */}
                 </Grid>
               </Grid>
+              <Grid item xs={12}>
+                <Box height={theme.spacing(4)} />
+              </Grid>
             </Grid>
-          </Grid>
-        </Grid>
-      </SectionLight>
-    </Container>
+          </SectionLight>
+        </Container>
+      </ThemeProvider>
+    </>
   )
 }
 
