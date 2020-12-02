@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link as RouterLink, useLocation } from 'react-router-dom'
 import {
   Container,
@@ -21,7 +21,7 @@ import Emoji from 'components/Emoji'
 import ActionButton from 'components/ActionButton'
 import theme, { lightTheme } from 'theme'
 
-import { SectionLight, SectionDark } from 'layouts/PageSections'
+import { SectionLight } from 'layouts/PageSections'
 import cardImage from 'images/postcard_back.png'
 import WebsiteNavBar from 'components/WebsiteNavBar'
 
@@ -40,8 +40,8 @@ export const CardImage = styled(AppImage)`
 `
 
 const paypal = {
-  monthly: { link: 'https://py.pl/fGOTI', label: 'Try 1 month for $5' },
-  annual: { link: 'https://py.pl/1FwDqe', label: 'Try 12 months for $36' },
+  monthly: { link: 'https://py.pl/fGOTI', label: 'Sign Up for $5/month' },
+  annual: { link: 'https://py.pl/1FwDqe', label: 'Sign Up for $3/month' },
 }
 
 const SignUp = () => {
@@ -52,6 +52,12 @@ const SignUp = () => {
 
   document.documentElement.style.setProperty('--vh', `${vh}px`)
 
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+
   const handleChange = event => {
     setBilling(event.target.value)
   }
@@ -61,7 +67,11 @@ const SignUp = () => {
       <ThemeProvider theme={lightTheme}>
         <Container disableGutters maxWidth={false}>
           <SectionLight
-            style={{ minHeight: '100vh', height: 'calc(var(--vh, 1vh) * 100)' }}
+            style={{
+              minHeight: '100vh',
+              // eslint-disable-next-line no-dupe-keys
+              minHeight: 'calc(var(--vh, 1vh) * 100)',
+            }}
           >
             <WebsiteNavBar
               position="static"
@@ -134,8 +144,9 @@ const SignUp = () => {
                       <Grid item xs={12}>
                         <Typography>
                           <i>
-                            Subscriptions start in January. Sign up by December
-                            25th to get a free <b>Plynth Holiday Postcard</b>.
+                            Subscriptions start in January. Anyone that signs up
+                            by December 25th to gets a free{' '}
+                            <b>Plynth Holiday Postcard</b>.
                           </i>
                         </Typography>
                       </Grid>

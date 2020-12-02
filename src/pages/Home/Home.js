@@ -1,5 +1,5 @@
-import React from 'react'
-import { Link as RouterLink } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { Link as RouterLink, useLocation } from 'react-router-dom'
 import {
   Grid,
   Typography,
@@ -7,19 +7,23 @@ import {
   Box,
   Button,
   Link,
+  Tooltip,
+  IconButton,
 } from '@material-ui/core'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import styled from 'styled-components'
 import { HashLink } from 'react-router-hash-link'
+import InfoIcon from '@material-ui/icons/Info'
 
 import theme from 'theme'
 import { SectionLight, SectionDark } from 'layouts/PageSections'
-import InfoBar from './components/InfoBar'
+import { withStyles } from '@material-ui/core/styles'
 import PickupButton from 'components/PickupButton'
 import appImage from 'images/plynth_matchbook.png'
 import cardImage from 'images/postcard_back.png'
 import ActionButton from 'components/ActionButton'
 import Emoji from 'components/Emoji'
+import WebsiteNavBar from 'components/WebsiteNavBar'
 
 const StyledBox = styled(Box)`
   background-color: ${theme.palette.background.default};
@@ -48,6 +52,24 @@ const CardImage = styled(AppImage)`
   transform: rotate(-20deg);
 `
 
+const StyledTooltip = withStyles(theme => ({
+  tooltipPlacementTop: {
+    margin: '0',
+  },
+  tooltip: {
+    backgroundColor: theme.palette.background.paper,
+    color: theme.palette.text.primary,
+    maxWidth: 220,
+  },
+}))(Tooltip)
+
+const StyledInfo = styled(InfoIcon)`
+  opacity: 0.4;
+  &:hover {
+    opacity: 0.6;
+  }
+`
+
 const SmoothHashLink = React.forwardRef((props, ref) => (
   <HashLink smooth innerRef={ref} {...props} />
 ))
@@ -56,6 +78,12 @@ const Home = () => {
   let vh = window.innerHeight * 0.01
 
   document.documentElement.style.setProperty('--vh', `${vh}px`)
+
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
 
   return (
     <>
@@ -70,7 +98,63 @@ const Home = () => {
             style={{ height: '100%' }}
           >
             <Grid item>
-              <InfoBar />
+              <WebsiteNavBar
+                position="static"
+                opacity="0.4"
+                left={
+                  <Grid item xs={1}>
+                    <Grid container justify="flex-start">
+                      <Grid item>
+                        <StyledTooltip
+                          title={
+                            <>
+                              <Typography color="inherit">
+                                Welcome to Plynth. It's like a QR code, without
+                                the QR code.
+                              </Typography>
+                              <br />
+                              <Typography color="inherit">
+                                Give it a try:
+                              </Typography>
+                              <Typography color="inherit">
+                                1. Upload a photo of a piece of art
+                              </Typography>
+                              <Typography color="inherit">
+                                2. Access the content it's linked to!
+                              </Typography>
+                            </>
+                          }
+                          enterTouchDelay={0}
+                          leaveTouchDelay={10}
+                          arrow={true}
+                          placement="bottom-end"
+                        >
+                          <IconButton aria-label="info">
+                            <StyledInfo />
+                          </IconButton>
+                        </StyledTooltip>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                }
+                right={
+                  <Grid item xs={1}>
+                    <Grid container justify="flex-end">
+                      <Grid item>
+                        <Button
+                          component={RouterLink}
+                          to="/admin/login"
+                          style={{ textTransform: 'none' }}
+                        >
+                          <Typography style={{ opacity: 0.7 }}>
+                            Sign In
+                          </Typography>
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                }
+              />
             </Grid>
             <Grid item>
               <Grid container direction="column">
@@ -270,7 +354,7 @@ const Home = () => {
                     <Grid item>
                       <ActionButton
                         component={RouterLink}
-                        to="/s/signup/fans"
+                        to="/s/signup/potcard-mixtape"
                         label="Sign Up"
                         fullWidth={false}
                       />

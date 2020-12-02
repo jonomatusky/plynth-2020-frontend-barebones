@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link as RouterLink, useHistory, useLocation } from 'react-router-dom'
 import { Container, Grid, Typography, Box, Button } from '@material-ui/core'
 import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
@@ -33,6 +33,12 @@ const SignUp = () => {
   const history = useHistory()
   const location = useLocation()
   const confirmationMessage = `Thanks for signing up! We'll reach out shortly to get you set up.`
+
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
 
   const handleSubmit = async values => {
     try {

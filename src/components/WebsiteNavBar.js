@@ -8,6 +8,7 @@ import plynthLogoBlack from 'images/plynth_logo_black.svg'
 import plynthLogoWhite from 'images/plynth_logo_white.svg'
 
 const StyledLogo = styled.img`
+  opacity: ${props => props.opacity || 1};
   width: 100%;
   max-width: 100px;
   height: 100%;
@@ -18,18 +19,18 @@ const StyledLogo = styled.img`
   }
 `
 
-const WebsiteNavBar = ({ left, right, position }) => {
+const WebsiteNavBar = ({ left, right, position, opacity }) => {
   const theme = useTheme()
 
   return (
     <AppBar position={position} color="transparent" elevation={0}>
       <Toolbar>
-        <Grid container justify="space-between">
+        <Grid container justify="space-between" alignItems="center">
           {left}
           <Box flexGrow={1}>
             <Grid container justify="center">
               <Grid item>
-                <HashLink smooth to="/#about">
+                <HashLink smooth to="/">
                   <Grid
                     container
                     direction="column"
@@ -37,6 +38,7 @@ const WebsiteNavBar = ({ left, right, position }) => {
                     alignItems="center"
                   >
                     <StyledLogo
+                      opacity={opacity}
                       src={
                         theme.palette.type === 'dark'
                           ? plynthLogoWhite

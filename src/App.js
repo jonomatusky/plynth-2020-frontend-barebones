@@ -40,6 +40,7 @@ import ScanLoadingScreen from 'components/ScanLoadingScreen'
 import Home from 'pages/Home/Home'
 import SignupCreator from 'pages/SignupCreator/SignupCreator'
 import SignupFan from 'pages/SignupFan/SignupFan'
+import ContactUs from 'pages/ContactUs/ContactUs'
 
 import ErrorBar from 'components/ErrorBar'
 import MessageBar from 'components/MessageBar'
@@ -120,9 +121,11 @@ const App = () => {
       <Route
         publicRoute={true}
         component={SignupFan}
-        path="/s/signup/fans"
+        path="/s/signup/postcard-mixtape"
         exact
       />
+
+      <Route publicRoute={true} component={ContactUs} path="/s/contact" exact />
 
       <Route
         publicRoute={true}
