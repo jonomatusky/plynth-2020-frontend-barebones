@@ -462,7 +462,7 @@ const Home = () => {
               <Typography variant="h5">Questions?</Typography>
             </Grid>
             <Grid item>
-              <Button>
+              <Button component={RouterLink} to="/s/contact">
                 <Typography variant="h6" style={{ textTransform: 'none' }}>
                   Get in Touch
                 </Typography>
