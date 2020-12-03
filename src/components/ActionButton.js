@@ -30,7 +30,7 @@ const ActionButton = props => {
     return (
       <Button
         color={'default'}
-        fullWidth={fullWidth === false ? false : true}
+        fullWidth={fullWidth}
         variant={variant}
         onClick={onClick}
         {...other}

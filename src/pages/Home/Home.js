@@ -200,7 +200,6 @@ const Home = () => {
                 <Box height="5rem" />
                 <Grid item>
                   <Box mb={2}>
-                    p
                     <Typography variant="h3">
                       <b>
                         Bring Your Art to Life{' '}
