@@ -144,9 +144,10 @@ const SignUp = () => {
                       <Grid item xs={12}>
                         <Typography>
                           <i>
-                            Subscriptions start in January. Anyone that signs up
-                            by December 25th to gets a free{' '}
-                            <b>Plynth Holiday Postcard</b>.
+                            Subscriptions start in January. Sign up by December
+                            25th to gets a free <b>Plynth Holiday Postcard</b>.
+                            Your card won't be charged until the last week of
+                            the month.
                           </i>
                         </Typography>
                       </Grid>
@@ -296,7 +297,7 @@ const SignUp = () => {
                 </Grid>
               </Grid>
               <Grid item xs={12}>
-                <Box height={theme.spacing(4)} />
+                <Box height={theme.spacing(6)} />
               </Grid>
             </Grid>
           </SectionLight>

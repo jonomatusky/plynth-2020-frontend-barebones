@@ -127,7 +127,7 @@ const Home = () => {
                           enterTouchDelay={0}
                           leaveTouchDelay={10}
                           arrow={true}
-                          placement="bottom-end"
+                          placement="bottom-start"
                         >
                           <IconButton aria-label="info">
                             <StyledInfo />
@@ -146,9 +146,7 @@ const Home = () => {
                           to="/admin/login"
                           style={{ textTransform: 'none' }}
                         >
-                          <Typography style={{ opacity: 0.7 }}>
-                            Sign In
-                          </Typography>
+                          <p style={{ opacity: 0.7 }}>Sign In</p>
                         </Button>
                       </Grid>
                     </Grid>
