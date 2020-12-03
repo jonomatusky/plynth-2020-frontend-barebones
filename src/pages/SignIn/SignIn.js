@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink, useHistory, useLocation } from 'react-router-dom'
 import { Typography, Link } from '@material-ui/core'
 import * as Yup from 'yup'
 
@@ -12,6 +12,8 @@ import SimpleForm from 'components/SimpleForm'
 const SignIn = () => {
   const auth = useContext(AuthContext)
   const { status, request } = useRequest()
+  const history = useHistory()
+  const location = useLocation()
 
   const initialValues = {
     email: '',
@@ -39,6 +41,12 @@ const SignIn = () => {
   return (
     <FormLayout
       title="Log In"
+      onClose={() =>
+        (location.state || {}).referrer
+          ? history.push(location.state.referrer)
+          : history.push('/')
+      }
+      buttonLabel={'Cancel X'}
       below={
         <Typography>
           {`Forgot your password? `}

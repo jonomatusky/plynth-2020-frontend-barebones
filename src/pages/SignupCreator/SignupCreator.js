@@ -1,14 +1,6 @@
 import React, { useEffect } from 'react'
-import { Link as RouterLink, useHistory, useLocation } from 'react-router-dom'
-import {
-  Container,
-  Grid,
-  Typography,
-  Box,
-  Button,
-  Hidden,
-} from '@material-ui/core'
-import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
+import { useHistory, useLocation } from 'react-router-dom'
+import { Container, Grid, Typography, Box, Hidden } from '@material-ui/core'
 import styled from 'styled-components'
 import * as Yup from 'yup'
 
@@ -39,7 +31,6 @@ export const CardImage = styled(AppImage)`
 const SignUp = () => {
   const { status, request } = useRequest()
   const history = useHistory()
-  const location = useLocation()
   const confirmationMessage = `Thanks for signing up! We'll reach out shortly to get you set up.`
 
   const { pathname } = useLocation()
@@ -92,43 +83,7 @@ const SignUp = () => {
 
   return (
     <>
-      <WebsiteNavBar
-        position="static"
-        left={
-          <Grid item xs={1}>
-            <Grid container justify="flex-start">
-              <Grid item>
-                <Button
-                  component={RouterLink}
-                  to="/"
-                  startIcon={<PhotoCameraIcon />}
-                  style={{ textTransform: 'none' }}
-                >
-                  Home
-                </Button>
-              </Grid>
-            </Grid>
-          </Grid>
-        }
-        right={
-          <Grid item xs={1}>
-            <Grid container justify="flex-end">
-              <Grid item>
-                <Button
-                  component={RouterLink}
-                  to={{
-                    pathname: '/admin/login',
-                    state: { referrer: location.pathname },
-                  }}
-                  style={{ textTransform: 'none' }}
-                >
-                  Sign In
-                </Button>
-              </Grid>
-            </Grid>
-          </Grid>
-        }
-      />
+      <WebsiteNavBar position="static" />
       <Container maxWidth={false}>
         <Grid container justify="space-around">
           <Grid item xs={12}>
@@ -164,6 +119,11 @@ const SignUp = () => {
                 <Grid container spacing={1}>
                   <Grid item xs={12}>
                     <Box height="0.5rem" />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography variant="h5">
+                      <b>Sign Up</b>
+                    </Typography>
                   </Grid>
                   <Grid item xs={12}>
                     <PieceBox container direction="column">

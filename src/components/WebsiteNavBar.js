@@ -1,7 +1,9 @@
 import React from 'react'
-import { Grid, Box, AppBar, Toolbar } from '@material-ui/core'
+import { Link as RouterLink } from 'react-router-dom'
+import { Grid, Box, AppBar, Toolbar, Button } from '@material-ui/core'
 import { useTheme } from '@material-ui/core/styles'
 import styled from 'styled-components'
+import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 
 import { HashLink } from 'react-router-hash-link'
 import plynthLogoBlack from 'images/plynth_logo_black.svg'
@@ -26,7 +28,24 @@ const WebsiteNavBar = ({ left, right, position, opacity }) => {
     <AppBar position={position} color="transparent" elevation={0}>
       <Toolbar>
         <Grid container justify="space-between" alignItems="center">
-          {left}
+          {left ? (
+            left
+          ) : (
+            <Grid item xs={1}>
+              <Grid container justify="flex-start">
+                <Grid item>
+                  <Button
+                    component={RouterLink}
+                    to="/"
+                    startIcon={<PhotoCameraIcon />}
+                    style={{ textTransform: 'none' }}
+                  >
+                    Home
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          )}
           <Box flexGrow={1}>
             <Grid container justify="center">
               <Grid item>
@@ -51,7 +70,23 @@ const WebsiteNavBar = ({ left, right, position, opacity }) => {
               </Grid>
             </Grid>
           </Box>
-          {right}
+          {right ? (
+            right
+          ) : (
+            <Grid item xs={1}>
+              <Grid container justify="flex-end">
+                <Grid item>
+                  <Button
+                    component={RouterLink}
+                    to="/admin/login"
+                    style={{ textTransform: 'none' }}
+                  >
+                    Sign In
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          )}
         </Grid>
       </Toolbar>
     </AppBar>

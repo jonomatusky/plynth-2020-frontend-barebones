@@ -232,8 +232,7 @@ const Home = () => {
                         </Grid>
                         <Grid item>
                           <Box mb={1}>
-                            <Typography>{`Get a monthly postcard mixtape–or make your own.`}</Typography>
-                            <br />
+                            <Typography>{`A whole new way to discover music. Get a Postcard Mixtape delivered every month.`}</Typography>
                           </Box>
                         </Grid>
                         <Grid item>
@@ -266,10 +265,12 @@ const Home = () => {
                           </Box>
                         </Grid>
                         <Grid item>
-                          <Typography>
-                            Use Plynth to link your art, merch and marketing
-                            materials to digital experiences.
-                          </Typography>
+                          <Box mb={1}>
+                            <Typography>
+                              Use Plynth to link your art, merch and marketing
+                              materials to digital experiences.
+                            </Typography>
+                          </Box>
                         </Grid>
                         <Grid item>
                           <Box style={{ opacity: '80%' }}>
@@ -337,15 +338,16 @@ const Home = () => {
                     </Grid>
                     <Grid item>
                       <Typography>
-                        Get a monthly "postcard mixtape" featuring music from
-                        10+ new artists. Just snap a photo to unlock the
-                        playlist and messages from the artists.
+                        Every month, we partner with 10+ musicians to produce a
+                        new <b>Postcard Mixtape</b> and deliver it directly to
+                        your door. Just snap a photo to unlock an exclusive
+                        playlist and info about the artists.
                       </Typography>
                     </Grid>
                     <Grid item>
                       <Box mb={1}>
                         <Typography>
-                          <b>Try it out and get your first postcard free.</b>
+                          <b>Try it out and get this month's postcard free.</b>
                         </Typography>
                       </Box>
                     </Grid>
@@ -385,11 +387,14 @@ const Home = () => {
                       </Typography>
                     </Grid>
                     <Grid item>
-                      <Typography>
-                        Turn your merch into a virtual mixtape. Add a photo,
-                        create your links and you’re ready to go. Fans just snap
-                        a photo to learn more about you and access your art.
-                      </Typography>
+                      <Box mb="1em">
+                        <Typography>
+                          Turn your merch into a virtual mixtape. Upload a
+                          photo, add your links and you’re ready to go. Fans
+                          just snap a pic to access your art and learn more
+                          about you. No download required.
+                        </Typography>
+                      </Box>
                     </Grid>
                     <Grid item>
                       <Box mb="1em">

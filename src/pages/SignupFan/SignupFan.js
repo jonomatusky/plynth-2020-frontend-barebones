@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link as RouterLink, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import {
   Container,
   Grid,
@@ -11,11 +11,9 @@ import {
   FormControl,
   FormLabel,
   Hidden,
-  Button,
 } from '@material-ui/core'
 import styled from 'styled-components'
 import { ThemeProvider } from '@material-ui/core/styles'
-import PhotoCameraIcon from '@material-ui/icons/PhotoCamera'
 
 import Emoji from 'components/Emoji'
 import ActionButton from 'components/ActionButton'
@@ -45,7 +43,6 @@ const paypal = {
 }
 
 const SignUp = () => {
-  const location = useLocation()
   const [billing, setBilling] = useState('annual')
 
   let vh = window.innerHeight * 0.01
@@ -73,43 +70,7 @@ const SignUp = () => {
               minHeight: 'calc(var(--vh, 1vh) * 100)',
             }}
           >
-            <WebsiteNavBar
-              position="static"
-              left={
-                <Grid item xs={1}>
-                  <Grid container justify="flex-start">
-                    <Grid item>
-                      <Button
-                        component={RouterLink}
-                        to="/"
-                        startIcon={<PhotoCameraIcon />}
-                        style={{ textTransform: 'none' }}
-                      >
-                        Home
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              }
-              right={
-                <Grid item xs={1}>
-                  <Grid container justify="flex-end">
-                    <Grid item>
-                      <Button
-                        component={RouterLink}
-                        to={{
-                          pathname: '/admin/login',
-                          state: { referrer: location.pathname },
-                        }}
-                        style={{ textTransform: 'none' }}
-                      >
-                        Sign In
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              }
-            />
+            <WebsiteNavBar position="static" />
             <Grid container justify="center">
               <Hidden smDown>
                 <Grid item xs={12}>
@@ -289,11 +250,6 @@ const SignUp = () => {
                       </Grid>
                     </Grid>
                   </Grid>
-                  {/* <Hidden mdUp>
-                  <Grid item xs={10}>
-                    <CardImage src={cardImage} alt="App image" />
-                  </Grid>
-                </Hidden> */}
                 </Grid>
               </Grid>
               <Grid item xs={12}>

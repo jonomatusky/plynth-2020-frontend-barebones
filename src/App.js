@@ -71,7 +71,7 @@ const App = () => {
               <Redirect
                 to={{
                   pathname: '/admin/login',
-                  state: { referrer: location.pathname },
+                  state: { referrer: '/' },
                 }}
               />
             )}
