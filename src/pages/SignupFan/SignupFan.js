@@ -38,8 +38,16 @@ export const CardImage = styled(AppImage)`
 `
 
 const paypal = {
-  monthly: { link: 'https://py.pl/fGOTI', label: 'Sign Up for $5/month' },
-  annual: { link: 'https://py.pl/1FwDqe', label: 'Sign Up for $3/month' },
+  monthly: {
+    link: 'https://py.pl/fGOTI',
+    label: 'Sign Up for $5/month',
+    price: 5,
+  },
+  annual: {
+    link: 'https://py.pl/1FwDqe',
+    label: 'Sign Up for $3/month',
+    price: 36,
+  },
 }
 
 const SignUp = () => {
@@ -97,19 +105,11 @@ const SignUp = () => {
                       <Grid item xs={12}>
                         <Typography>
                           Get a new <b>Postcard Mixtape</b> delivered monthly,
-                          <b> starting at $3/month</b>. Scan each postcard on
-                          the Plynth app to <b>unlock an exclusive playlist</b>{' '}
-                          <Emoji symbol="✨" label="sparkle" />
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Typography>
-                          <i>
-                            Subscriptions start in January. Sign up by December
-                            25th to gets a free <b>Plynth Holiday Postcard</b>.
-                            Your card won't be charged until the last week of
-                            the month.
-                          </i>
+                          <b> starting at $3/month</b>. Scan the postcard on the
+                          Plynth app to <b>unlock an exclusive playlist</b>{' '}
+                          <Emoji symbol="✨" label="sparkle" /> and info about
+                          each featured artist.{' '}
+                          <i>Subscriptions start January.</i>
                         </Typography>
                       </Grid>
                       <Hidden smDown>
@@ -243,8 +243,10 @@ const SignUp = () => {
                       <Grid item sm={11} xs={10}>
                         <Typography align="center" variant="body2">
                           <i>
-                            Pay via Paypal, credit or debit. First payment will
-                            be for $0 to authorize card.
+                            Pay via Paypal, credit, or debit. First payment will
+                            be for $0 to authorize card, then $
+                            {paypal[billing].price} at the start of your
+                            subscription.
                           </i>
                         </Typography>
                       </Grid>

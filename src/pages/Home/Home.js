@@ -347,7 +347,9 @@ const Home = () => {
                     <Grid item>
                       <Box mb={1}>
                         <Typography>
-                          <b>Try it out and get this month's postcard free.</b>
+                          <b>
+                            Try it out and get this month's postcard for free.
+                          </b>
                         </Typography>
                       </Box>
                     </Grid>
@@ -412,7 +414,7 @@ const Home = () => {
                       <Box mb="1em">
                         <Typography variant="h6">
                           <Emoji symbol="🎧" label="headphones" /> Promote your
-                          art
+                          work
                         </Typography>
                       </Box>
                       <Box mb="1em">
@@ -426,8 +428,8 @@ const Home = () => {
                       <Box mb="1em">
                         <Typography>
                           <b>
-                            Now open to a small group of artists participating
-                            in our private beta. Sign up get on the app.
+                            Now open to artists participating in our private
+                            beta. Sign up try it out.
                           </b>
                         </Typography>
                       </Box>
@@ -436,7 +438,7 @@ const Home = () => {
                       <ActionButton
                         component={RouterLink}
                         to="/s/signup/creators"
-                        label="Get Access"
+                        label="Try the App"
                         fullWidth={false}
                       />
                     </Grid>
