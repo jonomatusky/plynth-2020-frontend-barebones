@@ -377,7 +377,7 @@ const Home = () => {
                     <Grid item>
                       <Box color={theme.palette.primary.main}>
                         <Typography variant="h3">
-                          <b>For Arists</b>
+                          <b>For Artists</b>
                         </Typography>
                       </Box>
                     </Grid>
