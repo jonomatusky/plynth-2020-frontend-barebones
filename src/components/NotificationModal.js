@@ -25,13 +25,13 @@ const NotificationModal = ({
       <DialogContent dividers>{secondaryMessage}</DialogContent>
       <DialogActions>
         <ActionButton
-          fullWidth={false}
+          fullWidth={true}
           variant="text"
           onClick={secondaryAction}
           label={secondaryActionLabel}
         />
         <ActionButton
-          fullWidth={false}
+          fullWidth={true}
           onClick={primaryAction}
           label={primaryActionLabel}
           loading={isLoading}

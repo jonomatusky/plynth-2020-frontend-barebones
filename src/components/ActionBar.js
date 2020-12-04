@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { AppBar, Toolbar, Box } from '@material-ui/core'
+import { AppBar, Toolbar } from '@material-ui/core'
 import ActionButton from './ActionButton'
 
 import { makeStyles } from '@material-ui/core/styles'
@@ -33,24 +33,20 @@ const ActionBar = props => {
     <AppBar className={classes.bottomBar}>
       <Toolbar>
         {!!secondaryLabel && (
-          <Box flexGrow={1}>
-            <ActionButton
-              onClick={secondaryAction}
-              label={secondaryLabel}
-              fullWidth={false}
-              variant="text"
-            />
-          </Box>
+          <ActionButton
+            onClick={secondaryAction}
+            label={secondaryLabel}
+            fullWidth={true}
+            variant="text"
+          />
         )}
         {!!primaryLabel && (
-          <Box flexGrow={1}>
-            <ActionButton
-              onClick={primaryAction}
-              label={primaryLabel}
-              fullWidth={true}
-              {...others}
-            />
-          </Box>
+          <ActionButton
+            onClick={primaryAction}
+            label={primaryLabel}
+            fullWidth={true}
+            {...others}
+          />
         )}
       </Toolbar>
     </AppBar>

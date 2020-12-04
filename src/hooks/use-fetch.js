@@ -16,7 +16,6 @@ export const useFetch = () => {
       await fetchPieces()
     }
     if (auth.authStatus === 'authenticated') {
-      console.log('fetching')
       fetch()
     }
   }, [auth.authStatus, fetchPieces, fetchUser])

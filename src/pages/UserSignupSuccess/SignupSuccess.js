@@ -17,8 +17,8 @@ const SignUp = () => {
           <PieceBox container direction="column">
             <BarRow
               buttonLabel="Close X"
-              onClick={() => {
-                history.push('/admin')
+              onClose={() => {
+                history.push('/admin/profile')
               }}
             />
             <Box

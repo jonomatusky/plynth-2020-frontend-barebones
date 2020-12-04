@@ -92,13 +92,13 @@ const ImageCropper = props => {
             onClick={props.onCancel}
             label="Cancel"
             variant="text"
-            fullWidth={false}
+            fullWidth={true}
           />
           <ActionButton
             onClick={submitHandler}
             loading={status === 'loading'}
             label={`Accept`}
-            fullWidth={false}
+            fullWidth={true}
           />
         </Toolbar>
       </AppBar>

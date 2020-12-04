@@ -14,8 +14,6 @@ const ChangeUsername = () => {
     username: '',
   })
 
-  console.log(updateStatus)
-
   useEffect(() => {
     if (status === 'succeeded') {
       setInitialValues({
@@ -42,7 +40,6 @@ const ChangeUsername = () => {
 
   const handleSubmit = async (values, actions) => {
     try {
-      console.log('submitting')
       await updateUser({ ...values })
       setMessage({ message: 'Your username has been updated.' })
     } catch (err) {

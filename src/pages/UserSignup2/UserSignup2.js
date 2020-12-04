@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Grid, Box } from '@material-ui/core'
 import { Formik, Form } from 'formik'
@@ -17,20 +17,22 @@ const title = 'Add Your Info'
 const UserSignup2 = () => {
   const { user, updateStatus, updateUser } = useUserStore()
   const history = useHistory()
-  const [initialValues, setInitialValues] = {
+  const [initialValues, setInitialValues] = useState({
     avatar: '',
     displayName: '',
     bio: '',
     links: [],
-  }
+  })
 
   useEffect(() => {
-    setInitialValues({
-      avatar: user.avatar,
-      displayName: user.displayName,
-      bio: user.bio,
-      links: user.links,
-    })
+    if (user) {
+      setInitialValues({
+        avatar: user.avatar,
+        displayName: user.displayName,
+        bio: user.bio,
+        links: user.links,
+      })
+    }
   }, [user, setInitialValues])
 
   const validationSchema = Yup.object({

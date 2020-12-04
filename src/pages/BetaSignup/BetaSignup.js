@@ -30,7 +30,6 @@ const BetaSignup = () => {
       data: userData,
     })
     if (!!scanToken) {
-      console.log('scantoken: ' + scanToken)
       await sendLog({
         url: `/scans`,
         data: { email: values.email, scanToken },

@@ -2,6 +2,7 @@ import React from 'react'
 import { Link, useHistory, useLocation } from 'react-router-dom'
 import { useLastLocation } from 'react-router-last-location'
 import { Grid, Box, Button, Typography } from '@material-ui/core'
+import { useAuth } from 'hooks/auth-hook'
 
 import styled from 'styled-components'
 import theme from '../theme'
@@ -84,11 +85,10 @@ export const BarRow = ({ title, buttonLabel, onClose, ...props }) => {
   const lastLocation = useLastLocation()
   const history = useHistory()
   const location = useLocation()
+  const { authStatus } = useAuth()
 
   const handleClose = event => {
     event.preventDefault()
-
-    console.log(location)
 
     const { referrer } = location.state || {}
 
@@ -96,6 +96,8 @@ export const BarRow = ({ title, buttonLabel, onClose, ...props }) => {
       history.push(referrer)
     } else if (!!onClose) {
       onClose()
+    } else if (!lastLocation && authStatus === 'authenticated') {
+      history.push('/admin/pieces')
     } else if (!lastLocation) {
       history.push('/')
     } else {

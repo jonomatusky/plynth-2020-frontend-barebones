@@ -24,7 +24,6 @@ export const fetchPieces = createAsyncThunk(
 export const createPiece = createAsyncThunk(
   'pieces/createPiece',
   async ({ headers, ...inputs }) => {
-    console.log(inputs)
     const { piece } = await client.request({
       headers,
       url: `/pieces`,

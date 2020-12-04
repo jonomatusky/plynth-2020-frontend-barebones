@@ -67,13 +67,13 @@ const PieceImageCrop = props => {
         >{`Upload a new image to change your profile picture.`}</DialogContent>
         <DialogActions>
           <ActionButton
-            fullWidth={false}
+            fullWidth={true}
             variant="text"
             onClick={closeDialog}
             label="Close"
           />
           <ImagePicker onSelect={handleSelect}>
-            <ActionButton fullWidth={false} label="Upload" />
+            <ActionButton label="Upload" />
           </ImagePicker>
         </DialogActions>
       </Dialog>
