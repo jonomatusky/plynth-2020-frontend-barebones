@@ -39,12 +39,12 @@ export const CardImage = styled(AppImage)`
 
 const paypal = {
   monthly: {
-    link: 'https://py.pl/fGOTI',
+    link: 'https://py.pl/1FwDqe',
     label: 'Sign Up for $5/month',
     price: 5,
   },
   annual: {
-    link: 'https://py.pl/1FwDqe',
+    link: 'https://py.pl/fGOTI',
     label: 'Sign Up for $3/month',
     price: 36,
   },
