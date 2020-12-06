@@ -212,9 +212,14 @@ const App = () => {
       />
       <Route component={ContactSupport} path="/admin/profile/help" exact />
       {/* <PrivateRoute component={Logout} path="/admin/logout" exact /> */}
-      <Redirect from="/admin" to="/" />
+      <Redirect from="/admin" to="/admin/profile" />
 
-      <Route restricted={false} component={ViewUser} path="/:username" />
+      <Route
+        publicRoute={true}
+        restricted={false}
+        component={ViewUser}
+        path="/:username"
+      />
 
       <Redirect to="/" />
     </Switch>
