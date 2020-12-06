@@ -121,7 +121,8 @@ const Home = () => {
                             </>
                           }
                           enterTouchDelay={0}
-                          leaveTouchDelay={10}
+                          leaveTouchDelay={10000}
+                          interactive={true}
                           arrow={true}
                           placement="bottom-start"
                         >
