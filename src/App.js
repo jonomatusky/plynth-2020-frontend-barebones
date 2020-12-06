@@ -213,6 +213,7 @@ const App = () => {
       <Route component={ContactSupport} path="/admin/profile/help" exact />
       {/* <PrivateRoute component={Logout} path="/admin/logout" exact /> */}
       <Redirect from="/admin" to="/admin/profile" />
+      <Redirect from="/postcardmixtape" to="/s/signup/postcard-mixtape" />
 
       <Route
         publicRoute={true}
