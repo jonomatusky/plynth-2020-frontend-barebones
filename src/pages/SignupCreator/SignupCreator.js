@@ -85,12 +85,12 @@ const SignUp = () => {
           <Grid item xs={12}>
             <Box height={theme.spacing(4)} />
           </Grid>
-          <Grid item xs={10}>
+          <Grid item sm={10} xs={12}>
             <Typography variant="h3">
               <b>Try the App</b>
             </Typography>
           </Grid>
-          <Grid item xs={10}>
+          <Grid item sm={10} xs={12}>
             <Grid container justify="space-between">
               <Grid item sm={5} xs={12}>
                 <Grid container spacing={1}>
