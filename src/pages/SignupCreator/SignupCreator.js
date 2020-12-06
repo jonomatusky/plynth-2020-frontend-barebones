@@ -123,7 +123,7 @@ const SignUp = () => {
                   </Grid>
                   <Grid item xs={12}>
                     <PieceBox container direction="column">
-                      <BarRow buttonLabel="Cancel X" />
+                      <BarRow buttonLabel="Cancel X" onClose={handleClose} />
                       <Grid item>
                         <Grid container justify="center">
                           <Grid item xs={11}>

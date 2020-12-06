@@ -31,7 +31,7 @@ const SignUp = () => {
   }
 
   const handleClose = () => {
-    history.push('/admin/profile')
+    history.push('/')
   }
 
   const initialValues = {
@@ -92,7 +92,7 @@ const SignUp = () => {
         message={
           <>
             Fill out the form below to get in touch. If you'd like to sign up
-            for a Poscard Mixtape,{' '}
+            for a Postcard Mixtape,{' '}
             <Link component={RouterLink} to="/s/signup/postcard-mixtape">
               click here
             </Link>
@@ -103,6 +103,7 @@ const SignUp = () => {
             .
           </>
         }
+        onClose={handleClose}
       >
         <SimpleForm
           onSubmit={handleSubmit}

@@ -15,7 +15,6 @@ import { setScanStatus } from 'redux/scanSlice'
 const NewPickup = ({ isOpen, setIsOpen, ...props }) => {
   const {
     startScan,
-    clearScan,
     status,
     imageUrl,
     foundPiece,
