@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import React, { useState } from 'react'
 import {
   Container,
   Grid,
@@ -15,6 +14,7 @@ import {
 import styled from 'styled-components'
 import { ThemeProvider } from '@material-ui/core/styles'
 
+import ScrollToTopOnMount from 'components/ScrollToTopOnMount'
 import Emoji from 'components/Emoji'
 import ActionButton from 'components/ActionButton'
 import theme, { lightTheme } from 'theme'
@@ -57,18 +57,13 @@ const SignUp = () => {
 
   document.documentElement.style.setProperty('--vh', `${vh}px`)
 
-  const { pathname } = useLocation()
-
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [pathname])
-
   const handleChange = event => {
     setBilling(event.target.value)
   }
 
   return (
     <>
+      <ScrollToTopOnMount />
       <ThemeProvider theme={lightTheme}>
         <Container disableGutters maxWidth={false}>
           <SectionLight

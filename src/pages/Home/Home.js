@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { Link as RouterLink, useLocation } from 'react-router-dom'
+import React from 'react'
+import { Link as RouterLink } from 'react-router-dom'
 import {
   Grid,
   Typography,
@@ -24,6 +24,7 @@ import cardImage from 'images/postcard_back.png'
 import ActionButton from 'components/ActionButton'
 import Emoji from 'components/Emoji'
 import WebsiteNavBar from 'components/WebsiteNavBar'
+import ScrollToTopOnMount from 'components/ScrollToTopOnMount'
 
 const StyledBox = styled(Box)`
   background-color: ${theme.palette.background.default};
@@ -79,14 +80,9 @@ const Home = () => {
 
   document.documentElement.style.setProperty('--vh', `${vh}px`)
 
-  const { pathname } = useLocation()
-
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [pathname])
-
   return (
     <>
+      <ScrollToTopOnMount />
       <Container disableGutters maxWidth={false}>
         <StyledBox>
           <Grid

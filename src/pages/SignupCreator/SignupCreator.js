@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
+import React from 'react'
+import { useHistory } from 'react-router-dom'
 import { Container, Grid, Typography, Box, Hidden } from '@material-ui/core'
 import styled from 'styled-components'
 import * as Yup from 'yup'
@@ -11,6 +11,7 @@ import SimpleForm from 'components/SimpleForm'
 import appImage from 'images/plynth_matchbook.png'
 import { TextField } from 'components/FormElements'
 import theme from 'theme'
+import ScrollToTopOnMount from 'components/ScrollToTopOnMount'
 
 export const AppImage = styled.img`
   height: 100%;
@@ -32,12 +33,6 @@ const SignUp = () => {
   const { status, request } = useRequest()
   const history = useHistory()
   const confirmationMessage = `Thanks for signing up! We'll reach out shortly to get you set up.`
-
-  const { pathname } = useLocation()
-
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [pathname])
 
   const handleSubmit = async values => {
     try {
@@ -83,6 +78,7 @@ const SignUp = () => {
 
   return (
     <>
+      <ScrollToTopOnMount />
       <WebsiteNavBar position="static" />
       <Container maxWidth={false}>
         <Grid container justify="space-around">

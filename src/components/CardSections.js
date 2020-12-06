@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link, useHistory, useLocation } from 'react-router-dom'
 import { useLastLocation } from 'react-router-last-location'
 import { Grid, Box, Button, Typography } from '@material-ui/core'
-import { useAuth } from 'hooks/auth-hook'
-
 import styled from 'styled-components'
-import theme from '../theme'
+
+import { AuthContext } from 'contexts/auth-context'
+import theme from 'theme'
 
 export const PieceBox = styled(Grid)`
   border: 1px solid ${theme.palette.secondary.main};
@@ -85,7 +85,7 @@ export const BarRow = ({ title, buttonLabel, onClose, ...props }) => {
   const lastLocation = useLastLocation()
   const history = useHistory()
   const location = useLocation()
-  const { authStatus } = useAuth()
+  const { authStatus } = useContext(AuthContext)
 
   const handleClose = event => {
     event.preventDefault()

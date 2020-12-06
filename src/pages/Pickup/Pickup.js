@@ -50,7 +50,7 @@ const NewPickup = ({ isOpen, setIsOpen, ...props }) => {
         if (imageUrl) {
           startScan(imageUrl)
         } else {
-          clearScan()
+          history.push(scanRoute)
         }
       } catch (err) {}
     }
@@ -58,10 +58,10 @@ const NewPickup = ({ isOpen, setIsOpen, ...props }) => {
     if (status === 'ready') {
       start()
     }
-  }, [status, imageUrl, startScan, clearScan])
+  }, [status, imageUrl, startScan, history, scanRoute])
 
   const handleClose = () => {
-    clearScan()
+    history.push(scanRoute)
   }
 
   //change to updateScan
@@ -98,24 +98,22 @@ const NewPickup = ({ isOpen, setIsOpen, ...props }) => {
       )
     } else if (status === 'succeeded' && foundPiece && !foundPiece.isDirect) {
       return (
-        <>
-          <Container maxWidth="xs" disableGutters>
-            <Grid
-              container
-              direction="column"
-              justify="center"
-              alignItems="center"
-            >
-              <Box minHeight="2vh"></Box>
-              <PieceCard
-                piece={foundPiece}
-                onClose={handleClose}
-                loggedOut={props.loggedOut}
-              />
-              <Box minHeight="2vh"></Box>
-            </Grid>
-          </Container>
-        </>
+        <Container maxWidth="xs" disableGutters>
+          <Grid
+            container
+            direction="column"
+            justify="center"
+            alignItems="center"
+          >
+            <Box minHeight="2vh"></Box>
+            <PieceCard
+              piece={foundPiece}
+              onClose={handleClose}
+              loggedOut={props.loggedOut}
+            />
+            <Box minHeight="2vh"></Box>
+          </Grid>
+        </Container>
       )
     } else if (status === 'succeeded' && !foundPiece) {
       return (
