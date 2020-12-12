@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Helmet } from 'react-helmet'
 import {
   Container,
   Grid,
@@ -63,6 +64,9 @@ const SignUp = () => {
 
   return (
     <>
+      <Helmet>
+        <title>Plynth | Postcard Mixtapes</title>
+      </Helmet>
       <ScrollToTopOnMount />
       <ThemeProvider theme={lightTheme}>
         <Container disableGutters maxWidth={false}>
@@ -98,12 +102,22 @@ const SignUp = () => {
                         {/* </Box> */}
                       </Grid>
                       <Grid item xs={12}>
-                        <Typography>
+                        <Typography variant="h5">
                           Get a new <b>Postcard Mixtape</b> delivered monthly,
-                          <b> starting at $3/month</b>. Scan the postcard on the
-                          Plynth app to <b>unlock an exclusive playlist</b>{' '}
-                          <Emoji symbol="✨" label="sparkle" /> and info about
-                          each featured artist.{' '}
+                          <b> starting at $3/month</b>.
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography>
+                          Scan the postcard on the Plynth app to{' '}
+                          <b>unlock an exclusive playlist</b>{' '}
+                          <Emoji symbol="✨" label="sparkle" /> and more. Sign
+                          up now to get a <b>free second postcard each month</b>{' '}
+                          to share with a friend–we'll even mail it for you!
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography>
                           <i>Subscriptions start January.</i>
                         </Typography>
                       </Grid>
@@ -151,8 +165,14 @@ const SignUp = () => {
                         </Box>
                         <Box mb="0.5rem">
                           <Typography>
-                            <Emoji symbol="🎧" label="handshake" /> Linked to an
-                            exclusive mixtape
+                            <Emoji symbol="👯‍♂️" label="friends" /> A second
+                            postcard sent to a friend
+                          </Typography>
+                        </Box>
+                        <Box mb="0.5rem">
+                          <Typography>
+                            <Emoji symbol="🎧" label="handshake" /> Both linked
+                            to an exclusive mixtape
                           </Typography>
                         </Box>
                         <Box mb="0.5rem">

@@ -341,11 +341,12 @@ const Home = () => {
                         playlist and info about the artists.
                       </Typography>
                     </Grid>
-                    <Grid item>
+                    <Grid item md={8}>
                       <Box mb={1}>
                         <Typography>
                           <b>
-                            Try it out and get this month's postcard for free.
+                            Try it out now and get a free bonus postcard to send
+                            to a friend every month.
                           </b>
                         </Typography>
                       </Box>
