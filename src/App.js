@@ -168,15 +168,6 @@ const App = () => {
       <Route publicRoute={true} component={NewPickup} path="/pickup" exact />
 
       <Route
-        publicRoute={true}
-        path="/get-on-plynth"
-        component={() => {
-          window.location.href = 'https://site.plynth.com/get-on-plynth'
-          return null
-        }}
-      />
-
-      <Route
         component={UserSignup2}
         path="/admin/get-started/profile"
         noNav
@@ -214,6 +205,7 @@ const App = () => {
       {/* <PrivateRoute component={Logout} path="/admin/logout" exact /> */}
       <Redirect from="/admin" to="/admin/profile" />
       <Redirect from="/postcardmixtape" to="/s/signup/postcard-mixtape" />
+      <Redirect from="/get-on-plynth" to="/s/signup/creators" />
 
       <Route
         publicRoute={true}
