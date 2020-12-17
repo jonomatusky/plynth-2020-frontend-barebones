@@ -17,6 +17,8 @@ export const useRequest = () => {
     async config => {
       setStatus('loading')
 
+      const { quiet, ...rest } = config
+
       try {
         const CancelToken = axios.CancelToken
         const source = CancelToken.source()
@@ -31,7 +33,7 @@ export const useRequest = () => {
         let response = await client.request({
           cancelToken: source.token,
           headers,
-          ...config,
+          ...rest,
         })
 
         activeAxiosSources.current = activeAxiosSources.current.filter(
@@ -41,12 +43,14 @@ export const useRequest = () => {
         setStatus('succeeded')
         return response
       } catch (err) {
-        dispatch(
-          setError({
-            message:
-              err.message || 'An unknown error occured. Please try again.',
-          })
-        )
+        if (!quiet) {
+          dispatch(
+            setError({
+              message:
+                err.message || 'An unknown error occured. Please try again.',
+            })
+          )
+        }
         setStatus('failed')
         throw err
       }

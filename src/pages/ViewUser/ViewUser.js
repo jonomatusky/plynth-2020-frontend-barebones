@@ -39,7 +39,10 @@ const UserProfile = props => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const responseData = await request({ url: `/users/${username}` })
+        const responseData = await request({
+          url: `/users/${username}`,
+          quiet: true,
+        })
         setUser(responseData.user)
       } catch (err) {}
     }
@@ -73,7 +76,7 @@ const UserProfile = props => {
 
   return (
     <>
-      {!user && status !== 'loading' && <NotFound />}
+      {status === 'failed' && <NotFound />}
       {user && status === 'succeeded' && (
         <Container maxWidth="xs">
           <Grid container justify="flex-start" direction="column">
