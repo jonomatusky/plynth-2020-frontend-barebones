@@ -233,7 +233,6 @@ const App = () => {
             <ErrorBar />
             <MessageBar />
             <Background />
-            {/* <ScanLoadingScreen /> */}
             <ScanLoadingScreen />
             {routes}
           </>
