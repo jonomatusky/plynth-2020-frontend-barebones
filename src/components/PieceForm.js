@@ -13,6 +13,7 @@ import {
 } from '@material-ui/core'
 
 import SectionItem from './SectionItem'
+import SectionButton from './SectionButton'
 import { Image, ImageBox } from './FormElements'
 import ActionButton from './ActionButton'
 
@@ -168,6 +169,8 @@ const PieceForm = ({
                 {fields.map((section, index) => {
                   return (
                     <SectionItem
+                      key={section.id}
+                      register={register}
                       section={section}
                       index={index}
                       move={move}
@@ -176,7 +179,7 @@ const PieceForm = ({
                   )
                 })}
                 <Grid item>
-                  <SectionButton onClick={() => append({})} />
+                  <SectionButton append={append} />
                 </Grid>
 
                 {/* <Grid item>

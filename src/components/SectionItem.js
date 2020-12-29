@@ -14,7 +14,15 @@ import ClearIcon from '@material-ui/icons/Clear'
 import ExpandLessIcon from '@material-ui/icons/ExpandLess'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 
-const SectionItem = ({ section, index, remove, move, first, last }) => {
+const SectionItem = ({
+  register,
+  section,
+  index,
+  remove,
+  move,
+  first,
+  last,
+}) => {
   const RemoveButton = () => {
     return (
       <Button variant="text" color="inherit" onClick={() => remove(index)}>
@@ -56,96 +64,94 @@ const SectionItem = ({ section, index, remove, move, first, last }) => {
   }
 
   return (
-    <Grid item key={section.id || index}>
+    <Grid item>
       <Accordion>
         <AccordionSummary>
-          <Grid item>
-            <Typography>
-              <b>{printHeader(section.type)}</b>
-            </Typography>
-          </Grid>
+          <Typography>
+            <b>{printHeader(section.type)}</b>
+          </Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Grid item>
-            <Grid container direction="column">
-              <Paper square>
-                <Grid container justify="center">
-                  <Grid item xs={11}>
-                    <Grid container direction="column" spacing={1}>
-                      <Box height="1rem" />
-                      <Grid item>
-                        {section.type === 'text' && (
-                          <TextField
-                            name={`sections.${index}.text`}
-                            label="Text Section"
-                            multiline
-                            rows={4}
-                          />
-                        )}
-                        {section.type === 'title' && (
-                          <TextField
-                            name={`sections.${index}.title`}
-                            label="Section Title"
-                          />
-                        )}
-                        {section.type === 'link' && (
-                          <>
-                            <Grid item>
-                              <TextField
-                                label="URL"
-                                name={`sections.${index}.link.url`}
-                                type="url"
-                              />
-                            </Grid>
-                            <Grid item>
-                              <TextField
-                                name={`sections.${index}.link.name`}
-                                label="Button Text"
-                                type="text"
-                              />
-                            </Grid>
-                          </>
-                        )}
-                      </Grid>
-                    </Grid>
+          <Grid container>
+            <Grid item xs={12}>
+              {section.type === 'text' && (
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  name={`sections[${index}].text`}
+                  label="Text Section"
+                  multiline
+                  rows={4}
+                  InputRef={register}
+                  defaultValue={section.text}
+                />
+              )}
+              {section.type === 'title' && (
+                <TextField
+                  name={`sections[${index}].title`}
+                  label="Section Title"
+                  InputRef={register}
+                  defaultValue={section.title}
+                />
+              )}
+              {section.type === 'link' && (
+                <>
+                  <Grid item>
+                    <TextField
+                      label="URL"
+                      name={`sections[${index}].link.url`}
+                      type="url"
+                      InputRef={register}
+                      defaultValue={section.link?.url}
+                    />
                   </Grid>
-                  <Grid item xs={12}>
-                    <Box height="0.5rem" />
-                  </Grid>{' '}
-                  <Grid item xs={11}>
-                    <Grid container justify="space-between">
-                      <Grid item>
-                        <Grid container>
-                          <Grid item>
-                            <Box maxWidth="8rem" textOverflow="ellipsis">
-                              <Typography noWrap>Order</Typography>
-                            </Box>
-                          </Grid>
-                          {!last && (
-                            <Grid item>
-                              <DownButton />
-                            </Grid>
-                          )}
-                          <Grid item>
-                            <Typography>{index + 1}</Typography>
-                          </Grid>
-                          {!first && (
-                            <Grid item>
-                              <UpButton />
-                            </Grid>
-                          )}
-                        </Grid>
-                      </Grid>
-                      <Grid item>
-                        <RemoveButton />
-                      </Grid>
-                    </Grid>
+                  <Grid item>
+                    <TextField
+                      name={`sections[${index}].link.name`}
+                      label="Button Text"
+                      type="text"
+                      InputRef={register}
+                      defaultValue={section.link?.name}
+                    />
                   </Grid>
-                  <Grid item xs={12}>
-                    <Box height="0.5rem" />
+                </>
+              )}
+            </Grid>
+
+            <Grid item xs={12}>
+              <Box height="0.5rem" />
+            </Grid>
+            <Grid item xs={12}>
+              <Grid container justify="space-between">
+                <Grid item>
+                  <Grid container>
+                    <Grid item>
+                      <Box maxWidth="8rem" textOverflow="ellipsis">
+                        <Typography noWrap>Order</Typography>
+                      </Box>
+                    </Grid>
+                    {!last && (
+                      <Grid item>
+                        <DownButton />
+                      </Grid>
+                    )}
+                    <Grid item>
+                      <Typography>{index + 1}</Typography>
+                    </Grid>
+                    {!first && (
+                      <Grid item>
+                        <UpButton />
+                      </Grid>
+                    )}
                   </Grid>
                 </Grid>
-              </Paper>
+                <Grid item>
+                  <RemoveButton />
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={12}>
+              <Box height="0.5rem" />
             </Grid>
           </Grid>
         </AccordionDetails>
