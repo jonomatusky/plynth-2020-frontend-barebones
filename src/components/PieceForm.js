@@ -1,5 +1,5 @@
 import React from 'react'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm, useFieldArray, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 
@@ -12,6 +12,7 @@ import {
   Typography,
 } from '@material-ui/core'
 
+import SectionItem from './SectionItem'
 import { Image, ImageBox } from './FormElements'
 import ActionButton from './ActionButton'
 
@@ -24,8 +25,16 @@ const PieceForm = ({
   isLoading,
   submitLabel,
 }) => {
-  const { title, description, links, awsId, ext, isDirect, directLink } =
-    piece || {}
+  const {
+    title,
+    description,
+    links,
+    awsId,
+    ext,
+    isDirect,
+    directLink,
+    sections,
+  } = piece || {}
 
   imageFilepath = imageFilepath || (awsId && ext ? `${awsId}.${ext}` : null)
 
@@ -35,6 +44,7 @@ const PieceForm = ({
     links: links || [],
     isDirect: isDirect || false,
     directLink: directLink || '',
+    sections: sections || [],
   }
 
   console.log(isDirect)
@@ -64,6 +74,13 @@ const PieceForm = ({
       mode: 'onBlur',
       resolver: yupResolver(validationSchema),
       defaultValues,
+    }
+  )
+
+  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
+    {
+      control,
+      name: 'sections',
     }
   )
 
@@ -134,9 +151,9 @@ const PieceForm = ({
           </>
         ) : (
           <>
-            {!getValues.isDirect && (
+            {!watchDirect && (
               <>
-                <Grid item>
+                {/* <Grid item>
                   <TextField
                     fullWidth
                     multiline
@@ -147,7 +164,11 @@ const PieceForm = ({
                     label="Description"
                   />
                 </Grid>
-                <Box height="1rem" />
+                <Box height="1rem" /> */}
+                {sections.map(section => {
+                  return <SectionItem section={section} />
+                })}
+
                 {/* <Grid item>
                   <LinksList links={values.links} />
                 </Grid> */}
