@@ -165,9 +165,19 @@ const PieceForm = ({
                   />
                 </Grid>
                 <Box height="1rem" /> */}
-                {sections.map(section => {
-                  return <SectionItem section={section} />
+                {fields.map((section, index) => {
+                  return (
+                    <SectionItem
+                      section={section}
+                      index={index}
+                      move={move}
+                      remove={remove}
+                    />
+                  )
                 })}
+                <Grid item>
+                  <SectionButton onClick={() => append({})} />
+                </Grid>
 
                 {/* <Grid item>
                   <LinksList links={values.links} />
