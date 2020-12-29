@@ -9,6 +9,7 @@ import {
   TextField,
   Checkbox,
   FormControlLabel,
+  Typography,
 } from '@material-ui/core'
 
 import { Image, ImageBox } from './FormElements'
@@ -36,6 +37,8 @@ const PieceForm = ({
     directLink: directLink || '',
   }
 
+  console.log(isDirect)
+
   const validationSchema = Yup.object({
     title: Yup.string()
       .max(32, 'Must be 32 characters or less')
@@ -56,11 +59,15 @@ const PieceForm = ({
     ),
   })
 
-  const { register, handleSubmit, errors, getValues } = useForm({
-    mode: 'onBlur',
-    resolver: yupResolver(validationSchema),
-    defaultValues,
-  })
+  const { register, handleSubmit, errors, getValues, control, watch } = useForm(
+    {
+      mode: 'onBlur',
+      resolver: yupResolver(validationSchema),
+      defaultValues,
+    }
+  )
+
+  const watchDirect = watch('isDirect', isDirect)
 
   console.log(errors)
 
@@ -91,24 +98,50 @@ const PieceForm = ({
         </Grid>
         <Grid item>
           <FormControlLabel
-            control={<Checkbox inputRef={register} name="isDirect" />}
+            control={
+              <Controller
+                render={props => (
+                  <Checkbox
+                    onChange={e => props.onChange(e.target.checked)}
+                    checked={props.value}
+                  />
+                )}
+                name="isDirect"
+                type="checkbox"
+                control={control}
+              />
+            }
             label="Take users directly to my profile or content"
           />
         </Grid>
-        {getValues().isDirect ? (
-          <Grid item>
-            <TextField
-              inputRef={register}
-              name="directLink"
-              label="Enter your direct link. Otherwise users will be directed to your profile."
-            />
-          </Grid>
+        {!!watchDirect ? (
+          <>
+            <Grid item>
+              <Typography>
+                Enter your direct link. Leave blank to direct users to your
+                profile.
+              </Typography>
+            </Grid>
+            <Grid item>
+              <TextField
+                fullWidth
+                variant="outlined"
+                inputRef={register}
+                name="directLink"
+                label="Link"
+              />
+            </Grid>
+          </>
         ) : (
           <>
             {!getValues.isDirect && (
               <>
                 <Grid item>
                   <TextField
+                    fullWidth
+                    multiline
+                    rows={4}
+                    variant="outlined"
                     inputRef={register}
                     name="description"
                     label="Description"
