@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
 import { Button, Menu, MenuItem } from '@material-ui/core'
+// import { useUserStore } from 'hooks/store/use-user-store'
 
 const SectionButton = props => {
+  // const { fetchUserList } = useUserStore()
+
   const [anchorEl, setAnchorEl] = useState(null)
 
   const handleOpen = event => {
@@ -13,9 +16,10 @@ const SectionButton = props => {
   }
 
   const handleSelect = type => {
+    console.log(type)
     switch (type) {
       case 'link':
-        props.append({ type, link: { name: '', url: '' } })
+        props.append({ type, link: { text: '', url: '' } })
         break
       case 'title':
         props.append({ type, title: '' })
@@ -24,10 +28,11 @@ const SectionButton = props => {
         props.append({ type, text: '' })
         break
       case 'list.links':
-        props.append({ type, list: [] })
+        props.append({ type, links: [] })
         break
       case 'list.users':
-        props.append({ type, list: [] })
+        // fetchUserList()
+        props.append({ type, users: [] })
         break
       default:
         props.append({ name: '', url: '' })

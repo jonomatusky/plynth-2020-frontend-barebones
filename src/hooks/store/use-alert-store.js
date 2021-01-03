@@ -39,3 +39,5 @@ export const useAlertStore = () => {
     error,
   }
 }
+
+export default useAlertStore

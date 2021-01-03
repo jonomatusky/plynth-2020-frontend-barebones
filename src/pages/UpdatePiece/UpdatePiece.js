@@ -27,6 +27,7 @@ const UpdatePiece = () => {
   const history = useHistory()
 
   const handleSubmit = async values => {
+    console.log(values)
     try {
       await updatePiece({ id: pieceId, ...values })
       history.goBack()

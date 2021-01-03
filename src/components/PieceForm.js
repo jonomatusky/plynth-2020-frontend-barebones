@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm, useFieldArray, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
@@ -6,16 +6,18 @@ import * as Yup from 'yup'
 import {
   Grid,
   Box,
-  TextField,
   Checkbox,
   FormControlLabel,
   Typography,
 } from '@material-ui/core'
 
+import { useUserStore } from 'hooks/store/use-user-store'
+import TextField from './TextField'
 import SectionItem from './SectionItem'
 import SectionButton from './SectionButton'
 import { Image, ImageBox } from './FormElements'
 import ActionButton from './ActionButton'
+import { fetchUser } from 'redux/userSlice'
 
 const ASSET_URL = process.env.REACT_APP_ASSET_URL
 
@@ -26,6 +28,8 @@ const PieceForm = ({
   isLoading,
   submitLabel,
 }) => {
+  const { fetchUserList } = useUserStore()
+
   const {
     title,
     description,
@@ -48,8 +52,6 @@ const PieceForm = ({
     sections: sections || [],
   }
 
-  console.log(isDirect)
-
   const validationSchema = Yup.object({
     title: Yup.string()
       .max(32, 'Must be 32 characters or less')
@@ -68,31 +70,108 @@ const PieceForm = ({
           .required('Required'),
       })
     ),
+    sections: Yup.array().of(
+      Yup.object({
+        type: Yup.string(),
+        title: Yup.string().when('type', {
+          is: value => value === 'title',
+          then: Yup.string().required('Required'),
+          otherwise: Yup.string(),
+        }),
+        text: Yup.string().when('type', {
+          is: value => value === 'text',
+          then: Yup.string().required('Required'),
+          otherwise: Yup.string(),
+        }),
+        link: Yup.object().when('type', {
+          is: value => value === 'link',
+          then: Yup.object().shape({
+            text: Yup.string()
+              .max(32, 'Must be 32 characters or less')
+              .required('Required'),
+            url: Yup.string()
+              .url(`Must be a valid URL. Include http:// or https://`)
+              .required('Required'),
+          }),
+          otherwise: Yup.object(),
+        }),
+        links: Yup.array().when('type', {
+          is: value => value === 'list.links',
+          then: Yup.array().of(
+            Yup.object({
+              text: Yup.string()
+                .max(32, 'Must be 32 characters or less')
+                .required('Required'),
+              url: Yup.string()
+                .url(`Must be a valid URL. Include http:// or https://`)
+                .required('Required'),
+            })
+          ),
+        }),
+      })
+    ),
   })
 
-  const { register, handleSubmit, errors, getValues, control, watch } = useForm(
-    {
-      mode: 'onBlur',
-      resolver: yupResolver(validationSchema),
-      defaultValues,
-    }
-  )
+  const { register, handleSubmit, errors, control, watch } = useForm({
+    mode: 'onBlur',
+    resolver: yupResolver(validationSchema),
+    defaultValues,
+    shouldUnregister: false,
+  })
 
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
-    {
-      control,
-      name: 'sections',
-    }
-  )
+  const { fields, append, remove, move } = useFieldArray({
+    control,
+    name: 'sections',
+    keyName: 'identifier',
+  })
 
   const watchDirect = watch('isDirect', isDirect)
+
+  // const values = watch()
+  // console.log(values)
+
+  const [expanded, setExpanded] = useState(false)
+  const [sectionsLength, setSectionsLength] = useState(sections.length)
+
+  const handleChange = identifier => (event, isExpanded) => {
+    setExpanded(isExpanded ? identifier : false)
+    console.log(expanded)
+  }
+
+  const handleAppend = data => {
+    append(data)
+  }
+
+  useEffect(() => {
+    const handleAppend = () => {
+      setExpanded(fields[fields.length - 1].identifier)
+      setSectionsLength(fields.length)
+    }
+    const handleRemove = () => {
+      setSectionsLength(fields.length)
+    }
+    if (fields.length !== sectionsLength) {
+      if (fields.length > sectionsLength) {
+        handleAppend()
+      } else {
+        handleRemove()
+      }
+    }
+  }, [fields, sectionsLength])
+
+  useEffect(() => {
+    console.log(sections.map(section => section.type))
+    if (sections.map(section => section.type).includes('list.users')) {
+      fetchUserList()
+    }
+  }, [sections, fetchUserList])
 
   console.log(errors)
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Grid container direction="column" spacing={1}>
-        <Grid item>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
           <Grid container justify="center">
             <Grid item>
               <ImageBox>
@@ -103,18 +182,16 @@ const PieceForm = ({
             </Grid>
           </Grid>
         </Grid>
-        <Grid item>
+        <Grid item xs={12}>
           <TextField
-            fullWidth
-            variant="outlined"
-            inputRef={register}
             name="title"
             label="Title (Required)"
+            control={control}
             error={Boolean(errors.title)}
             helperText={errors.title?.message}
           />
         </Grid>
-        <Grid item>
+        <Grid item xs={12}>
           <FormControlLabel
             control={
               <Controller
@@ -134,19 +211,19 @@ const PieceForm = ({
         </Grid>
         {!!watchDirect ? (
           <>
-            <Grid item>
+            <Grid item xs={12}>
               <Typography>
                 Enter your direct link. Leave blank to direct users to your
                 profile.
               </Typography>
             </Grid>
-            <Grid item>
+            <Grid item xs={12}>
               <TextField
-                fullWidth
-                variant="outlined"
-                inputRef={register}
                 name="directLink"
                 label="Link"
+                control={control}
+                error={Boolean(errors.title)}
+                helperText={errors.title?.message}
               />
             </Grid>
           </>
@@ -169,17 +246,25 @@ const PieceForm = ({
                 {fields.map((section, index) => {
                   return (
                     <SectionItem
-                      key={section.id}
+                      control={control}
+                      key={section.identifier}
                       register={register}
                       section={section}
                       index={index}
                       move={move}
                       remove={remove}
+                      errors={(errors.sections || [])[index] || {}}
+                      expanded={
+                        expanded === section.identifier || expanded === 'last'
+                      }
+                      handleChange={handleChange}
+                      first={index === 0}
+                      last={index === fields.length - 1}
                     />
                   )
                 })}
-                <Grid item>
-                  <SectionButton append={append} />
+                <Grid item xs={12}>
+                  <SectionButton append={handleAppend} />
                 </Grid>
 
                 {/* <Grid item>
@@ -190,7 +275,7 @@ const PieceForm = ({
           </>
         )}
         <Box height="1rem"></Box>
-        <Grid item>
+        <Grid item xs={12}>
           <ActionButton
             type="submit"
             label={submitLabel || `Save & Close`}
