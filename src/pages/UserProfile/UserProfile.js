@@ -105,13 +105,11 @@ const MyProfile = props => {
                   <Grid item xs={5}>
                     <Grid container justify="center">
                       <Grid item>
-                        {user.avatarLink && (
-                          <Avatar
-                            src={user.avatarLink}
-                            alt="Preview"
-                            className={classes.large}
-                          />
-                        )}
+                        <Avatar
+                          src={user.avatarLink}
+                          alt="Preview"
+                          className={classes.large}
+                        />
                       </Grid>
                     </Grid>
                   </Grid>

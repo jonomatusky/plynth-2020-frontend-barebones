@@ -17,23 +17,32 @@ const title = 'Add Your Info'
 const UserSignup2 = () => {
   const { user, updateStatus, updateUser } = useUserStore()
   const history = useHistory()
-  const [initialValues, setInitialValues] = useState({
-    avatar: '',
-    displayName: '',
-    bio: '',
-    links: [],
-  })
+  // const [initialValues, setInitialValues] = useState({
+  //   avatar: '',
+  //   displayName: '',
+  //   bio: '',
+  //   links: [],
+  // })
 
-  useEffect(() => {
-    if (user) {
-      setInitialValues({
-        avatar: user.avatar,
-        displayName: user.displayName,
-        bio: user.bio,
-        links: user.links,
-      })
-    }
-  }, [user, setInitialValues])
+  const { displayName, bio, links, avatar } = user || {}
+
+  const initialValues = {
+    displayName: displayName || '',
+    bio: bio || '',
+    avatar: avatar || '',
+    links: links || [],
+  }
+
+  // useEffect(() => {
+  //   if (user) {
+  //     setInitialValues({
+  //       avatar: user.avatar,
+  //       displayName: user.displayName,
+  //       bio: user.bio,
+  //       links: user.links,
+  //     })
+  //   }
+  // }, [user, setInitialValues])
 
   const validationSchema = Yup.object({
     avatar: Yup.string(),
