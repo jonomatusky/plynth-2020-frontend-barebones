@@ -53,7 +53,6 @@ const SectionItem = ({
   handleChange,
 }) => {
   const { users } = useUserStore()
-  console.log(users)
 
   const { fields, remove, append } = useFieldArray({
     control,
@@ -259,7 +258,6 @@ const SectionItem = ({
                   <UserAutocomplete
                     control={control}
                     options={users}
-                    label="Users"
                     name={`sections[${index}].users`}
                     defaultValue={section.users}
                     // error={Boolean(((errors.links || [])[k] || {}).url)}

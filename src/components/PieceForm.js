@@ -18,6 +18,7 @@ import SectionButton from './SectionButton'
 import { Image, ImageBox } from './FormElements'
 import ActionButton from './ActionButton'
 import { fetchUser } from 'redux/userSlice'
+import LinkList from './LinkList'
 
 const ASSET_URL = process.env.REACT_APP_ASSET_URL
 
@@ -39,6 +40,7 @@ const PieceForm = ({
     isDirect,
     directLink,
     sections,
+    generation,
   } = piece || {}
 
   imageFilepath = imageFilepath || (awsId && ext ? `${awsId}.${ext}` : null)
@@ -231,18 +233,25 @@ const PieceForm = ({
           <>
             {!watchDirect && (
               <>
-                {/* <Grid item>
-                  <TextField
-                    fullWidth
-                    multiline
-                    rows={4}
-                    variant="outlined"
-                    inputRef={register}
-                    name="description"
-                    label="Description"
-                  />
-                </Grid>
-                <Box height="1rem" /> */}
+                {!!description && (
+                  <Grid item>
+                    <TextField
+                      fullWidth
+                      multiline
+                      rows={4}
+                      variant="outlined"
+                      inputRef={register}
+                      name="description"
+                      label="Description"
+                    />
+                  </Grid>
+                )}
+                {!!links && links.length > 0 && (
+                  <Grid item>
+                    <LinkList control={control} links={links} />
+                  </Grid>
+                )}
+                <Box height="1rem" />
                 {fields.map((section, index) => {
                   return (
                     <SectionItem

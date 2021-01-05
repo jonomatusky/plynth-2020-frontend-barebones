@@ -29,6 +29,7 @@ import {
   BottomRow,
   UnstyledLink,
 } from 'components/CardSections'
+import useUserStore from 'hooks/store/use-user-store'
 
 const title = 'My Profile'
 
@@ -41,7 +42,8 @@ const useStyles = makeStyles(theme => ({
 
 const MyProfile = props => {
   const auth = useContext(AuthContext)
-  const { user } = useSelector(state => state.user)
+  // const { user } = useSelector(state => state.user)
+  const { user, status } = useUserStore()
   const classes = useStyles()
   const [message, setMessage] = useState((props.location.state || {}).message)
   const [anchorEl, setAnchorEl] = useState(null)
@@ -93,7 +95,7 @@ const MyProfile = props => {
           </Menu>
         </PageTitle>
         <Grid container justify="flex-start" direction="column">
-          {!!user && (
+          {!!user && status === 'succeeded' && (
             <PieceBox container direction="column">
               <React.Fragment>
                 <ProfileTopRow

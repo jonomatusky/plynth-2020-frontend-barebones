@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   FormControl,
   OutlinedInput,
@@ -41,24 +41,40 @@ const UserAutocomplete = ({
   // }
 
   const labelId = `${name}-label`
+
+  const [inputValue, setInputValue] = useState('')
+  const [open, setOpen] = useState(false)
+  const handleOpen = () => {
+    if (inputValue.length > 0) {
+      setOpen(true)
+    }
+  }
+  const handleInputChange = (event, newInputValue) => {
+    setInputValue(newInputValue)
+    if (newInputValue.length > 0) {
+      setOpen(true)
+    } else {
+      setOpen(false)
+    }
+  }
+
   return (
-    // <FormControl fullWidth color="secondary" margin="dense" {...props}>
-    //   <InputLabel shrink id={labelId} htmlFor={labelId}>
-    //     {label}
-    //   </InputLabel>
     <Controller
       render={props => (
         <Autocomplete
           {...props}
+          open={open}
+          onOpen={handleOpen}
+          onClose={() => setOpen(false)}
+          inputValue={inputValue}
+          onInputChange={handleInputChange}
           multiple
           id={labelId}
           options={options}
           getOptionLabel={option => option.username}
-          // getOptionSelected={(option, value) => {
-          //   return option.username === getOpObj(value).username
-          // }}
+          getOptionSelected={(option, value) => option.id === value.id}
           renderInput={params => (
-            <TextField {...params} label={label} variant="outlined" />
+            <TextField {...params} label="Add Users" variant="outlined" />
           )}
           renderOption={option => option.username}
           onChange={(_, data) => props.onChange(data)}
@@ -67,10 +83,7 @@ const UserAutocomplete = ({
       name={name}
       control={control}
       defaultValue={defaultValue}
-      // onChange={([, obj]) => getOpObj(obj).username}
     />
-    //   /* <FormHelperText>{helperText}</FormHelperText> */
-    // </FormControl>
   )
 }
 export default UserAutocomplete
