@@ -56,7 +56,7 @@ const PieceForm = ({
 
   const validationSchema = Yup.object({
     title: Yup.string()
-      .max(32, 'Must be 32 characters or less')
+      .max(48, 'Must be 48 characters or less')
       .required('Required'),
     description: Yup.string(),
     directLink: Yup.string().url(
