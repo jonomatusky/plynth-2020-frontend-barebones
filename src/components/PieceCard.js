@@ -202,29 +202,29 @@ const PieceCard = ({ piece, onClose, ...props }) => {
           </Grid>
         )}
         <Grid item xs={12}>
-          <Box pt={2} pb={2}>
+          <Box pt="1.25rem" pb={3}>
             <Grid container justify="center" spacing={3}>
               {piece.isDirect ? (
-                <Grid item xs={12}>
+                <Grid item xs={11}>
                   <DescriptionText>
-                    Taking users directly to{' '}
-                    {piece.directLink || `your profile`}
+                    Taking users directly to
+                    {piece.directLink
+                      ? `: ${piece.directLink}`
+                      : ` your profile`}
                   </DescriptionText>
                 </Grid>
               ) : (
                 <>
                   {!!piece.description && (
-                    <Grid container item xs={11}>
+                    <Grid item xs={11}>
                       <DescriptionText>{piece.description}</DescriptionText>
                     </Grid>
                   )}
                   {!!piece.links &&
                     piece.links.map(link => {
                       return (
-                        <Grid container key={link._id} justify="center">
-                          <Grid item xs={11}>
-                            <LinkButton link={link} />
-                          </Grid>
+                        <Grid item xs={11} key={link._id}>
+                          <LinkButton link={link} />
                         </Grid>
                       )
                     })}
@@ -324,18 +324,14 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                                         >
                                           <Grid item>
                                             <Box paddingRight="0.5rem">
-                                              {user.avatar ? (
-                                                <Avatar
-                                                  alt={user.displayName}
-                                                  src={user.avatarLink}
-                                                  style={{
-                                                    width: theme.spacing(4),
-                                                    height: theme.spacing(4),
-                                                  }}
-                                                />
-                                              ) : (
-                                                <AccountCircleIcon />
-                                              )}
+                                              <Avatar
+                                                alt={user.displayName}
+                                                src={user.avatarLink}
+                                                style={{
+                                                  width: theme.spacing(4),
+                                                  height: theme.spacing(4),
+                                                }}
+                                              />
                                             </Box>
                                           </Grid>
                                           <AvatarBox

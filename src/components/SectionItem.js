@@ -133,6 +133,10 @@ const SectionItem = ({
     const title = section.type.split('.').join(' of ')
     if (section.type === 'text') {
       return 'Text Section'
+    } else if (section.type === 'list.links') {
+      return 'Link List'
+    } else if (section.type === 'list.users') {
+      return 'Profile List'
     } else if (section.title) {
       return `Title: ${section.title}`
     } else if (section.link) {

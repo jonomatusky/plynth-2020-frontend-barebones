@@ -38,7 +38,7 @@ const ViewPiece = props => {
     <Container maxWidth="xs" disableGutters>
       {isLoading && !piece && <LoadingSpinner asOverlay />}
       {!isLoading && piece && (
-        <Box pt="1.5rem" pb="1rem">
+        <Box pt="1.5rem" pb="1.5rem">
           <Grid container justify="center">
             <Grid item xs={12}>
               <PieceCard

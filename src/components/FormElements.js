@@ -12,7 +12,6 @@ export const ImageBox = styled.div`
   height: 200px;
   width: 200px;
   text-align: center;
-  margin: 16px;
 `
 
 export const Image = styled.img`

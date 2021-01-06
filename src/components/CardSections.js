@@ -70,6 +70,7 @@ export const DescriptionBox = styled(Grid)`
 export const DescriptionText = styled(Typography)`
   line-height: 1.5;
   white-space: pre-line;
+  overflow-wrap: break-word;
 `
 
 export const LinkRow = styled(Grid)`

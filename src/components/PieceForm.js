@@ -185,8 +185,6 @@ const PieceForm = ({
             error={Boolean(errors.title)}
             helperText={errors.title?.message}
           />
-        </Grid>
-        <Grid item xs={12}>
           <FormControlLabel
             control={
               <Controller
@@ -201,9 +199,10 @@ const PieceForm = ({
                 control={control}
               />
             }
-            label="Take users directly to my profile or content"
+            label="Skip this page. Take users directly to my profile or content."
           />
         </Grid>
+        <Grid item xs={12}></Grid>
         {!!watchDirect ? (
           <>
             <Grid item xs={12}>
@@ -226,25 +225,6 @@ const PieceForm = ({
           <>
             {!watchDirect && (
               <>
-                {/* {!!description && (
-                  <Grid item>
-                    <TextField
-                      fullWidth
-                      multiline
-                      rows={4}
-                      variant="outlined"
-                      inputRef={register}
-                      name="description"
-                      label="Description"
-                    />
-                  </Grid>
-                )} */}
-                {/* {!!links && links.length > 0 && (
-                  <Grid item>
-                    <LinkList control={control} links={links} />
-                  </Grid>
-                )} */}
-                {/* <Box height="1rem" /> */}
                 {fields.map((section, index) => {
                   return (
                     <SectionItem

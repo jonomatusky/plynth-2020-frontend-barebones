@@ -94,7 +94,7 @@ const SectionButton = props => {
           <ListItemIcon>
             <PeopleIcon fontSize="small" />
           </ListItemIcon>
-          <Typography>List of users</Typography>
+          <Typography>List of profiles</Typography>
         </MenuItem>
         <MenuItem onClick={() => handleSelect('divider')}>
           <ListItemIcon>

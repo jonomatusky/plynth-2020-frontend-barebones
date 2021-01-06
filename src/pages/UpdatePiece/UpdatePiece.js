@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { Button } from '@material-ui/core'
+import { Button, Box, Container, Grid } from '@material-ui/core'
 
 import { usePieceStore } from 'hooks/store/use-piece-store'
 import { useAlertStore } from 'hooks/store/use-alert-store'
@@ -28,13 +28,10 @@ const UpdatePiece = () => {
   const history = useHistory()
 
   const handleSubmit = async values => {
-    console.log(values)
     try {
       await updatePiece({ id: pieceId, ...values })
       history.goBack()
-    } catch (err) {
-      console.log(err)
-    }
+    } catch (err) {}
   }
 
   const handleDelete = async () => {
@@ -42,9 +39,7 @@ const UpdatePiece = () => {
       await deletePiece({ id: pieceId })
       setMessage({ message: 'Your piece has been deleted.' })
       history.push(`/admin/pieces`)
-    } catch (err) {
-      console.log(err)
-    }
+    } catch (err) {}
   }
 
   const handleOpenDeleteModal = () => {
@@ -75,20 +70,61 @@ const UpdatePiece = () => {
         !!piece &&
         !!piece.version &&
         piece.version !== '1.0' && (
-          <FormLayout
-            bar={<BarRow title="Edit Your Piece" buttonLabel={'Cancel X'} />}
-            bottom={
-              <Button color="inherit" onClick={handleOpenDeleteModal}>
-                Delete This Piece
-              </Button>
-            }
-          >
-            <PieceForm
-              piece={piece}
-              onSubmit={handleSubmit}
-              isLoading={updateStatus === 'loading'}
-            />
-          </FormLayout>
+          // <FormLayout
+          //   bar={<BarRow title="Edit Your Piece" buttonLabel={'Cancel X'} />}
+          //   bottom={
+          //     <Button color="inherit" onClick={handleOpenDeleteModal}>
+          //       Delete This Piece
+          //     </Button>
+          //   }
+          // >
+          <Container maxWidth="xs">
+            <Box pt="1.5rem" pb="1.5rem">
+              <Grid container justify="center">
+                <Grid item xs={12}>
+                  <Box
+                    border={1}
+                    borderColor="secondary.main"
+                    bgcolor="background.card"
+                  >
+                    <Grid container justify="center">
+                      <Grid item xs={12}>
+                        <BarRow
+                          title="Edit Your Piece"
+                          buttonLabel={'Cancel X'}
+                        />
+                      </Grid>
+                      <Grid item xs={11}>
+                        <Box pt={3} pb={3}>
+                          <PieceForm
+                            piece={piece}
+                            onSubmit={handleSubmit}
+                            isLoading={updateStatus === 'loading'}
+                          />
+                        </Box>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </Grid>
+                <Grid item xs={12}>
+                  <Box
+                    borderColor="secondary.main"
+                    bgcolor="background.card"
+                    border={1}
+                    borderTop={0}
+                  >
+                    <Button
+                      fullWidth
+                      color="secondary"
+                      onClick={handleOpenDeleteModal}
+                    >
+                      Delete Piece
+                    </Button>
+                  </Box>
+                </Grid>
+              </Grid>
+            </Box>
+          </Container>
         )}
       {status === 'succeeded' &&
         !!piece &&

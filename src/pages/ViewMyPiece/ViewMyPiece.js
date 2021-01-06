@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { Container, Box, Grid } from '@material-ui/core'
+import { useHistory } from 'react-router-dom'
+import { Container, Box, Grid, Button } from '@material-ui/core'
 
 import { useRequest } from 'hooks/use-request'
 import { selectPiece } from 'redux/piecesSlice'
 import LoadingSpinner from 'components/LoadingSpinner'
 import NotFound from 'layouts/NotFound'
 import PieceCard from 'components/PieceCard'
-import BottomBar from 'components/PieceCardBottomBar'
 
 const ViewPiece = props => {
+  const history = useHistory()
+
   const { request } = useRequest()
   const pieceId = useParams().pieceId
   const piece = useSelector(state => selectPiece(state, pieceId))
@@ -46,7 +48,7 @@ const ViewPiece = props => {
       )}
       {status === 'succeeded' && !!piece && (
         <Container maxWidth="xs">
-          <Box pt="1.5rem" pb="1rem">
+          <Box pt="1.5rem" pb="1.5rem">
             <Grid container justify="center">
               <Grid item xs={12}>
                 <PieceCard
@@ -57,7 +59,25 @@ const ViewPiece = props => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <BottomBar piece={piece} />
+                <Box
+                  borderColor="secondary.main"
+                  bgcolor="background.card"
+                  border={1}
+                  borderTop={0}
+                >
+                  <Button
+                    fullWidth
+                    color="secondary"
+                    onClick={() => {
+                      history.push(`/admin/pieces/${piece.id}/edit`)
+                    }}
+                    disabled={
+                      status !== 'succeeded' || piece.owner.id !== user.id
+                    }
+                  >
+                    Edit Your Piece
+                  </Button>
+                </Box>
               </Grid>
             </Grid>
           </Box>
