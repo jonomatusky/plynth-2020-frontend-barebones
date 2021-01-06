@@ -130,7 +130,6 @@ const SectionItem = ({
   }
 
   const printHeader = section => {
-    const title = section.type.split('.').join(' of ')
     if (section.type === 'text') {
       return 'Text Section'
     } else if (section.type === 'list.links') {
@@ -142,7 +141,7 @@ const SectionItem = ({
     } else if (section.link) {
       return `Link${section.link.text ? ': ' + section.link.text : ''}`
     } else {
-      return title.charAt(0).toUpperCase() + title.slice(1)
+      return 'Section'
     }
   }
 
