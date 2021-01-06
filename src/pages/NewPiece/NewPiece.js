@@ -9,6 +9,8 @@ import PieceForm from 'components/PieceForm'
 import { BarRow } from 'components/CardSections'
 import NotificationModal from 'components/NotificationModal'
 
+const PIECE_VERSION = process.env.REACT_APP_PIECE_VERSION
+
 const NewPiece = () => {
   const { createPiece, newPieceImage, createStatus } = usePieceStore()
   const [confirmationModalIsOpen, setConfirmationModalIsOpen] = useState(false)
@@ -36,6 +38,7 @@ const NewPiece = () => {
 
   const handleOpenConfirmationModal = values => {
     values.images = [newPieceImage]
+    values.version = PIECE_VERSION
     setFormValues(values)
     setConfirmationModalIsOpen(true)
   }

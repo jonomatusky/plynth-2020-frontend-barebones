@@ -20,6 +20,32 @@ import UserAutocomplete from './UserAutocomplete'
 import theme from 'theme'
 import useUserStore from 'hooks/store/use-user-store'
 
+import LinkIcon from '@material-ui/icons/Link'
+import TitleIcon from '@material-ui/icons/Title'
+import ViewHeadlineIcon from '@material-ui/icons/ViewHeadline'
+import ListIcon from '@material-ui/icons/List'
+import PeopleIcon from '@material-ui/icons/People'
+import RemoveIcon from '@material-ui/icons/Remove'
+
+const AccordionIcon = ({ type }) => {
+  switch (type) {
+    case 'link':
+      return <LinkIcon fontSize="small" />
+    case 'title':
+      return <TitleIcon fontSize="small" />
+    case 'text':
+      return <ViewHeadlineIcon fontSize="small" />
+    case 'list.links':
+      return <ListIcon fontSize="small" />
+    case 'list.users':
+      return <PeopleIcon fontSize="small" />
+    case 'divider':
+      return <RemoveIcon fontSize="small" />
+    default:
+      return <RemoveIcon fontSize="small" />
+  }
+}
+
 const AccordionSummary = withStyles({
   root: {
     backgroundColor: theme.palette.secondary.main,
@@ -136,15 +162,21 @@ const SectionItem = ({
             />
           }
         >
-          <Typography>
-            <b>{printHeader(section)}</b>
-          </Typography>
+          <Box display="flex" alignItems="center" flexWrap="wrap">
+            <AccordionIcon type={section.type} />
+            <Box mr={1} />
+            <Typography>
+              <b>{printHeader(section)}</b>
+            </Typography>
+          </Box>
         </AccordionSummary>
         <AccordionDetails>
           <Grid container>
             <Grid item xs={12}>
               {section.type === 'text' && (
                 <TextField
+                  multiline
+                  rows={4}
                   control={control}
                   name={`sections[${index}].text`}
                   label="Text Section"

@@ -8,6 +8,7 @@ import LoadingSpinner from 'components/LoadingSpinner'
 import NotificationModal from 'components/NotificationModal'
 import NotFound from 'layouts/NotFound'
 import PieceForm from 'components/PieceForm'
+import PieceFormOld from 'components/PieceFormOld'
 import { BarRow } from 'components/CardSections'
 import FormLayout from 'layouts/FormLayout'
 
@@ -70,22 +71,43 @@ const UpdatePiece = () => {
           setDeleteModalIsOpen(false)
         }}
       />
-      {status === 'succeeded' && !!piece && (
-        <FormLayout
-          bar={<BarRow title="Edit Your Piece" buttonLabel={'Cancel X'} />}
-          bottom={
-            <Button color="inherit" onClick={handleOpenDeleteModal}>
-              Delete This Piece
-            </Button>
-          }
-        >
-          <PieceForm
-            piece={piece}
-            onSubmit={handleSubmit}
-            isLoading={updateStatus === 'loading'}
-          />
-        </FormLayout>
-      )}
+      {status === 'succeeded' &&
+        !!piece &&
+        !!piece.version &&
+        piece.version !== '1.0' && (
+          <FormLayout
+            bar={<BarRow title="Edit Your Piece" buttonLabel={'Cancel X'} />}
+            bottom={
+              <Button color="inherit" onClick={handleOpenDeleteModal}>
+                Delete This Piece
+              </Button>
+            }
+          >
+            <PieceForm
+              piece={piece}
+              onSubmit={handleSubmit}
+              isLoading={updateStatus === 'loading'}
+            />
+          </FormLayout>
+        )}
+      {status === 'succeeded' &&
+        !!piece &&
+        (!piece.version || piece.version === '1.0') && (
+          <FormLayout
+            bar={<BarRow title="Edit Your Piece" buttonLabel={'Cancel X'} />}
+            bottom={
+              <Button color="inherit" onClick={handleOpenDeleteModal}>
+                Delete This Piece
+              </Button>
+            }
+          >
+            <PieceFormOld
+              piece={piece}
+              onSubmit={handleSubmit}
+              isLoading={updateStatus === 'loading'}
+            />
+          </FormLayout>
+        )}
       {(status === 'loading' || status === 'idle') && (
         <LoadingSpinner asOverlay />
       )}

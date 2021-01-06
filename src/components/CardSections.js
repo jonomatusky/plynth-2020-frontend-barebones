@@ -55,8 +55,8 @@ export const TitleText = styled(Grid)`
 `
 
 export const PieceTitle = styled(Typography)`
-  font-weight: bold;
   line-height: 1;
+  overflow-wrap: break-word;
 `
 
 export const CardRow = styled(Grid)`
@@ -106,7 +106,7 @@ export const BarRow = ({ title, buttonLabel, onClose, ...props }) => {
   }
 
   return (
-    <Bar container justify="center">
+    <Box bgcolor="secondary.main" color="background.paper">
       <Grid container justify="space-between">
         <BarTitle>
           <Typography color="inherit">{title}</Typography>
@@ -117,7 +117,7 @@ export const BarRow = ({ title, buttonLabel, onClose, ...props }) => {
           </BarAction>
         </Grid>
       </Grid>
-    </Bar>
+    </Box>
   )
 }
 

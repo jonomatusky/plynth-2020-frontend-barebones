@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { Container } from '@material-ui/core'
+import { Container, Box, Grid } from '@material-ui/core'
 
 import { useRequest } from 'hooks/use-request'
 import { selectPiece } from 'redux/piecesSlice'
 import LoadingSpinner from 'components/LoadingSpinner'
 import NotFound from 'layouts/NotFound'
 import PieceCard from 'components/PieceCard'
+import BottomBar from 'components/PieceCardBottomBar'
 
 const ViewPiece = props => {
   const { request } = useRequest()
@@ -39,18 +40,27 @@ const ViewPiece = props => {
   return (
     <React.Fragment>
       {(status === 'loading' || status === 'idle') && (
-        <Container maxWidth="xs" disableGutters>
+        <Container maxWidth="xs">
           <LoadingSpinner asOverlay />
         </Container>
       )}
       {status === 'succeeded' && !!piece && (
-        <Container maxWidth="xs" disableGutters>
-          <PieceCard
-            piece={piece}
-            showAnalytics={showAnalytics}
-            scanCount={scanCount}
-            clickCount={clickCount}
-          />
+        <Container maxWidth="xs">
+          <Box pt="1.5rem" pb="1rem">
+            <Grid container justify="center">
+              <Grid item xs={12}>
+                <PieceCard
+                  piece={piece}
+                  showAnalytics={showAnalytics}
+                  scanCount={scanCount}
+                  clickCount={clickCount}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <BottomBar piece={piece} />
+              </Grid>
+            </Grid>
+          </Box>
         </Container>
       )}
       {status === 'failed' && <NotFound />}

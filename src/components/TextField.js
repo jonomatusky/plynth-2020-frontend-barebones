@@ -15,11 +15,11 @@ const MuiTextField = withStyles(theme => ({
     },
     borderRadius: 0,
   },
+  focused: {
+    backgroundColor: theme.palette.common.white,
+    color: theme.palette.background.default,
+  },
   input: {
-    '&:focus': {
-      backgroundColor: theme.palette.common.white,
-      color: theme.palette.background.default,
-    },
     fontWeight: 'bold',
   },
 }))(OutlinedInput)
@@ -31,6 +31,8 @@ const TextField = ({
   type,
   defaultValue,
   helperText,
+  multiline,
+  rows,
   ...props
 }) => {
   const labelId = `${name}-label`
@@ -40,7 +42,15 @@ const TextField = ({
         {label}
       </InputLabel>
       <Controller
-        as={<MuiTextField variant="outlined" name={name} id={labelId} />}
+        as={
+          <MuiTextField
+            variant="outlined"
+            name={name}
+            id={labelId}
+            multiline={multiline}
+            rows={rows}
+          />
+        }
         name={name}
         control={control}
         defaultValue={defaultValue}

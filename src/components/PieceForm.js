@@ -17,8 +17,6 @@ import SectionItem from './SectionItem'
 import SectionButton from './SectionButton'
 import { Image, ImageBox } from './FormElements'
 import ActionButton from './ActionButton'
-import { fetchUser } from 'redux/userSlice'
-import LinkList from './LinkList'
 
 const ASSET_URL = process.env.REACT_APP_ASSET_URL
 
@@ -40,7 +38,6 @@ const PieceForm = ({
     isDirect,
     directLink,
     sections,
-    generation,
   } = piece || {}
 
   imageFilepath = imageFilepath || (awsId && ext ? `${awsId}.${ext}` : null)
@@ -133,11 +130,10 @@ const PieceForm = ({
   // console.log(values)
 
   const [expanded, setExpanded] = useState(false)
-  const [sectionsLength, setSectionsLength] = useState(sections.length)
+  const [sectionsLength, setSectionsLength] = useState((sections || []).length)
 
   const handleChange = identifier => (event, isExpanded) => {
     setExpanded(isExpanded ? identifier : false)
-    console.log(expanded)
   }
 
   const handleAppend = data => {
@@ -162,13 +158,10 @@ const PieceForm = ({
   }, [fields, sectionsLength])
 
   useEffect(() => {
-    console.log(sections.map(section => section.type))
-    if (sections.map(section => section.type).includes('list.users')) {
+    if ((sections || []).map(section => section.type).includes('list.users')) {
       fetchUserList()
     }
   }, [sections, fetchUserList])
-
-  console.log(errors)
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -233,7 +226,7 @@ const PieceForm = ({
           <>
             {!watchDirect && (
               <>
-                {!!description && (
+                {/* {!!description && (
                   <Grid item>
                     <TextField
                       fullWidth
@@ -245,13 +238,13 @@ const PieceForm = ({
                       label="Description"
                     />
                   </Grid>
-                )}
-                {!!links && links.length > 0 && (
+                )} */}
+                {/* {!!links && links.length > 0 && (
                   <Grid item>
                     <LinkList control={control} links={links} />
                   </Grid>
-                )}
-                <Box height="1rem" />
+                )} */}
+                {/* <Box height="1rem" /> */}
                 {fields.map((section, index) => {
                   return (
                     <SectionItem

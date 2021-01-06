@@ -1,5 +1,6 @@
 import React from 'react'
 import { Grid, Box, Avatar, Typography, Button } from '@material-ui/core'
+import styled from 'styled-components'
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos'
 
 import { useLogClient } from 'hooks/log-hook'
@@ -8,23 +9,25 @@ import ActionButton from './ActionButton'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import {
   BarRow,
-  PieceBox,
-  TopRow,
-  ImageBox,
-  PieceImage,
-  TitleBox,
-  TitleText,
   PieceTitle,
-  CardRow,
   AvatarBox,
-  AvatarTypography,
   UnstyledLink,
-  DescriptionBox,
   DescriptionText,
-  LinkRow,
 } from './CardSections'
-import BottomBar from './PieceCardBottomBar'
 import theme from 'theme'
+
+const ImageSquare = styled.div`
+  background: url(${props => props.url}) no-repeat center;
+  background-size: contain;
+  text-align: center;
+  position: relative;
+  width: 100%;
+  &:after {
+    content: '';
+    display: block;
+    padding-bottom: 100%;
+  }
+`
 
 const PieceCard = ({ piece, onClose, ...props }) => {
   const { sendLog } = useLogClient()
@@ -64,7 +67,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
         onClick={handleClick}
         target="_blank"
         href={link.url}
-        label={link.name}
+        label={link.text || link.name}
       />
     )
   }
@@ -81,62 +84,100 @@ const PieceCard = ({ piece, onClose, ...props }) => {
             },
           })
         }
-      } catch (err) {
-        console.log(err)
-      }
+      } catch (err) {}
     }
 
     return (
       <UnstyledLink to={`/${piece.owner.username}`} onClick={handleClick}>
-        <CardRow container direction="row" wrap="nowrap" alignItems="center">
+        <Box
+          borderTop={1}
+          borderColor="secondary.main"
+          bgcolor="background.card"
+          display="flex"
+          alignItems="center"
+        >
           <Box padding="0.5rem 0.75rem">
             {piece.owner.avatar ? (
               <Avatar
                 alt={piece.owner.displayName}
                 src={piece.owner.avatarLink}
+                style={{
+                  width: theme.spacing(4),
+                  height: theme.spacing(4),
+                }}
               />
             ) : (
               <AccountCircleIcon />
             )}
           </Box>
           <AvatarBox flexGrow={1} paddingRight="0.5rem">
-            <AvatarTypography variant="subtitle2">
+            <Typography variant="subtitle2">
               <strong>{piece.owner.displayName}</strong>
-            </AvatarTypography>
+            </Typography>
           </AvatarBox>
-        </CardRow>
+        </Box>
       </UnstyledLink>
     )
   }
 
   return (
-    <Grid container justify="center">
-      <Grid item xs={11}>
-        <Box height="1rem"></Box>
-        <PieceBox container direction="column">
+    <Box border={1} borderColor="secondary.main" bgcolor="background.card">
+      <Grid container justify="center">
+        <Grid item xs={12}>
           <BarRow buttonLabel="Close X" onClose={onClose} />
-          <TopRow container>
-            <ImageBox item xs={6}>
-              <PieceImage src={piece.imageUrl} alt="Preview" />
-            </ImageBox>
-            <TitleBox item xs={6}>
-              <TitleText container direction="column" justify="center">
+        </Grid>
+        <Grid item xs={12}>
+          <Box borderBottom={1} borderColor="secondary.main">
+            <Grid container alignItems="stretch">
+              <Grid item xs={6}>
                 <Box
-                  flexGrow={1}
+                  height="100%"
                   display="flex"
                   alignItems="center"
-                  padding="1rem"
+                  justifyContent="center"
+                  justifyItems="center"
                 >
-                  <PieceTitle variant="h5">{piece.title}</PieceTitle>
+                  <ImageSquare url={piece.imageUrl} />
                 </Box>
-                <OwnerSection owner={piece.owner} />
-              </TitleText>
-            </TitleBox>
-          </TopRow>
-          {props.showAnalytics && (
-            <CardRow container justify="center">
-              <Grid item xs={11}>
-                <Grid container justify="space-between">
+              </Grid>
+              <Grid item xs={6}>
+                <Box
+                  borderLeft={1}
+                  borderColor="secondary.main"
+                  height="100%"
+                  display="flex"
+                  flexDirection="column"
+                  justifycontent="center"
+                >
+                  <Box
+                    flex={1}
+                    display="flex"
+                    alignItems="center"
+                    p={0.5}
+                    pl={1.5}
+                    pr={1}
+                  >
+                    <Grid container>
+                      <Grid item xs={12}>
+                        <PieceTitle variant="h5">
+                          <strong>{piece.title}</strong>
+                        </PieceTitle>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                  <Box>
+                    <OwnerSection owner={piece.owner} />
+                  </Box>
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
+        </Grid>
+        {props.showAnalytics && (
+          <Grid item xs={12}>
+            <Box borderBottom={1} borderColor="secondary.main">
+              <Grid container justify="center">
+                <Grid item xs={11} container justify="space-between">
                   <Grid item>
                     <Typography variant="subtitle1">
                       Pickups: {props.scanCount}
@@ -157,64 +198,68 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                   </Grid>
                 </Grid>
               </Grid>
-            </CardRow>
-          )}
-
-          {piece.isDirect ? (
-            <CardRow container justify="center">
-              <DescriptionBox item xs={11}>
-                <DescriptionText>
-                  Taking users directly to {piece.directLink || `your profile`}
-                </DescriptionText>
-              </DescriptionBox>
-            </CardRow>
-          ) : (
-            <>
-              <CardRow container justify="center">
-                <DescriptionBox item xs={11}>
-                  <DescriptionText>{piece.description}</DescriptionText>
-                </DescriptionBox>
-              </CardRow>
-              {piece.links.map(link => {
-                return (
-                  <LinkRow container key={link._id} justify="center">
-                    <Grid item xs={11}>
-                      <LinkButton link={link} />
+            </Box>
+          </Grid>
+        )}
+        <Grid item xs={12}>
+          <Box pt={2} pb={2}>
+            <Grid container justify="center" spacing={3}>
+              {piece.isDirect ? (
+                <Grid item xs={12}>
+                  <DescriptionText>
+                    Taking users directly to{' '}
+                    {piece.directLink || `your profile`}
+                  </DescriptionText>
+                </Grid>
+              ) : (
+                <>
+                  {!!piece.description && (
+                    <Grid container item xs={11}>
+                      <DescriptionText>{piece.description}</DescriptionText>
                     </Grid>
-                  </LinkRow>
-                )
-              })}
-              {piece.sections.map((section, index) => {
-                return (
-                  <Grid item key={index}>
-                    {section.title && (
-                      <LinkRow container justify="center" key={index}>
-                        <Grid item xs={11}>
-                          <Box padding={`0.5rem 0rem 0rem 0rem`}>
-                            <PieceTitle variant="h5">
-                              {section.title}
+                  )}
+                  {!!piece.links &&
+                    piece.links.map(link => {
+                      return (
+                        <Grid container key={link._id} justify="center">
+                          <Grid item xs={11}>
+                            <LinkButton link={link} />
+                          </Grid>
+                        </Grid>
+                      )
+                    })}
+                  {piece.sections.map((section, index) => {
+                    return (
+                      <Grid container item xs={12} justify="center" key={index}>
+                        {section.type === 'divider' && (
+                          <Grid item key={index} xs={12}>
+                            <Box borderTop={1} borderColor="secondary.main" />
+                          </Grid>
+                        )}
+                        {section.title && (
+                          <Grid item key={index} xs={11}>
+                            <PieceTitle variant="h6">
+                              <strong>{section.title}</strong>
                             </PieceTitle>
-                          </Box>
-                        </Grid>
-                      </LinkRow>
-                    )}
-                    {section.text && (
-                      <CardRow container justify="center" key={index}>
-                        <Grid item xs={11}>
-                          <DescriptionBox>
+                          </Grid>
+                        )}
+                        {section.text && (
+                          <Grid item xs={11}>
                             <DescriptionText>{section.text}</DescriptionText>
-                          </DescriptionBox>
-                        </Grid>
-                      </CardRow>
-                    )}
-                    {section.linkListIsSecondary
-                      ? (section.links || []).length > 0 && (
+                          </Grid>
+                        )}
+                        {section.link && (
+                          <Grid item xs={11}>
+                            <LinkButton link={section.link} />
+                          </Grid>
+                        )}
+                        {(section.links || []).length > 0 && (
                           <Grid container justify="center" key={index}>
                             <Grid item xs={11}>
                               <Grid
                                 container
                                 justify="space-between"
-                                spacing={3}
+                                spacing={2}
                               >
                                 {(section.links || []).map(link => {
                                   return (
@@ -239,7 +284,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                                                 textTransform: 'none',
                                               }}
                                             >
-                                              {link.name}
+                                              {link.text || link.name}
                                             </Typography>
                                           </Grid>
                                           <Grid item>
@@ -256,80 +301,73 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                               </Grid>
                             </Grid>
                           </Grid>
-                        )
-                      : (section.links || []).map(link => {
-                          return (
-                            <LinkRow container key={link.url} justify="center">
-                              <Grid item xs={11}>
-                                <LinkButton link={link} />
-                              </Grid>
-                            </LinkRow>
-                          )
-                        })}
-                    {(section.users || []).length > 0 && (
-                      <LinkRow container justify="center" key={index}>
-                        <Grid item xs={11}>
-                          <Box margin={`0em 0em 1em 0em`}>
-                            <Grid container justify="space-between" spacing={2}>
-                              {section.users.map(user => {
-                                return (
-                                  <Grid item key={user._id} xs={6}>
-                                    <UnstyledLink to={`/${user.username}`}>
-                                      <Grid
-                                        container
-                                        direction="row"
-                                        wrap="nowrap"
-                                        alignItems="center"
-                                        alignContent="center"
-                                        style={{ height: '100%' }}
-                                      >
-                                        <Grid item>
-                                          <Box paddingRight="0.5rem">
-                                            {user.avatar ? (
-                                              <Avatar
-                                                alt={user.displayName}
-                                                src={user.avatarLink}
-                                                style={{
-                                                  width: theme.spacing(4),
-                                                  height: theme.spacing(4),
-                                                }}
-                                              />
-                                            ) : (
-                                              <AccountCircleIcon />
-                                            )}
-                                          </Box>
-                                        </Grid>
-                                        <AvatarBox
-                                          flexGrow={1}
-                                          paddingRight="0.5rem"
+                        )}
+                        {(section.users || []).length > 0 && (
+                          <Grid container justify="center" key={index}>
+                            <Grid item xs={11}>
+                              <Grid
+                                container
+                                justify="space-between"
+                                spacing={1}
+                              >
+                                {section.users.map(user => {
+                                  return (
+                                    <Grid item key={user._id} xs={6}>
+                                      <UnstyledLink to={`/${user.username}`}>
+                                        <Grid
+                                          container
+                                          direction="row"
+                                          wrap="nowrap"
+                                          alignItems="center"
+                                          alignContent="center"
+                                          style={{ height: '100%' }}
                                         >
-                                          <AvatarTypography>
-                                            <strong>{user.displayName}</strong>
-                                          </AvatarTypography>
-                                        </AvatarBox>
-                                      </Grid>
-                                    </UnstyledLink>
-                                  </Grid>
-                                )
-                              })}
+                                          <Grid item>
+                                            <Box paddingRight="0.5rem">
+                                              {user.avatar ? (
+                                                <Avatar
+                                                  alt={user.displayName}
+                                                  src={user.avatarLink}
+                                                  style={{
+                                                    width: theme.spacing(4),
+                                                    height: theme.spacing(4),
+                                                  }}
+                                                />
+                                              ) : (
+                                                <AccountCircleIcon />
+                                              )}
+                                            </Box>
+                                          </Grid>
+                                          <AvatarBox
+                                            flexGrow={1}
+                                            paddingRight="0.5rem"
+                                          >
+                                            <Typography>
+                                              <strong>
+                                                {user.displayName}
+                                              </strong>
+                                            </Typography>
+                                          </AvatarBox>
+                                        </Grid>
+                                      </UnstyledLink>
+                                    </Grid>
+                                  )
+                                })}
+                              </Grid>
                             </Grid>
-                          </Box>
-                        </Grid>
-                      </LinkRow>
-                    )}
-                  </Grid>
-                )
-              })}
-              {!piece.sections.length > 0 && <Box height="1rem"></Box>}
-            </>
-          )}
-          <BottomBar piece={piece} />
-        </PieceBox>
-        <Box height="1rem"></Box>
+                          </Grid>
+                        )}
+                      </Grid>
+                    )
+                  })}
+                </>
+              )}
+            </Grid>
+          </Box>
+        </Grid>
       </Grid>
-    </Grid>
+    </Box>
   )
 }
 
 export default PieceCard
-export { TitleBox, CardRow }

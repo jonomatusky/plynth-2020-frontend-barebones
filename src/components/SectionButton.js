@@ -1,6 +1,18 @@
 import React, { useState } from 'react'
-import { Button, Menu, MenuItem } from '@material-ui/core'
-// import { useUserStore } from 'hooks/store/use-user-store'
+import {
+  Button,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  Typography,
+} from '@material-ui/core'
+
+import LinkIcon from '@material-ui/icons/Link'
+import TitleIcon from '@material-ui/icons/Title'
+import ViewHeadlineIcon from '@material-ui/icons/ViewHeadline'
+import ListIcon from '@material-ui/icons/List'
+import PeopleIcon from '@material-ui/icons/People'
+import RemoveIcon from '@material-ui/icons/Remove'
 
 const SectionButton = props => {
   // const { fetchUserList } = useUserStore()
@@ -16,7 +28,6 @@ const SectionButton = props => {
   }
 
   const handleSelect = type => {
-    console.log(type)
     switch (type) {
       case 'link':
         props.append({ type, link: { text: '', url: '' } })
@@ -33,6 +44,9 @@ const SectionButton = props => {
       case 'list.users':
         // fetchUserList()
         props.append({ type, users: [] })
+        break
+      case 'divider':
+        props.append({ type })
         break
       default:
         props.append({ name: '', url: '' })
@@ -53,19 +67,40 @@ const SectionButton = props => {
         onClose={handleClose}
       >
         <MenuItem onClick={() => handleSelect('link')}>
-          Add Link Button
+          <ListItemIcon>
+            <LinkIcon fontSize="small" />
+          </ListItemIcon>
+          <Typography>Link button</Typography>
         </MenuItem>
         <MenuItem onClick={() => handleSelect('title')}>
-          Add Title Section
+          <ListItemIcon>
+            <TitleIcon fontSize="small" />
+          </ListItemIcon>
+          <Typography>Heading/title</Typography>
         </MenuItem>
         <MenuItem onClick={() => handleSelect('text')}>
-          Add Text Section
+          <ListItemIcon>
+            <ViewHeadlineIcon fontSize="small" />
+          </ListItemIcon>
+          <Typography>Text section</Typography>
         </MenuItem>
         <MenuItem onClick={() => handleSelect('list.links')}>
-          Add Link List
+          <ListItemIcon>
+            <ListIcon fontSize="small" />
+          </ListItemIcon>
+          <Typography>List of links</Typography>
         </MenuItem>
         <MenuItem onClick={() => handleSelect('list.users')}>
-          Add Profile List
+          <ListItemIcon>
+            <PeopleIcon fontSize="small" />
+          </ListItemIcon>
+          <Typography>List of users</Typography>
+        </MenuItem>
+        <MenuItem onClick={() => handleSelect('divider')}>
+          <ListItemIcon>
+            <RemoveIcon fontSize="small" />
+          </ListItemIcon>
+          <Typography>Dividing line</Typography>
         </MenuItem>
       </Menu>
     </>
