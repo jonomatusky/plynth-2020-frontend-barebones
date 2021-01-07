@@ -48,9 +48,8 @@ import MessageBar from 'components/MessageBar'
 import NavBar from 'components/NavBar'
 
 firebase.analytics()
-posthog.init('E2QEbn5_tIopjXPvTdEQe_XPe9ONukgm0t_a2iRJO08', {
-  api_host: 'https://app.posthog.com',
-})
+const POSTHOG_KEY = process.env.REACT_APP_POSTHOG_KEY
+posthog.init(POSTHOG_KEY, { api_host: 'https://app.posthog.com' })
 
 const App = () => {
   let routes
