@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   BrowserRouter as Router,
   Route as DomRoute,
@@ -13,6 +13,7 @@ import { useAuth } from 'hooks/auth-hook'
 import { AuthContext } from 'contexts/auth-context'
 import { useFetch } from 'hooks/use-fetch'
 import firebase from './firebase'
+import posthog from 'posthog-js'
 
 import Background from 'layouts/Background'
 import NewPieceImage from 'pages/NewPieceImage/NewPieceImage'
@@ -47,6 +48,9 @@ import MessageBar from 'components/MessageBar'
 import NavBar from 'components/NavBar'
 
 firebase.analytics()
+posthog.init('E2QEbn5_tIopjXPvTdEQe_XPe9ONukgm0t_a2iRJO08', {
+  api_host: 'https://app.posthog.com',
+})
 
 const App = () => {
   let routes
@@ -61,6 +65,10 @@ const App = () => {
   }) => {
     const location = useLocation()
     useFetch()
+
+    useEffect(() => {
+      posthog.capture('$pageview')
+    }, [location])
 
     return (
       <DomRoute
