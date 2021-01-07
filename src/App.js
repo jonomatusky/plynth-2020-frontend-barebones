@@ -49,6 +49,7 @@ import NavBar from 'components/NavBar'
 
 firebase.analytics()
 const POSTHOG_KEY = process.env.REACT_APP_POSTHOG_KEY
+console.log(POSTHOG_KEY)
 posthog.init(POSTHOG_KEY, { api_host: 'https://app.posthog.com' })
 
 const App = () => {
