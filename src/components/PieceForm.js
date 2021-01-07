@@ -202,7 +202,6 @@ const PieceForm = ({
             label="Skip this page. Take users directly to my profile or content."
           />
         </Grid>
-        <Grid item xs={12}></Grid>
         {!!watchDirect ? (
           <>
             <Grid item xs={12}>
