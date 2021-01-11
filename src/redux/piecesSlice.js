@@ -74,6 +74,9 @@ const piecesSlice = createSlice({
       state.updateStatus = 'idle'
       state.createStatus = 'idle'
     },
+    setFilter(state, action) {
+      state.filter = action.payload
+    },
   },
   extraReducers: {
     [fetchPieces.pending]: (state, action) => {
@@ -140,10 +143,25 @@ export const {
   setPiece,
   setNewPieceImage,
   clearPieces,
+  setFilter,
 } = piecesSlice.actions
 
 export default piecesSlice.reducer
 
 export const selectPiece = (state, pieceId) => {
   return (state.pieces.pieces || []).find(piece => piece.id === pieceId)
+}
+
+export const selectPiecesByUser = (state, username) => {
+  return state.pieces.pieces.filter(piece => piece.owner.username === username)
+}
+
+export const getPiecesByFilter = state => {
+  if (state.pieces.filter === 'REMOVED') {
+    return state.pieces.pieces.filter(piece => piece.isRemoved)
+  } else if (state.pieces.filter === 'ACTIVE') {
+    return state.pieces.pieces.filter(piece => !piece.isRemoved)
+  } else {
+    return state.pieces.pieces
+  }
 }

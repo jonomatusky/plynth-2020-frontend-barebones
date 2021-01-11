@@ -43,9 +43,20 @@ import SignupCreator from 'pages/SignupCreator/SignupCreator'
 import SignupFan from 'pages/SignupFan/SignupFan'
 import ContactUs from 'pages/ContactUs/ContactUs'
 
+import SAViewPieces from './pages/SAViewPieces/SAViewPieces'
+import SAViewPiece from './pages/SAViewPiece/SAViewPiece'
+import SAUpdatePiece from './pages/SAUpdatePiece/SAUpdatePiece'
+import SAViewUsers from './pages/SAViewUsers/SAViewUsers'
+import SAViewUser from './pages/SAViewUser/SAViewUser'
+import SAUpdateUser from './pages/SAUpdateUser.js/SAUpdateUser'
+import SARemoveUser from './pages/SARemoveUser/SARemoveUser'
+import SAViewScans from './pages/SAViewScans/SAViewScans'
+import SAViewScan from './pages/SAViewScan/SAViewScan'
+
 import ErrorBar from 'components/ErrorBar'
 import MessageBar from 'components/MessageBar'
 import NavBar from 'components/NavBar'
+import useUserStore from 'hooks/store/use-user-store'
 
 firebase.analytics()
 const POSTHOG_KEY = process.env.REACT_APP_POSTHOG_KEY
@@ -54,11 +65,13 @@ posthog.init(POSTHOG_KEY, { api_host: 'https://app.posthog.com' })
 const App = () => {
   let routes
   const { token, login, logout, authStatus } = useAuth()
+  const { user } = useUserStore()
 
   const Route = ({
     component: Component,
     noNav,
     publicRoute,
+    superadmin,
     restricted,
     ...rest
   }) => {
@@ -82,9 +95,20 @@ const App = () => {
                 }}
               />
             )}
+            {/* {!publicRoute &&
+              authStatus === 'authenticated' &&
+              superadmin &&
+              !user.admin && (
+                <Redirect
+                  to={{
+                    pathname: '/admin/profile',
+                    state: { referrer: '/' },
+                  }}
+                />
+              )} */}
             {publicRoute && restricted && authStatus === 'authenticated' && (
               <Redirect
-                to={(location.state || {}).referrer || '/admin/pieces'}
+                to={(location.state || {}).referrer || '/admin/profile'}
               />
             )}
             {
@@ -109,6 +133,82 @@ const App = () => {
   routes = (
     <Switch>
       <Route publicRoute={true} component={Home} path="/" exact />
+
+      <Route
+        publicRoute={true}
+        component={SignIn}
+        path="/superadmin/login"
+        exact
+      />
+
+      <Route
+        superadmin={true}
+        component={SAViewPieces}
+        path="/superadmin/pieces"
+        exact
+      />
+
+      <Route
+        superadmin={true}
+        component={SAViewPiece}
+        path="/superadmin/pieces/:pieceId"
+        noNav
+        exact
+      />
+
+      <Route
+        superadmin={true}
+        component={SAUpdatePiece}
+        path="/superadmin/pieces/:pieceId/edit"
+        noNav
+        exact
+      />
+
+      <Route
+        superadmin={true}
+        component={SAViewScans}
+        path="/superadmin/pickups"
+        exact
+      />
+
+      <Route
+        superadmin={true}
+        component={SAViewScan}
+        path="/superadmin/pickups/:scanId"
+        noNav
+        exact
+      />
+
+      <Route
+        superadmin={true}
+        component={SAViewUsers}
+        path="/superadmin/users"
+        exact
+      />
+
+      <Route
+        superadmin={true}
+        component={SAViewUser}
+        path="/superadmin/users/:username"
+        noNav
+        exact
+      />
+
+      <Route
+        superadmin={true}
+        component={SARemoveUser}
+        path="/superadmin/users/:username/remove"
+        noNav
+        exact
+      />
+
+      <Route
+        superadmin={true}
+        component={SAUpdateUser}
+        path="/superadmin/users/:username/edit"
+        noNav
+        exact
+      />
 
       <Route
         publicRoute={true}
