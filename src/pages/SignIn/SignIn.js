@@ -16,18 +16,20 @@ const SignIn = () => {
   const location = useLocation()
 
   const initialValues = {
-    email: '',
+    emailOrUsername: '',
     password: '',
   }
 
   const validationSchema = Yup.object({
-    email: Yup.string()
-      .email('Please provide your email address.')
-      .required('Required'),
-    password: Yup.string().required('Required'),
+    emailOrUsername: Yup.string().required(
+      'Please provide your email or username.'
+    ),
+    password: Yup.string().required('Please enter your password to log in.'),
   })
 
   const handleSubmit = async values => {
+    values.emailOrUsername = values.emailOrUsername.toLowerCase()
+
     try {
       const { token } = await request({
         url: '/auth/login',
@@ -69,8 +71,8 @@ const SignIn = () => {
         status={status}
       >
         <TextField
-          name="email"
-          label="Email"
+          name="emailOrUsername"
+          label="Username or Email"
           type="text"
           autocapitalize="none"
           autocorrect="off"
