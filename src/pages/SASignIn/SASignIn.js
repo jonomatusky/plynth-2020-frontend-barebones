@@ -35,7 +35,7 @@ const SignIn = () => {
         data: values,
       })
       auth.login(token)
-      history.push('/admin/profile')
+      history.push('/superadmin/pieces')
     } catch (err) {}
   }
 

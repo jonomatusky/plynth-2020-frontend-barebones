@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { Container, Grid } from '@material-ui/core'
 
+import SALayout from 'layouts/SALayout'
 import { setMessage } from 'redux/alertSlice'
 import Message from 'components/MessageBar'
 import Background from 'layouts/Background'
@@ -46,7 +47,7 @@ const MyPieces = () => {
   }
 
   return (
-    <React.Fragment>
+    <SALayout>
       <Message />
       <Background />
       <Container maxWidth="sm">
@@ -73,7 +74,7 @@ const MyPieces = () => {
           )}
         </Grid>
       </Container>
-    </React.Fragment>
+    </SALayout>
   )
 }
 
