@@ -9,7 +9,7 @@ const SALayout = ({ children }) => {
 
   return (
     <>
-      {user && !!user.admin && { children }}
+      {user && !!user.admin && children}
       {user && !user.admin && <NoPermission />}
       {!user && <LoadingSpinner />}
     </>

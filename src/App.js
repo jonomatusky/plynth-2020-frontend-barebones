@@ -43,15 +43,17 @@ import SignupCreator from 'pages/SignupCreator/SignupCreator'
 import SignupFan from 'pages/SignupFan/SignupFan'
 import ContactUs from 'pages/ContactUs/ContactUs'
 
-import SAViewPieces from './pages/SAViewPieces/SAViewPieces'
-import SAViewPiece from './pages/SAViewPiece/SAViewPiece'
-import SAUpdatePiece from './pages/SAUpdatePiece/SAUpdatePiece'
-import SAViewUsers from './pages/SAViewUsers/SAViewUsers'
-import SAViewUser from './pages/SAViewUser/SAViewUser'
-import SAUpdateUser from './pages/SAUpdateUser.js/SAUpdateUser'
-import SARemoveUser from './pages/SARemoveUser/SARemoveUser'
-import SAViewScans from './pages/SAViewScans/SAViewScans'
-import SAViewScan from './pages/SAViewScan/SAViewScan'
+import SAViewPieces from 'pages/SAViewPieces/SAViewPieces'
+import SAViewPiece from 'pages/SAViewPiece/SAViewPiece'
+import SAUpdatePiece from 'pages/SAUpdatePiece/SAUpdatePiece'
+import SAViewUsers from 'pages/SAViewUsers/SAViewUsers'
+import SAViewUser from 'pages/SAViewUser/SAViewUser'
+import SAUpdateUser from 'pages/SAUpdateUser.js/SAUpdateUser'
+import SARemoveUser from 'pages/SARemoveUser/SARemoveUser'
+import SAViewScans from 'pages/SAViewScans/SAViewScans'
+import SAViewScan from 'pages/SAViewScan/SAViewScan'
+import SASignIn from 'pages/SASignIn/SASignIn'
+import SANavBar from 'components/SANavBar'
 
 import ErrorBar from 'components/ErrorBar'
 import MessageBar from 'components/MessageBar'
@@ -103,12 +105,25 @@ const App = () => {
                 {authStatus === 'authenticated' && !publicRoute && !noNav && (
                   <NavBar />
                 )}
-                <main>
-                  <Component {...props} />
-                  {authStatus === 'authenticated' && !publicRoute && !noNav && (
-                    <Box height="5rem" />
+                {authStatus === 'authenticated' &&
+                  superadmin &&
+                  !publicRoute &&
+                  !noNav && (
+                    <SANavBar>
+                      <Component {...props} />
+                      {authStatus === 'authenticated' &&
+                        !publicRoute &&
+                        !noNav && <Box height="5rem" />}
+                    </SANavBar>
                   )}
-                </main>
+                {!superadmin && (
+                  <main>
+                    <Component {...props} />
+                    {authStatus === 'authenticated' &&
+                      !publicRoute &&
+                      !noNav && <Box height="5rem" />}
+                  </main>
+                )}
               </>
             }
           </>
@@ -123,7 +138,8 @@ const App = () => {
 
       <Route
         publicRoute={true}
-        component={SignIn}
+        restricted={true}
+        component={SASignIn}
         path="/superadmin/login"
         exact
       />
