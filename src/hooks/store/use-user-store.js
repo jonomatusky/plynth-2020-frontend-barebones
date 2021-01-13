@@ -2,7 +2,12 @@ import { useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { useThunk } from 'hooks/use-thunk'
-import { fetchUser, updateUser, clearUser } from 'redux/userSlice'
+import {
+  fetchUser,
+  updateUser,
+  clearUser,
+  fetchUserList,
+} from 'redux/userSlice'
 
 export const useUserStore = () => {
   const dispatch = useDispatch()
@@ -10,6 +15,10 @@ export const useUserStore = () => {
 
   const _fetchUser = useCallback(async () => {
     await dispatchThunk(fetchUser)
+  }, [dispatchThunk])
+
+  const _fetchUserList = useCallback(async () => {
+    await dispatchThunk(fetchUserList)
   }, [dispatchThunk])
 
   const _updateUser = useCallback(
@@ -25,6 +34,7 @@ export const useUserStore = () => {
 
   const {
     user,
+    users,
     status,
     updateStatus,
     error,
@@ -34,9 +44,11 @@ export const useUserStore = () => {
 
   return {
     fetchUser: _fetchUser,
+    fetchUserList: _fetchUserList,
     updateUser: _updateUser,
     clearUser: _clearUser,
     user,
+    users,
     status,
     updateStatus,
     error,
@@ -44,3 +56,5 @@ export const useUserStore = () => {
     locationHistory,
   }
 }
+
+export default useUserStore

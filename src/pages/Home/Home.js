@@ -337,7 +337,7 @@ const Home = () => {
                       <Typography>
                         Every month, we partner with 10+ musicians to produce a
                         new <b>Postcard Mixtape</b> and deliver it directly to
-                        your door. Just snap a photo to unlock an exclusive
+                        your door. Just snap a photo to unlock a secret, curated
                         playlist and info about the artists.
                       </Typography>
                     </Grid>

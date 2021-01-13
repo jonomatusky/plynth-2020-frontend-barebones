@@ -1,17 +1,22 @@
-import React from 'react'
-import { Grid, Box } from '@material-ui/core'
-import { Formik, Form } from 'formik'
+import React, { useEffect, useState } from 'react'
+import { useForm, useFieldArray, Controller } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 
-import ActionButton from './ActionButton'
 import {
-  TextField,
-  TextArea,
-  Image,
-  ImageBox,
-  CheckButton,
-} from './FormElements'
-import LinksList from './LinkList'
+  Grid,
+  Box,
+  Checkbox,
+  FormControlLabel,
+  Typography,
+} from '@material-ui/core'
+
+import { useUserStore } from 'hooks/store/use-user-store'
+import TextField from './TextField'
+import SectionItem from './SectionItem'
+import SectionButton from './SectionButton'
+import { Image, ImageBox } from './FormElements'
+import ActionButton from './ActionButton'
 
 const ASSET_URL = process.env.REACT_APP_ASSET_URL
 
@@ -22,26 +27,33 @@ const PieceForm = ({
   isLoading,
   submitLabel,
 }) => {
-  const { title, description, links, awsId, ext, isDirect, directLink } =
-    piece || {}
+  const { fetchUserList } = useUserStore()
+
+  const {
+    title,
+    description,
+    links,
+    awsId,
+    ext,
+    isDirect,
+    directLink,
+    sections,
+  } = piece || {}
 
   imageFilepath = imageFilepath || (awsId && ext ? `${awsId}.${ext}` : null)
 
-  const initialValues = {
+  const defaultValues = {
     title: title || '',
     description: description || '',
     links: links || [],
     isDirect: isDirect || false,
     directLink: directLink || '',
-  }
-
-  const handleSubmit = async values => {
-    onSubmit(values)
+    sections: sections || [],
   }
 
   const validationSchema = Yup.object({
     title: Yup.string()
-      .max(32, 'Must be 32 characters or less')
+      .max(48, 'Must be 48 characters or less')
       .required('Required'),
     description: Yup.string(),
     directLink: Yup.string().url(
@@ -57,82 +69,202 @@ const PieceForm = ({
           .required('Required'),
       })
     ),
+    sections: Yup.array().of(
+      Yup.object({
+        type: Yup.string(),
+        title: Yup.string().when('type', {
+          is: value => value === 'title',
+          then: Yup.string().required('Required'),
+          otherwise: Yup.string(),
+        }),
+        text: Yup.string().when('type', {
+          is: value => value === 'text',
+          then: Yup.string().required('Required'),
+          otherwise: Yup.string(),
+        }),
+        link: Yup.object().when('type', {
+          is: value => value === 'link',
+          then: Yup.object().shape({
+            text: Yup.string()
+              .max(32, 'Must be 32 characters or less')
+              .required('Required'),
+            url: Yup.string()
+              .url(`Must be a valid URL. Include http:// or https://`)
+              .required('Required'),
+          }),
+          otherwise: Yup.object(),
+        }),
+        links: Yup.array().when('type', {
+          is: value => value === 'list.links',
+          then: Yup.array().of(
+            Yup.object({
+              text: Yup.string()
+                .max(32, 'Must be 32 characters or less')
+                .required('Required'),
+              url: Yup.string()
+                .url(`Must be a valid URL. Include http:// or https://`)
+                .required('Required'),
+            })
+          ),
+        }),
+      })
+    ),
   })
 
+  const { register, handleSubmit, errors, control, watch } = useForm({
+    mode: 'onBlur',
+    resolver: yupResolver(validationSchema),
+    defaultValues,
+    shouldUnregister: false,
+  })
+
+  const { fields, append, remove, move } = useFieldArray({
+    control,
+    name: 'sections',
+    keyName: 'identifier',
+  })
+
+  const watchDirect = watch('isDirect', isDirect)
+
+  // const values = watch()
+  // console.log(values)
+
+  const [expanded, setExpanded] = useState(false)
+  const [sectionsLength, setSectionsLength] = useState((sections || []).length)
+
+  const handleChange = identifier => (event, isExpanded) => {
+    setExpanded(isExpanded ? identifier : false)
+  }
+
+  const handleAppend = data => {
+    append(data)
+  }
+
+  useEffect(() => {
+    const handleAppend = () => {
+      setExpanded(fields[fields.length - 1].identifier)
+      setSectionsLength(fields.length)
+    }
+    const handleRemove = () => {
+      setSectionsLength(fields.length)
+    }
+    if (fields.length !== sectionsLength) {
+      if (fields.length > sectionsLength) {
+        handleAppend()
+      } else {
+        handleRemove()
+      }
+    }
+  }, [fields, sectionsLength])
+
+  useEffect(() => {
+    if ((sections || []).map(section => section.type).includes('list.users')) {
+      fetchUserList()
+    }
+  }, [sections, fetchUserList])
+
   return (
-    <>
-      <Formik
-        enableReinitialize="true"
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
-        {({ values, setFieldValue }) => (
-          <Form>
-            <Grid container direction="column" spacing={1}>
-              <Grid item>
-                <Grid container justify="center">
-                  <Grid item>
-                    <ImageBox>
-                      {imageFilepath && (
-                        <Image
-                          src={`${ASSET_URL}/${imageFilepath}`}
-                          alt="Preview"
-                        />
-                      )}
-                    </ImageBox>
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item>
-                <TextField name="title" label="Title (Required)" />
-              </Grid>
-              <Grid item>
-                <CheckButton
-                  onClick={() => {
-                    setFieldValue('isDirect', !values.isDirect)
-                    setFieldValue('directLink', '')
-                  }}
-                  name="isDirect"
-                  label="Take users directly to my profile or content"
-                  checked={values.isDirect}
-                />
-              </Grid>
-              {values.isDirect ? (
-                <Grid item>
-                  <TextField
-                    name="directLink"
-                    label="Enter your direct link. Otherwise users will be directed to your profile."
-                  />
-                </Grid>
-              ) : (
-                <>
-                  {!values.isDirect && (
-                    <>
-                      <Grid item>
-                        <TextArea name="description" label="Description" />
-                      </Grid>
-                      <Box height="1rem" />
-                      <Grid item>
-                        <LinksList links={values.links} />
-                      </Grid>
-                    </>
-                  )}
-                </>
-              )}
-              <Box height="1rem"></Box>
-              <Grid item>
-                <ActionButton
-                  type="submit"
-                  label={submitLabel || `Save & Close`}
-                  loading={isLoading}
-                />
-              </Grid>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Grid container justify="center">
+            <Grid item>
+              <ImageBox>
+                {imageFilepath && (
+                  <Image src={`${ASSET_URL}/${imageFilepath}`} alt="Preview" />
+                )}
+              </ImageBox>
             </Grid>
-          </Form>
+          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            name="title"
+            label="Title (Required)"
+            control={control}
+            error={Boolean(errors.title)}
+            helperText={errors.title?.message}
+          />
+          <FormControlLabel
+            control={
+              <Controller
+                render={props => (
+                  <Checkbox
+                    onChange={e => props.onChange(e.target.checked)}
+                    checked={props.value}
+                  />
+                )}
+                name="isDirect"
+                type="checkbox"
+                control={control}
+              />
+            }
+            label="Skip this page. Take users directly to my profile or content."
+          />
+        </Grid>
+        {!!watchDirect ? (
+          <>
+            <Grid item xs={12}>
+              <Typography>
+                Enter your direct link. Leave blank to direct users to your
+                profile.
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                name="directLink"
+                label="Link"
+                control={control}
+                error={Boolean(errors.title)}
+                helperText={errors.title?.message}
+              />
+            </Grid>
+          </>
+        ) : (
+          <>
+            {!watchDirect && (
+              <>
+                {fields.map((section, index) => {
+                  return (
+                    <SectionItem
+                      control={control}
+                      key={section.identifier}
+                      register={register}
+                      section={section}
+                      index={index}
+                      move={move}
+                      remove={remove}
+                      errors={(errors.sections || [])[index] || {}}
+                      expanded={
+                        expanded === section.identifier || expanded === 'last'
+                      }
+                      handleChange={handleChange}
+                      first={index === 0}
+                      last={index === fields.length - 1}
+                    />
+                  )
+                })}
+                <Grid item xs={12}>
+                  <SectionButton append={handleAppend} />
+                </Grid>
+
+                {/* <Grid item>
+                  <LinksList links={values.links} />
+                </Grid> */}
+              </>
+            )}
+          </>
         )}
-      </Formik>
-    </>
+        <Box height="1rem"></Box>
+        <Grid item xs={12}>
+          <ActionButton
+            type="submit"
+            label={submitLabel || `Save & Close`}
+            loading={isLoading}
+          />
+        </Grid>
+      </Grid>
+    </form>
   )
 }
 

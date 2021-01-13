@@ -28,7 +28,7 @@ const UpdateProfile = () => {
   const initialValues = {
     displayName: displayName || '',
     bio: bio || '',
-    avatar: avatar || null,
+    avatar: avatar || '',
     links,
   }
 

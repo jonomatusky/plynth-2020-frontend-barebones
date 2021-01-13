@@ -26,12 +26,15 @@ const useStyles = makeStyles(() => ({
   },
   details: {
     height: '100%',
-    flex: '1 0 auto',
+    flexGrow: '1 0 auto',
   },
   content: {},
   cover: {
     height: '100%',
     width: '100%',
+  },
+  title: {
+    overflowWrap: 'break-word',
   },
 }))
 
@@ -66,7 +69,11 @@ const PieceItem = ({ piece, ...props }) => {
                 <Grid item>
                   <div className={classes.details}>
                     <CardContent p={0.5}>
-                      <Typography component="h6" variant="h6">
+                      <Typography
+                        component="h6"
+                        variant="h6"
+                        className={classes.title}
+                      >
                         {piece.title}
                       </Typography>
                       <Typography variant="subtitle1" color="textSecondary">

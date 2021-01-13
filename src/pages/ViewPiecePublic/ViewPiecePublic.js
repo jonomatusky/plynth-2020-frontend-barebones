@@ -3,7 +3,7 @@ import { useParams, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import { useRequest } from 'hooks/use-request'
-import { Container } from '@material-ui/core'
+import { Container, Box, Grid } from '@material-ui/core'
 import LoadingSpinner from 'components/LoadingSpinner'
 
 import PieceCard from 'components/PieceCard'
@@ -38,12 +38,18 @@ const ViewPiece = props => {
     <Container maxWidth="xs" disableGutters>
       {isLoading && !piece && <LoadingSpinner asOverlay />}
       {!isLoading && piece && (
-        <PieceCard
-          piece={piece}
-          onClose={() => {
-            history.push('/admin/pieces')
-          }}
-        />
+        <Box pt="1.5rem" pb="1.5rem">
+          <Grid container justify="center">
+            <Grid item xs={12}>
+              <PieceCard
+                piece={piece}
+                onClose={() => {
+                  history.push('/admin/pieces')
+                }}
+              />
+            </Grid>
+          </Grid>
+        </Box>
       )}
     </Container>
   )

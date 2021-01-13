@@ -109,8 +109,8 @@ const SignUp = () => {
                       </Grid>
                       <Grid item xs={12}>
                         <Typography>
-                          Scan the postcard on the Plynth app to{' '}
-                          <b>unlock an exclusive playlist</b>{' '}
+                          Scan the postcard on the Plynth app to unlock a{' '}
+                          <b>secret curated playlist</b>{' '}
                           <Emoji symbol="✨" label="sparkle" /> and more. Sign
                           up now to get a <b>free second postcard each month</b>{' '}
                           to share with a friend–we'll even mail it for you!

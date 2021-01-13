@@ -67,3 +67,5 @@ export const useScanStore = () => {
     error,
   }
 }
+
+export default useScanStore

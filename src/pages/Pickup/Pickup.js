@@ -97,21 +97,18 @@ const NewPickup = ({ isOpen, setIsOpen, ...props }) => {
       )
     } else if (status === 'succeeded' && foundPiece && !foundPiece.isDirect) {
       return (
-        <Container maxWidth="xs" disableGutters>
-          <Grid
-            container
-            direction="column"
-            justify="center"
-            alignItems="center"
-          >
-            <Box minHeight="2vh"></Box>
-            <PieceCard
-              piece={foundPiece}
-              onClose={handleClose}
-              loggedOut={props.loggedOut}
-            />
-            <Box minHeight="2vh"></Box>
-          </Grid>
+        <Container maxWidth="xs">
+          <Box pt="1.5rem" pb="1.5rem">
+            <Grid container justify="center">
+              <Grid item xs={12}>
+                <PieceCard
+                  piece={foundPiece}
+                  onClose={handleClose}
+                  loggedOut={props.loggedOut}
+                />
+              </Grid>
+            </Grid>
+          </Box>
         </Container>
       )
     } else if (status === 'succeeded' && !foundPiece) {

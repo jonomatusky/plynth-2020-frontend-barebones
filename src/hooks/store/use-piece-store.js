@@ -75,3 +75,5 @@ export const usePieceStore = () => {
     createStatus,
   }
 }
+
+export default usePieceStore

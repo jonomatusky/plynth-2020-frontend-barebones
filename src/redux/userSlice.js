@@ -5,9 +5,11 @@ let initialState = {
   user: {},
   status: 'idle',
   updateStatus: 'idle',
+  userListStatus: 'idle',
   error: null,
   scanRoute: '/',
   locationHistory: [],
+  users: [],
 }
 
 export const fetchUser = createAsyncThunk(
@@ -31,6 +33,18 @@ export const updateUser = createAsyncThunk(
       data: inputs,
     })
     return user
+  }
+)
+
+export const fetchUserList = createAsyncThunk(
+  'user/fetchUserList',
+  async ({ headers }) => {
+    const { users } = await client.request({
+      headers,
+      url: '/users/list',
+      method: 'GET',
+    })
+    return users
   }
 )
 
@@ -79,6 +93,17 @@ const userSlice = createSlice({
     },
     [updateUser.rejected]: (state, action) => {
       state.updateStatus = 'failed'
+      state.error = action.error.message
+    },
+    [fetchUserList.pending]: (state, action) => {
+      state.userListStatus = 'loading'
+    },
+    [fetchUserList.fulfilled]: (state, action) => {
+      state.userListStatus = 'succeeded'
+      state.users = action.payload
+    },
+    [fetchUserList.rejected]: (state, action) => {
+      state.userListStatus = 'failed'
       state.error = action.error.message
     },
   },

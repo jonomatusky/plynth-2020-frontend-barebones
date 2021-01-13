@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Container,
@@ -29,6 +28,7 @@ import {
   BottomRow,
   UnstyledLink,
 } from 'components/CardSections'
+import useUserStore from 'hooks/store/use-user-store'
 
 const title = 'My Profile'
 
@@ -41,7 +41,8 @@ const useStyles = makeStyles(theme => ({
 
 const MyProfile = props => {
   const auth = useContext(AuthContext)
-  const { user } = useSelector(state => state.user)
+  // const { user } = useSelector(state => state.user)
+  const { user, status } = useUserStore()
   const classes = useStyles()
   const [message, setMessage] = useState((props.location.state || {}).message)
   const [anchorEl, setAnchorEl] = useState(null)
@@ -93,7 +94,7 @@ const MyProfile = props => {
           </Menu>
         </PageTitle>
         <Grid container justify="flex-start" direction="column">
-          {!!user && (
+          {!!user && status === 'succeeded' && (
             <PieceBox container direction="column">
               <React.Fragment>
                 <ProfileTopRow
@@ -105,13 +106,11 @@ const MyProfile = props => {
                   <Grid item xs={5}>
                     <Grid container justify="center">
                       <Grid item>
-                        {user.avatarLink && (
-                          <Avatar
-                            src={user.avatarLink}
-                            alt="Preview"
-                            className={classes.large}
-                          />
-                        )}
+                        <Avatar
+                          src={user.avatarLink}
+                          alt="Preview"
+                          className={classes.large}
+                        />
                       </Grid>
                     </Grid>
                   </Grid>
