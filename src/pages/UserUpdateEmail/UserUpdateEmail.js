@@ -5,10 +5,12 @@ import { useUserStore } from 'hooks/store/use-user-store'
 import FormLayout from 'layouts/FormLayout'
 import SimpleForm from 'components/SimpleForm'
 import { TextField } from 'components/FormElements'
+import { useAlertStore } from 'hooks/store/use-alert-store'
 
 // need to change loggedOut to auth instead of props
 const UpdateEmail = () => {
   const { user, updateStatus, updateUser } = useUserStore()
+  const { setMessage } = useAlertStore()
 
   const initialValues = {
     email: user.email || '',
@@ -20,12 +22,13 @@ const UpdateEmail = () => {
       .required('Required'),
   })
 
-  const handleSubmit = async ({ values, resetForm }) => {
+  const handleSubmit = async (values, actions) => {
     try {
-      await updateUser({ ...values })
+      await updateUser(values)
+      setMessage({ message: 'Your email has been updated.' })
     } catch (err) {
       console.log(err)
-      resetForm()
+      actions.resetForm()
     }
   }
 
