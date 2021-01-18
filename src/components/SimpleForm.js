@@ -22,7 +22,6 @@ const SimpleForm = ({
       onSubmit(values, actions)
     }
   }
-  console.log(status)
 
   if (status === 'succeeded') {
     return (
