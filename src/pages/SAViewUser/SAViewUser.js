@@ -85,12 +85,24 @@ const SAViewUser = props => {
                           color="inherit"
                         >
                           {user.email}
-                        </MuiLink>
+                        </MuiLink>{' '}
+                        <UnstyledLink
+                          textDecoration="underline"
+                          to={`/superadmin/users/${username}/change/email`}
+                        >
+                          edit
+                        </UnstyledLink>
                       </Typography>
                       <Typography variant="body2">
                         <UnstyledLink
                           to={`/${user.username}`}
                         >{`@${user.username} `}</UnstyledLink>
+                        <UnstyledLink
+                          textDecoration="underline"
+                          to={`/superadmin/users/${username}/change/username`}
+                        >
+                          edit
+                        </UnstyledLink>
                       </Typography>
                       <Typography
                         variant="body2"
@@ -99,7 +111,18 @@ const SAViewUser = props => {
                         Tier: {user.tier}
                       </Typography>
                       <Typography variant="body2">
-                        Pieces: {pieces.length}/{user.pieceLimit}
+                        Pieces:{' '}
+                        {
+                          pieces.filter(piece => piece.isRemoved !== true)
+                            .length
+                        }
+                        /{user.pieceLimit}
+                      </Typography>
+                      <Typography variant="body2">
+                        Last Active:{' '}
+                        {user.lastActiveAt
+                          ? new Date(user.lastActiveAt).toLocaleDateString()
+                          : 'N/A'}
                       </Typography>
                     </Box>
                   </Grid>

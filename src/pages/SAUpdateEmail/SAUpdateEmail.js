@@ -1,28 +1,35 @@
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 
-import { useUserStore } from 'hooks/store/use-user-store'
+import { useSAUsersStore } from 'hooks/store/use-sa-users-store'
+import { useAlertStore } from 'hooks/store/use-alert-store'
 import FormLayout from 'layouts/FormLayout'
 import SimpleForm from 'components/SimpleForm'
 import { TextField } from 'components/FormElements'
 
 // need to change loggedOut to auth instead of props
 const UpdateEmail = () => {
-  const { user, updateStatus, updateUser } = useUserStore()
+  const { selectUser, updateStatus, updateUser } = useSAUsersStore()
+  const { setMessage } = useAlertStore()
+  const { username } = useParams()
+  const user = selectUser(username)
 
   const initialValues = {
-    email: user.email || '',
+    email: (user || {}).email,
   }
 
   const validationSchema = Yup.object({
     email: Yup.string()
-      .email('Please provide your email address')
+      .email('Please provide an email address')
       .required('Required'),
   })
 
   const handleSubmit = async (values, actions) => {
     try {
-      await updateUser({ ...values })
+      console.log(values)
+      await updateUser({ username, updates: values })
+      setMessage({ message: 'Email address has been updated.' })
     } catch (err) {
       console.log(err)
       actions.resetForm()
@@ -32,13 +39,13 @@ const UpdateEmail = () => {
   return (
     <FormLayout
       title="Email Preferences"
-      message={`Update your email address.`}
+      message={`Update their email address.`}
     >
       <SimpleForm
         onSubmit={handleSubmit}
         initialValues={initialValues}
         validationSchema={validationSchema}
-        confirmationMessage={'Your email has been updated.'}
+        confirmationMessage={'Email address has been updated.'}
         status={updateStatus}
       >
         <TextField name="email" label="Email" type="email" />

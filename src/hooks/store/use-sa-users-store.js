@@ -20,15 +20,15 @@ export const useSAUsersStore = () => {
   }, [dispatchThunk])
 
   const _createUser = useCallback(
-    async updates => {
-      await dispatchThunk(createUser, { ...updates })
+    async data => {
+      await dispatchThunk(createUser, data)
     },
     [dispatchThunk]
   )
 
   const _updateUser = useCallback(
-    async updates => {
-      await dispatchThunk(updateUser, { ...updates })
+    async ({ username, updates }) => {
+      await dispatchThunk(updateUser, { username, updates })
     },
     [dispatchThunk]
   )

@@ -4,7 +4,6 @@ import { Grid, Button } from '@material-ui/core'
 const FilterButtons = ({ filterFunction, currentFilter, items }) => {
   const handleClick = filter => {
     return () => {
-      console.log(filter)
       filterFunction(filter)
     }
   }

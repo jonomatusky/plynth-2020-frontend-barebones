@@ -43,6 +43,7 @@ import SignupCreator from 'pages/SignupCreator/SignupCreator'
 import SignupFan from 'pages/SignupFan/SignupFan'
 import ContactUs from 'pages/ContactUs/ContactUs'
 
+import SALayout from 'layouts/SALayout'
 import SAViewPieces from 'pages/SAViewPieces/SAViewPieces'
 import SAViewPiece from 'pages/SAViewPiece/SAViewPiece'
 import SAUpdatePiece from 'pages/SAUpdatePiece/SAUpdatePiece'
@@ -53,7 +54,8 @@ import SARemoveUser from 'pages/SARemoveUser/SARemoveUser'
 import SAViewScans from 'pages/SAViewScans/SAViewScans'
 import SAViewScan from 'pages/SAViewScan/SAViewScan'
 import SASignIn from 'pages/SASignIn/SASignIn'
-import SANavBar from 'components/SANavBar'
+import SAUpdateUsername from 'pages/SAUpdateUsername/SAUpdateUsername'
+import SAUpdateEmail from 'pages/SAUpdateEmail/SAUpdateEmail'
 
 import ErrorBar from 'components/ErrorBar'
 import MessageBar from 'components/MessageBar'
@@ -105,17 +107,11 @@ const App = () => {
                 {authStatus === 'authenticated' && !publicRoute && !noNav && (
                   <NavBar />
                 )}
-                {authStatus === 'authenticated' &&
-                  superadmin &&
-                  !publicRoute &&
-                  !noNav && (
-                    <SANavBar>
-                      <Component {...props} />
-                      {authStatus === 'authenticated' &&
-                        !publicRoute &&
-                        !noNav && <Box height="5rem" />}
-                    </SANavBar>
-                  )}
+                {authStatus === 'authenticated' && superadmin && !noNav && (
+                  <SALayout>
+                    <Component {...props} />
+                  </SALayout>
+                )}
                 {!superadmin && (
                   <main>
                     <Component {...props} />
@@ -196,6 +192,18 @@ const App = () => {
         superadmin={true}
         component={SAUpdateUser}
         path="/superadmin/users/:username/edit"
+        exact
+      />
+      <Route
+        superadmin={true}
+        component={SAUpdateUsername}
+        path="/superadmin/users/:username/change/username"
+        exact
+      />
+      <Route
+        superadmin={true}
+        component={SAUpdateEmail}
+        path="/superadmin/users/:username/change/email"
         exact
       />
 

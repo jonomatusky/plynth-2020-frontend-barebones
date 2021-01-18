@@ -8,7 +8,7 @@ import AvatarInput from 'components/AvatarInput'
 import LinkList from 'components/LinkList'
 import ActionButton from 'components/ActionButton'
 
-const UserForm = ({ handleSubmit, user, status }) => {
+export const UserForm = ({ onSubmit, user, status }) => {
   const { displayName, bio, links, avatar, avatarLink } = user || {}
 
   const initialValues = {
@@ -39,7 +39,7 @@ const UserForm = ({ handleSubmit, user, status }) => {
       enableReinitialize="true"
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={handleSubmit}
+      onSubmit={onSubmit}
     >
       {({ values, setFieldValue }) => (
         <Form>
@@ -77,5 +77,3 @@ const UserForm = ({ handleSubmit, user, status }) => {
     </Formik>
   )
 }
-
-export default UserForm

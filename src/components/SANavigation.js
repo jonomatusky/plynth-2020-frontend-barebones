@@ -13,6 +13,7 @@ import {
   ListItemIcon,
   ListItemText,
   Divider,
+  Box,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import styled from 'styled-components'
@@ -119,32 +120,6 @@ const MainHeader = ({ children, ...props }) => {
             <Typography variant="h6" noWrap>
               <Emoji symbol="🦸🏾‍♀️" label="superhero" /> Superadmin
             </Typography>
-            {/* <Box flexGrow={1}>
-              <Button
-                color="inherit"
-                component={NavLink}
-                activeClassName="Mui-selected"
-                to={'/admin/pickup'}
-              >
-                Test
-              </Button>
-              <Button
-                color="inherit"
-                component={NavLink}
-                activeClassName="Mui-selected"
-                to={'/admin/pieces'}
-              >
-                My Pieces
-              </Button>
-              <Button
-                color="inherit"
-                component={NavLink}
-                activeClassName="Mui-selected"
-                to={'/admin/profile'}
-              >
-                My Profile
-              </Button>
-            </Box> */}
           </Toolbar>
         </AppBar>
         <nav className={classes.drawer} aria-label="navigation menu">
@@ -165,13 +140,13 @@ const MainHeader = ({ children, ...props }) => {
               <ListItem
                 button
                 component={NavLink}
-                to={'/superadmin/pickups'}
-                selected={pathname.includes('/superadmin/pickups')}
+                to={'/superadmin/users'}
+                selected={pathname.includes('/superadmin/users')}
               >
                 <ListItemIcon>
-                  <CameraEnhanceIcon />
+                  <PeopleIcon />
                 </ListItemIcon>
-                <ListItemText>Pickups</ListItemText>
+                <ListItemText>Users</ListItemText>
               </ListItem>
               <ListItem
                 button
@@ -187,13 +162,13 @@ const MainHeader = ({ children, ...props }) => {
               <ListItem
                 button
                 component={NavLink}
-                to={'/superadmin/users'}
-                selected={pathname.includes('/superadmin/users')}
+                to={'/superadmin/pickups'}
+                selected={pathname.includes('/superadmin/pickups')}
               >
                 <ListItemIcon>
-                  <PeopleIcon />
+                  <CameraEnhanceIcon />
                 </ListItemIcon>
-                <ListItemText>Users</ListItemText>
+                <ListItemText>Pickups</ListItemText>
               </ListItem>
             </List>
             <Divider />
@@ -239,8 +214,12 @@ const MainHeader = ({ children, ...props }) => {
           </Drawer>
         </nav>
       </Hidden>
-      <main className={classes.content}>{children}</main>
-
+      <main className={classes.content}>
+        <>
+          {children}
+          <Box height="5rem" />
+        </>
+      </main>
       <Hidden mdUp>
         <AppBar className={classes.bottomBar}>
           <BottomNavigation
@@ -251,26 +230,26 @@ const MainHeader = ({ children, ...props }) => {
             }}
           >
             <BottomNavigationAction
-              label={<span className="bottomNavLabel">Test</span>}
-              icon={<FlashOnIcon />}
+              label={<span className="bottomNavLabel">Users</span>}
+              icon={<PeopleIcon />}
               component={NavLink}
-              to={'/admin/pickup'}
+              to={'/superadmin/profile'}
               activeClassName="Mui-selected"
               classes={{ root: classes.navBarActionRoot, label: classes.label }}
             />
             <BottomNavigationAction
-              label={<span className="bottomNavLabel">My Pieces</span>}
-              icon={<AlbumIcon />}
+              label={<span className="bottomNavLabel">Pieces</span>}
+              icon={<LibraryMusicIcon />}
               component={NavLink}
-              to={'/admin/pieces'}
+              to={'/superadmin/pieces'}
               activeClassName="Mui-selected"
               classes={{ root: classes.navBarActionRoot, label: classes.label }}
             />
             <BottomNavigationAction
-              label={<span className="bottomNavLabel">My Profile</span>}
-              icon={<PersonIcon />}
+              label={<span className="bottomNavLabel">Pickups</span>}
+              icon={<CameraEnhanceIcon />}
               component={NavLink}
-              to={'/admin/profile'}
+              to={'/superadmin/pickups'}
               activeClassName="Mui-selected"
               classes={{ root: classes.navBarActionRoot, label: classes.label }}
             />

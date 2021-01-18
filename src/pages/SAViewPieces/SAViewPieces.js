@@ -2,9 +2,6 @@ import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Container, Grid } from '@material-ui/core'
 
-import SALayout from 'layouts/SALayout'
-import Message from 'components/MessageBar'
-import Background from 'layouts/Background'
 import PageTitle from 'components/PageTitle'
 import PieceList from './components/PieceList'
 import LoadingSpinner from 'components/LoadingSpinner'
@@ -24,7 +21,7 @@ const filterButtons = [
   { label: 'Removed', filterLabel: 'REMOVED' },
 ]
 
-const MyPieces = () => {
+const SAViewPieces = () => {
   const {
     getPiecesByFilter,
     fetchPieces,
@@ -49,35 +46,31 @@ const MyPieces = () => {
   }, [fetchPieces, status])
 
   return (
-    <SALayout>
-      <Message />
-      <Background />
-      <Container maxWidth="sm">
-        <PageTitle title={title} />
-        <Grid container direction="column" alignItems="stretch" spacing={2}>
-          <Grid item xs={12}>
-            <ActionButton
-              onClick={handleClick}
-              label="Create New Piece +"
-            ></ActionButton>
-          </Grid>
-          <Grid item>
-            <FilterButtons
-              items={filterButtons}
-              currentFilter={filter}
-              filterFunction={setFilter}
-            />
-          </Grid>
-          {!pieces && <LoadingSpinner asOverlay />}
-          {pieces && (
-            <Grid item>
-              <PieceList items={pieces} />
-            </Grid>
-          )}
+    <Container maxWidth="sm">
+      <PageTitle title={title} />
+      <Grid container direction="column" alignItems="stretch" spacing={2}>
+        <Grid item xs={12}>
+          <ActionButton
+            onClick={handleClick}
+            label="Create New Piece +"
+          ></ActionButton>
         </Grid>
-      </Container>
-    </SALayout>
+        <Grid item>
+          <FilterButtons
+            items={filterButtons}
+            currentFilter={filter}
+            filterFunction={setFilter}
+          />
+        </Grid>
+        {!pieces && <LoadingSpinner asOverlay />}
+        {pieces && (
+          <Grid item>
+            <PieceList items={pieces} />
+          </Grid>
+        )}
+      </Grid>
+    </Container>
   )
 }
 
-export default MyPieces
+export default SAViewPieces

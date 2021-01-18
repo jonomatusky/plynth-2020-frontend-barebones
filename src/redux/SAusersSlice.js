@@ -39,20 +39,21 @@ export const createUser = createAsyncThunk(
 
 export const updateUser = createAsyncThunk(
   'SAusers/updateUser',
-  async ({ headers, username, ...inputs }) => {
+  async ({ headers, ...inputs }) => {
+    const { username, updates } = inputs
     const { user } = await client.request({
       headers,
       url: `/users/${username}`,
       method: 'PATCH',
-      data: inputs,
+      data: updates,
     })
-    return user
+    return { username, user }
   }
 )
 
 export const deleteUser = createAsyncThunk(
   'SAusers/deleteUser',
-  async ({ headers, username, ...rest }) => {
+  async ({ headers, username }) => {
     await client.request({
       headers,
       url: `/users/${username}`,
@@ -95,7 +96,6 @@ const SAusersSlice = createSlice({
     },
     [fetchUsers.fulfilled]: (state, action) => {
       state.status = 'succeeded'
-      console.log(action.payload)
       state.users = action.payload
     },
     [fetchUsers.rejected]: (state, action) => {
@@ -107,8 +107,8 @@ const SAusersSlice = createSlice({
     },
     [updateUser.fulfilled]: (state, action) => {
       state.updateStatus = 'idle'
-      const user = action.payload
-      const matchingIndex = state.users.findIndex(isMatch(user.username))
+      const { username, user } = action.payload
+      const matchingIndex = state.users.findIndex(isMatch(username))
 
       if (matchingIndex >= 0) {
         state.users = [
