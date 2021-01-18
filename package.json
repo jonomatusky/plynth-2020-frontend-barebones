@@ -24,7 +24,6 @@
     "react-autocomplete": "^1.8.1",
     "react-autosuggest": "^10.0.4",
     "react-beautiful-dnd": "^13.0.0",
-    "react-datepicker": "^3.4.0",
     "react-dom": "^17.0.1",
     "react-easy-crop": "^3.3.1",
     "react-helmet": "^6.1.0",

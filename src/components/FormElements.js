@@ -1,9 +1,6 @@
 import React from 'react'
 import { Grid, Button } from '@material-ui/core'
 import { useField } from 'formik'
-import DatePicker from 'react-datepicker'
-
-import 'react-datepicker/dist/react-datepicker.css'
 
 import styled from 'styled-components'
 import theme from '../theme'
@@ -115,18 +112,6 @@ export const TextField = ({ label, ...props }) => {
     <StyledInput error={showError}>
       <Label htmlFor={props.id || props.name}>{label}</Label>
       <TextInput type="text" {...field} {...props} />
-      {showError ? <ErrorMessage>Error: {meta.error}</ErrorMessage> : null}
-    </StyledInput>
-  )
-}
-
-export const DateField = ({ label, ...props }) => {
-  const [field, meta] = useField(props)
-  const showError = meta.touched && meta.error
-  return (
-    <StyledInput error={showError}>
-      <Label htmlFor={props.id || props.name}>{label}</Label>
-      <DatePicker {...field} {...props} selected={new Date()} />
       {showError ? <ErrorMessage>Error: {meta.error}</ErrorMessage> : null}
     </StyledInput>
   )
