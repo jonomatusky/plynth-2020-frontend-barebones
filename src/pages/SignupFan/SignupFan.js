@@ -110,15 +110,10 @@ const SignUp = () => {
                       <Grid item xs={12}>
                         <Typography>
                           Scan the postcard on the Plynth app to unlock a{' '}
-                          <b>secret curated playlist</b>{' '}
-                          <Emoji symbol="✨" label="sparkle" /> and more. Sign
-                          up now to get a <b>free second postcard each month</b>{' '}
-                          to share with a friend–we'll even mail it for you!
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Typography>
-                          <i>Subscriptions start January.</i>
+                          <Emoji symbol="✨" label="sparkle" />
+                          <b>secret curated playlist</b> and more. Sign up now
+                          to get a <b>free BONUS postcard each month</b> to
+                          share with a friend–we'll even mail it for you!
                         </Typography>
                       </Grid>
                       <Hidden smDown>
@@ -165,7 +160,7 @@ const SignUp = () => {
                         </Box>
                         <Box mb="0.5rem">
                           <Typography>
-                            <Emoji symbol="👯‍♂️" label="friends" /> A second
+                            <Emoji symbol="👯‍♂️" label="friends" /> A bonus
                             postcard sent to a friend
                           </Typography>
                         </Box>
