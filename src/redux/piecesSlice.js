@@ -3,7 +3,6 @@ import * as client from 'util/client'
 
 let initialState = {
   pieces: null,
-  newPieceImage: null,
   status: 'idle',
   error: null,
   updateStatus: 'idle',
@@ -150,18 +149,4 @@ export default piecesSlice.reducer
 
 export const selectPiece = (state, pieceId) => {
   return (state.pieces.pieces || []).find(piece => piece.id === pieceId)
-}
-
-export const selectPiecesByUser = (state, username) => {
-  return state.pieces.pieces.filter(piece => piece.owner.username === username)
-}
-
-export const getPiecesByFilter = state => {
-  if (state.pieces.filter === 'REMOVED') {
-    return state.pieces.pieces.filter(piece => piece.isRemoved)
-  } else if (state.pieces.filter === 'ACTIVE') {
-    return state.pieces.pieces.filter(piece => !piece.isRemoved)
-  } else {
-    return state.pieces.pieces
-  }
 }

@@ -1,57 +1,35 @@
-import React, { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useEffect } from 'react'
 import { Container, Grid, Box, Typography } from '@material-ui/core'
 
-import { useRequest } from 'hooks/use-request'
+import { useSAScansStore } from 'hooks/store/use-sa-scans-store'
 import PageTitle from 'components/PageTitle'
 import ScanList from './components/ScanList'
 import { CircularProgress } from '@material-ui/core'
 
 const title = 'Scans'
 
-const ViewUsers = () => {
-  const [loadedScans, setLoadedScans] = useState()
-  const { status, request } = useRequest()
-  const [scanCountDaily, setScanCountDaily] = useState()
-  const [scanCountMonthly, setScanCountMonthly] = useState()
-  const { user } = useSelector(state => state.user)
+const SAViewUsers = () => {
+  const {
+    scans,
+    status,
+    fetchScans,
+    countDailyScans,
+    countMonthlyScans,
+    dailyScanCount,
+    monthlyScanCount,
+  } = useSAScansStore()
 
   useEffect(() => {
-    if (user) {
-      const fetchScans = async () => {
-        try {
-          const responseData = await request({ url: `/scans` })
-          setLoadedScans(responseData.scans)
-        } catch (err) {}
-      }
-
-      let endDate = new Date()
-      let startDateDaily = new Date()
-      let startDateMonthly = new Date()
-      startDateDaily.setDate(endDate.getDate() - 1)
-      startDateMonthly.setDate(endDate.getDate() - 30)
-
-      const fetchScanCountDaily = async () => {
-        try {
-          const { scanCount } = await request({
-            url: `/scans/count?startDate=${startDateDaily}`,
-          })
-          setScanCountDaily(scanCount)
-        } catch (err) {}
-      }
-      const fetchScanCountMonthly = async () => {
-        try {
-          const responseData = await request({
-            url: `/scans/count?startDate=${startDateMonthly}`,
-          })
-          setScanCountMonthly(responseData.scanCount)
-        } catch (err) {}
-      }
+    const fetch = () => {
       fetchScans()
-      fetchScanCountDaily()
-      fetchScanCountMonthly()
+      countDailyScans()
+      countMonthlyScans()
     }
-  }, [request, user])
+
+    if (status === 'idle') {
+      fetch()
+    }
+  }, [fetchScans, countDailyScans, countMonthlyScans, status])
 
   useEffect(() => {
     const handleScroll = async () => {
@@ -61,17 +39,16 @@ const ViewUsers = () => {
       )
         return
       try {
-        let skip = loadedScans.length
-        let params = { skip }
-        const responseData = await request({ url: `/scans`, params })
-        let scans = loadedScans.concat(responseData.scans)
-        setLoadedScans(scans)
+        let skip = scans.length
+        if (status !== 'loading') {
+          fetchScans({ skip })
+        }
       } catch (err) {}
     }
 
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [loadedScans, request])
+  }, [fetchScans, scans.length, status])
 
   return (
     <Container maxWidth="sm">
@@ -81,19 +58,19 @@ const ViewUsers = () => {
           <Grid container justify="space-evenly">
             <Grid item>
               <Typography variant="subtitle1">
-                Daily Pickups: {scanCountDaily}
+                Daily Pickups: {dailyScanCount}
               </Typography>
             </Grid>
             <Grid item>
               <Typography variant="subtitle1">
-                Monthly Pickups: {scanCountMonthly}
+                Monthly Pickups: {monthlyScanCount}
               </Typography>
             </Grid>
           </Grid>
         </Grid>
-        {loadedScans && (
+        {scans && (
           <Grid item>
-            <ScanList items={loadedScans} />
+            <ScanList items={scans} />
           </Grid>
         )}
         {status === 'loading' && (
@@ -114,4 +91,4 @@ const ViewUsers = () => {
   )
 }
 
-export default ViewUsers
+export default SAViewUsers

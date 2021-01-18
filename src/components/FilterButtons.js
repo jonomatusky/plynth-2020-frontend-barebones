@@ -1,14 +1,11 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
 import { Grid, Button } from '@material-ui/core'
 
 const FilterButtons = ({ filterFunction, currentFilter, items }) => {
-  const dispatch = useDispatch()
-
   const handleClick = filter => {
     return () => {
       console.log(filter)
-      dispatch(filterFunction(filter))
+      filterFunction(filter)
     }
   }
 

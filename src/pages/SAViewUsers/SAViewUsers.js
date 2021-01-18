@@ -1,25 +1,36 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { useSelector } from 'react-redux'
-import { useLocation } from 'react-router-dom'
-import { Container, Grid, Box, Button } from '@material-ui/core'
+import React, { useEffect } from 'react'
+import { Container, Grid, Box } from '@material-ui/core'
+
+import { useSAUsersStore } from 'hooks/store/use-sa-users-store'
+import { useSAPiecesStore } from 'hooks/store/use-sa-pieces-store'
 
 import PageTitle from 'components/PageTitle'
-import MessageBar from 'components/MessageBar'
 import UserList from './components/UserList'
 import LoadingSpinner from 'components/LoadingSpinner'
 import FilterButtons from 'components/FilterButtons'
-import { getUsersByFilter, setFilter } from 'redux/usersSlice'
-import { AuthContext } from 'contexts/auth-context'
 
 const title = 'Users'
 
 const ViewUsers = () => {
-  const auth = useContext(AuthContext)
-  const users = useSelector(getUsersByFilter)
-  const { filter } = useSelector(state => state.users)
-  const { pieces } = useSelector(state => state.pieces)
-  const location = useLocation()
-  const [message, setMessage] = useState(null)
+  const {
+    fetchUsers,
+    status,
+    filter,
+    getUsersByFilter,
+    setFilter,
+  } = useSAUsersStore()
+  const users = getUsersByFilter()
+  const { pieces } = useSAPiecesStore()
+
+  useEffect(() => {
+    const fetch = () => {
+      fetchUsers()
+    }
+
+    if (status === 'idle') {
+      fetch()
+    }
+  }, [fetchUsers, status])
 
   const filterButtons = [
     {
@@ -39,20 +50,9 @@ const ViewUsers = () => {
     return { pieceCount, ...user }
   })
 
-  useEffect(() => {
-    setMessage((location.state || {}).message)
-  }, [location.state])
-
   return (
     <Container maxWidth="sm">
-      <MessageBar
-        open={!!message}
-        message={message}
-        handleClose={() => setMessage(null)}
-      />
-      <PageTitle title={title}>
-        <Button onClick={auth.logout}>Log Out</Button>
-      </PageTitle>
+      <PageTitle title={title} />
       {!users && <LoadingSpinner asOverlay />}
       {users && (
         <Grid container direction="column" alignItems="stretch" spacing={2}>

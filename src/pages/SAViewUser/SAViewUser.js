@@ -1,6 +1,5 @@
-import React, { useState } from 'react'
-import { Link, useParams, useHistory } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import React from 'react'
+import { Link, useParams } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles'
 import {
   Container,
@@ -24,10 +23,9 @@ import {
   UnstyledLink,
   BarRow,
 } from 'components/CardSections'
-import MessageBar from 'components/MessageBar'
 import PieceList from '../MyPieces/components/PieceList'
-import { selectUser } from 'redux/usersSlice'
-import { selectPiecesByUser } from 'redux/piecesSlice'
+import { useSAUsersStore } from 'hooks/store/use-sa-users-store'
+import { useSAPiecesStore } from 'hooks/store/use-sa-pieces-store'
 
 const title = 'User Profile'
 
@@ -38,42 +36,24 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const AdminViewUser = props => {
-  const history = useHistory()
+const SAViewUser = props => {
+  const { selectUser } = useSAUsersStore()
+  const { selectPiecesByUser } = useSAPiecesStore()
   const { username } = useParams()
-  const user = useSelector(state => selectUser(state, username))
-  const pieces = useSelector(state => selectPiecesByUser(state, username))
+  const user = selectUser(username)
+  const pieces = selectPiecesByUser(username)
 
   const classes = useStyles()
-  const [message, setMessage] = useState((props.location.state || {}).message)
-
-  const handleClosePage = event => {
-    const { referrer } = props.location.state || {}
-    if (!!referrer) {
-      history.push(referrer)
-    } else {
-      history.push('/admin/users')
-    }
-  }
 
   return (
     <React.Fragment>
-      <MessageBar
-        open={!!message}
-        message={message}
-        handleClose={() => setMessage(null)}
-      />
       <Background />
       <Container maxWidth="xs">
         <PageTitle title={title} />
         {user && pieces && (
           <Grid container justify="flex-start" direction="column">
             <PieceBox container direction="column">
-              <BarRow
-                onClick={handleClosePage}
-                buttonLabel="Close X"
-                title={user.admin && 'Admin'}
-              />
+              <BarRow buttonLabel="Close X" />
               <React.Fragment>
                 <ProfileTopRow
                   container
@@ -129,7 +109,7 @@ const AdminViewUser = props => {
                     <Button
                       color="inherit"
                       component={Link}
-                      to={`/admin/users/${user.username}/edit`}
+                      to={`/superadmin/users/${user.username}/edit`}
                     >
                       Edit User
                     </Button>
@@ -155,4 +135,4 @@ const AdminViewUser = props => {
   )
 }
 
-export default AdminViewUser
+export default SAViewUser

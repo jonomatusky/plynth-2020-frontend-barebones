@@ -3,8 +3,6 @@ import { Link, NavLink, useLocation } from 'react-router-dom'
 import {
   AppBar,
   Toolbar,
-  Box,
-  Button,
   Hidden,
   Drawer,
   Typography,
@@ -119,7 +117,7 @@ const MainHeader = ({ children, ...props }) => {
         <AppBar position="fixed" className={classes.appBar}>
           <Toolbar>
             <Typography variant="h6" noWrap>
-              <Emoji symbol="🦸🏾‍♀️" label="superhero" /> Plynth Superadmin
+              <Emoji symbol="🦸🏾‍♀️" label="superhero" /> Superadmin
             </Typography>
             {/* <Box flexGrow={1}>
               <Button
@@ -168,7 +166,7 @@ const MainHeader = ({ children, ...props }) => {
                 button
                 component={NavLink}
                 to={'/superadmin/pickups'}
-                selected={pathname === '/superadmin/pickups'}
+                selected={pathname.includes('/superadmin/pickups')}
               >
                 <ListItemIcon>
                   <CameraEnhanceIcon />
@@ -179,7 +177,7 @@ const MainHeader = ({ children, ...props }) => {
                 button
                 component={NavLink}
                 to={'/superadmin/pieces'}
-                selected={pathname === '/superadmin/pieces'}
+                selected={pathname.includes('/superadmin/pieces')}
               >
                 <ListItemIcon>
                   <LibraryMusicIcon />
@@ -190,7 +188,7 @@ const MainHeader = ({ children, ...props }) => {
                 button
                 component={NavLink}
                 to={'/superadmin/users'}
-                selected={pathname === '/superadmin/users'}
+                selected={pathname.includes('/superadmin/users')}
               >
                 <ListItemIcon>
                   <PeopleIcon />
@@ -235,15 +233,7 @@ const MainHeader = ({ children, ...props }) => {
               </ListItem>
             </List>
             <Divider />
-            <ListItem
-              button
-              onClick={handleLogout}
-              activeClassName="Mui-selected"
-              classes={{
-                root: classes.navBarActionRoot,
-                label: classes.label,
-              }}
-            >
+            <ListItem button onClick={handleLogout}>
               <ListItemText>Sign Out</ListItemText>
             </ListItem>
           </Drawer>

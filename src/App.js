@@ -136,6 +136,7 @@ const App = () => {
     <Switch>
       <Route publicRoute={true} component={Home} path="/" exact />
 
+      <Redirect from="/superadmin" to="/superadmin/users" exact />
       <Route
         publicRoute={true}
         restricted={true}
@@ -143,73 +144,58 @@ const App = () => {
         path="/superadmin/login"
         exact
       />
-
       <Route
         superadmin={true}
         component={SAViewPieces}
         path="/superadmin/pieces"
         exact
       />
-
       <Route
         superadmin={true}
         component={SAViewPiece}
         path="/superadmin/pieces/:pieceId"
-        noNav
         exact
       />
-
       <Route
         superadmin={true}
         component={SAUpdatePiece}
         path="/superadmin/pieces/:pieceId/edit"
-        noNav
         exact
       />
-
       <Route
         superadmin={true}
         component={SAViewScans}
         path="/superadmin/pickups"
         exact
       />
-
       <Route
         superadmin={true}
         component={SAViewScan}
         path="/superadmin/pickups/:scanId"
-        noNav
         exact
       />
-
       <Route
         superadmin={true}
         component={SAViewUsers}
         path="/superadmin/users"
         exact
       />
-
       <Route
         superadmin={true}
         component={SAViewUser}
         path="/superadmin/users/:username"
-        noNav
         exact
       />
-
       <Route
         superadmin={true}
         component={SARemoveUser}
         path="/superadmin/users/:username/remove"
-        noNav
         exact
       />
-
       <Route
         superadmin={true}
         component={SAUpdateUser}
         path="/superadmin/users/:username/edit"
-        noNav
         exact
       />
 
@@ -220,23 +206,19 @@ const App = () => {
         path="/login"
         exact
       />
-
       <Route
         publicRoute={true}
         component={SignupCreator}
         path="/s/signup/creators"
         exact
       />
-
       <Route
         publicRoute={true}
         component={SignupFan}
         path="/s/signup/postcard-mixtape"
         exact
       />
-
       <Route publicRoute={true} component={ContactUs} path="/s/contact" exact />
-
       <Route
         publicRoute={true}
         restricted={true}
@@ -244,7 +226,6 @@ const App = () => {
         path="/signup"
         exact
       />
-
       <Route
         publicRoute={true}
         restricted={true}

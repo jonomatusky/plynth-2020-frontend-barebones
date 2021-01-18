@@ -1,18 +1,16 @@
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { useSelector } from 'react-redux'
 import { useLastLocation } from 'react-router-last-location'
 import { Grid, Box, Button, Typography, Avatar } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 import { makeStyles } from '@material-ui/core/styles'
 
+import { useSAUsersStore } from 'hooks/store/use-sa-users-store'
 import Background from 'layouts/Background'
 import FormLayout from 'layouts/FormLayout'
 import { TextField, CheckButton } from 'components/FormElements'
 import ActionButton from 'components/ActionButton'
-import { updateUser, selectUser } from 'redux/usersSlice'
-import { useThunkClient } from 'hooks/thunk-hook'
 
 const useStyles = makeStyles(theme => ({
   large: {
@@ -23,22 +21,17 @@ const useStyles = makeStyles(theme => ({
 
 const UpdateProfile = props => {
   const classes = useStyles()
-  const dispatchThunk = useThunkClient()
   const history = useHistory()
   const lastLocation = useLastLocation()
   const { username } = useParams()
-  const { updateStatus } = useSelector(state => state.users)
 
-  const user = useSelector(state => selectUser(state, username))
+  const { selectUser, updateStatus, updateUser } = useSAUsersStore()
 
-  console.log(lastLocation)
+  const user = selectUser(username)
 
   const handleSubmit = async values => {
     try {
-      await dispatchThunk({
-        thunk: updateUser,
-        inputs: { username, ...values },
-      })
+      updateUser({ username, ...values })
       !!lastLocation
         ? history.goBack()
         : history.push(`admin/users/${username}`)

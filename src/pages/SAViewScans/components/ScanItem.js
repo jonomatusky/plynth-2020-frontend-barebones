@@ -35,7 +35,7 @@ const UserItem = ({ scan, ...props }) => {
   const history = useHistory()
 
   const handleClick = () => {
-    history.push(`/admin/pickups/${scan.id}`)
+    history.push(`/superadmin/pickups/${scan.id}`)
   }
 
   return (

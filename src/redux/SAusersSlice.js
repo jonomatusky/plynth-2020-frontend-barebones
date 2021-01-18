@@ -14,7 +14,7 @@ const isMatch = username => {
 }
 
 export const fetchUsers = createAsyncThunk(
-  'users/fetchUsers',
+  'SAusers/fetchUsers',
   async ({ headers }) => {
     const { users } = await client.request({
       headers,
@@ -25,7 +25,7 @@ export const fetchUsers = createAsyncThunk(
 )
 
 export const createUser = createAsyncThunk(
-  'users/createUser',
+  'SAusers/createUser',
   async ({ headers, ...inputs }) => {
     const { user } = await client.request({
       headers,
@@ -38,7 +38,7 @@ export const createUser = createAsyncThunk(
 )
 
 export const updateUser = createAsyncThunk(
-  'users/updateUser',
+  'SAusers/updateUser',
   async ({ headers, username, ...inputs }) => {
     const { user } = await client.request({
       headers,
@@ -51,7 +51,7 @@ export const updateUser = createAsyncThunk(
 )
 
 export const deleteUser = createAsyncThunk(
-  'users/deleteUser',
+  'SAusers/deleteUser',
   async ({ headers, username, ...rest }) => {
     await client.request({
       headers,
@@ -62,14 +62,10 @@ export const deleteUser = createAsyncThunk(
   }
 )
 
-const usersSlice = createSlice({
-  name: 'users',
+const SAusersSlice = createSlice({
+  name: 'SAusers',
   initialState,
   reducers: {
-    setUsers(state, action) {
-      const { users } = action.payload
-      state.users = users
-    },
     setUser(state, action) {
       const { user } = action.payload
       const matchingIndex = state.users.findIndex(isMatch(user.username))
@@ -152,22 +148,6 @@ const usersSlice = createSlice({
   },
 })
 
-export const { setUsers, setUser, setFilter, clearUsers } = usersSlice.actions
+export const { setUsers, setUser, setFilter, clearUsers } = SAusersSlice.actions
 
-export default usersSlice.reducer
-
-export const selectUser = (state, username) => {
-  return state.users.users.find(user => user.username === username)
-}
-
-export const getUsersByFilter = state => {
-  if (state.users.filter === 'DUMMY') {
-    return state.users.users.filter(user => user.isDummy)
-  } else if (state.users.filter === 'ACTIVE') {
-    return state.users.users.filter(user => !user.isDummy)
-  } else if (state.users.filter === 'ADMIN') {
-    return state.users.users.filter(user => user.admin)
-  } else {
-    return state.users.users
-  }
-}
+export default SAusersSlice.reducer

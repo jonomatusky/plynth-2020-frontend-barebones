@@ -2,16 +2,16 @@ import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Container } from '@material-ui/core'
 
-import { deleteUser } from 'redux/usersSlice'
 import Background from 'layouts/Background'
 import FormLayout from 'layouts/FormLayout'
 import RemoveUserForm from './components/RemoveUserForm'
-import { useThunkClient } from 'hooks/thunk-hook'
-import { setMessage } from 'redux/alertSlice'
+import { useAlertStore } from 'hooks/store/use-alert-store'
+import { useSAUsersStore } from 'hooks/store/use-sa-users-store'
 
 // need to change loggedOut to auth instead of props
 const RemoveUser = () => {
-  const dispatchThunk = useThunkClient()
+  const { setMessage } = useAlertStore()
+  const { deleteUser } = useSAUsersStore()
   const { username } = useParams() || {}
   const history = useHistory()
 
@@ -20,8 +20,8 @@ const RemoveUser = () => {
 
     try {
       if (username === values.username) {
-        await dispatchThunk({ thunk: deleteUser, inputs: { username } })
-        dispatchEvent(setMessage({ message: 'User has been deleted' }))
+        await deleteUser(username)
+        setMessage({ message: 'User has been deleted' })
       }
     } catch (err) {
       console.log(err)

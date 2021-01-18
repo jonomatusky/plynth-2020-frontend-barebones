@@ -54,10 +54,25 @@ export const usePieceStore = () => {
     error,
     updateStatus,
     createStatus,
+    filter,
   } = useSelector(state => state.pieces)
 
   const selectPiece = pieceId => {
     return (pieces || []).find(piece => piece.id === pieceId)
+  }
+
+  const selectPiecesByUser = username => {
+    return pieces.filter(piece => piece.owner.username === username)
+  }
+
+  const getPiecesByFilter = () => {
+    if (filter === 'REMOVED') {
+      return (pieces || []).filter(piece => piece.isRemoved)
+    } else if (filter === 'ACTIVE') {
+      return (pieces || []).filter(piece => !piece.isRemoved)
+    } else {
+      return pieces
+    }
   }
 
   return {
@@ -67,6 +82,9 @@ export const usePieceStore = () => {
     deletePiece: _deletPiece,
     setNewPieceImage: _setPieceImage,
     selectPiece,
+    selectPiecesByUser,
+    getPiecesByFilter,
+    filter,
     pieces,
     newPieceImage,
     status,

@@ -1,18 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
 import { Container, Grid } from '@material-ui/core'
 
 import SALayout from 'layouts/SALayout'
-import { setMessage } from 'redux/alertSlice'
 import Message from 'components/MessageBar'
 import Background from 'layouts/Background'
 import PageTitle from 'components/PageTitle'
-import PieceList from '../MyPieces/components/PieceList'
+import PieceList from './components/PieceList'
 import LoadingSpinner from 'components/LoadingSpinner'
 import ActionButton from 'components/ActionButton'
 import FilterButtons from 'components/FilterButtons'
-import { setFilter, getPiecesByFilter } from 'redux/piecesSlice'
+
+import { useSAPiecesStore } from 'hooks/store/use-sa-pieces-store'
 
 const title = 'Pieces'
 
@@ -26,25 +25,28 @@ const filterButtons = [
 ]
 
 const MyPieces = () => {
-  const pieces = useSelector(getPiecesByFilter)
-  const dispatch = useDispatch()
-  const user = useSelector(state => state.user)
-  const { filter } = useSelector(state => state.pieces)
+  const {
+    getPiecesByFilter,
+    fetchPieces,
+    status,
+    setFilter,
+    filter,
+  } = useSAPiecesStore()
+  const pieces = getPiecesByFilter()
   const history = useHistory()
 
-  let pieceLimit = (user || {}).pieceLimit
-
   const handleClick = () => {
-    if (pieceLimit <= pieces.length) {
-      dispatch(
-        setMessage({
-          message: `Sorry, looks like you've reached your piece limit! Please remove a piece or contact an admin to add another piece.`,
-        })
-      )
-    } else {
-      history.push('/admin/create/style')
-    }
+    history.push('/admin/create/style')
   }
+
+  useEffect(() => {
+    const fetch = async () => {
+      await fetchPieces()
+    }
+    if (status === 'idle') {
+      fetch()
+    }
+  }, [fetchPieces, status])
 
   return (
     <SALayout>

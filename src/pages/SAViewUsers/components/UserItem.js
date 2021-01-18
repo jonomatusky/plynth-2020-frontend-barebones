@@ -35,7 +35,7 @@ const UserItem = ({ user, ...props }) => {
   const history = useHistory()
 
   const handleClick = () => {
-    history.push(`/admin/users/${user.username}`)
+    history.push(`/superadmin/users/${user.username}`)
   }
 
   return (

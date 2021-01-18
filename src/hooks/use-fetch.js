@@ -12,8 +12,6 @@ export const useFetch = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      console.log('fetching user')
-      console.log(auth.authStatus)
       await fetchUser()
       await fetchPieces()
     }

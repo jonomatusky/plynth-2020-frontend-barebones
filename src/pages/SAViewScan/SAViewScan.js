@@ -22,15 +22,18 @@ const ScanImage = styled.img`
   object-fit: contain;
 `
 
-const ViewScan = () => {
+const SAViewScan = () => {
   const { request } = useRequest()
   const [scan, setScan] = useState(null)
   const scanId = useParams().scanId
 
   const history = useHistory()
 
+  console.log('scan')
+
   useEffect(() => {
     const fetchScan = async () => {
+      console.log('fetching scan')
       try {
         const responseData = await request({ url: `/scans/${scanId}` })
         console.log(responseData)
@@ -52,7 +55,7 @@ const ViewScan = () => {
       <Background />
       <Container maxWidth="xs">
         <Grid container justify="flex-start" direction="column" spacing={2}>
-          <Box height="4vh"></Box>
+          <Box height="4vh" />
           {scan && (
             <PieceBox container direction="column">
               <BarRow onClick={handleClose} buttonLabel="Close X" />
@@ -97,4 +100,4 @@ const ViewScan = () => {
   )
 }
 
-export default ViewScan
+export default SAViewScan
