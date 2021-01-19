@@ -27,7 +27,7 @@ const PieceForm = ({
   isLoading,
   submitLabel,
 }) => {
-  const { fetchUserList } = useUserStore()
+  const { fetchUserList, userListStatus } = useUserStore()
 
   const {
     title,
@@ -158,10 +158,10 @@ const PieceForm = ({
   }, [fields, sectionsLength])
 
   useEffect(() => {
-    if ((sections || []).map(section => section.type).includes('list.users')) {
+    if (userListStatus !== 'loading') {
       fetchUserList()
     }
-  }, [sections, fetchUserList])
+  }, [fetchUserList, userListStatus])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
