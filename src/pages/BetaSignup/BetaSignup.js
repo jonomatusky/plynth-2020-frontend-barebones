@@ -6,7 +6,7 @@ import { Box, Typography } from '@material-ui/core'
 
 import theme from 'theme'
 import { useRequest } from 'hooks/use-request'
-import { useLogClient } from 'hooks/log-hook'
+import { useLog } from 'hooks/use-log'
 
 import { TextField } from 'components/FormElements'
 import FormLayout from 'layouts/FormLayout'
@@ -15,7 +15,7 @@ import SimpleForm from 'components/SimpleForm'
 const BetaSignup = () => {
   const { scanToken } = useSelector(state => state.scan)
   const { status, request } = useRequest()
-  const { sendLog } = useLogClient()
+  const { sendLog } = useLog()
   const history = useHistory()
 
   const handleClose = () => {

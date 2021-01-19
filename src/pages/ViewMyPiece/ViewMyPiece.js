@@ -1,24 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import { Container, Box, Grid, Button } from '@material-ui/core'
 
+import { usePieceStore } from 'hooks/store/use-piece-store'
+import { useUserStore } from 'hooks/store/use-user-store'
 import { useRequest } from 'hooks/use-request'
-import { selectPiece } from 'redux/piecesSlice'
 import LoadingSpinner from 'components/LoadingSpinner'
 import NotFound from 'layouts/NotFound'
 import PieceCard from 'components/PieceCard'
 
 const ViewPiece = props => {
   const history = useHistory()
-
+  const { selectPiece, status } = usePieceStore()
+  const { user } = useUserStore()
   const { request } = useRequest()
-  const pieceId = useParams().pieceId
-  const piece = useSelector(state => selectPiece(state, pieceId))
-  const { user } = useSelector(state => state.user)
-
-  const { status } = useSelector(state => state.pieces)
+  const { pieceId } = useParams()
+  const piece = selectPiece(pieceId)
 
   let showAnalytics = (user || {}).tier !== 'free'
   let [scanCount, setScanCount] = useState()

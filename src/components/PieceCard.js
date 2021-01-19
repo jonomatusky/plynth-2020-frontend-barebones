@@ -3,7 +3,7 @@ import { Grid, Box, Avatar, Typography, Button } from '@material-ui/core'
 import styled from 'styled-components'
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos'
 
-import { useLogClient } from 'hooks/log-hook'
+import { useLog } from 'hooks/use-log'
 import { useScanStore } from 'hooks/store/use-scan-store'
 import ActionButton from './ActionButton'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
@@ -30,7 +30,7 @@ const ImageSquare = styled.div`
 `
 
 const PieceCard = ({ piece, onClose, ...props }) => {
-  const { sendLog } = useLogClient()
+  const { sendLog } = useLog()
   let { scanToken } = useScanStore()
 
   const handleLinkClick = async link => {

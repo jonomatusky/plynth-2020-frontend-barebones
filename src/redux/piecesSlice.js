@@ -3,7 +3,6 @@ import * as client from 'util/client'
 
 let initialState = {
   pieces: null,
-  newPieceImage: null,
   status: 'idle',
   error: null,
   updateStatus: 'idle',
@@ -74,6 +73,9 @@ const piecesSlice = createSlice({
       state.updateStatus = 'idle'
       state.createStatus = 'idle'
     },
+    setFilter(state, action) {
+      state.filter = action.payload
+    },
   },
   extraReducers: {
     [fetchPieces.pending]: (state, action) => {
@@ -140,6 +142,7 @@ export const {
   setPiece,
   setNewPieceImage,
   clearPieces,
+  setFilter,
 } = piecesSlice.actions
 
 export default piecesSlice.reducer

@@ -42,6 +42,23 @@ import Home from 'pages/Home/Home'
 import SignupCreator from 'pages/SignupCreator/SignupCreator'
 import SignupFan from 'pages/SignupFan/SignupFan'
 import ContactUs from 'pages/ContactUs/ContactUs'
+import PreviewProfile from 'pages/PreviewProfile/PreviewProfile'
+import ClaimProfile from 'pages/ClaimProfile/ClaimProfile'
+
+import SALayout from 'layouts/SALayout'
+import SAViewPieces from 'pages/SAViewPieces/SAViewPieces'
+import SAViewPiece from 'pages/SAViewPiece/SAViewPiece'
+import SAUpdatePiece from 'pages/SAUpdatePiece/SAUpdatePiece'
+import SAViewUsers from 'pages/SAViewUsers/SAViewUsers'
+import SAViewUser from 'pages/SAViewUser/SAViewUser'
+import SAUpdateUser from 'pages/SAUpdateUser.js/SAUpdateUser'
+import SARemoveUser from 'pages/SARemoveUser/SARemoveUser'
+import SAViewScans from 'pages/SAViewScans/SAViewScans'
+import SAViewScan from 'pages/SAViewScan/SAViewScan'
+import SASignIn from 'pages/SASignIn/SASignIn'
+import SAUpdateUsername from 'pages/SAUpdateUsername/SAUpdateUsername'
+import SAUpdateEmail from 'pages/SAUpdateEmail/SAUpdateEmail'
+import SACreateUser from 'pages/SACreateUser/SACreateUser'
 
 import ErrorBar from 'components/ErrorBar'
 import MessageBar from 'components/MessageBar'
@@ -59,6 +76,7 @@ const App = () => {
     component: Component,
     noNav,
     publicRoute,
+    superadmin,
     restricted,
     ...rest
   }) => {
@@ -84,7 +102,7 @@ const App = () => {
             )}
             {publicRoute && restricted && authStatus === 'authenticated' && (
               <Redirect
-                to={(location.state || {}).referrer || '/admin/pieces'}
+                to={(location.state || {}).referrer || '/admin/profile'}
               />
             )}
             {
@@ -92,12 +110,19 @@ const App = () => {
                 {authStatus === 'authenticated' && !publicRoute && !noNav && (
                   <NavBar />
                 )}
-                <main>
-                  <Component {...props} />
-                  {authStatus === 'authenticated' && !publicRoute && !noNav && (
-                    <Box height="5rem" />
-                  )}
-                </main>
+                {authStatus === 'authenticated' && superadmin && !noNav && (
+                  <SALayout>
+                    <Component {...props} />
+                  </SALayout>
+                )}
+                {!superadmin && (
+                  <main>
+                    <Component {...props} />
+                    {authStatus === 'authenticated' &&
+                      !publicRoute &&
+                      !noNav && <Box height="5rem" />}
+                  </main>
+                )}
               </>
             }
           </>
@@ -110,6 +135,87 @@ const App = () => {
     <Switch>
       <Route publicRoute={true} component={Home} path="/" exact />
 
+      <Redirect from="/superadmin" to="/superadmin/users" exact />
+      <Route
+        publicRoute={true}
+        restricted={true}
+        component={SASignIn}
+        path="/superadmin/login"
+        exact
+      />
+      <Route
+        superadmin={true}
+        component={SAViewPieces}
+        path="/superadmin/pieces"
+        exact
+      />
+      <Route
+        superadmin={true}
+        component={SAViewPiece}
+        path="/superadmin/pieces/:pieceId"
+        exact
+      />
+      <Route
+        superadmin={true}
+        component={SAUpdatePiece}
+        path="/superadmin/pieces/:pieceId/edit"
+        exact
+      />
+      <Route
+        superadmin={true}
+        component={SAViewScans}
+        path="/superadmin/pickups"
+        exact
+      />
+      <Route
+        superadmin={true}
+        component={SAViewScan}
+        path="/superadmin/pickups/:scanId"
+        exact
+      />
+      <Route
+        superadmin={true}
+        component={SAViewUsers}
+        path="/superadmin/users"
+        exact
+      />
+      <Route
+        superadmin={true}
+        component={SAViewUser}
+        path="/superadmin/users/:username"
+        exact
+      />
+      <Route
+        superadmin={true}
+        component={SARemoveUser}
+        path="/superadmin/users/:username/remove"
+        exact
+      />
+      <Route
+        superadmin={true}
+        component={SAUpdateUser}
+        path="/superadmin/users/:username/edit"
+        exact
+      />
+      <Route
+        superadmin={true}
+        component={SAUpdateUsername}
+        path="/superadmin/users/:username/change/username"
+        exact
+      />
+      <Route
+        superadmin={true}
+        component={SAUpdateEmail}
+        path="/superadmin/users/:username/change/email"
+        exact
+      />
+      <Route
+        superadmin={true}
+        component={SACreateUser}
+        path="/superadmin/new-user"
+        exact
+      />
+
       <Route
         publicRoute={true}
         restricted={true}
@@ -117,23 +223,19 @@ const App = () => {
         path="/login"
         exact
       />
-
       <Route
         publicRoute={true}
         component={SignupCreator}
         path="/s/signup/creators"
         exact
       />
-
       <Route
         publicRoute={true}
         component={SignupFan}
         path="/s/signup/postcard-mixtape"
         exact
       />
-
       <Route publicRoute={true} component={ContactUs} path="/s/contact" exact />
-
       <Route
         publicRoute={true}
         restricted={true}
@@ -141,7 +243,6 @@ const App = () => {
         path="/signup"
         exact
       />
-
       <Route
         publicRoute={true}
         restricted={true}
@@ -213,6 +314,22 @@ const App = () => {
       <Redirect from="/admin" to="/admin/profile" />
       <Redirect from="/postcardmixtape" to="/s/signup/postcard-mixtape" />
       <Redirect from="/get-on-plynth" to="/s/signup/creators" />
+
+      <Route
+        publicRoute={true}
+        restricted={true}
+        component={PreviewProfile}
+        path="/:username/preview/:code"
+        exact
+      />
+
+      <Route
+        publicRoute={true}
+        restricted={true}
+        component={ClaimProfile}
+        path="/:username/claim/:code"
+        exact
+      />
 
       <Route
         publicRoute={true}
