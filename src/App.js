@@ -42,6 +42,8 @@ import Home from 'pages/Home/Home'
 import SignupCreator from 'pages/SignupCreator/SignupCreator'
 import SignupFan from 'pages/SignupFan/SignupFan'
 import ContactUs from 'pages/ContactUs/ContactUs'
+import PreviewProfile from 'pages/PreviewProfile/PreviewProfile'
+import ClaimProfile from 'pages/ClaimProfile/ClaimProfile'
 
 import SALayout from 'layouts/SALayout'
 import SAViewPieces from 'pages/SAViewPieces/SAViewPieces'
@@ -56,6 +58,7 @@ import SAViewScan from 'pages/SAViewScan/SAViewScan'
 import SASignIn from 'pages/SASignIn/SASignIn'
 import SAUpdateUsername from 'pages/SAUpdateUsername/SAUpdateUsername'
 import SAUpdateEmail from 'pages/SAUpdateEmail/SAUpdateEmail'
+import SACreateUser from 'pages/SACreateUser/SACreateUser'
 
 import ErrorBar from 'components/ErrorBar'
 import MessageBar from 'components/MessageBar'
@@ -206,6 +209,12 @@ const App = () => {
         path="/superadmin/users/:username/change/email"
         exact
       />
+      <Route
+        superadmin={true}
+        component={SACreateUser}
+        path="/superadmin/new-user"
+        exact
+      />
 
       <Route
         publicRoute={true}
@@ -305,6 +314,22 @@ const App = () => {
       <Redirect from="/admin" to="/admin/profile" />
       <Redirect from="/postcardmixtape" to="/s/signup/postcard-mixtape" />
       <Redirect from="/get-on-plynth" to="/s/signup/creators" />
+
+      <Route
+        publicRoute={true}
+        restricted={true}
+        component={PreviewProfile}
+        path="/:username/preview/:code"
+        exact
+      />
+
+      <Route
+        publicRoute={true}
+        restricted={true}
+        component={ClaimProfile}
+        path="/:username/claim/:code"
+        exact
+      />
 
       <Route
         publicRoute={true}

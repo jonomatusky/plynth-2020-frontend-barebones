@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { makeStyles } from '@material-ui/core/styles'
 import {
   Container,
   Grid,
@@ -8,42 +7,23 @@ import {
   Button,
   Menu,
   MenuItem,
-  Avatar,
   Typography,
 } from '@material-ui/core'
 import SettingsIcon from '@material-ui/icons/Settings'
 
 import { AuthContext } from 'contexts/auth-context'
 import MessageBar from 'components/MessageBar'
-import ActionButton from 'components/ActionButton'
 import PageTitle from 'components/PageTitle'
-import {
-  PieceBox,
-  ProfileTopRow,
-  CardRow,
-  PieceTitle,
-  DescriptionBox,
-  DescriptionText,
-  LinkRow,
-  BottomRow,
-  UnstyledLink,
-} from 'components/CardSections'
+import { UnstyledLink } from 'components/CardSections'
 import useUserStore from 'hooks/store/use-user-store'
+import UserCard from 'components/UserCard'
 
 const title = 'My Profile'
-
-const useStyles = makeStyles(theme => ({
-  large: {
-    width: theme.spacing(12),
-    height: theme.spacing(12),
-  },
-}))
 
 const MyProfile = props => {
   const auth = useContext(AuthContext)
   // const { user } = useSelector(state => state.user)
   const { user, status } = useUserStore()
-  const classes = useStyles()
   const [message, setMessage] = useState((props.location.state || {}).message)
   const [anchorEl, setAnchorEl] = useState(null)
 
@@ -95,80 +75,58 @@ const MyProfile = props => {
         </PageTitle>
         <Grid container justify="flex-start" direction="column">
           {!!user && status === 'succeeded' && (
-            <PieceBox container direction="column">
-              <React.Fragment>
-                <ProfileTopRow
-                  container
-                  alignContent="center"
-                  alignItems="center"
-                  justify="center"
-                >
-                  <Grid item xs={5}>
-                    <Grid container justify="center">
-                      <Grid item>
-                        <Avatar
-                          src={user.avatarLink}
-                          alt="Preview"
-                          className={classes.large}
-                        />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={7}>
-                    <Box textAlign="left" padding={1} overflow="hidden">
-                      <PieceTitle variant="h5">{user.displayName}</PieceTitle>
-                      <Typography variant="body2">
-                        <UnstyledLink
-                          to={`/${user.username}`}
-                        >{`plynth.com/${user.username}`}</UnstyledLink>
-                      </Typography>
-                      <Typography variant="body2">
-                        {`@${user.username} `}
-                        <UnstyledLink
-                          textDecoration="underline"
-                          to={`/admin/profile/username/change`}
-                        >
-                          edit
-                        </UnstyledLink>
-                      </Typography>
-                      <Typography variant="body2"></Typography>
-                    </Box>
-                  </Grid>
-                </ProfileTopRow>
-                <CardRow container justify="center">
-                  <DescriptionBox item xs={11}>
-                    <DescriptionText>{user.bio}</DescriptionText>
-                  </DescriptionBox>
-                </CardRow>
-                {(user.links || []).map(link => {
-                  return (
-                    <LinkRow container key={link._id} justify="center">
-                      <Grid item xs={11}>
-                        <ActionButton
-                          target="_blank"
-                          href={link.url}
-                          label={link.name}
-                        />
-                      </Grid>
-                    </LinkRow>
-                  )
-                })}
-                <Box height="1rem"></Box>
-                <BottomRow container justify="center">
-                  <Grid>
-                    <Button
-                      color="inherit"
-                      component={Link}
-                      to="/admin/profile/edit"
+            <UserCard
+              user={user}
+              subtitle={
+                <>
+                  <Typography variant="body2">
+                    <UnstyledLink
+                      to={`/${user.username}`}
+                    >{`plynth.com/${user.username}`}</UnstyledLink>
+                  </Typography>
+                  <Typography variant="body2">
+                    {`@${user.username} `}
+                    <UnstyledLink
+                      textDecoration="underline"
+                      to={`/admin/profile/username/change`}
                     >
-                      Edit My Profile
-                    </Button>
-                  </Grid>
-                </BottomRow>
-              </React.Fragment>
-            </PieceBox>
+                      change
+                    </UnstyledLink>
+                  </Typography>
+                  <Typography variant="body2">
+                    <UnstyledLink
+                      textDecoration="underline"
+                      to={`/admin/profile/edit`}
+                    >
+                      Edit Profile
+                    </UnstyledLink>
+                  </Typography>
+                </>
+              }
+            />
           )}
-
+          <Box
+            borderColor="secondary.main"
+            bgcolor="background.card"
+            borderLeft={1}
+            borderRight={1}
+            borderBottom={1}
+          >
+            <Grid container justify="center">
+              <Grid item xs={12}>
+                <Grid container justify="center">
+                  <Button
+                    component={Link}
+                    to={`/admin/profile/edit`}
+                    fullWidth
+                    color="secondary"
+                  >
+                    Edit Profile
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Box>
           <Box height="1rem"></Box>
         </Grid>
       </Container>

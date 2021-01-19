@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { Grid, Box, Avatar, Typography, Button } from '@material-ui/core'
 
-import { useLogClient } from 'hooks/log-hook'
+import { useLog } from 'hooks/use-log'
 import { BarRow } from 'components/CardSections'
 import ActionButton from 'components/ActionButton'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
@@ -27,7 +27,7 @@ import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos'
 import theme from 'theme'
 
 const PieceCard = ({ piece, onClose, ...props }) => {
-  const { sendLog } = useLogClient()
+  const { sendLog } = useLog()
   let { scanToken } = useSelector(state => state.scan)
 
   const handleLinkClick = async link => {

@@ -1,160 +1,173 @@
 import React from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { makeStyles } from '@material-ui/core/styles'
 import {
   Container,
   Grid,
   Box,
   Button,
-  Avatar,
   Typography,
   Link as MuiLink,
 } from '@material-ui/core'
 
-import Background from 'layouts/Background'
+import ShareIcon from '@material-ui/icons/Share'
+
 import PageTitle from 'components/PageTitle'
-import {
-  PieceBox,
-  ProfileTopRow,
-  CardRow,
-  PieceTitle,
-  DescriptionBox,
-  BottomRow,
-  UnstyledLink,
-  BarRow,
-} from 'components/CardSections'
+import { UnstyledLink, DescriptionText } from 'components/CardSections'
+import UserCard from 'components/UserCard'
 import PieceList from '../MyPieces/components/PieceList'
 import { useSAUsersStore } from 'hooks/store/use-sa-users-store'
 import { useSAPiecesStore } from 'hooks/store/use-sa-pieces-store'
 
 const title = 'User Profile'
-
-const useStyles = makeStyles(theme => ({
-  large: {
-    width: theme.spacing(12),
-    height: theme.spacing(12),
-  },
-}))
+const { REACT_APP_PUBLIC_URL } = process.env
 
 const SAViewUser = props => {
   const { selectUser } = useSAUsersStore()
   const { selectPiecesByUser } = useSAPiecesStore()
   const { username } = useParams()
-  const user = selectUser(username)
+  const user = selectUser(username) || {}
   const pieces = selectPiecesByUser(username)
 
-  const classes = useStyles()
+  const handleLinkShare = async text => {
+    await navigator.clipboard.writeText(text)
+  }
+
+  const claimLink = `${REACT_APP_PUBLIC_URL}/${username}/preview/${user.id}`
+
+  const { links, bio, ...userForCard } = user || {}
 
   return (
-    <React.Fragment>
-      <Background />
-      <Container maxWidth="xs">
-        <PageTitle title={title} />
-        {user && pieces && (
-          <Grid container justify="flex-start" direction="column">
-            <PieceBox container direction="column">
-              <BarRow buttonLabel="Close X" />
-              <React.Fragment>
-                <ProfileTopRow
-                  container
-                  alignContent="center"
-                  alignItems="center"
-                  justify="center"
-                >
-                  <Grid item xs={5}>
-                    <Grid container justify="center">
-                      <Grid item>
-                        {user.avatarLink && (
-                          <Avatar
-                            src={user.avatarLink}
-                            alt="Preview"
-                            className={classes.large}
-                          />
-                        )}
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={7}>
-                    <Box textAlign="left" overflow="hidden">
-                      <PieceTitle variant="h5">{user.displayName}</PieceTitle>
-                      <Typography variant="body2">
-                        <MuiLink
-                          href={`mailto:${user.email}`}
-                          target="_blank"
-                          rel="noopener"
-                          color="inherit"
-                        >
-                          {user.email}
-                        </MuiLink>{' '}
-                        <UnstyledLink
-                          textDecoration="underline"
-                          to={`/superadmin/users/${username}/change/email`}
-                        >
-                          edit
-                        </UnstyledLink>
-                      </Typography>
-                      <Typography variant="body2">
-                        <UnstyledLink
-                          to={`/${user.username}`}
-                        >{`@${user.username} `}</UnstyledLink>
-                        <UnstyledLink
-                          textDecoration="underline"
-                          to={`/superadmin/users/${username}/change/username`}
-                        >
-                          edit
-                        </UnstyledLink>
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        style={{ textTransform: 'capitalize' }}
+    <Container maxWidth="xs">
+      <PageTitle title={title} />
+      {user && pieces && (
+        <>
+          <Grid item xs={12}>
+            <UserCard
+              user={userForCard}
+              subtitle={
+                <>
+                  {user.email ? (
+                    <Typography variant="body2">
+                      <MuiLink
+                        href={`mailto:${user.email}`}
+                        target="_blank"
+                        rel="noopener"
+                        color="inherit"
                       >
-                        Tier: {user.tier}
-                      </Typography>
-                      <Typography variant="body2">
-                        Pieces:{' '}
-                        {
-                          pieces.filter(piece => piece.isRemoved !== true)
-                            .length
-                        }
-                        /{user.pieceLimit}
-                      </Typography>
-                      <Typography variant="body2">
-                        Last Active:{' '}
-                        {user.lastActiveAt
-                          ? new Date(user.lastActiveAt).toLocaleDateString()
-                          : 'N/A'}
-                      </Typography>
-                    </Box>
-                  </Grid>
-                </ProfileTopRow>
-                <BottomRow container justify="center">
-                  <Grid>
+                        {user.email}
+                      </MuiLink>{' '}
+                      <UnstyledLink
+                        textDecoration="underline"
+                        to={`/superadmin/users/${username}/change/email`}
+                      >
+                        edit
+                      </UnstyledLink>
+                    </Typography>
+                  ) : (
+                    <Typography variant="body2">Not Active</Typography>
+                  )}
+                  <Typography variant="body2">
+                    <UnstyledLink
+                      to={`/${user.username}`}
+                    >{`@${user.username} `}</UnstyledLink>
+                    <UnstyledLink
+                      textDecoration="underline"
+                      to={`/superadmin/users/${username}/change/username`}
+                    >
+                      edit
+                    </UnstyledLink>
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    style={{ textTransform: 'capitalize' }}
+                  >
+                    Tier: {user.tier}
+                  </Typography>
+                  <Typography variant="body2">
+                    Pieces:{' '}
+                    {pieces.filter(piece => piece.isRemoved !== true).length}/
+                    {user.pieceLimit}
+                  </Typography>
+                  <Typography variant="body2">
+                    Last Active:{' '}
+                    {user.lastActiveAt
+                      ? new Date(user.lastActiveAt).toLocaleDateString()
+                      : 'N/A'}
+                  </Typography>
+                </>
+              }
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Box
+              borderColor="secondary.main"
+              bgcolor="background.card"
+              borderLeft={1}
+              borderRight={1}
+              borderBottom={1}
+            >
+              <Grid container justify="center">
+                <Grid item xs={12}>
+                  <Grid container justify="center">
                     <Button
-                      color="inherit"
                       component={Link}
                       to={`/superadmin/users/${user.username}/edit`}
                     >
                       Edit User
                     </Button>
                   </Grid>
-                </BottomRow>
-                <>
-                  <CardRow container justify="center">
-                    <DescriptionBox item xs={11}>
-                      <PieceList
-                        items={pieces.filter(piece => piece.isRemoved !== true)}
-                      />
-                    </DescriptionBox>
-                  </CardRow>
-                  <Box height="1rem"></Box>
-                </>
-              </React.Fragment>
-            </PieceBox>
-            <Box height="1rem"></Box>
+                </Grid>
+                <Grid item xs={12}>
+                  {!user.lastActiveAt && (
+                    <Box
+                      borderColor="secondary.main"
+                      borderTop={1}
+                      pt={2}
+                      pb={2}
+                    >
+                      <Grid container justify="center" spacing={1}>
+                        <Grid item xs={11}>
+                          <Typography>Link to claim their profile:</Typography>
+                        </Grid>
+                        <Grid item xs={11}>
+                          <DescriptionText>{claimLink}</DescriptionText>
+                        </Grid>
+                        <Grid item xs={11}>
+                          <Button
+                            onClick={() => handleLinkShare(claimLink)}
+                            endIcon={<ShareIcon />}
+                            variant="contained"
+                          >
+                            Copy Link
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    </Box>
+                  )}
+                  <Box borderColor="secondary.main" borderTop={1} pt={2} pb={2}>
+                    <Grid container justify="center">
+                      <Grid item xs={11}>
+                        {pieces.length > 0 ? (
+                          <PieceList
+                            items={pieces.filter(
+                              piece => piece.isRemoved !== true
+                            )}
+                          />
+                        ) : (
+                          <Typography variant="h5" align="center">
+                            No Pieces
+                          </Typography>
+                        )}
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </Grid>
+              </Grid>
+            </Box>
           </Grid>
-        )}
-      </Container>
-    </React.Fragment>
+        </>
+      )}
+    </Container>
   )
 }
 

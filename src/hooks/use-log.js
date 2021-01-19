@@ -1,6 +1,34 @@
 import { useCallback } from 'react'
-import { status, request } from 'use-request'
+import { useSelector } from 'react-redux'
+import axios from 'axios'
 
-const useLog = () => {
-  const log = useCallback(() => {})
+const { REACT_APP_BACKEND_URL } = process.env
+
+export const useLog = () => {
+  const { token } = useSelector(state => state.user)
+
+  const sendLog = useCallback(
+    async ({ url, data }) => {
+      let headers
+      if (token) {
+        headers.Authorization = 'Bearer ' + token
+      }
+      url = REACT_APP_BACKEND_URL.concat(url)
+
+      try {
+        const response = await axios.request({
+          url,
+          method: 'PATCH',
+          data,
+          headers,
+          timeout: 10000,
+        })
+
+        return response.data
+      } catch (err) {}
+    },
+    [token]
+  )
+
+  return { sendLog }
 }

@@ -1,6 +1,5 @@
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { useLastLocation } from 'react-router-last-location'
 import { Grid, Button, Typography, Avatar } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -19,7 +18,6 @@ const useStyles = makeStyles(theme => ({
 const UpdateProfile = props => {
   const classes = useStyles()
   const history = useHistory()
-  const lastLocation = useLastLocation()
   const { username } = useParams()
 
   const { selectUser, updateStatus, updateUser } = useSAUsersStore()
@@ -28,10 +26,8 @@ const UpdateProfile = props => {
 
   const handleSubmit = async values => {
     try {
-      updateUser({ username, ...values })
-      !!lastLocation
-        ? history.goBack()
-        : history.push(`admin/users/${username}`)
+      await updateUser({ username, updates: values })
+      history.push(`superadmin/users/${username}`)
     } catch (err) {
       console.log(err)
     }

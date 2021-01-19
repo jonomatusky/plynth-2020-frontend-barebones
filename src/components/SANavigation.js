@@ -233,7 +233,7 @@ const MainHeader = ({ children, ...props }) => {
               label={<span className="bottomNavLabel">Users</span>}
               icon={<PeopleIcon />}
               component={NavLink}
-              to={'/superadmin/profile'}
+              to={'/superadmin/users'}
               activeClassName="Mui-selected"
               classes={{ root: classes.navBarActionRoot, label: classes.label }}
             />

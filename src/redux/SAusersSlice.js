@@ -27,6 +27,7 @@ export const fetchUsers = createAsyncThunk(
 export const createUser = createAsyncThunk(
   'SAusers/createUser',
   async ({ headers, ...inputs }) => {
+    console.log(inputs)
     const { user } = await client.request({
       headers,
       url: `/users`,
