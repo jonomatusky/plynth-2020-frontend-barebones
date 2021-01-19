@@ -47,7 +47,7 @@ export const IconLink = ({ link }) => {
   }
 
   return (
-    <IconButton>
+    <IconButton target="_blank" href={link}>
       <FontAwesomeIcon icon={type.fontAwesome} />
     </IconButton>
   )

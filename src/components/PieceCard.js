@@ -245,12 +245,12 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                           </Grid>
                         )}
                         {section.text && (
-                          <Grid item xs={11}>
+                          <Grid item xs={11} key={index}>
                             <DescriptionText>{section.text}</DescriptionText>
                           </Grid>
                         )}
                         {section.link && (
-                          <Grid item xs={11}>
+                          <Grid item xs={11} key={index}>
                             <LinkButton link={section.link} />
                           </Grid>
                         )}
@@ -321,9 +321,12 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                                   spacing={2}
                                 >
                                   <Grid container justify="center">
-                                    {section.links.map((link, index) => {
+                                    {section.links.map((link, k) => {
                                       return (
-                                        <Grid item key={index}>
+                                        <Grid
+                                          item
+                                          key={link._id || `${index}.${k}`}
+                                        >
                                           <IconLink link={link.url} />
                                         </Grid>
                                       )
