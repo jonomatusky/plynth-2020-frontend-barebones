@@ -13,6 +13,7 @@ import ViewHeadlineIcon from '@material-ui/icons/ViewHeadline'
 import ListIcon from '@material-ui/icons/List'
 import PeopleIcon from '@material-ui/icons/People'
 import RemoveIcon from '@material-ui/icons/Remove'
+import TwitterIcon from '@material-ui/icons/Twitter'
 
 const SectionButton = props => {
   // const { fetchUserList } = useUserStore()
@@ -39,7 +40,10 @@ const SectionButton = props => {
         props.append({ type, text: '' })
         break
       case 'list.links':
-        props.append({ type, links: [] })
+        props.append({ type, links: [{ text: '', url: '' }] })
+        break
+      case 'list.icons':
+        props.append({ type, links: [{ url: '' }] })
         break
       case 'list.users':
         // fetchUserList()
@@ -89,6 +93,12 @@ const SectionButton = props => {
             <ListIcon fontSize="small" />
           </ListItemIcon>
           <Typography>List of links</Typography>
+        </MenuItem>
+        <MenuItem onClick={() => handleSelect('list.icons')}>
+          <ListItemIcon>
+            <TwitterIcon fontSize="small" />
+          </ListItemIcon>
+          <Typography>Icon links</Typography>
         </MenuItem>
         <MenuItem onClick={() => handleSelect('list.users')}>
           <ListItemIcon>

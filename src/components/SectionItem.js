@@ -136,6 +136,8 @@ const SectionItem = ({
       return 'Link List'
     } else if (section.type === 'list.users') {
       return 'Profile List'
+    } else if (section.type === 'list.icons') {
+      return 'Icon Links'
     } else if (section.type === 'divider') {
       return 'Divider'
     } else if (section.title) {
@@ -261,6 +263,54 @@ const SectionItem = ({
                                 )}
                                 helperText={
                                   (((errors.links || [])[k] || {}).text || {})
+                                    .message
+                                }
+                              />
+                            </Box>
+                            <Box mt={5}>
+                              <IconButton
+                                disabled={k === 0}
+                                size="small"
+                                edge="end"
+                                onClick={() => remove(k)}
+                              >
+                                <ClearIcon fontSize="small" />
+                              </IconButton>
+                            </Box>
+                          </Box>
+                        </Grid>
+                      )
+                    })}
+                  </>
+                  <Grid item xs={12}>
+                    <Button
+                      fullWidth
+                      onClick={() => append({ url: '', text: '' })}
+                    >
+                      <b>+ Add Link</b>
+                    </Button>
+                  </Grid>
+                </>
+              )}
+              {section.type === 'list.icons' && (
+                <>
+                  <>
+                    {fields.map((field, k) => {
+                      return (
+                        <Grid item xs={12} key={field.identifier}>
+                          <Box display="flex">
+                            <Box flexGrow={1} mr={0.5}>
+                              <TextField
+                                control={control}
+                                label="URL"
+                                name={`sections[${index}].links[${k}].url`}
+                                type="url"
+                                defaultValue={field.url}
+                                error={Boolean(
+                                  ((errors.links || [])[k] || {}).url
+                                )}
+                                helperText={
+                                  (((errors.links || [])[k] || {}).url || {})
                                     .message
                                 }
                               />

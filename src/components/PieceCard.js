@@ -14,6 +14,7 @@ import {
   UnstyledLink,
   DescriptionText,
 } from './CardSections'
+import { IconLink } from 'components/IconLink'
 import theme from 'theme'
 
 const ImageSquare = styled.div`
@@ -253,55 +254,86 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                             <LinkButton link={section.link} />
                           </Grid>
                         )}
-                        {(section.links || []).length > 0 && (
-                          <Grid container justify="center" key={index}>
-                            <Grid item xs={11}>
-                              <Grid
-                                container
-                                justify="space-between"
-                                spacing={2}
-                              >
-                                {(section.links || []).map(link => {
-                                  return (
-                                    <Grid item key={link.url} xs={6}>
-                                      <Button
-                                        onClick={handleLinkClick}
-                                        fullWidth
-                                        style={{
-                                          paddingRight: 0,
-                                          paddingLeft: 0,
-                                          paddingTop: 0,
-                                          borderBottom: `1px solid ${theme.palette.secondary.main}`,
-                                          borderRadius: '0',
-                                        }}
-                                        href={link.url}
-                                        target="_blank"
+                        {section.type === 'list.links' &&
+                          (section.links || []).length > 0 && (
+                            <Grid container justify="center" key={index}>
+                              <Grid item xs={11}>
+                                <Grid
+                                  container
+                                  justify="space-between"
+                                  spacing={2}
+                                >
+                                  {(section.links || []).map((link, k) => {
+                                    return (
+                                      <Grid
+                                        item
+                                        key={link._id || `${index}.${k}`}
+                                        xs={6}
                                       >
-                                        <Grid container justify="space-between">
-                                          <Grid item>
-                                            <Typography
-                                              style={{
-                                                textTransform: 'none',
-                                              }}
-                                            >
-                                              {link.text || link.name}
-                                            </Typography>
+                                        <Button
+                                          onClick={handleLinkClick}
+                                          fullWidth
+                                          style={{
+                                            paddingRight: 0,
+                                            paddingLeft: 0,
+                                            paddingTop: 0,
+                                            borderBottom: `1px solid ${theme.palette.secondary.main}`,
+                                            borderRadius: '0',
+                                          }}
+                                          href={link.url}
+                                          target="_blank"
+                                        >
+                                          <Grid
+                                            container
+                                            justify="space-between"
+                                          >
+                                            <Grid item>
+                                              <Typography
+                                                style={{
+                                                  textTransform: 'none',
+                                                }}
+                                              >
+                                                {link.text || link.name}
+                                              </Typography>
+                                            </Grid>
+                                            <Grid item>
+                                              <ArrowForwardIosIcon
+                                                fontSize="small"
+                                                color="error"
+                                              />
+                                            </Grid>
                                           </Grid>
-                                          <Grid item>
-                                            <ArrowForwardIosIcon
-                                              fontSize="small"
-                                              color="error"
-                                            />
-                                          </Grid>
-                                        </Grid>
-                                      </Button>
-                                    </Grid>
-                                  )
-                                })}
+                                        </Button>
+                                      </Grid>
+                                    )
+                                  })}
+                                </Grid>
                               </Grid>
                             </Grid>
-                          </Grid>
-                        )}
+                          )}
+                        {section.type === 'list.icons' &&
+                          (section.links || []).length > 0 && (
+                            <Grid container justify="center" key={index}>
+                              <Grid item xs={11}>
+                                <Grid
+                                  container
+                                  justify="space-between"
+                                  spacing={2}
+                                >
+                                  <Grid container justify="center">
+                                    {section.links.map((link, index) => {
+                                      return (
+                                        <Grid item key={index}>
+                                          <IconLink link={link.url} />
+                                        </Grid>
+                                      )
+                                    })}
+                                  </Grid>
+                                </Grid>
+                              </Grid>
+                            </Grid>
+                          )}
+
                         {(section.users || []).length > 0 && (
                           <Grid container justify="center" key={index}>
                             <Grid item xs={11}>

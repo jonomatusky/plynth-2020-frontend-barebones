@@ -60,6 +60,8 @@ import SAUpdateUsername from 'pages/SAUpdateUsername/SAUpdateUsername'
 import SAUpdateEmail from 'pages/SAUpdateEmail/SAUpdateEmail'
 import SACreateUser from 'pages/SACreateUser/SACreateUser'
 
+import IconButtonTest from 'pages/IconButtonTest/IconButtonTest'
+
 import ErrorBar from 'components/ErrorBar'
 import MessageBar from 'components/MessageBar'
 import NavBar from 'components/NavBar'
@@ -134,6 +136,13 @@ const App = () => {
   routes = (
     <Switch>
       <Route publicRoute={true} component={Home} path="/" exact />
+
+      <Route
+        publicRoute={true}
+        component={IconButtonTest}
+        path="/icon-button-test"
+        exact
+      />
 
       <Redirect from="/superadmin" to="/superadmin/users" exact />
       <Route
