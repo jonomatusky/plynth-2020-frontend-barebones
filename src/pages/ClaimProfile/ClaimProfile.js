@@ -10,7 +10,7 @@ import FormLayout from 'layouts/FormLayout'
 import { BarRow } from 'components/CardSections'
 import { TextField } from 'components/FormElements'
 import ActionButton from 'components/ActionButton'
-import useAlertStore, { userAlertStore } from 'hooks/store/use-alert-store'
+import { useAlertStore } from 'hooks/store/use-alert-store'
 
 const initialValues = {
   email: '',
