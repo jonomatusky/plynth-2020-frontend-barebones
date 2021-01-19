@@ -25,6 +25,7 @@ import ActionButton from 'components/ActionButton'
 import Emoji from 'components/Emoji'
 import WebsiteNavBar from 'components/WebsiteNavBar'
 import ScrollToTopOnMount from 'components/ScrollToTopOnMount'
+import { UnstyledLink } from 'components/CardSections'
 
 const StyledBox = styled(Box)`
   background-color: ${theme.palette.background.default};
@@ -117,6 +118,19 @@ const Home = () => {
                               </Typography>
                               <Typography color="inherit">
                                 2. Access the content it's linked to!
+                              </Typography>
+                              <Typography color="inherit">
+                                Trouble getting access? Try a different browser
+                                or{' '}
+                                <Link
+                                  component={RouterLink}
+                                  to="/s/contact"
+                                  color="inherit"
+                                  underline="always"
+                                >
+                                  contact us
+                                </Link>
+                                .
                               </Typography>
                             </>
                           }

@@ -238,7 +238,7 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                         )}
                         {section.title && (
                           <Grid item key={index} xs={11}>
-                            <PieceTitle variant="h6">
+                            <PieceTitle variant="h6" align="center">
                               <strong>{section.title}</strong>
                             </PieceTitle>
                           </Grid>

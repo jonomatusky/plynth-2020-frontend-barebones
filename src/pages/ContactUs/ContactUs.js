@@ -100,6 +100,10 @@ const SignUp = () => {
             <Link component={RouterLink} to="/s/signup/creators">
               click here
             </Link>
+            . For immediate tech support, email us at{' '}
+            <Link href="mailto:help@plynth.com" target="_blank">
+              help@plynth.com
+            </Link>
             .
           </>
         }
