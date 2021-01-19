@@ -14,6 +14,7 @@ const SimpleForm = ({
   buttonLabel,
   confirmationMessage,
   onClose,
+  ps,
 }) => {
   const history = useHistory()
 
@@ -23,21 +24,32 @@ const SimpleForm = ({
     }
   }
 
-  if (status === 'succeeded') {
+  if (status === 'succeeded' && confirmationMessage) {
     return (
-      <>
-        <Grid item>
-          <Typography variant="h6">{confirmationMessage}</Typography>
-        </Grid>
-        <Grid item>
-          <Box height="1rem" />
-        </Grid>
+      <Grid
+        container
+        alignItems="center"
+        justify="center"
+        style={{ height: '100%' }}
+      >
+        {confirmationMessage && (
+          <>
+            <Grid item xs={12}>
+              <Typography align="center" variant="h6">
+                {confirmationMessage}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Box height="1rem" />
+            </Grid>
+          </>
+        )}
         {onClose && (
           <Grid item>
             <Button onClick={onClose || history.goBack}>Close</Button>
           </Grid>
         )}
-      </>
+      </Grid>
     )
   } else {
     return (
@@ -48,22 +60,37 @@ const SimpleForm = ({
         onSubmit={handleSubmit}
       >
         <Form>
-          <Grid container direction="column" spacing={1}>
+          <Grid container spacing={1}>
             {children.isArray ? (
               children.map(child => {
-                return <Grid item>{child}</Grid>
+                return (
+                  <Grid item xs={12}>
+                    {child}
+                  </Grid>
+                )
               })
             ) : (
-              <Grid item>{children}</Grid>
+              <Grid item xs={12}>
+                {children}
+              </Grid>
             )}
-            <Box height="1rem" />
-            <Grid item>
+            <Box height="0.5rem" />
+            <Grid item xs={12}>
               <ActionButton
                 type="submit"
                 label={buttonLabel || `Submit`}
                 loading={status === 'loading'}
               />
             </Grid>
+            {!!ps && (
+              <Grid item xs={12}>
+                <Box color="secondary.main" mt={1}>
+                  <Typography variant="body2">
+                    <em>{ps}</em>
+                  </Typography>
+                </Box>
+              </Grid>
+            )}
           </Grid>
         </Form>
       </Formik>

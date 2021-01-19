@@ -26,6 +26,7 @@ import Emoji from 'components/Emoji'
 import WebsiteNavBar from 'components/WebsiteNavBar'
 import ScrollToTopOnMount from 'components/ScrollToTopOnMount'
 import { UnstyledLink } from 'components/CardSections'
+import EmailSignupForm from 'components/EmailSignupForm'
 
 const StyledBox = styled(Box)`
   background-color: ${theme.palette.background.default};
@@ -306,7 +307,6 @@ const Home = () => {
             </Grid>
           </Grid>
         </SectionLight>
-
         {/* For Fans */}
         <SectionDark id="for-fans">
           <Grid
@@ -466,26 +466,55 @@ const Home = () => {
           </Grid>
         </SectionLight>
         <SectionDark>
-          <Grid
-            container
-            direction="column"
-            justify="center"
-            alignItems="center"
-            alignContent="center"
-          >
-            <Box height="5rem" />
-            <Grid item>
-              <Typography variant="h5">Questions?</Typography>
+          <Box pt={5} pb={5}>
+            <Grid container justify="center" alignItems="center" spacing={2}>
+              {/* <Grid item md={3} sm={5} xs={11}>
+                <Grid container spacing={1}>
+                  <Grid item xs={12}>
+                    <Typography align="center" variant="h1">
+                      <Emoji symbol="📧" label="email" />
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid> */}
+              <Grid item md={3} sm={5} xs={11}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <Typography variant="h6">
+                      Want to get the latest news on Plynth and the Postcard
+                      Mixtapes? Sign up for email updates.
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <EmailSignupForm />
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Box height="5rem" />
             </Grid>
-            <Grid item>
-              <Button component={RouterLink} to="/s/contact">
-                <Typography variant="h6" style={{ textTransform: 'none' }}>
-                  Get in Touch
-                </Typography>
-              </Button>
+          </Box>
+        </SectionDark>
+        <SectionDark>
+          <Box pt={5} pb={5}>
+            <Grid
+              container
+              direction="column"
+              justify="center"
+              alignItems="center"
+              alignContent="center"
+            >
+              <Grid item>
+                <Typography variant="h5">Questions?</Typography>
+              </Grid>
+              <Grid item>
+                <Button component={RouterLink} to="/s/contact">
+                  <Typography variant="h6" style={{ textTransform: 'none' }}>
+                    Get in Touch
+                  </Typography>
+                </Button>
+              </Grid>
             </Grid>
-            <Box height="5rem" />
-          </Grid>
+          </Box>
         </SectionDark>
         <SectionDark>
           <Grid

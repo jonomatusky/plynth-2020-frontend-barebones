@@ -28,7 +28,7 @@ import UserSignup1 from 'pages/UserSignup1/UserSignup1'
 import UserSignup2 from 'pages/UserSignup2/UserSignup2'
 import SignupSuccess from 'pages/UserSignupSuccess/SignupSuccess'
 import SignIn from 'pages/SignIn/SignIn'
-import BetaSignup from 'pages/BetaSignup/BetaSignup'
+import Subscribe from 'pages/Subscribe/Subscribe'
 import ViewUser from 'pages/ViewUser/ViewUser'
 import UpdateEmail from 'pages/UserUpdateEmail/UserUpdateEmail'
 import UpdatePassword from 'pages/UserUpdatePassword/UserUpdatePassword'
@@ -246,7 +246,7 @@ const App = () => {
       <Route
         publicRoute={true}
         restricted={true}
-        component={BetaSignup}
+        component={Subscribe}
         path="/s/subscribe"
         exact
       />

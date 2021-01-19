@@ -16,49 +16,45 @@ const FormLayout = ({
   ...props
 }) => {
   return (
-    <React.Fragment>
-      <Container maxWidth="xs">
-        <Grid container justify="flex-start" direction="column" spacing={2}>
-          {title ? (
-            <Grid item>
-              <PageTitle title={title} />
-            </Grid>
-          ) : (
-            <Box height="5vh"></Box>
-          )}
-          {message && (
-            <Grid item>
-              <Typography>{message}</Typography>
-            </Grid>
-          )}
+    <Container maxWidth="xs">
+      <Grid container justify="flex-start" direction="column" spacing={2}>
+        {title ? (
           <Grid item>
-            <PieceBox container direction="column">
-              {bar || (
-                <BarRow buttonLabel="Cancel X" onClose={onClose || null} />
-              )}
-              <Grid item>
+            <PageTitle title={title} />
+          </Grid>
+        ) : (
+          <Box height="5vh"></Box>
+        )}
+        {message && (
+          <Grid item>
+            <Typography>{message}</Typography>
+          </Grid>
+        )}
+        <Grid item>
+          <PieceBox container direction="column">
+            {bar || <BarRow buttonLabel="Close X" onClose={onClose || null} />}
+            <Grid item>
+              <Box pt={2} pb={3}>
                 <Grid container justify="center">
                   <Grid item xs={11}>
-                    <Box height="1rem"></Box>
                     {children}
                   </Grid>
                 </Grid>
-              </Grid>
-              <Box height="2rem"></Box>
-              <BottomRow container justify="center">
-                {bottom}
-              </BottomRow>
-            </PieceBox>
-          </Grid>
-          <Grid item>
-            <Grid container justify="center">
-              <Grid item>{below}</Grid>
+              </Box>
             </Grid>
-          </Grid>
-          <Box height="1rem"></Box>
+            <BottomRow container justify="center">
+              {bottom}
+            </BottomRow>
+          </PieceBox>
         </Grid>
-      </Container>
-    </React.Fragment>
+        <Grid item>
+          <Grid container justify="center">
+            <Grid item>{below}</Grid>
+          </Grid>
+        </Grid>
+        <Box height="1rem"></Box>
+      </Grid>
+    </Container>
   )
 }
 
