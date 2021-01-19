@@ -136,6 +136,8 @@ const SectionItem = ({
       return 'Link List'
     } else if (section.type === 'list.users') {
       return 'Profile List'
+    } else if (section.type === 'divider') {
+      return 'Divider'
     } else if (section.title) {
       return `Title: ${section.title}`
     } else if (section.link) {

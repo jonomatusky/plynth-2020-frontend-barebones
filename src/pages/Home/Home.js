@@ -25,7 +25,6 @@ import ActionButton from 'components/ActionButton'
 import Emoji from 'components/Emoji'
 import WebsiteNavBar from 'components/WebsiteNavBar'
 import ScrollToTopOnMount from 'components/ScrollToTopOnMount'
-import { UnstyledLink } from 'components/CardSections'
 import EmailSignupForm from 'components/EmailSignupForm'
 
 const StyledBox = styled(Box)`
