@@ -27,7 +27,7 @@ const UpdateProfile = props => {
   const handleSubmit = async values => {
     try {
       await updateUser({ username, updates: values })
-      history.push(`superadmin/users/${username}`)
+      history.push(`/superadmin/users/${username}`)
     } catch (err) {
       console.log(err)
     }
@@ -42,7 +42,7 @@ const UpdateProfile = props => {
           bottom={
             <Button
               color="inherit"
-              onClick={() => history.push(`/admin/users/${username}/remove`)}
+              onClick={event => history.push(`/admin/users/${username}/remove`)}
             >
               Remove User
             </Button>

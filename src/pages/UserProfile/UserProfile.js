@@ -75,58 +75,61 @@ const MyProfile = props => {
         </PageTitle>
         <Grid container justify="flex-start" direction="column">
           {!!user && status === 'succeeded' && (
-            <UserCard
-              user={user}
-              subtitle={
-                <>
-                  <Typography variant="body2">
-                    <UnstyledLink
-                      to={`/${user.username}`}
-                    >{`plynth.com/${user.username}`}</UnstyledLink>
-                  </Typography>
-                  <Typography variant="body2">
-                    {`@${user.username} `}
-                    <UnstyledLink
-                      textDecoration="underline"
-                      to={`/admin/profile/username/change`}
-                    >
-                      change
-                    </UnstyledLink>
-                  </Typography>
-                  <Typography variant="body2">
-                    <UnstyledLink
-                      textDecoration="underline"
-                      to={`/admin/profile/edit`}
-                    >
-                      Edit Profile
-                    </UnstyledLink>
-                  </Typography>
-                </>
-              }
-            />
-          )}
-          <Box
-            borderColor="secondary.main"
-            bgcolor="background.card"
-            borderLeft={1}
-            borderRight={1}
-            borderBottom={1}
-          >
-            <Grid container justify="center">
-              <Grid item xs={12}>
+            <>
+              <UserCard
+                user={user}
+                subtitle={
+                  <>
+                    <Typography variant="body2">
+                      <UnstyledLink
+                        to={`/${user.username}`}
+                      >{`plynth.com/${user.username}`}</UnstyledLink>
+                    </Typography>
+                    <Typography variant="body2">
+                      {`@${user.username} `}
+                      <UnstyledLink
+                        textDecoration="underline"
+                        to={`/admin/profile/username/change`}
+                      >
+                        change
+                      </UnstyledLink>
+                    </Typography>
+                    <Typography variant="body2">
+                      <UnstyledLink
+                        textDecoration="underline"
+                        to={`/admin/profile/edit`}
+                      >
+                        Edit Profile
+                      </UnstyledLink>
+                    </Typography>
+                  </>
+                }
+              />
+              <Box
+                borderColor="secondary.main"
+                bgcolor="background.card"
+                borderLeft={1}
+                borderRight={1}
+                borderBottom={1}
+              >
                 <Grid container justify="center">
-                  <Button
-                    component={Link}
-                    to={`/admin/profile/edit`}
-                    fullWidth
-                    color="secondary"
-                  >
-                    Edit Profile
-                  </Button>
+                  <Grid item xs={12}>
+                    <Grid container justify="center">
+                      <Button
+                        component={Link}
+                        to={`/admin/profile/edit`}
+                        fullWidth
+                        color="secondary"
+                      >
+                        Edit Profile
+                      </Button>
+                    </Grid>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Grid>
-          </Box>
+              </Box>
+            </>
+          )}
+
           <Box height="1rem"></Box>
         </Grid>
       </Container>

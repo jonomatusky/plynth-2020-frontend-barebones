@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
-import { Grid, Box } from '@material-ui/core'
+import { Link as RouterLink, useHistory, useParams } from 'react-router-dom'
+import { Grid, Box, Typography, Link } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import * as Yup from 'yup'
 
@@ -58,7 +58,7 @@ const ClaimProfile = ({ values }) => {
   return (
     <FormLayout
       title={`Claim @${username}`}
-      message={`Enter an email address and password to claim this user and edit your profile.`}
+      message={`Enter an email address and password to claim this account and edit your profile.`}
       bar={
         <BarRow
           buttonLabel="Cancel X"
@@ -66,6 +66,19 @@ const ClaimProfile = ({ values }) => {
             history.push('/')
           }}
         />
+      }
+      below={
+        <Typography>
+          {`Already set up your account? `}
+          <Link
+            component={RouterLink}
+            to="/admin/login"
+            color="inherit"
+            underline="always"
+          >
+            Log In
+          </Link>
+        </Typography>
       }
     >
       <Formik
