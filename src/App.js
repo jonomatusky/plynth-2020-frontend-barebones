@@ -6,7 +6,6 @@ import {
   Switch,
   useLocation,
 } from 'react-router-dom'
-import { Box } from '@material-ui/core'
 import { LastLocationProvider } from 'react-router-last-location'
 
 import { useAuth } from 'hooks/auth-hook'
@@ -16,6 +15,7 @@ import firebase from './firebase'
 import posthog from 'posthog-js'
 
 import Background from 'layouts/Background'
+import Navigation from 'components/Navigation'
 import NewPieceImage from 'pages/NewPieceImage/NewPieceImage'
 import NewPiece from 'pages/NewPiece/NewPiece'
 import ViewPiece from 'pages/ViewMyPiece/ViewMyPiece'
@@ -64,7 +64,6 @@ import IconButtonTest from 'pages/IconButtonTest/IconButtonTest'
 
 import ErrorBar from 'components/ErrorBar'
 import MessageBar from 'components/MessageBar'
-import NavBar from 'components/NavBar'
 
 firebase.analytics()
 const POSTHOG_KEY = process.env.REACT_APP_POSTHOG_KEY
@@ -107,26 +106,28 @@ const App = () => {
                 to={(location.state || {}).referrer || '/admin/profile'}
               />
             )}
-            {
-              <>
-                {authStatus === 'authenticated' && !publicRoute && !noNav && (
-                  <NavBar />
-                )}
-                {authStatus === 'authenticated' && superadmin && !noNav && (
-                  <SALayout>
-                    <Component {...props} />
-                  </SALayout>
-                )}
-                {!superadmin && (
-                  <main>
-                    <Component {...props} />
-                    {authStatus === 'authenticated' &&
-                      !publicRoute &&
-                      !noNav && <Box height="5rem" />}
-                  </main>
-                )}
-              </>
-            }
+
+            {(publicRoute || noNav) && (
+              <main>
+                <Component {...props} />
+              </main>
+            )}
+            {authStatus === 'authenticated' &&
+              !publicRoute &&
+              !noNav &&
+              !superadmin && (
+                <Navigation>
+                  <Component {...props} />
+                </Navigation>
+              )}
+            {authStatus === 'authenticated' &&
+              !publicRoute &&
+              !noNav &&
+              superadmin && (
+                <SALayout>
+                  <Component {...props} />
+                </SALayout>
+              )}
           </>
         )}
       />
@@ -282,7 +283,13 @@ const App = () => {
         exact
       />
 
-      <Route publicRoute={true} component={NewPickup} path="/pickup" exact />
+      <Route
+        noNav
+        publicRoute={true}
+        component={NewPickup}
+        path="/pickup"
+        exact
+      />
 
       <Route
         component={UserSignup2}

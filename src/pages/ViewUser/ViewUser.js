@@ -7,9 +7,9 @@ import { useRequest } from 'hooks/use-request'
 import UserCard from 'components/UserCard'
 import NotFound from 'layouts/NotFound'
 
-const UserProfile = props => {
+const ViewUser = () => {
   const { status, request } = useRequest()
-  const [user, setUser] = useState()
+  const [user, setUser] = useState(null)
   const username = useParams().username
 
   useEffect(() => {
@@ -22,8 +22,10 @@ const UserProfile = props => {
         setUser(responseData.user)
       } catch (err) {}
     }
-    fetchUser()
-  }, [request, username])
+    if (!user) {
+      fetchUser()
+    }
+  }, [request, username, user])
 
   return (
     <>
@@ -43,4 +45,4 @@ const UserProfile = props => {
   )
 }
 
-export default UserProfile
+export default ViewUser

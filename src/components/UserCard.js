@@ -51,9 +51,9 @@ const UserCard = ({ user, onClose, subtitle, ...props }) => {
                 <Grid item xs={11}>
                   <DescriptionText>{user.bio}</DescriptionText>
                 </Grid>
-                {(user.links || []).map(link => {
+                {(user.links || []).map((link, index) => {
                   return (
-                    <Grid item xs={11} key={link.id}>
+                    <Grid item xs={11} key={link.id || index}>
                       <LinkButton link={link} />
                     </Grid>
                   )

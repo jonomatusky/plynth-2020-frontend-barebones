@@ -12,7 +12,6 @@ import {
 import SettingsIcon from '@material-ui/icons/Settings'
 
 import { AuthContext } from 'contexts/auth-context'
-import MessageBar from 'components/MessageBar'
 import PageTitle from 'components/PageTitle'
 import { UnstyledLink } from 'components/CardSections'
 import useUserStore from 'hooks/store/use-user-store'
@@ -24,7 +23,6 @@ const MyProfile = props => {
   const auth = useContext(AuthContext)
   // const { user } = useSelector(state => state.user)
   const { user, status } = useUserStore()
-  const [message, setMessage] = useState((props.location.state || {}).message)
   const [anchorEl, setAnchorEl] = useState(null)
 
   const handleClick = event => {
@@ -41,11 +39,6 @@ const MyProfile = props => {
 
   return (
     <React.Fragment>
-      <MessageBar
-        open={!!message}
-        message={message}
-        handleClose={() => setMessage(null)}
-      />
       <Container maxWidth="xs">
         <PageTitle title={title}>
           <Button onClick={handleClick} endIcon={<SettingsIcon />}>
