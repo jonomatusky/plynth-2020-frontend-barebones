@@ -5,6 +5,7 @@ let initialState = {
   pieces: [],
   filter: 'ACTIVE',
   status: 'idle',
+  pieceStatus: 'idle',
   error: null,
 }
 
@@ -16,6 +17,17 @@ export const fetchPieces = createAsyncThunk(
       url: '/pieces',
     })
     return pieces
+  }
+)
+
+export const fetchPiece = createAsyncThunk(
+  'SApieces/fetchPiece',
+  async ({ headers, pieceId }) => {
+    const { piece } = await client.request({
+      headers,
+      url: `/pieces/${pieceId}`,
+    })
+    return piece
   }
 )
 
@@ -44,6 +56,17 @@ const SApiecesSlice = createSlice({
       state.pieces = action.payload
     },
     [fetchPieces.rejected]: (state, action) => {
+      state.status = 'failed'
+      state.error = action.error.message
+    },
+    [fetchPiece.pending]: (state, action) => {
+      state.status = 'loading'
+    },
+    [fetchPiece.fulfilled]: (state, action) => {
+      state.status = 'succeeded'
+      state.pieces = action.payload
+    },
+    [fetchPiece.rejected]: (state, action) => {
       state.status = 'failed'
       state.error = action.error.message
     },

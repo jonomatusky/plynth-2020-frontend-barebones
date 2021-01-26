@@ -1,32 +1,29 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { useSelector } from 'react-redux'
 import { Container, Grid, Button } from '@material-ui/core'
 
 import { useRequest } from 'hooks/use-request'
+import { useSAPiecesStore } from 'hooks/store/use-sa-pieces-store'
 import Background from 'layouts/Background'
 import PageTitle from 'components/PageTitle'
 import LoadingSpinner from 'components/LoadingSpinner'
 
-import PieceCard from 'components/AdminPieceCard'
-
-import { selectPiece } from 'redux/piecesSlice'
+import PieceCard from 'components/SAPieceCard'
 
 import NotFound from 'layouts/NotFound'
 
 const ViewPiece = props => {
   const history = useHistory()
-  const pieceId = useParams().pieceId
-  const piece = useSelector(state => selectPiece(state, pieceId))
-  const { request } = useRequest()
-  const { user } = useSelector(state => state.user)
+  const { selectPiece, status } = useSAPiecesStore()
+  const { pieceId } = useParams()
+  const selectedPiece = selectPiece(pieceId)
 
-  const { status } = useSelector(state => state.pieces)
+  const [piece, setPiece] = useState()
+
+  const { request, status: requestStatus } = useRequest()
 
   let [scanCount, setScanCount] = useState()
   let [clickCount, setClickCount] = useState()
-
-  console.log(piece)
 
   useEffect(() => {
     const getCount = async id => {
@@ -38,17 +35,36 @@ const ViewPiece = props => {
         setClickCount(clickCount)
       } catch (err) {}
     }
-    !!piece && getCount(piece.id)
+    if (piece) {
+      getCount(piece.id)
+    }
   }, [piece, request])
+
+  useEffect(() => {
+    const fetchPiece = async () => {
+      if (!!selectedPiece) {
+        setPiece(selectedPiece)
+      } else {
+        try {
+          console.log('fetching')
+          const { piece } = await request(`/pieces/${pieceId}`)
+          setPiece(piece)
+        } catch (err) {}
+      }
+    }
+    if (status === 'succeeded') {
+      fetchPiece()
+    }
+  }, [pieceId, request, status, selectedPiece])
 
   return (
     <React.Fragment>
       <Background />
       <Container maxWidth="xs" disableGutters>
-        {(status === 'loading' || status === 'idle') && (
-          <LoadingSpinner asOverlay />
-        )}
-        {status === 'succeeded' && !!piece && (
+        {(status === 'loading' ||
+          status === 'idle' ||
+          requestStatus === 'loading') && <LoadingSpinner asOverlay />}
+        {!!piece && (
           <Grid container justify="center">
             <Grid item xs={11}>
               {piece.isRemoved && <PageTitle title="REMOVED" />}
@@ -60,19 +76,18 @@ const ViewPiece = props => {
                 clickCount={clickCount}
               />
             </Grid>
-            {user.username !== piece.owner.username && (
-              <Grid item>
-                <Button
-                  onClick={() => history.push(`/admin/pieces/${piece.id}/edit`)}
-                >
-                  Edit This Piece
-                </Button>
-              </Grid>
-            )}
+            <Grid item>
+              <Button
+                onClick={() =>
+                  history.push(`/superadmin/pieces/${piece.id}/edit`)
+                }
+              >
+                Edit This Piece
+              </Button>
+            </Grid>
           </Grid>
         )}
-        {status === 'failed' && <NotFound />}
-        {status === 'succeeded' && !piece && <NotFound />}
+        {requestStatus === 'failed' && <NotFound />}
       </Container>
     </React.Fragment>
   )
