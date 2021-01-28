@@ -33,7 +33,7 @@ export const usePieceStore = () => {
     [dispatchThunk]
   )
 
-  const _deletPiece = useCallback(
+  const _deletePiece = useCallback(
     async ({ id }) => {
       await dispatchThunk(deletePiece, { id })
     },
@@ -61,29 +61,13 @@ export const usePieceStore = () => {
     return (pieces || []).find(piece => piece.id === pieceId)
   }
 
-  const selectPiecesByUser = username => {
-    return pieces.filter(piece => piece.owner.username === username)
-  }
-
-  const getPiecesByFilter = () => {
-    if (filter === 'REMOVED') {
-      return (pieces || []).filter(piece => piece.isRemoved)
-    } else if (filter === 'ACTIVE') {
-      return (pieces || []).filter(piece => !piece.isRemoved)
-    } else {
-      return pieces
-    }
-  }
-
   return {
     fetchPieces: _fetchPieces,
     createPiece: _createPiece,
     updatePiece: _updatePiece,
-    deletePiece: _deletPiece,
+    deletePiece: _deletePiece,
     setNewPieceImage: _setPieceImage,
     selectPiece,
-    selectPiecesByUser,
-    getPiecesByFilter,
     filter,
     pieces,
     newPieceImage,

@@ -59,6 +59,7 @@ import SASignIn from 'pages/SASignIn/SASignIn'
 import SAUpdateUsername from 'pages/SAUpdateUsername/SAUpdateUsername'
 import SAUpdateEmail from 'pages/SAUpdateEmail/SAUpdateEmail'
 import SACreateUser from 'pages/SACreateUser/SACreateUser'
+import SAReassignPiece from 'pages/SAResassignPiece/SAReassignPiece'
 
 import IconButtonTest from 'pages/IconButtonTest/IconButtonTest'
 
@@ -168,6 +169,12 @@ const App = () => {
         superadmin={true}
         component={SAUpdatePiece}
         path="/superadmin/pieces/:pieceId/edit"
+        exact
+      />
+      <Route
+        superadmin={true}
+        component={SAReassignPiece}
+        path="/superadmin/pieces/:pieceId/reassign"
         exact
       />
       <Route

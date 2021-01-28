@@ -347,6 +347,7 @@ const SectionItem = ({
                     options={users}
                     name={`sections[${index}].users`}
                     defaultValue={section.users}
+                    multiple
                     // error={Boolean(((errors.links || [])[k] || {}).url)}
                     // helperText={
                     //   (((errors.links || [])[k] || {}).url || {}).message

@@ -1,24 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { Container, Grid, Button } from '@material-ui/core'
+import { Container, Grid, Button, Box } from '@material-ui/core'
 
 import { useRequest } from 'hooks/use-request'
 import { useSAPiecesStore } from 'hooks/store/use-sa-pieces-store'
-import Background from 'layouts/Background'
-import PageTitle from 'components/PageTitle'
 import LoadingSpinner from 'components/LoadingSpinner'
 
-import PieceCard from 'components/SAPieceCard'
+import PieceCard from 'components/PieceCard'
 
 import NotFound from 'layouts/NotFound'
 
 const ViewPiece = props => {
   const history = useHistory()
-  const { selectPiece, status } = useSAPiecesStore()
+  const { piece, pieceStatus, fetchPiece, status } = useSAPiecesStore()
   const { pieceId } = useParams()
-  const selectedPiece = selectPiece(pieceId)
-
-  const [piece, setPiece] = useState()
 
   const { request, status: requestStatus } = useRequest()
 
@@ -35,60 +30,85 @@ const ViewPiece = props => {
         setClickCount(clickCount)
       } catch (err) {}
     }
-    if (piece) {
-      getCount(piece.id)
+    if (pieceId && requestStatus === 'idle') {
+      getCount(pieceId)
     }
-  }, [piece, request])
+  }, [pieceId, request, requestStatus])
 
   useEffect(() => {
-    const fetchPiece = async () => {
-      if (!!selectedPiece) {
-        setPiece(selectedPiece)
-      } else {
-        try {
-          console.log('fetching')
-          const { piece } = await request(`/pieces/${pieceId}`)
-          setPiece(piece)
-        } catch (err) {}
-      }
+    const fetch = async () => {
+      try {
+        console.log('fetching')
+        await fetchPiece(pieceId)
+      } catch (err) {}
     }
-    if (status === 'succeeded') {
-      fetchPiece()
+
+    if (pieceStatus === 'idle') {
+      fetch()
     }
-  }, [pieceId, request, status, selectedPiece])
+  }, [pieceId, request, pieceStatus, fetchPiece])
 
   return (
     <React.Fragment>
-      <Background />
-      <Container maxWidth="xs" disableGutters>
-        {(status === 'loading' ||
-          status === 'idle' ||
-          requestStatus === 'loading') && <LoadingSpinner asOverlay />}
-        {!!piece && (
-          <Grid container justify="center">
-            <Grid item xs={11}>
-              {piece.isRemoved && <PageTitle title="REMOVED" />}
+      {(pieceStatus === 'loading' || status === 'idle') && (
+        <Container maxWidth="xs">
+          <LoadingSpinner asOverlay />
+        </Container>
+      )}
+      {pieceStatus === 'succeeded' && (
+        <Container maxWidth="xs">
+          <Box pt="1.5rem" pb="1.5rem">
+            <Grid container justify="center">
+              <Grid item xs={12}>
+                <PieceCard
+                  piece={piece}
+                  showAnalytics={true}
+                  scanCount={scanCount}
+                  clickCount={clickCount}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Box
+                  borderColor="secondary.main"
+                  bgcolor="background.card"
+                  border={1}
+                  borderTop={0}
+                >
+                  <Button
+                    fullWidth
+                    color="secondary"
+                    onClick={() => {
+                      history.push(`/superadmin/pieces/${piece.id}/edit`)
+                    }}
+                  >
+                    Edit Piece
+                  </Button>
+                </Box>
+              </Grid>
+              <Grid item xs={12}>
+                <Box
+                  borderColor="secondary.main"
+                  bgcolor="background.card"
+                  border={1}
+                  borderTop={0}
+                >
+                  <Button
+                    fullWidth
+                    color="secondary"
+                    onClick={() => {
+                      history.push(`/superadmin/pieces/${piece.id}/reassign`)
+                    }}
+                  >
+                    Reassign Piece
+                  </Button>
+                </Box>
+              </Grid>
             </Grid>
-            <Grid item>
-              <PieceCard
-                piece={piece}
-                scanCount={scanCount}
-                clickCount={clickCount}
-              />
-            </Grid>
-            <Grid item>
-              <Button
-                onClick={() =>
-                  history.push(`/superadmin/pieces/${piece.id}/edit`)
-                }
-              >
-                Edit This Piece
-              </Button>
-            </Grid>
-          </Grid>
-        )}
-        {requestStatus === 'failed' && <NotFound />}
-      </Container>
+          </Box>
+        </Container>
+      )}
+      {pieceStatus === 'failed' && <NotFound />}
+      {pieceStatus === 'succeeded' && !piece && <NotFound />}
     </React.Fragment>
   )
 }

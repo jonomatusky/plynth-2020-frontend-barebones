@@ -158,7 +158,7 @@ const PieceForm = ({
   }, [fields, sectionsLength])
 
   useEffect(() => {
-    if (userListStatus !== 'loading') {
+    if (userListStatus === 'idle') {
       fetchUserList()
     }
   }, [fetchUserList, userListStatus])

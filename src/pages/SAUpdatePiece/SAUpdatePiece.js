@@ -8,7 +8,7 @@ import { useAlertStore } from 'hooks/store/use-alert-store'
 import Background from 'layouts/Background'
 import NotificationModal from 'components/NotificationModal'
 import LoadingSpinner from 'components/LoadingSpinner'
-import AdminPieceForm from './components/AdminPieceForm'
+import PieceForm from 'components/PieceForm'
 import { BarRow } from 'components/CardSections'
 import FormLayout from 'layouts/FormLayout'
 
@@ -28,6 +28,7 @@ const UpdatePiece = props => {
   const piece = selectPiece(pieceId)
 
   const handleSubmit = async values => {
+    console.log('submitting')
     try {
       await updatePiece({ id: pieceId, ...values })
       // dispatch(setMessage({ message: 'Your piece has been updated.' }))
@@ -89,7 +90,7 @@ const UpdatePiece = props => {
             </Button>
           }
         >
-          <AdminPieceForm
+          <PieceForm
             piece={piece}
             users={users}
             onSubmit={handleSubmit}
