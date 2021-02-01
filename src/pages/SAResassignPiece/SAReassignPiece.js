@@ -61,13 +61,9 @@ const SAReassignPiece = () => {
 
   const onSubmit = async values => {
     console.log(values)
-    piece.owner = values.owner
-
-    console.log('submitting')
-    console.log(piece)
 
     try {
-      await updatePiece({ pieceId, updates: piece })
+      await updatePiece({ id: pieceId, ...values })
       setMessage({ message: 'The piece has been reassigned.' })
       history.push(`/superadmin/pieces/${pieceId}`)
     } catch (err) {

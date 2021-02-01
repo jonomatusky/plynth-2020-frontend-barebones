@@ -29,6 +29,8 @@ const UpdatePiece = props => {
 
   const handleSubmit = async values => {
     console.log('submitting')
+    console.log(values)
+
     try {
       await updatePiece({ id: pieceId, ...values })
       // dispatch(setMessage({ message: 'Your piece has been updated.' }))

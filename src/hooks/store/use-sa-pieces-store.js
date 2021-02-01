@@ -31,6 +31,7 @@ export const useSAPiecesStore = () => {
       setPieceStatus('succeeded')
     } catch (err) {
       setPieceStatus('failed')
+      throw err
     }
   }
 
@@ -46,6 +47,7 @@ export const useSAPiecesStore = () => {
       setUpdateStatus('succeeded')
     } catch (err) {
       setUpdateStatus('failed')
+      throw err
     }
   }
 
@@ -56,6 +58,7 @@ export const useSAPiecesStore = () => {
       setDeleteStatus('succeeded')
     } catch (err) {
       setDeleteStatus('failed')
+      throw err
     }
   }
 
