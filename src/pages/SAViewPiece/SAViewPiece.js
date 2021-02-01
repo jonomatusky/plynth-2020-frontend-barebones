@@ -1,32 +1,24 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import { Container, Grid, Button } from '@material-ui/core'
+import { Container, Grid, Button, Box } from '@material-ui/core'
 
 import { useRequest } from 'hooks/use-request'
-import Background from 'layouts/Background'
-import PageTitle from 'components/PageTitle'
+import { useSAPiecesStore } from 'hooks/store/use-sa-pieces-store'
 import LoadingSpinner from 'components/LoadingSpinner'
 
-import PieceCard from 'components/AdminPieceCard'
-
-import { selectPiece } from 'redux/piecesSlice'
+import PieceCard from 'components/PieceCard'
 
 import NotFound from 'layouts/NotFound'
 
 const ViewPiece = props => {
   const history = useHistory()
-  const pieceId = useParams().pieceId
-  const piece = useSelector(state => selectPiece(state, pieceId))
-  const { request } = useRequest()
-  const { user } = useSelector(state => state.user)
+  const { piece, pieceStatus, fetchPiece, status } = useSAPiecesStore()
+  const { pieceId } = useParams()
 
-  const { status } = useSelector(state => state.pieces)
+  const { request, status: requestStatus } = useRequest()
 
   let [scanCount, setScanCount] = useState()
   let [clickCount, setClickCount] = useState()
-
-  console.log(piece)
 
   useEffect(() => {
     const getCount = async id => {
@@ -38,42 +30,85 @@ const ViewPiece = props => {
         setClickCount(clickCount)
       } catch (err) {}
     }
-    !!piece && getCount(piece.id)
-  }, [piece, request])
+    if (pieceId && requestStatus === 'idle') {
+      getCount(pieceId)
+    }
+  }, [pieceId, request, requestStatus])
+
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        console.log('fetching')
+        await fetchPiece(pieceId)
+      } catch (err) {}
+    }
+
+    if (pieceStatus === 'idle') {
+      fetch()
+    }
+  }, [pieceId, request, pieceStatus, fetchPiece])
 
   return (
     <React.Fragment>
-      <Background />
-      <Container maxWidth="xs" disableGutters>
-        {(status === 'loading' || status === 'idle') && (
+      {(pieceStatus === 'loading' || status === 'idle') && (
+        <Container maxWidth="xs">
           <LoadingSpinner asOverlay />
-        )}
-        {status === 'succeeded' && !!piece && (
-          <Grid container justify="center">
-            <Grid item xs={11}>
-              {piece.isRemoved && <PageTitle title="REMOVED" />}
-            </Grid>
-            <Grid item>
-              <PieceCard
-                piece={piece}
-                scanCount={scanCount}
-                clickCount={clickCount}
-              />
-            </Grid>
-            {user.username !== piece.owner.username && (
-              <Grid item>
-                <Button
-                  onClick={() => history.push(`/admin/pieces/${piece.id}/edit`)}
-                >
-                  Edit This Piece
-                </Button>
+        </Container>
+      )}
+      {pieceStatus === 'succeeded' && (
+        <Container maxWidth="xs">
+          <Box pt="1.5rem" pb="1.5rem">
+            <Grid container justify="center">
+              <Grid item xs={12}>
+                <PieceCard
+                  piece={piece}
+                  showAnalytics={true}
+                  scanCount={scanCount}
+                  clickCount={clickCount}
+                />
               </Grid>
-            )}
-          </Grid>
-        )}
-        {status === 'failed' && <NotFound />}
-        {status === 'succeeded' && !piece && <NotFound />}
-      </Container>
+              <Grid item xs={12}>
+                <Box
+                  borderColor="secondary.main"
+                  bgcolor="background.card"
+                  border={1}
+                  borderTop={0}
+                >
+                  <Button
+                    fullWidth
+                    color="secondary"
+                    onClick={() => {
+                      history.push(`/superadmin/pieces/${piece.id}/edit`)
+                    }}
+                  >
+                    Edit Piece
+                  </Button>
+                </Box>
+              </Grid>
+              <Grid item xs={12}>
+                <Box
+                  borderColor="secondary.main"
+                  bgcolor="background.card"
+                  border={1}
+                  borderTop={0}
+                >
+                  <Button
+                    fullWidth
+                    color="secondary"
+                    onClick={() => {
+                      history.push(`/superadmin/pieces/${piece.id}/reassign`)
+                    }}
+                  >
+                    Reassign Piece
+                  </Button>
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
+        </Container>
+      )}
+      {pieceStatus === 'failed' && <NotFound />}
+      {pieceStatus === 'succeeded' && !piece && <NotFound />}
     </React.Fragment>
   )
 }

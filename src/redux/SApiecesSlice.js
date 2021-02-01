@@ -5,6 +5,7 @@ let initialState = {
   pieces: [],
   filter: 'ACTIVE',
   status: 'idle',
+  pieceStatus: 'idle',
   error: null,
 }
 

@@ -1,35 +1,38 @@
 import React, { useState } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
 import { Button } from '@material-ui/core'
 
-import { useThunkClient } from 'hooks/thunk-hook'
-import { setMessage } from 'redux/alertSlice'
-import { selectPiece, updatePiece, deletePiece } from 'redux/piecesSlice'
+import { useSAUsersStore } from 'hooks/store/use-sa-users-store'
+import { useSAPiecesStore } from 'hooks/store/use-sa-pieces-store'
+import { useAlertStore } from 'hooks/store/use-alert-store'
 import Background from 'layouts/Background'
 import NotificationModal from 'components/NotificationModal'
 import LoadingSpinner from 'components/LoadingSpinner'
-import AdminPieceForm from './components/AdminPieceForm'
+import PieceForm from 'components/PieceForm'
 import { BarRow } from 'components/CardSections'
 import FormLayout from 'layouts/FormLayout'
 
 const UpdatePiece = props => {
-  const dispatch = useDispatch()
   const history = useHistory()
-  const { users } = useSelector(state => state.users)
+  const { users } = useSAUsersStore()
+  const {
+    selectPiece,
+    updatePiece,
+    updateStatus,
+    deletePiece,
+  } = useSAPiecesStore()
+  const { setMessage } = useAlertStore()
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
-  const updateStatus = useSelector(state => state.pieces)
 
-  const dispatchThunk = useThunkClient()
   const pieceId = useParams().pieceId
-  const piece = useSelector(state => selectPiece(state, pieceId))
+  const piece = selectPiece(pieceId)
 
   const handleSubmit = async values => {
+    console.log('submitting')
+    console.log(values)
+
     try {
-      await dispatchThunk({
-        thunk: updatePiece,
-        inputs: { id: pieceId, ...values },
-      })
+      await updatePiece({ id: pieceId, ...values })
       // dispatch(setMessage({ message: 'Your piece has been updated.' }))
       history.goBack()
     } catch (err) {
@@ -39,11 +42,8 @@ const UpdatePiece = props => {
 
   const handleDelete = async () => {
     try {
-      await dispatchThunk({
-        thunk: deletePiece,
-        inputs: { id: pieceId },
-      })
-      dispatch(setMessage({ message: 'Your piece has been deleted.' }))
+      await deletePiece({ id: pieceId })
+      setMessage({ message: 'Your piece has been deleted.' })
       history.push(`/admin/pieces`)
     } catch (err) {
       console.log(err)
@@ -79,7 +79,7 @@ const UpdatePiece = props => {
         <FormLayout
           bar={
             <BarRow
-              title="Edit Your Piece"
+              title="Edit Piece"
               onClick={() => {
                 history.goBack()
               }}
@@ -92,7 +92,7 @@ const UpdatePiece = props => {
             </Button>
           }
         >
-          <AdminPieceForm
+          <PieceForm
             piece={piece}
             users={users}
             onSubmit={handleSubmit}

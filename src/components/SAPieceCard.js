@@ -22,7 +22,6 @@ import {
   DescriptionText,
   LinkRow,
 } from 'components/CardSections'
-import BottomBar from './PieceCardBottomBar'
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos'
 import theme from 'theme'
 
@@ -294,7 +293,6 @@ const PieceCard = ({ piece, onClose, ...props }) => {
             )
           })}
           <Box height="1rem"></Box>
-          <BottomBar piece={piece} />
         </PieceBox>
         <Box height="1rem"></Box>
       </Grid>

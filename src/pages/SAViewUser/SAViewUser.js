@@ -14,7 +14,7 @@ import ShareIcon from '@material-ui/icons/Share'
 import PageTitle from 'components/PageTitle'
 import { UnstyledLink, DescriptionText } from 'components/CardSections'
 import UserCard from 'components/UserCard'
-import PieceList from '../MyPieces/components/PieceList'
+import PieceList from '../SAViewPieces/components/PieceList'
 import { useSAUsersStore } from 'hooks/store/use-sa-users-store'
 import { useSAPiecesStore } from 'hooks/store/use-sa-pieces-store'
 
