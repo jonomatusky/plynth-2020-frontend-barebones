@@ -2,10 +2,8 @@ import React, { useContext } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import {
   AppBar,
-  Toolbar,
   Hidden,
   Drawer,
-  Typography,
   BottomNavigation,
   BottomNavigationAction,
   List,
@@ -27,7 +25,6 @@ import LibraryMusicIcon from '@material-ui/icons/LibraryMusic'
 import PeopleIcon from '@material-ui/icons/People'
 
 import { AuthContext } from 'contexts/auth-context'
-import Emoji from 'components/Emoji'
 import plynthLogoWhite from 'images/plynth_logo_white.svg'
 
 const drawerWidth = 200
@@ -87,6 +84,7 @@ const useStyles = makeStyles(theme => ({
   },
   content: {
     flexGrow: 1,
+    padding: theme.spacing(3),
   },
 }))
 
@@ -115,13 +113,13 @@ const MainHeader = ({ children, ...props }) => {
   return (
     <div className={classes.root}>
       <Hidden smDown>
-        <AppBar position="fixed" className={classes.appBar}>
+        {/* <AppBar position="fixed" className={classes.appBar}>
           <Toolbar>
             <Typography variant="h6" noWrap>
               <Emoji symbol="🦸🏾‍♀️" label="superhero" /> Superadmin
             </Typography>
           </Toolbar>
-        </AppBar>
+        </AppBar> */}
         <nav className={classes.drawer} aria-label="navigation menu">
           <Drawer
             open={true}

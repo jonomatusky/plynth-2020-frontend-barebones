@@ -16,7 +16,7 @@ const FilterButtons = ({ filterFunction, currentFilter, items }) => {
             <Button
               onClick={handleClick(item.filterLabel)}
               color={
-                item.filterLabel === currentFilter ? 'secondary' : 'default'
+                item.filterLabel === currentFilter ? 'primary' : 'secondary'
               }
             >
               {item.label}

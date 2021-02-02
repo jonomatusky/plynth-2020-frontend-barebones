@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Dialog,
   DialogTitle,
@@ -27,6 +27,8 @@ const PieceImageCrop = props => {
   const [imageSrc, setImageSrc] = useState(null)
   const [imageUrl, setImageUrl] = useState(props.imageUrl)
 
+  console.log(imageUrl)
+
   const openDialog = () => {
     setDialogIsOpen(true)
   }
@@ -45,6 +47,13 @@ const PieceImageCrop = props => {
     props.onInput(imageFilepath)
     closeDialog()
   }
+
+  useEffect(() => {
+    const setImage = () => {
+      setImageUrl(props.imageUrl)
+    }
+    setImage()
+  }, [setImageUrl, props.imageUrl])
 
   return (
     <>

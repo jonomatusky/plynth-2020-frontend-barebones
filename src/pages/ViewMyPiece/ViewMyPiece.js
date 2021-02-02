@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { useHistory } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { Container, Box, Grid, Button } from '@material-ui/core'
 
 import { usePieceStore } from 'hooks/store/use-piece-store'
@@ -11,7 +10,6 @@ import NotFound from 'layouts/NotFound'
 import PieceCard from 'components/PieceCard'
 
 const ViewPiece = props => {
-  const history = useHistory()
   const { selectPiece, status } = usePieceStore()
   const { user } = useUserStore()
   const { request } = useRequest()
@@ -66,9 +64,8 @@ const ViewPiece = props => {
                   <Button
                     fullWidth
                     color="secondary"
-                    onClick={() => {
-                      history.push(`/admin/pieces/${piece.id}/edit`)
-                    }}
+                    component={Link}
+                    to={`/admin/pieces/${piece.id}/edit`}
                     disabled={
                       status !== 'succeeded' || piece.owner.id !== user.id
                     }

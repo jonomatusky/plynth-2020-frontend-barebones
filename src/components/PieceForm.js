@@ -94,19 +94,30 @@ const PieceForm = ({
           }),
           otherwise: Yup.object(),
         }),
-        links: Yup.array().when('type', {
-          is: value => value === 'list.links',
-          then: Yup.array().of(
-            Yup.object({
-              text: Yup.string()
-                .max(32, 'Must be 32 characters or less')
-                .required('Required'),
-              url: Yup.string()
-                .url(`Must be a valid URL. Include http:// or https://`)
-                .required('Required'),
-            })
-          ),
-        }),
+        links: Yup.array()
+          .when('type', {
+            is: value => value === 'list.links',
+            then: Yup.array().of(
+              Yup.object({
+                text: Yup.string()
+                  .max(32, 'Must be 32 characters or less')
+                  .required('Required'),
+                url: Yup.string()
+                  .url(`Must be a valid URL. Include http:// or https://`)
+                  .required('Required'),
+              })
+            ),
+          })
+          .when('type', {
+            is: value => value === 'list.icons',
+            then: Yup.array().of(
+              Yup.object({
+                url: Yup.string()
+                  .url(`Must be a valid URL. Include http:// or https://`)
+                  .required('Required'),
+              })
+            ),
+          }),
       })
     ),
   })

@@ -25,6 +25,8 @@ const UpdateProfile = () => {
 
   const { displayName, bio, links, avatar, avatarLink } = user || {}
 
+  console.log(avatarLink)
+
   const initialValues = {
     displayName: displayName || '',
     bio: bio || '',
@@ -62,7 +64,7 @@ const UpdateProfile = () => {
               <Box height="1rem"></Box>
               <Grid item>
                 <AvatarInput
-                  imageUrl={avatarLink || undefined}
+                  imageUrl={avatarLink}
                   onInput={avatar => {
                     setFieldValue('avatar', avatar)
                   }}

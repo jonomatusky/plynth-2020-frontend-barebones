@@ -40,18 +40,30 @@ const ViewUsers = () => {
       label: 'Active',
       filterLabel: 'ACTIVE',
     },
+    {
+      label: 'HXC',
+      filterLabel: 'HXC',
+    },
+    {
+      label: 'Inactive',
+      filterLabel: 'INACTIVE',
+    },
     { label: 'All', filterLabel: 'ALL' },
-    { label: 'Dummy', filterLabel: 'DUMMY' },
+    { label: 'Demo', filterLabel: 'DEMO' },
     { label: 'Admin', filterLabel: 'ADMIN' },
   ]
 
-  const items = users.map(user => {
-    let pieceCount = pieces.filter(
-      piece =>
-        piece.owner.username === user.username && piece.isRemoved !== true
-    ).length
-    return { pieceCount, ...user }
-  })
+  const items = users
+    .map(user => {
+      let pieceCount = pieces.filter(
+        piece =>
+          piece.owner.username === user.username && piece.isRemoved !== true
+      ).length
+      return { pieceCount, ...user }
+    })
+    .filter(user => filter !== 'HXC' || user.pieceCount > 0)
+
+  console.log(filter)
 
   return (
     <Container maxWidth="sm">

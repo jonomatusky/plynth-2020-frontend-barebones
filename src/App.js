@@ -275,21 +275,18 @@ const App = () => {
         path="/admin/login"
         exact
       />
-
       <Route
         publicRoute={true}
         component={RecoverPassword}
         path="/admin/recover"
         exact
       />
-
       <Route
         publicRoute={true}
         component={ResetPassword}
         path="/admin/reset/:userId/:token"
         exact
       />
-
       <Route
         noNav
         publicRoute={true}
@@ -297,7 +294,6 @@ const App = () => {
         path="/pickup"
         exact
       />
-
       <Route
         component={UserSignup2}
         path="/admin/get-started/profile"
@@ -311,15 +307,13 @@ const App = () => {
         exact
       />
 
-      <Route component={UpdateProfile} path="/admin/profile/edit" noNav exact />
-
       <Route component={NewPieceImage} path="/admin/create/style" noNav exact />
-      <Route component={NewPiece} path="/admin/create/piece" noNav exact />
-      <Route component={UpdatePiece} path="/admin/pieces/:pieceId/edit" noNav />
-      <Route component={ViewPiece} path="/admin/pieces/:pieceId" noNav />
+      <Route component={NewPiece} path="/admin/create/piece" exact />
+      <Route component={UpdatePiece} path="/admin/pieces/:pieceId/edit" />
+      <Route component={ViewPiece} path="/admin/pieces/:pieceId" />
       <Route component={MyPieces} path="/admin/pieces" exact />
       <Route component={NewScan} path="/admin/pickup" exact />
-      <Route component={UpdateProfile} path="/admin/profile/edit" noNav exact />
+      <Route component={UpdateProfile} path="/admin/profile/edit" exact />
       <Route component={MyProfile} path="/admin/profile" exact />
       <Route component={UpdateEmail} path="/admin/profile/email/change" exact />
       <Route

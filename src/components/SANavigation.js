@@ -62,6 +62,7 @@ const useStyles = makeStyles(theme => ({
       flexShrink: 0,
     },
   },
+  toolbar: theme.mixins.toolbar,
   drawerPaper: {
     width: drawerWidth,
   },
@@ -87,6 +88,7 @@ const useStyles = makeStyles(theme => ({
   },
   content: {
     flexGrow: 1,
+    padding: theme.spacing(3),
   },
 }))
 
@@ -216,6 +218,7 @@ const MainHeader = ({ children, ...props }) => {
       </Hidden>
       <main className={classes.content}>
         <>
+          <div className={classes.toolbar} />
           {children}
           <Box height="5rem" />
         </>

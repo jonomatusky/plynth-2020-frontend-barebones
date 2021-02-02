@@ -12,7 +12,27 @@ import {
 } from '@fortawesome/free-brands-svg-icons'
 import { IconButton } from '@material-ui/core'
 
+import { useScanStore } from 'hooks/store/use-scan-store'
+import { useLog } from 'hooks/use-log'
+
 export const IconLink = ({ link }) => {
+  const { scanToken } = useScanStore
+  const { sendLog } = useLog()
+
+  const handleClick = async () => {
+    try {
+      if (scanToken) {
+        await sendLog({
+          url: '/scans',
+          data: {
+            click: { type: 'link', destination: link.url },
+            scanToken,
+          },
+        })
+      }
+    } catch (err) {}
+  }
+
   const types = [
     {
       name: 'instagram.com',
@@ -47,7 +67,7 @@ export const IconLink = ({ link }) => {
   }
 
   return (
-    <IconButton target="_blank" href={link}>
+    <IconButton target="_blank" href={link} onClick={handleClick}>
       <FontAwesomeIcon icon={type.fontAwesome} />
     </IconButton>
   )

@@ -60,12 +60,18 @@ export const useSAUsersStore = () => {
   }
 
   const getUsersByFilter = () => {
-    if (filter === 'DUMMY') {
-      return (users || []).filter(user => user.isDummy)
-    } else if (filter === 'ACTIVE') {
-      return (users || []).filter(user => !user.isDummy)
-    } else if (filter === 'ADMIN') {
+    if (filter === 'ADMIN') {
       return (users || []).filter(user => user.admin)
+    } else if (filter === 'DEMO') {
+      return (users || []).filter(user => user.isDummy)
+    } else if (filter === 'ACTIVE' || filter === 'HXC') {
+      return (users || []).filter(
+        user => !user.isDummy && !user.admin && user.lastActiveAt
+      )
+    } else if (filter === 'INACTIVE') {
+      return (users || []).filter(
+        user => !user.isDummy && !user.admin && !user.lastActiveAt
+      )
     } else {
       return users
     }
@@ -82,6 +88,7 @@ export const useSAUsersStore = () => {
     getUsersByFilter,
     users,
     status,
+    filter,
     updateStatus,
     error,
   }

@@ -40,14 +40,19 @@ export const CardImage = styled(AppImage)`
 
 const paypal = {
   monthly: {
-    link: 'https://py.pl/1FwDqe',
+    link: 'https://py.pl/1yEb6p',
     label: 'Sign Up for $5/month',
     price: 5,
   },
   annual: {
-    link: 'https://py.pl/fGOTI',
+    link: 'https://py.pl/2J6LSE',
     label: 'Sign Up for $3/month',
     price: 36,
+  },
+  international: {
+    link: 'https://py.pl/1QLMIYTvH5h',
+    label: 'Sign Up for $5/month',
+    price: 60,
   },
 }
 
@@ -216,8 +221,8 @@ const SignUp = () => {
                               control={<Radio color="primary" />}
                               label={
                                 <Typography>
-                                  <b>$3/month</b>, billed annually ($36 per
-                                  year)
+                                  <b>Annual: $3/month</b>, billed annually ($36
+                                  per year)
                                 </Typography>
                               }
                             />
@@ -226,7 +231,18 @@ const SignUp = () => {
                               control={<Radio color="primary" />}
                               label={
                                 <Typography>
-                                  <b>$5/month</b>, billed monthly ($60 per year)
+                                  <b>Monthly: $5/month</b>, billed monthly ($60
+                                  per year)
+                                </Typography>
+                              }
+                            />
+                            <FormControlLabel
+                              value="international"
+                              control={<Radio color="primary" />}
+                              label={
+                                <Typography>
+                                  <b>International: $5/month</b>, billed
+                                  annually ($60 per year)
                                 </Typography>
                               }
                             />
@@ -252,12 +268,7 @@ const SignUp = () => {
                       </Grid>
                       <Grid item sm={11} xs={10}>
                         <Typography align="center" variant="body2">
-                          <i>
-                            Pay via Paypal, credit, or debit. First payment will
-                            be for $0 to authorize card, then $
-                            {paypal[billing].price} at the start of your
-                            subscription.
-                          </i>
+                          <i>Pay via Paypal, credit, or debit.</i>
                         </Typography>
                       </Grid>
                     </Grid>

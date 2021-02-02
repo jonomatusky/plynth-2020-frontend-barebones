@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { useForm, useFieldArray, Controller } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import * as Yup from 'yup'
 
 import { Grid, TextField } from '@material-ui/core'
@@ -9,12 +9,10 @@ import { Autocomplete } from '@material-ui/lab'
 import { useSAUsersStore } from 'hooks/store/use-sa-users-store'
 import { useAlertStore } from 'hooks/store/use-alert-store'
 import FormLayout from 'layouts/FormLayout'
-import { fetchPieces } from 'redux/piecesSlice'
 import { useSAPiecesStore } from 'hooks/store/use-sa-pieces-store'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 
-import UserAutocomplete from 'components/UserAutocomplete'
 import ActionButton from 'components/ActionButton'
 
 const SAReassignPiece = () => {
@@ -23,7 +21,6 @@ const SAReassignPiece = () => {
   const {
     pieceStatus,
     fetchPiece,
-    piece,
     updatePiece,
     updateStatus,
   } = useSAPiecesStore()
@@ -51,7 +48,7 @@ const SAReassignPiece = () => {
     owner: Yup.object().required('Required'),
   })
 
-  const { register, handleSubmit, errors, control, watch } = useForm({
+  const { handleSubmit, errors, control } = useForm({
     mode: 'onBlur',
     resolver: yupResolver(validationSchema),
     defaultValues,
