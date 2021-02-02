@@ -183,6 +183,7 @@ const SectionItem = ({
               {section.type === 'text' && (
                 <TextField
                   multiline
+                  autoComplete="off"
                   rows={4}
                   control={control}
                   name={`sections[${index}].text`}
@@ -194,6 +195,7 @@ const SectionItem = ({
               )}
               {section.type === 'title' && (
                 <TextField
+                  autoComplete="off"
                   control={control}
                   name={`sections[${index}].title`}
                   label="Section Title"
@@ -206,6 +208,7 @@ const SectionItem = ({
                 <>
                   <Grid item>
                     <TextField
+                      autoComplete="off"
                       control={control}
                       label="URL"
                       name={`sections[${index}].link.url`}
@@ -217,6 +220,7 @@ const SectionItem = ({
                   </Grid>
                   <Grid item>
                     <TextField
+                      autoComplete="off"
                       control={control}
                       name={`sections[${index}].link.text`}
                       label="Button Text"
@@ -237,6 +241,7 @@ const SectionItem = ({
                           <Box display="flex">
                             <Box flexGrow={1} mr={0.5}>
                               <TextField
+                                autoComplete="off"
                                 control={control}
                                 label="URL"
                                 name={`sections[${index}].links[${k}].url`}
@@ -253,6 +258,7 @@ const SectionItem = ({
                             </Box>
                             <Box flexGrow={1} ml={0.5}>
                               <TextField
+                                autoComplete="off"
                                 control={control}
                                 name={`sections[${index}].links[${k}].text`}
                                 label="Text"
@@ -301,6 +307,7 @@ const SectionItem = ({
                           <Box display="flex">
                             <Box flexGrow={1} mr={0.5}>
                               <TextField
+                                autoComplete="off"
                                 control={control}
                                 label="URL"
                                 name={`sections[${index}].links[${k}].url`}

@@ -33,6 +33,7 @@ const TextField = ({
   helperText,
   multiline,
   rows,
+  autoComplete,
   ...props
 }) => {
   const labelId = `${name}-label`
@@ -49,6 +50,7 @@ const TextField = ({
             id={labelId}
             multiline={multiline}
             rows={rows}
+            autoComplete={autoComplete}
           />
         }
         name={name}

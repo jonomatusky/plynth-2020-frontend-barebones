@@ -54,7 +54,7 @@ const ActionButton = props => {
       >
         {!loading && (
           <Box>
-            <ButtonText>
+            <ButtonText align="center">
               <strong>{label}</strong>
             </ButtonText>
           </Box>

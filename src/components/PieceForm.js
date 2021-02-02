@@ -85,9 +85,7 @@ const PieceForm = ({
         link: Yup.object().when('type', {
           is: value => value === 'link',
           then: Yup.object().shape({
-            text: Yup.string()
-              .max(32, 'Must be 32 characters or less')
-              .required('Required'),
+            text: Yup.string().required('Required'),
             url: Yup.string()
               .url(`Must be a valid URL. Include http:// or https://`)
               .required('Required'),
@@ -99,9 +97,7 @@ const PieceForm = ({
             is: value => value === 'list.links',
             then: Yup.array().of(
               Yup.object({
-                text: Yup.string()
-                  .max(32, 'Must be 32 characters or less')
-                  .required('Required'),
+                text: Yup.string().required('Required'),
                 url: Yup.string()
                   .url(`Must be a valid URL. Include http:// or https://`)
                   .required('Required'),
@@ -195,6 +191,7 @@ const PieceForm = ({
             control={control}
             error={Boolean(errors.title)}
             helperText={errors.title?.message}
+            autoComplete="off"
           />
           <FormControlLabel
             control={
@@ -228,6 +225,7 @@ const PieceForm = ({
                 control={control}
                 error={Boolean(errors.title)}
                 helperText={errors.title?.message}
+                autoComplete="off"
               />
             </Grid>
           </>

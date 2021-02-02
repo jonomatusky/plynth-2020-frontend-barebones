@@ -2,6 +2,7 @@ import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMusic, faLink } from '@fortawesome/free-solid-svg-icons'
 import {
+  faInstagram,
   faFacebook,
   faTwitter,
   faTiktok,
@@ -36,7 +37,7 @@ export const IconLink = ({ link }) => {
   const types = [
     {
       name: 'instagram.com',
-      fontAwesome: 'fa-instagram',
+      fontAwesome: faInstagram,
       display: 'Instagram',
     },
     { name: 'facebook.com', fontAwesome: faFacebook, display: 'Facebook' },

@@ -283,26 +283,25 @@ const PieceCard = ({ piece, onClose, ...props }) => {
                                           href={link.url}
                                           target="_blank"
                                         >
-                                          <Grid
-                                            container
-                                            justify="space-between"
-                                          >
-                                            <Grid item>
-                                              <Typography
-                                                style={{
-                                                  textTransform: 'none',
-                                                }}
-                                              >
-                                                {link.text || link.name}
-                                              </Typography>
-                                            </Grid>
-                                            <Grid item>
-                                              <ArrowForwardIosIcon
-                                                fontSize="small"
-                                                color="error"
-                                              />
-                                            </Grid>
-                                          </Grid>
+                                          <div style={{ width: '100%' }}>
+                                            <Box display="flex">
+                                              <Box flexGrow={1} p={0}>
+                                                <Typography
+                                                  style={{
+                                                    textTransform: 'none',
+                                                  }}
+                                                >
+                                                  {link.text || link.name}
+                                                </Typography>
+                                              </Box>
+                                              <Box>
+                                                <ArrowForwardIosIcon
+                                                  fontSize="small"
+                                                  color="error"
+                                                />
+                                              </Box>
+                                            </Box>
+                                          </div>
                                         </Button>
                                       </Grid>
                                     )
