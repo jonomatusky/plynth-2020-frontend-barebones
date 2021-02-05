@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link as RouterLink, useHistory, useLocation } from 'react-router-dom'
+import { Link as RouterLink, useHistory } from 'react-router-dom'
 import { Link } from '@material-ui/core'
 import * as Yup from 'yup'
 import { Grid, Button } from '@material-ui/core'
@@ -14,7 +14,6 @@ import WebsiteNavBar from 'components/WebsiteNavBar'
 const SignUp = () => {
   const { status, request } = useRequest()
   const history = useHistory()
-  const location = useLocation()
 
   const confirmationMessage = `Thanks for contacting support. We'll get back to you shortly.`
 
@@ -74,10 +73,7 @@ const SignUp = () => {
               <Grid item>
                 <Button
                   component={RouterLink}
-                  to={{
-                    pathname: '/admin/login',
-                    state: { referrer: location.pathname },
-                  }}
+                  to={'/admin/login'}
                   style={{ textTransform: 'none' }}
                 >
                   Sign In
@@ -93,15 +89,30 @@ const SignUp = () => {
           <>
             Fill out the form below to get in touch. If you'd like to sign up
             for a Postcard Mixtape,{' '}
-            <Link component={RouterLink} to="/s/signup/postcard-mixtape">
+            <Link
+              component={RouterLink}
+              to="/s/signup/postcard-mixtape"
+              color="inherit"
+              underline="always"
+            >
               click here
             </Link>
             . If you're an artist interested in trying out the app,{' '}
-            <Link component={RouterLink} to="/s/signup/creators">
+            <Link
+              component={RouterLink}
+              to="/s/signup/creators"
+              color="inherit"
+              underline="always"
+            >
               click here
             </Link>
             . For immediate tech support, email us at{' '}
-            <Link href="mailto:help@plynth.com" target="_blank">
+            <Link
+              href="mailto:help@plynth.com"
+              target="_blank"
+              color="inherit"
+              underline="always"
+            >
               help@plynth.com
             </Link>
             .

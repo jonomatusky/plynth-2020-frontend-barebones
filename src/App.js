@@ -331,6 +331,7 @@ const App = () => {
       <Redirect from="/admin" to="/admin/profile" />
       <Redirect from="/postcardmixtape" to="/s/signup/postcard-mixtape" />
       <Redirect from="/get-on-plynth" to="/s/signup/creators" />
+      <Redirect from="/user_removed" to="/" />
 
       <Route
         publicRoute={true}
