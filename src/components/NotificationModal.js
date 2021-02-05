@@ -20,7 +20,7 @@ const NotificationModal = ({
   isLoading,
 }) => {
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open} onClose={handleClose} maxWidth="xs">
       <DialogTitle>{primaryMessage}</DialogTitle>
       <DialogContent dividers>{secondaryMessage}</DialogContent>
       <DialogActions>

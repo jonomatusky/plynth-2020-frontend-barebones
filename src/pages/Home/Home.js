@@ -1,5 +1,5 @@
-import React from 'react'
-import { Link as RouterLink } from 'react-router-dom'
+import React, { useState } from 'react'
+import { Link as RouterLink, useHistory } from 'react-router-dom'
 import {
   Grid,
   Typography,
@@ -18,6 +18,7 @@ import InfoIcon from '@material-ui/icons/Info'
 import theme from 'theme'
 import { SectionLight, SectionDark } from 'layouts/PageSections'
 import { withStyles } from '@material-ui/core/styles'
+import NotificationModal from 'components/NotificationModal'
 import PickupButton from 'components/PickupButton'
 import appImage from 'images/plynth_matchbook.png'
 import cardImage from 'images/postcard_back.png'
@@ -77,13 +78,62 @@ const SmoothHashLink = React.forwardRef((props, ref) => (
 ))
 
 const Home = () => {
+  const history = useHistory()
   let vh = window.innerHeight * 0.01
 
   document.documentElement.style.setProperty('--vh', `${vh}px`)
 
+  const [helpModalIsOpen, setHelpModalIsOpen] = useState()
+
+  const handleClose = () => setHelpModalIsOpen(false)
+
+  const handleOpen = () => setHelpModalIsOpen(true)
+
   return (
     <>
       <ScrollToTopOnMount />
+      <NotificationModal
+        primaryMessage="Trouble Taking a Photo?"
+        secondaryMessage={
+          <>
+            <Typography>
+              Make sure your browser has access to your device's camera.
+            </Typography>
+            <br />
+            <Typography>
+              {'     '}1. On iPhone: Open the Settings app → Scroll down to find
+              browser and tap → Flip switch next to "Camera"
+            </Typography>
+            <Typography>
+              {'     '}2. On Android: Open the Settings app → Scroll down to
+              find browser and tap → Tap Permissions → Flip switch next to
+              "Camera"
+            </Typography>
+            <br />
+            <Typography>
+              If you don't want to give your browser camera access, you can also
+              take a photo with your camera app and then upload the photo from
+              your camera roll. If that doesn't work, please try a different
+              browser, or{' '}
+              <Link
+                component={RouterLink}
+                to="/s/contact"
+                color="inherit"
+                underline="always"
+              >
+                contact us
+              </Link>{' '}
+              for support.
+            </Typography>
+          </>
+        }
+        primaryAction={handleClose}
+        primaryActionLabel={`Got it`}
+        secondaryAction={() => history.push('/s/contact')}
+        secondaryActionLabel="Get Help"
+        open={helpModalIsOpen}
+        handleClose={handleClose}
+      />
       <Container disableGutters maxWidth={false}>
         <StyledBox>
           <Grid
@@ -120,8 +170,10 @@ const Home = () => {
                                 2. Access the content it's linked to!
                               </Typography>
                               <Typography color="inherit">
-                                Trouble getting access? Try a different browser
-                                or{' '}
+                                Trouble getting access? Make sure your browser
+                                has access to your device's camera, or try a
+                                different browser. If you're still having
+                                trouble
                                 <Link
                                   component={RouterLink}
                                   to="/s/contact"
@@ -175,6 +227,17 @@ const Home = () => {
                   <Typography variant="h6">
                     Take a photo to access your content
                   </Typography>
+                </Grid>
+                <Grid item>
+                  <Link
+                    component="button"
+                    variant="body2"
+                    onClick={handleOpen}
+                    color="inherit"
+                    underline="always"
+                  >
+                    Having trouble?
+                  </Link>
                 </Grid>
               </Grid>
             </Grid>
