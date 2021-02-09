@@ -529,7 +529,7 @@ const Home = () => {
         </SectionLight>
         <SectionDark>
           <Box pt={5} pb={5}>
-            <Grid container justify="center" alignItems="center" spacing={2}>
+            <Grid container justify="center" alignItems="center">
               {/* <Grid item md={3} sm={5} xs={11}>
                 <Grid container spacing={1}>
                   <Grid item xs={12}>
@@ -539,7 +539,7 @@ const Home = () => {
                   </Grid>
                 </Grid>
               </Grid> */}
-              <Grid item md={3} sm={5} xs={11}>
+              <Grid item md={3} sm={5} xs={10}>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <Typography variant="h6">
@@ -550,9 +550,9 @@ const Home = () => {
                   <Grid item xs={12}>
                     <EmailSignupForm />
                   </Grid>
+                  <Box height="5rem" />
                 </Grid>
               </Grid>
-              <Box height="5rem" />
             </Grid>
           </Box>
         </SectionDark>
