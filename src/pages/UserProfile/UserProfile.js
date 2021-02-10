@@ -71,6 +71,7 @@ const MyProfile = props => {
             <>
               <UserCard
                 user={user}
+                isProfilePage={true}
                 subtitle={
                   <>
                     <Typography variant="body2">

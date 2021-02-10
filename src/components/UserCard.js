@@ -12,15 +12,17 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const UserCard = ({ user, onClose, subtitle, ...props }) => {
+const UserCard = ({ user, isProfilePage, onClose, subtitle, ...props }) => {
   const classes = useStyles()
 
   return (
     <Box border={1} borderColor="secondary.main" bgcolor="background.card">
       <Grid container justify="center">
-        <Grid item xs={12}>
-          <BarRow buttonLabel="Close X" onClose={onClose} />
-        </Grid>
+        {!isProfilePage && (
+          <Grid item xs={12}>
+            <BarRow buttonLabel="Close X" onClose={onClose} />
+          </Grid>
+        )}
         <Grid item xs={12}>
           <Box pt={2} pb={2}>
             <Grid container alignItems="center">

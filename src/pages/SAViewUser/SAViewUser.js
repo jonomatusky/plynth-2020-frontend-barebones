@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useHistory } from 'react-router-dom'
 import {
   Container,
   Grid,
@@ -22,6 +22,7 @@ const title = 'User Profile'
 const { REACT_APP_PUBLIC_URL } = process.env
 
 const SAViewUser = props => {
+  const history = useHistory()
   const { selectUser } = useSAUsersStore()
   const { selectPiecesByUser } = useSAPiecesStore()
   const { username } = useParams()
@@ -44,6 +45,7 @@ const SAViewUser = props => {
           <Grid item xs={12}>
             <UserCard
               user={userForCard}
+              onClose={history.push('/superadmin/users')}
               subtitle={
                 <>
                   {user.email ? (

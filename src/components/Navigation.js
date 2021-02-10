@@ -116,7 +116,7 @@ const MainHeader = ({ children, ...props }) => {
         {/* <AppBar position="fixed" className={classes.appBar}>
           <Toolbar>
             <Typography variant="h6" noWrap>
-              <Emoji symbol="🦸🏾‍♀️" label="superhero" /> Superadmin
+              <Emoji symbol="🦸🏾‍♀️" label="superhero" /> Sdmin
             </Typography>
           </Toolbar>
         </AppBar> */}
@@ -129,7 +129,7 @@ const MainHeader = ({ children, ...props }) => {
             }}
           >
             <div className={classes.drawerHeader}>
-              <Link to={'/superadmin/pieces'}>
+              <Link to={'/admin/pieces'}>
                 <StyledLogo src={plynthLogoWhite} />
               </Link>
             </div>
@@ -195,7 +195,7 @@ const MainHeader = ({ children, ...props }) => {
               label={<span className="bottomNavLabel">Users</span>}
               icon={<PeopleIcon />}
               component={NavLink}
-              to={'/superadmin/users'}
+              to={'/admin/users'}
               activeClassName="Mui-selected"
               classes={{ root: classes.navBarActionRoot, label: classes.label }}
             />
@@ -203,7 +203,7 @@ const MainHeader = ({ children, ...props }) => {
               label={<span className="bottomNavLabel">Pieces</span>}
               icon={<LibraryMusicIcon />}
               component={NavLink}
-              to={'/superadmin/pieces'}
+              to={'/admin/pieces'}
               activeClassName="Mui-selected"
               classes={{ root: classes.navBarActionRoot, label: classes.label }}
             />
@@ -211,7 +211,7 @@ const MainHeader = ({ children, ...props }) => {
               label={<span className="bottomNavLabel">Pickups</span>}
               icon={<CameraEnhanceIcon />}
               component={NavLink}
-              to={'/superadmin/pickups'}
+              to={'/admin/pickups'}
               activeClassName="Mui-selected"
               classes={{ root: classes.navBarActionRoot, label: classes.label }}
             />
