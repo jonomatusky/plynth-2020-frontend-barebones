@@ -45,7 +45,7 @@ const SAViewUser = props => {
           <Grid item xs={12}>
             <UserCard
               user={userForCard}
-              onClose={history.push('/superadmin/users')}
+              onClose={() => history.push('/superadmin/users')}
               subtitle={
                 <>
                   {user.email ? (
