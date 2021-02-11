@@ -45,7 +45,7 @@ export const IconLink = ({ link }) => {
     { name: 'tiktok.com', fontAwesome: faTiktok, display: 'TikTok' },
     { name: 'spotify.com', fontAwesome: faSpotify, display: 'Spotify' },
     {
-      name: 'apple.music.com',
+      name: 'music.apple.com',
       fontAwesome: faMusic,
       display: 'Apple Music',
     },
