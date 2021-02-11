@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { Button } from '@material-ui/core'
+import { Container, Button } from '@material-ui/core'
 
 import { useSAUsersStore } from 'hooks/store/use-sa-users-store'
 import { useSAPiecesStore } from 'hooks/store/use-sa-pieces-store'
+import { useRequest } from 'hooks/use-request'
 import { useAlertStore } from 'hooks/store/use-alert-store'
 import Background from 'layouts/Background'
 import NotificationModal from 'components/NotificationModal'
@@ -16,16 +17,32 @@ const UpdatePiece = props => {
   const history = useHistory()
   const { users } = useSAUsersStore()
   const {
-    selectPiece,
+    piece,
     updatePiece,
     updateStatus,
+    fetchPiece,
+    pieceStatus,
     deletePiece,
+    status,
   } = useSAPiecesStore()
   const { setMessage } = useAlertStore()
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false)
 
   const pieceId = useParams().pieceId
-  const piece = selectPiece(pieceId)
+  const { request } = useRequest()
+
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        console.log('fetching')
+        await fetchPiece(pieceId)
+      } catch (err) {}
+    }
+
+    if (pieceStatus === 'idle') {
+      fetch()
+    }
+  }, [pieceId, request, pieceStatus, fetchPiece])
 
   const handleSubmit = async values => {
     console.log('submitting')
@@ -92,12 +109,19 @@ const UpdatePiece = props => {
             </Button>
           }
         >
-          <PieceForm
-            piece={piece}
-            users={users}
-            onSubmit={handleSubmit}
-            isLoading={updateStatus === 'loading'}
-          />
+          {(pieceStatus === 'loading' || status === 'idle') && (
+            <Container maxWidth="xs">
+              <LoadingSpinner asOverlay />
+            </Container>
+          )}
+          {pieceStatus === 'succeeded' && (
+            <PieceForm
+              piece={piece}
+              users={users}
+              onSubmit={handleSubmit}
+              isLoading={updateStatus === 'loading'}
+            />
+          )}
         </FormLayout>
       ) : (
         <LoadingSpinner asOverlay />
