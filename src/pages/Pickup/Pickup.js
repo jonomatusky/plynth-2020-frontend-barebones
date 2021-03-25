@@ -31,7 +31,7 @@ const NewPickup = ({ isOpen, setIsOpen, ...props }) => {
   useEffect(() => {
     if (status === 'idle') {
       history.push(scanRoute)
-    } else if ((foundPiece || {}).directLink) {
+    } else if ((foundPiece || {}).isDirect && (foundPiece || {}).directLink) {
       window.location.assign(foundPiece.directLink)
     } else if ((foundPiece || {}).isDirect) {
       history.push({
